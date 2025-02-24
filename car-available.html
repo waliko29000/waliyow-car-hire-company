@@ -546,13 +546,13 @@
     }
     bookingForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      const bookingId = document.getElementById('bookingId').value.trim();
+      const nationalId = document.getElementById('nationalId').value.trim();
       const license = document.getElementById('license').value.trim();
       const pickup = document.getElementById('pickup').value;
       const endDate = document.getElementById('endDate').value;
       
       // Validate required fields
-      if (!bookingId || !license || !pickup || !endDate) {
+      if (!nationalId || !license || !pickup || !endDate) {
         alert("Error: Please fill in all booking fields including Pick Up Date and End Date.");
         return;
       }
@@ -565,7 +565,7 @@
       // Save booking immediately
       const bookingDetails = {
         carName: currentCar.name,
-        bookingId,
+        nationalId,
         license,
         pickup,
         endDate,
@@ -593,7 +593,7 @@
         container.innerHTML = `
           <div class="booking-info">
             <p><strong>Car:</strong> ${booking.carName}</p>
-            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+            <p><strong>National ID:</strong> ${national.nationalId}</p>
             <p><strong>Licence:</strong> ${booking.license}</p>
             <p><strong>Pick Up:</strong> ${booking.pickup}</p>
             <p><strong>End Date:</strong> ${booking.endDate}</p>
