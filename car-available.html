@@ -16,22 +16,15 @@
       background-color: #eef2f3;
       color: #333;
       line-height: 1.6;
-      padding-top: 90px; /* increased for fixed header */
     }
-    /* Fixed Header */
+    /* Header */
     .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 10000;
       display: flex;
       align-items: center;
       background: #2c3e50;
       color: #fff;
       padding: 15px 20px;
       flex-wrap: wrap;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     .left-section {
       font-size: 24px;
@@ -61,10 +54,10 @@
     #content {
       padding: 20px;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 20px auto;
       text-align: left;
     }
-    /* Home Notice */
+    /* Home Notice (Red) */
     .notice {
       background: #ffdddd;
       border-left: 5px solid #ff0000;
@@ -90,17 +83,18 @@
     .car-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 0;
     }
     .car-card {
       background: #fff;
-      flex: 1 1 calc(33.33% - 20px);
+      flex: 1 1 calc(33.33% - 0px);
       min-width: 300px;
       border: 1px solid #ddd;
       border-radius: 5px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.1);
       position: relative;
       overflow: hidden;
+      margin: 0;
     }
     .car-card img {
       width: 100%;
@@ -118,7 +112,6 @@
       margin-bottom: 8px;
       color: #555;
       font-size: 15px;
-      line-height: 1.4;
     }
     .book-btn {
       text-decoration: none;
@@ -152,7 +145,7 @@
       min-width: 250px;
     }
     .booking-info p {
-      margin-bottom: 8px;
+      margin: 8px 0;
       font-size: 15px;
     }
     .pending {
@@ -378,7 +371,7 @@
   </style>
 </head>
 <body>
-  <!-- Header (Fixed) -->
+  <!-- Header -->
   <header class="header">
     <div class="left-section">Waliko Car Hire Company</div>
     <nav class="nav-links">
@@ -444,16 +437,8 @@
     <div class="receipt-content">
       <span class="close-receipt" id="closeReceipt">&times;</span>
       <h2>Receipt Details</h2>
-      <p>Dear customer, to receive your receipt, you must first make a payment for your booking car.</p>
-      <p>Your receipt will include:</p>
-      <ul>
-        <li>Your ID number</li>
-        <li>Your driver licence number</li>
-        <li>Your full name</li>
-        <li>Pick-up date</li>
-        <li>End date</li>
-        <li>The amount paid</li>
-      </ul>
+      <p>Dear customer, to receive your receipt, you must book a car and pay for it,Thank you!.</p>
+    
     </div>
   </div>
 
@@ -511,10 +496,10 @@
         <div class="notice">
           <h2>Welcome to Waliko Car Hire</h2>
           <p>* This system allows you to view and book available cars.</p>
-          <p>* Click "Cars" to see our fleet and "Book Now" to reserve your vehicle.</p>
-          <p>* After booking, go to "Booking Details" to view your pending bookings and cancel them by clicking the Delete button.</p>
+          <p>* Click "Cars" to see our fleet and "Book Now" on available vehicles.</p>
+          <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button.</p>
           <p>* Once you pay for your booking, your payment will reflect in the Payment Statements.</p>
-          <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Your receipt will include your ID number, driver licence number, full name, pick-up date, end date, and the amount paid.</p>
+          <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Get your receipt,and dowload it.</p>
           <p>* Thank you for choosing Waliko Car Hire!</p>
         </div>
       `;
