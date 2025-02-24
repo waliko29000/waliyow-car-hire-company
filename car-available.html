@@ -16,15 +16,22 @@
       background-color: #eef2f3;
       color: #333;
       line-height: 1.6;
+      padding-top: 80px; /* for fixed header */
     }
-    /* Header */
+    /* Fixed Header */
     .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10000;
       display: flex;
       align-items: center;
       background: #2c3e50;
       color: #fff;
       padding: 15px 20px;
       flex-wrap: wrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     .left-section {
       font-size: 24px;
@@ -54,10 +61,10 @@
     #content {
       padding: 20px;
       max-width: 1200px;
-      margin: 20px auto;
+      margin: 0 auto;
       text-align: left;
     }
-    /* Home Notice (Red) */
+    /* Home Notice */
     .notice {
       background: #ffdddd;
       border-left: 5px solid #ff0000;
@@ -83,11 +90,11 @@
     .car-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 0;
+      gap: 20px;
     }
     .car-card {
       background: #fff;
-      flex: 1 1 calc(33.33% - 0px);
+      flex: 1 1 calc(33.33% - 20px);
       min-width: 300px;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -112,6 +119,7 @@
       margin-bottom: 8px;
       color: #555;
       font-size: 15px;
+      line-height: 1.4;
     }
     .book-btn {
       text-decoration: none;
@@ -145,7 +153,7 @@
       min-width: 250px;
     }
     .booking-info p {
-      margin: 8px 0;
+      margin-bottom: 8px;
       font-size: 15px;
     }
     .pending {
@@ -371,7 +379,7 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header (Fixed) -->
   <header class="header">
     <div class="left-section">Waliko Car Hire Company</div>
     <nav class="nav-links">
@@ -437,8 +445,16 @@
     <div class="receipt-content">
       <span class="close-receipt" id="closeReceipt">&times;</span>
       <h2>Receipt Details</h2>
-      <p>Dear customer, to receive your receipt, you must book a car and pay for it,Thank you!.</p>
-    
+      <p>Dear customer, to receive your receipt, you must first make a payment for your booking car.</p>
+      <p>Your receipt will include:</p>
+      <ul>
+        <li>Your ID number</li>
+        <li>Your driver licence number</li>
+        <li>Your full name</li>
+        <li>Pick-up date</li>
+        <li>End date</li>
+        <li>The amount paid</li>
+      </ul>
     </div>
   </div>
 
@@ -455,7 +471,7 @@
       { name: "Honda CR-V", price: 12500, description: "Compact SUV with great mileage.", image: "car8.jpg", available: true, duration: "24 hours" },
       { name: "Hyundai Tucson", price: 15000, description: "Comfortable crossover with modern features.", image: "car9.jpg", available: true, duration: "24 hours" },
       { name: "Subaru Impreza", price: 10000, description: "Sporty and efficient AWD sedan.", image: "car10.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Vitz", price: 3500, description: "Compact and fuel-efficient city car.", image: "car11.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Vitz", price: 6000, description: "Compact and fuel-efficient city car.", image: "car11.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Wish", price: 4000, description: "Spacious MPV with great reliability.", image: "car12.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Prado TXL", price: 16000, description: "Advanced SUV with a powerful engine.", image: "car13.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Prado TXG", price: 17000, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
@@ -496,10 +512,10 @@
         <div class="notice">
           <h2>Welcome to Waliko Car Hire</h2>
           <p>* This system allows you to view and book available cars.</p>
-          <p>* Click "Cars" to see our fleet and "Book Now" on available vehicles.</p>
-          <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button.</p>
+          <p>* Click "Cars" to see our fleet and "Book Now" to reserve your vehicle.</p>
+          <p>* After booking, go to "Booking Details" to view your pending bookings and cancel them by clicking the Delete button.</p>
           <p>* Once you pay for your booking, your payment will reflect in the Payment Statements.</p>
-          <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Get your receipt,and dowload it.</p>
+          <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Your receipt will include your ID number, driver licence number, full name, pick-up date, end date, and the amount paid.</p>
           <p>* Thank you for choosing Waliko Car Hire!</p>
         </div>
       `;
