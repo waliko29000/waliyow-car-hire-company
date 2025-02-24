@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Car hire company</title>
+  <style>
+    /* Reset and basic styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #f4f4f4;
+      color: #333;
+    }
+    /* Header styling */
+    header {
+      background: #007BFF;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-size: 1.5em;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    nav button, nav a {
+      background: #0056b3;
+      border: none;
+      color: #fff;
+      margin: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 0.9em;
+      text-decoration: none;
+      display: inline-block;
+    }
+    nav button:hover, nav a:hover {
+      background: #004494;
+    }
+    /* Container styling */
+    .container {
+      padding: 20px;
+    }
+    /* Form modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+    .modal-content h2 {
+      margin-bottom: 15px;
+    }
+    .modal-content label {
+      display: block;
+      margin-top: 10px;
+    }
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    .modal-content button {
+      margin-top: 15px;
+      width: 100%;
+      background: #007BFF;
+      border: none;
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 1em;
+    }
+    .modal-content .close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+      font-size: 1.2em;
+      color: #555;
+    }
+    /* User Details Section */
+    #userDetails {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 4px;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <h1>Car Rental System</h1>
+    <nav>
+      <!-- "Cars Available" now checks if the user is registered -->
+      <a href="#" onclick="checkRegistration()">Cars Available</a>
+      <button onclick="openModal('signInModal')">Sign In</button>
+      <button onclick="openModal('signUpModal')">Sign Up</button>
+      <button onclick="showSection('terms')">Terms of Service</button>
+      <button onclick="showSection('privacy')">Privacy Policy</button>
+      <button onclick="signOut()">Sign Out</button>
+      <button onclick="showSection('contact')">Contact Us</button>
+      <button onclick="showSection('userDetails')">User Details</button>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container" id="mainContent">
+   
+    <h2>Welcome to Waliko CarHire – Your Ultimate Car Rental Experience!</h2>
+
+<h3>Reliable, Affordable, and Hassle-Free Rentals</h3>
+<p>At Waliko CarHire, we believe that renting a car should be a simple and enjoyable process. Whether you're planning a business trip, a vacation, or a weekend getaway, we have the perfect vehicle for you. Our seamless booking system ensures that you get on the road quickly and without hassle.</p>
+
+<h3>A Wide Selection of Vehicles</h3>
+<p>We offer a diverse fleet of vehicles to suit every need and budget. From fuel-efficient economy cars to spacious SUVs and luxury sedans, Waliko CarHire has something for everyone. Choose the car that best fits your journey and enjoy a smooth ride.</p>
+
+<h3>Fast and Secure Booking Process</h3>
+<p>We value your time, which is why we've made our booking process fast, secure, and convenient. With just a few clicks, you can reserve your preferred car and be ready to hit the road. No hidden charges, no unnecessary paperwork – just quick and easy rentals.</p>
+
+<h3>Your Safety is Our Priority</h3>
+<p>Every vehicle in our fleet undergoes regular maintenance and safety checks to ensure you have a safe and comfortable ride. We also provide 24/7 roadside assistance, so you can drive with peace of mind, knowing help is just a call away.</p>
+
+<h3>Exceptional Customer Support</h3>
+<p>Our dedicated customer service team is always here to assist you. Whether you need help choosing the right car, understanding our rental policies, or extending your booking, we are just a message or call away.</p>
+
+<h3>Start Your Journey with Waliko CarHire</h3>
+<p>Explore our services by selecting an option from the menu above. Book now and experience the freedom of the road with Waliko CarHire – where every journey begins with trust and excellence.</p>
+
+  </div>
+
+  <!-- Sign In Modal -->
+  <div id="signInModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('signInModal')">&times;</span>
+      <h2>Sign In</h2>
+      <form id="signInForm">
+          <label for="si_email">Email:</label>
+          <input type="email" id="si_email" placeholder="Enter your email" required>
+          
+          <label for="si_password">Password:</label>
+          <input type="password" id="si_password" placeholder="Enter your password" required>
+          
+          <button type="submit">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Sign Up Modal -->
+  <div id="signUpModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('signUpModal')">&times;</span>
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <label for="su_username">Username:</label>
+            <input type="text" id="su_username" placeholder="Enter your username" required>
+            
+            <label for="su_email">Email:</label>
+            <input type="email" id="su_email" placeholder="Enter your email" required>
+            
+            <label for="su_password">Password:</label>
+            <input type="password" id="su_password" placeholder="Create a password" required>
+            
+            <label for="su_tel">Telephone:</label>
+            <input type="tel" id="su_tel" placeholder="Enter your 10-digit phone number" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits">
+            
+            <label for="su_gender">Gender:</label>
+            <select id="su_gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+</div>
+
+
+  <!-- Section Containers -->
+  <div id="sectionContainer" class="container"></div>
+
+  <script>
+    // Utility functions to open and close modals
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('active');
+    }
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    // Clear main content areas before displaying new section
+    function clearSections() {
+      document.getElementById('mainContent').innerHTML = '';
+      document.getElementById('sectionContainer').innerHTML = '';
+    }
+
+    // Display section based on button clicked
+    function showSection(section) {
+      clearSections();
+      // Check if the section requires sign in (user registration)
+      if (section === 'userDetails') {
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        if (!storedUser) {
+          alert('Please sign in to view user details.');
+          return;
+        }
+        document.getElementById('sectionContainer').innerHTML = `
+          <h2>User Details</h2>
+          <p><strong>Username:</strong> ${storedUser.username}</p>
+          <p><strong>Email:</strong> ${storedUser.email}</p>
+          <p><strong>Telephone:</strong> ${storedUser.telephone}</p>
+          <p><strong>Gender:</strong> ${storedUser.gender}</p>
+          <p><strong>Password:</strong> ${storedUser.password}</p> <!-- Added password display -->
+        `;
+        return;
+      }
+      // Other sections display
+      switch(section) {
+        case 'terms':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>Terms of Service</h2>
+            <p>Welcome to Waliko CarHire Company. By using our car rental services, you agree to be bound by the following terms and conditions. Please read them carefully before proceeding with any rental.</p>
+
+<p><strong>1. Eligibility and Rental Requirements</strong></p>
+<p>To rent a vehicle from Waliko CarHire Company, you must be at least 21 years old and hold a valid, non-expired driver’s license. For certain premium vehicles, drivers must be at least 25 years old. Expired or invalid licenses will not be accepted, and failure to provide a valid license at the time of rental will result in cancellation without a refund. Additional requirements, such as a security deposit or additional identification, may be requested based on the rental location and vehicle type.</p>
+
+<p><strong>2. Booking and Payment</strong></p>
+<p>All vehicle bookings must be made in advance either via our website or at our rental offices. A valid credit or debit card is required to secure your booking. Payments for the rental, including any applicable deposits, taxes, and fees, must be completed at the time of booking or upon vehicle pick-up, as specified in your rental agreement.</p>
+
+<p><strong>3. Vehicle Use and Responsibilities</strong></p>
+<p>The vehicle must be used in compliance with all local traffic laws and regulations. You agree to use the vehicle responsibly and solely for lawful purposes. Waliko CarHire Company is not liable for any misuse, accidents, or damages that occur while the vehicle is used in violation of these terms.</p>
+
+<p><strong>4. Rental Period and Return Policy</strong></p>
+<p>Your rental period begins when you take possession of the vehicle and ends upon its return to the designated location. Timely return is essential; late returns may incur additional charges. The vehicle should be returned in the same condition as it was rented, except for normal wear and tear. In case of damage, additional fees may apply based on repair costs.</p>
+
+<p><strong>5. Insurance and Liability</strong></p>
+<p>All rental vehicles come with basic insurance coverage. However, renters are responsible for any damages, theft, or accidents not covered under the insurance policy. Additional insurance coverage may be purchased at the time of booking for extra protection.</p>
+
+<p><strong>6. Fuel Policy</strong></p>
+<p>All vehicles are rented with a full tank of fuel and must be returned with a full tank. Failure to do so may result in refueling charges. The exact fuel policy will be specified in the rental agreement.</p>
+
+<p><strong>7. Cancellations and Refunds</strong></p>
+<p>Reservations can be canceled at any time; however, cancellation fees may apply based on the time of cancellation. Refund policies vary based on the type of booking and will be outlined in your rental agreement.</p>
+
+<p><strong>8. Breakdown and Assistance</strong></p>
+<p>In case of vehicle breakdown, Waliko CarHire Company provides 24/7 roadside assistance. Renters must contact our support team immediately if they experience any mechanical issues. Unauthorized repairs are strictly prohibited.</p>
+
+<p><strong>9. Termination of Agreement</strong></p>
+<p>Waliko CarHire Company reserves the right to terminate the rental agreement and reclaim the vehicle at any time if the renter is found violating the terms and conditions. No refunds will be issued in such cases.</p>
+
+<p><strong>10. Privacy Policy</strong></p>
+<p>All personal information provided during the booking process is kept confidential and used solely for rental purposes. We do not share customer information with third parties except as required by law.</p>
+
+<p>By renting a vehicle from Waliko CarHire Company, you acknowledge that you have read, understood, and agreed to these terms and conditions.</p>
+
+          `;
+          break;
+        case 'privacy':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>Privacy Policy</h2>
+            <p><strong>Privacy Policy - Waliko CarHire Company</strong></p>
+
+<p>At Waliko CarHire Company, we are committed to protecting your privacy. This Privacy Policy outlines how we collect, use, and safeguard your personal information when you use our services.</p>
+
+<p><strong>1. Information We Collect</strong></p>
+<p>When you register or book a vehicle with Waliko CarHire Company, we may collect the following types of personal information:</p>
+<ul>
+    <li>Full name</li>
+    <li>Contact details (phone number, email address)</li>
+    <li>Driver’s license details</li>
+    <li>Payment information (credit/debit card details)</li>
+    <li>Rental history and preferences</li>
+    <li>Device and location data (when using our online services)</li>
+</ul>
+
+<p><strong>2. How We Use Your Information</strong></p>
+<p>We use the information collected to:</p>
+<ul>
+    <li>Process your bookings and rental transactions</li>
+    <li>Verify your identity and driver’s license validity</li>
+    <li>Improve our customer service and support</li>
+    <li>Send booking confirmations and updates</li>
+    <li>Prevent fraudulent activities and ensure security</li>
+    <li>Comply with legal and regulatory requirements</li>
+</ul>
+
+<p><strong>3. How We Protect Your Information</strong></p>
+<p>We take the security of your personal data seriously. We implement appropriate technical and organizational measures to protect your information from unauthorized access, misuse, or loss. These measures include encryption, secure payment gateways, and restricted access to personal data.</p>
+
+<p><strong>4. Sharing of Information</strong></p>
+<p>We do not sell, rent, or trade your personal data. However, we may share your information with:</p>
+<ul>
+    <li>Law enforcement or regulatory authorities when required by law</li>
+    <li>Third-party service providers assisting in payment processing, fraud prevention, or customer support</li>
+    <li>Insurance providers in case of accidents or claims</li>
+</ul>
+
+<p><strong>5. Cookies and Online Tracking</strong></p>
+<p>Our website may use cookies and similar tracking technologies to enhance your browsing experience. Cookies help us remember your preferences and improve our website’s functionality. You can adjust your browser settings to refuse cookies, but this may affect the usability of our services.</p>
+
+<p><strong>6. Your Rights and Choices</strong></p>
+<p>You have the right to:</p>
+<ul>
+    <li>Request access to your personal information</li>
+    <li>Update or correct inaccurate data</li>
+    <li>Request the deletion of your data, subject to legal obligations</li>
+    <li>Opt-out of marketing communications</li>
+</ul>
+
+<p><strong>7. Data Retention</strong></p>
+<p>We retain your personal data only for as long as necessary to fulfill the purposes outlined in this Privacy Policy. Legal or regulatory obligations may require us to keep certain information for extended periods.</p>
+
+<p><strong>8. Third-Party Links</strong></p>
+<p>Our website may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage users to review the privacy policies of any linked websites before providing personal data.</p>
+
+<p><strong>9. Changes to This Privacy Policy</strong></p>
+<p>We may update this Privacy Policy periodically. Any significant changes will be communicated through our website or via email. Continued use of our services after updates indicates acceptance of the revised policy.</p>
+
+<p><strong>10. Contact Us</strong></p>
+<p>If you have any questions or concerns about this Privacy Policy, you can contact us at:</p>
+<ul>
+    <li>Email: support@walikocarhire.com</li>
+    <li>Phone: +254 729 1777 41</li>
+    <li>Address: Waliko CarHire Company, Main Street, City, Country</li>
+</ul>
+
+<p>By using Waliko CarHire Company’s services, you acknowledge that you have read and understood this Privacy Policy.</p>
+
+            
+          `;
+          break;
+        case 'contact':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>Contact Us</h2>
+            <p>We’re here to help! Feel free to reach out for any questions, feedback, or support you need. Our dedicated team is always ready to assist you and ensure you have the best experience with us.</p>
+
+            <p><strong>Customer Support:</strong> For any inquiries, concerns, or assistance with your car rentals, email us at <a href="mailto:waliko@gmail.com">waliko@gmail.com</a>. We aim to respond within 24 hours.</p>
+        
+            <p><strong>Phone Support:</strong> Speak directly with one of our customer care representatives by calling us at <a href="tel:+254729177741">0729177741</a>. Our support hours are Monday to Friday, 9:00 AM to 6:00 PM.</p>
+        
+            <p><strong>Mailing Address:</strong> You can also reach us by mail at our headquarters:</p>
+            <p>235 Fashion Street,<br>
+            Garissa,<br>
+            Garissa County,<br>
+            70100,<br>
+            Kenya</p>
+            <p><strong>Social Media:</strong> Stay connected! Follow us on social media for the latest updates, new arrivals, and special promotions. Reach out via direct message, and we’ll get back to you promptly!</p>
+            <ul>
+                <li><a href="https://www.facebook.com/CarRentalService">Facebook</a></li>
+                <li><a href="https://www.instagram.com/CarRentalService">Instagram</a></li>
+                <li><a href="https://www.twitter.com/CarRentalService">Twitter</a></li>
+                <li><a href="https://www.linkedin.com/company/carrentalservice">LinkedIn</a></li>
+            </ul>
+        
+            <p><strong>Business Inquiries:</strong> For partnerships, collaborations, or wholesale inquiries, please contact us at <a href="mailto:business@carrentalservice.com">business@carrentalservice.com</a>. We’re excited to explore new opportunities together!</p>
+        
+            <p><strong>FAQ:</strong> Check out our Frequently Asked Questions page for quick answers to common questions about rentals, booking, and more.</p>
+        
+            <p>Thank you for connecting with us. We look forward to hearing from you!</p>
+          `;
+          break;
+        default:
+          document.getElementById('sectionContainer').innerHTML = `<p>Select a service from the header above.</p>`;
+      }
+    }
+
+    // Check if user is registered before redirecting to Cars Available (voting.html)
+    function checkRegistration() {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if (!storedUser) {
+        alert('Please sign up or sign in to view available cars.');
+        return false;
+      }
+      // If registered, redirect to voting.html
+      window.location.href = 'car-available.html';
+    }
+
+    // Handle Sign Up
+    document.getElementById('signUpForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userData = {
+        username: document.getElementById('su_username').value,
+        email: document.getElementById('su_email').value,
+        password: document.getElementById('su_password').value,
+        telephone: document.getElementById('su_tel').value,
+        gender: document.getElementById('su_gender').value
+      };
+      localStorage.setItem('user', JSON.stringify(userData));
+      alert('Registration Successful! You can now sign in.');
+      closeModal('signUpModal');
+      document.getElementById('signUpForm').reset();
+    });
+
+    // Handle Sign In
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('si_email').value;
+      const password = document.getElementById('si_password').value;
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      if(storedUser && email === storedUser.email && password === storedUser.password) {
+        alert('Sign In Successful!');
+        closeModal('signInModal');
+        document.getElementById('signInForm').reset();
+      } else {
+        alert('Incorrect email or password.');
+      }
+    });
+
+    // Sign Out - clear localStorage and reload page
+    function signOut() {
+      localStorage.removeItem('user');
+      alert('Signed out successfully.');
+      location.reload();
+    }
+  </script>
+</body>
+</html>
