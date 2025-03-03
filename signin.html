@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 20px; }
+        .container { max-width: 400px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); margin: auto; }
+        h2 { color: #0056b3; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #0056b3; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #003d82; }
+        .signup-link { margin-top: 10px; font-size: 14px; }
+        .signup-link a { color: #0056b3; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign In</h2>
+    <input type="email" id="signinEmail" placeholder="Enter Email">
+    <input type="password" id="signinPassword" placeholder="Enter Password">
+    <button onclick="signIn()">Login</button>
+    <p id="signinMessage"></p>
+
+    <!-- Sign Up Link -->
+    <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
+</div>
+
+<script>
+function signIn() {
+    const email = document.getElementById("signinEmail").value.trim();
+    const password = document.getElementById("signinPassword").value.trim();
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    if (!userData) {
+        alert("❌ No account found. Please sign up first.");
+        return;
+    }
+
+    if (email !== userData.email || password !== userData.password) {
+        alert("❌ Invalid email or password!");
+        return;
+    }
+
+    // Store login status
+    localStorage.setItem("isLoggedIn", "true");
+
+    alert("✅ Successfully logged in! Redirecting...");
+
+    // Redirect to index.html first
+    window.location.href = "car-available.html";
+
+    // After 2 seconds, redirect to car-available.html
+    setTimeout(() => {
+        window.location.href = "car-available.html";
+    }, 2000);
+}
+</script>
+
+</body>
+</html>

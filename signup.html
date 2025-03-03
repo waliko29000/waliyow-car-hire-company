@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 20px; }
+        .container { max-width: 400px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); margin: auto; }
+        h2 { color: #0056b3; }
+        input, select, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #0056b3; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #003d82; }
+        .terms { display: flex; align-items: center; font-size: 14px; }
+        .terms input { margin-right: 5px; }
+        .terms a { color: #0056b3; text-decoration: none; margin-left: 5px; }
+        .signin-link { margin-top: 10px; font-size: 14px; }
+        .signin-link a { color: #0056b3; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Sign Up</h2>
+    <input type="text" id="signupUsername" placeholder="Enter Username">
+    <input type="email" id="signupEmail" placeholder="Enter Email">
+    <input type="password" id="signupPassword" placeholder="Enter Password">
+    <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
+    <select id="signupGender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+     <!-- Checkbox and Terms (Now on the same line) -->
+     <div class="terms">
+        <input type="checkbox" id="agree">
+        <label for="agree">I agree to <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></label>
+    </div>
+    <button onclick="sendVerificationCode()">Send Verification Code</button>
+    <p id="signupMessage"></p>
+
+    <!-- Sign In Link -->
+    <p class="signin-link">Already have an account? <a href="signin.html">Sign In</a></p>
+</div>
+
+<script>
+(function() { emailjs.init("cRP4ovnb5IL3SxrkQ"); })();
+
+function sendVerificationCode() {
+    const username = document.getElementById("signupUsername").value.trim();
+    const email = document.getElementById("signupEmail").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+    const confirmPassword = document.getElementById("signupConfirmPassword").value.trim();
+    const gender = document.getElementById("signupGender").value;
+    const agree = document.getElementById("signupAgree").checked;
+
+    if (!username || !email || !password || !confirmPassword || !gender || !agree) {
+        alert("❌ Fill all fields and agree to terms!");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert("❌ Passwords do not match!");
+        return;
+    }
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    localStorage.setItem("verificationCode", verificationCode);
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userData", JSON.stringify({ username, email, password, gender }));
+
+    const templateParams = { to_email: email, verification_code: verificationCode };
+
+    emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
+        .then(() => {
+            alert("✅ Code sent to your email!");
+            window.location.href = "verify.html";  // Redirect to verification page
+        })
+        .catch((error) => alert("❌ Email sending failed! " + error.text));
+}
+</script>
+
+</body>
+</html>
