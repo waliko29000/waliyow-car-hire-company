@@ -6,136 +6,151 @@
   <title>Car hire company</title>
   <style>
     /* Reset and basic styling */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      background: #f4f4f4;
-      color: #333;
-    }
-    /* Header styling */
-    header {
-      background: #007BFF;
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header h1 {
-      font-size: 1.5em;
-    }
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    nav button, nav a {
-      background: #0056b3;
-      border: none;
-      color: #fff;
-      margin: 5px;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 3px;
-      font-size: 0.9em;
-      text-decoration: none;
-      display: inline-block;
-    }
-    nav button:hover, nav a:hover {
-      background: #004494;
-    }
-    /* Container styling */
-    .container {
-      padding: 20px;
-    }
-    /* Form modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .modal.active {
-      display: flex;
-    }
-    .modal-content {
-      background: #fff;
-      padding: 20px;
-      border-radius: 4px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-    }
-    .modal-content h2 {
-      margin-bottom: 15px;
-    }
-    .modal-content label {
-      display: block;
-      margin-top: 10px;
-    }
-    .modal-content input,
-    .modal-content select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-    .modal-content button {
-      margin-top: 15px;
-      width: 100%;
-      background: #007BFF;
-      border: none;
-      color: #fff;
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 3px;
-      font-size: 1em;
-    }
-    .modal-content .close {
-      position: absolute;
-      right: 10px;
-      top: 10px;
-      cursor: pointer;
-      font-size: 1.2em;
-      color: #555;
-    }
-    /* User Details Section */
-    #userDetails {
-      margin-top: 20px;
-      background: #fff;
-      padding: 15px;
-      border-radius: 4px;
-    }
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      nav {
-        margin-top: 10px;
-      }
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background: #f4f4f4;
+  color: #333;
+}
+/* Header styling */
+header {
+  background: #007BFF;
+  color: #fff;
+  padding: 8px 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+header h1 {
+  font-size: 1.2em;
+}
+nav {
+  display: flex;
+  flex-wrap: wrap;
+}
+nav button, nav a {
+  background: #0056b3;
+  border: none;
+  color: #fff;
+  margin: 3px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.8em;
+  text-decoration: none;
+  display: inline-block;
+}
+nav button:hover, nav a:hover {
+  background: #004494;
+}
+/* Container styling */
+.container {
+  padding: 15px;
+}
+/* Form modal styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+.modal.active {
+  display: flex;
+}
+.modal-content {
+  background: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 350px;
+  position: relative;
+}
+.modal-content h2 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+.modal-content label {
+  display: block;
+  margin-top: 8px;
+}
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+.modal-content button {
+  margin-top: 12px;
+  width: 100%;
+  background: #007BFF;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+.modal-content .close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 1em;
+  color: #555;
+}
+/* User Details Section */
+#userDetails {
+  margin-top: 15px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 4px;
+}
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+  header h1 {
+    font-size: 1em;
+  }
+  nav {
+    margin-top: 5px;
+  }
+  nav button, nav a {
+    font-size: 0.7em;
+    padding: 6px 10px;
+  }
+  .modal-content {
+    max-width: 300px;
+  }
+}
+
+  
   </style>
 </head>
 <body>
   <!-- Header Section -->
   <header>
-    <h1>Car Rental System</h1>
+    <h1> Waliko Car Rental System</h1>
     <nav>
       <!-- "Cars Available" now checks if the user is registered -->
       <a href="#" onclick="checkRegistration()">Cars Available</a>
@@ -152,14 +167,15 @@
   <!-- Main Container -->
   <div class="container" id="mainContent">
    
-    <h2>Welcome to Waliko CarHire – Your Ultimate Car Rental Experience!</h2>
+    <h4>Welcome to Waliko CarHire</h4>
 
-    <h2>How to Access Our Services</h2>
-    <p>To access our service, view available cars, and book a car, you must register or sign in if you are a registered user.</p>
+<h4>How to Access Our Services</h4>
+<p>To access our service, view available cars, and book a car, you must register or sign in if you are a registered user.</p>
 
-    <h2>Why Choose Us?</h2>
-    <p>We offer a seamless car rental experience with a wide selection of vehicles to suit your needs. Whether you're looking for a luxury ride or a budget-friendly option, we've got you covered.</p>
-  </div>
+<h4>Why Choose Us?</h4>
+<p>We offer a seamless car rental experience with a wide selection of vehicles to suit your needs. Whether you're looking for a luxury ride or a budget-friendly option, we've got you covered.</p>
+
+    </div>
 
   <!-- Sign In Modal -->
   <div id="signInModal" class="modal">
