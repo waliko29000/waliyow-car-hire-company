@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 20px; }
+        .container { max-width: 400px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); margin: auto; }
+        h2 { color: #0056b3; }
+        input, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: #0056b3; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #003d82; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Verify Your Email</h2>
+    <p>Enter the 6-digit verification code sent to <strong id="userEmailDisplay"></strong></p>
+    <input type="text" id="verifyCode" placeholder="Enter Code">
+    <button onclick="verifyCode()">Verify & Complete Sign Up</button>
+    <p id="verifyMessage"></p>
+</div>
+
+<script>
+document.getElementById("userEmailDisplay").innerText = localStorage.getItem("userEmail");
+
+function verifyCode() {
+    const enteredCode = document.getElementById("verifyCode").value.trim();
+    const storedCode = localStorage.getItem("verificationCode");
+
+    if (enteredCode === storedCode) {
+        const userData = JSON.parse(localStorage.getItem("userData"));
+        localStorage.setItem(userData.username, JSON.stringify(userData));
+        alert("✅ Registration Successful! You can now sign in.");
+        window.location.href = "signin.html";
+    } else {
+        alert("❌ Incorrect Code! Please try again.");
+    }
+}
+</script>
+
+</body>
+</html>
