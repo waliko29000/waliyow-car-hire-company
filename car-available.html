@@ -617,7 +617,8 @@
             <p><strong>Licence:</strong> ${booking.license}</p>
             <p><strong>Pick Up:</strong> ${booking.pickup}</p>
             <p><strong>End Date:</strong> ${booking.endDate}</p>
-            <p class="pending">Pending payment: Pay half of the rental fees (Ksh ${Math.floor(booking.price/2)}) to confirm your booking.</p>
+            <p class="pending">Pending payment:<p>You can pay half of the rental fee which is (Ksh ${Math.floor(booking.price / 2)}) to confirm your booking. The remaining balance will be paid when picking up the car.Thank you</p>
+
           </div>
           <div class="booking-actions">
             <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
