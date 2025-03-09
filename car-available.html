@@ -620,7 +620,8 @@
             <p class="pending">Pending payment: Pay half of the rental fees (Ksh ${Math.floor(booking.price/2)}) to confirm your booking.</p>
           </div>
           <div class="booking-actions">
-            <button class="pay-btn" data-index="${idx}">Pay</button>
+            <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+
             <button class="delete-btn" data-index="${idx}">Delete</button>
           </div>
         `;
