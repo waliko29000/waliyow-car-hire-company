@@ -468,7 +468,7 @@
       { name: "Toyota Prado TX", price: 14000, description: "Luxury SUV with 4WD.", image: "car1.jpg", available: true, duration: "24 hours" },
       { name: "Subaru Forester", price: 12000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Harrier", price: 9000, description: "Comfortable sedan.", image: "car3.jpg", available: false, duration: "24 hours" },
-      
+      { name: "Toyota Wish", price: 4000, description: "Spacious and powerful.", image: "car4.jpg", available: false, duration: "24 hours" },
       { name: "Mercedes Benz C200", price: 45000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
       { name: "Range Rover Sport", price: 45000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
       { name: "Mazda CX-5", price: 13000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
@@ -672,14 +672,7 @@
     }
     closeReceiptBtn.addEventListener('click', closeReceiptModal);
 
-    // --- Mpesa Modal Functions ---
-    function openMpesaModal() {
-      mpesaModal.style.display = 'flex';
-    }
-    function closeMpesaModal() {
-      mpesaModal.style.display = 'none';
-      mpesaNoInput.value = '';
-    }
+   
     submitMpesaBtn.addEventListener('click', () => {
       const mpesaNo = mpesaNoInput.value.trim();
       // Validate that the Mpesa number has exactly 10 digits
