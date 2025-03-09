@@ -5,26 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Waliko Car Hire - Sign Up</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       font-family: Arial, sans-serif;
-      background: #0f2027; /* fallback */
+      background: #0f2027;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       color: white;
       position: relative;
     }
 
     .rain {
-      position: absolute;
+      position: fixed;
       top: 0; left: 0;
       width: 100%;
       height: 100%;
-      background-image: url('https://i.ibb.co/gTD6z4F/rain.gif'); /* Sample animated rain */
+      background-image: url('https://i.ibb.co/gTD6z4F/rain.gif');
       background-size: cover;
       background-position: center;
       z-index: -1;
@@ -35,8 +36,8 @@
       background-color: rgba(0, 0, 0, 0.75);
       padding: 20px;
       border-radius: 10px;
-      width: 320px;
-      text-align: left;
+      max-width: 340px;
+      margin: 0 auto;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
@@ -62,8 +63,7 @@
 
     .signup-box input[type="text"],
     .signup-box input[type="password"],
-    .signup-box input[type="email"],
-    .signup-box select {
+    .signup-box input[type="email"] {
       width: 100%;
       padding: 8px;
       margin-top: 2px;
@@ -73,12 +73,15 @@
     }
 
     .gender-options {
+      display: flex;
+      gap: 15px;
       margin-top: 5px;
     }
 
     .gender-options label {
       font-weight: normal;
-      margin-right: 10px;
+      display: flex;
+      align-items: center;
     }
 
     .checkbox {
@@ -125,6 +128,7 @@
 </head>
 <body>
   <div class="rain"></div>
+
   <div class="signup-box">
     <h2>Waliko Car Hire</h2>
     <p class="subtext">Join us today and unlock a world of style and exclusivity tailored just for you!</p>
@@ -190,7 +194,7 @@
       }
 
       alert("✅ Signup successful!");
-      // Save to localStorage if needed
+      // You can store to localStorage or redirect here
     }
   </script>
 </body>
