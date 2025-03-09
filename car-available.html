@@ -17,15 +17,21 @@
       color: #333;
       line-height: 1.6;
     }
-    /* Header */
     .header {
-      display: flex;
-      align-items: center;
-      background: #2c3e50;
-      color: #fff;
-      padding: 15px 20px;
-      flex-wrap: wrap;
-    }
+  display: flex;
+  align-items: center;
+  background: #2c3e50;
+  color: #fff;
+  padding: 15px 20px;
+  flex-wrap: wrap;
+
+  position: fixed;       /* 👈 makes it fixed */
+  top: 0;                /* 👈 stick to top */
+  left: 0;
+  width: 100%;           /* 👈 full width */
+  z-index: 1000;         /* 👈 stay on top */
+}
+
     .left-section {
       font-size: 24px;
       font-weight: bold;
@@ -52,11 +58,17 @@
     }
     /* Content Area */
     #content {
-      padding: 20px;
-      max-width: 1200px;
-      margin: 20px auto;
-      text-align: left;
-    }
+  padding: 140px 20px 20px 20px; /* ⬅️ push everything down */
+  max-width: 1200px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+
+
+
+
+
     /* Home Notice (Red) */
     .notice {
       background: #ffdddd;
@@ -79,8 +91,8 @@
       font-size: 15px;
       line-height: 1.5;
     }
-    /* Car Cards Container */
-    .car-container {
+/* Car Cards Container */
+        .car-container {
       display: flex;
       flex-wrap: wrap;
       gap: 0;
@@ -351,33 +363,41 @@
       cursor: pointer;
       font-weight: bold;
     }
-    /* Mobile Responsive Styles */
     @media (max-width: 768px) {
-      .car-card, .booking-details {
-        flex: 1 1 100%;
-      }
-      .booking-details {
-        flex-direction: column;
-      }
-      .booking-actions {
-        align-items: flex-start;
-        margin-top: 10px;
-      }
-      .nav-links {
-        width: 100%;
-        justify-content: space-around;
-      }
-    }
+  /* Make headers smaller */
+  h1 {
+    font-size: 20px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  h3 {
+    font-size: 16px;
+  }
+
+  /* Make buttons smaller */
+  button,
+  .nav-links a,
+  .book-btn,
+  .pay-btn,
+  .delete-btn,
+  .receipt-btn,
+  .modal-content button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
   </style>
 </head>
 <body>
   <!-- Header -->
   <header class="header">
-    <div class="left-section">Waliko Car Hire Company</div>
+    <div class="left-section">Waliko Car Hire</div>
     <nav class="nav-links">
       <a id="homeLink">Home</a>
-      <a id="paymentsLink">Payment Statements</a>
-      <a id="bookingDetailsLink">Booking Details</a>
+      <a id="paymentsLink"> Statements</a>
+      <a id="bookingDetailsLink">Booking Info</a>
       <a id="carsLink">Cars</a>
       <a id="logoutLink">Logout</a>
     </nav>
@@ -395,7 +415,7 @@
       <h2>Book Car</h2>
       <form id="bookingForm">
         <label for="bookingId">Booking ID</label>
-        <input type="text" id="bookingId" placeholder="Enter National ID" required />
+        <input type="text" id="bookingId" placeholder="Enter Booking ID" required />
         <label for="license">Driver Licence No.</label>
         <input type="text" id="license" placeholder="Enter Licence Number" required />
         <label for="pickup">Pick Up Date</label>
@@ -427,7 +447,7 @@
   <div id="paymentFailedModal" class="modal">
     <div class="modal-content payment-failed">
       <span class="close-modal" id="closePaymentFailed">&times;</span>
-      <p> sorry we cannot proceess your request at this time</p>
+      <p> Unexpected Error Acquired</p>
       <p class="try-again-link" id="tryAgainLink">Try Again</p>
     </div>
   </div>
