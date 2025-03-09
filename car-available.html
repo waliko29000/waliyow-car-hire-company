@@ -415,9 +415,9 @@
       <h2>Book Car</h2>
       <form id="bookingForm">
         <label for="bookingId">Booking ID</label>
-        <input type="text" id="bookingId" placeholder="Enter your National ID" required />
+        <input type="text" id="bookingId" placeholder="Enter Booking ID" required />
         <label for="license">Driver Licence No.</label>
-        <input type="text" id="license" placeholder="Enter your Licence Number" required />
+        <input type="text" id="license" placeholder="Enter Licence Number" required />
         <label for="pickup">Pick Up Date</label>
         <input type="date" id="pickup" required />
         <label for="endDate">End Date</label>
@@ -468,7 +468,7 @@
       { name: "Toyota Prado TX", price: 14000, description: "Luxury SUV with 4WD.", image: "car1.jpg", available: true, duration: "24 hours" },
       { name: "Subaru Forester", price: 12000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Harrier", price: 9000, description: "Comfortable sedan.", image: "car3.jpg", available: false, duration: "24 hours" },
-      
+      { name: "Toyota Wish", price: 4000, description: "Spacious and powerful.", image: "car4.jpg", available: false, duration: "24 hours" },
       { name: "Mercedes Benz C200", price: 45000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
       { name: "Range Rover Sport", price: 45000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
       { name: "Mazda CX-5", price: 13000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
@@ -518,7 +518,7 @@
           <p>* This system allows you to view and book available cars.</p>
           <p>* Click "Cars" to see our fleet and "Book Now" on available vehicles.</p>
           <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button.</p>
-          <p>* You can pay via mpesa, paypal or visa card .Once you pay for your booking, your payment will reflect in the Payment Statements.</p>
+          <p>* Once you pay for your booking, your payment will reflect in the Payment Statements.</p>
           <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Get your receipt,and dowload it.</p>
           <p>* Thank you for choosing Waliko Car Hire!</p>
         </div>
@@ -617,8 +617,7 @@
             <p><strong>Licence:</strong> ${booking.license}</p>
             <p><strong>Pick Up:</strong> ${booking.pickup}</p>
             <p><strong>End Date:</strong> ${booking.endDate}</p>
-            <p class="pending">Pending payment:<p>You can pay half of the rental fee which is (Ksh ${Math.floor(booking.price / 2)}) to confirm your booking. The remaining balance will be paid when picking up the car.Thank you</p>
-
+            <p class="pending">Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking,The remaining balance will be paid when picking up the car.</p>
           </div>
           <div class="booking-actions">
             <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
