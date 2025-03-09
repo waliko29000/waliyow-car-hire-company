@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 50px;
+        }
+        .payment-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        .payment-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .payment-button:hover {
+            background-color: #e0e0e0;
+        }
+        .payment-button img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .loading {
+            display: none;
+            font-size: 18px;
+            color: green;
+            margin-top: 20px;
+        }
+        .error {
+            display: none;
+            font-size: 18px;
+            color: red;
+            margin-top: 20px;
+        }
+        .input-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .input-container input {
+            padding: 8px;
+            margin: 5px;
+            width: 80%;
+        }
+        .pay-now {
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Select Payment Method</h2>
+        <div class="payment-button" onclick="showInput('M-Pesa')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/M-PESA_LOGO.svg/2560px-M-PESA_LOGO.svg.png" alt="M-Pesa Logo">
+            <span>Pay with M-Pesa</span>
+        </div>
+        <div class="payment-button" onclick="showInput('PayPal')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo">
+            <span>Pay with PayPal</span>
+        </div>
+        <div class="payment-button" onclick="showInput('Visa')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa Logo">
+            <span>Pay with Visa</span>
+        </div>
+        
+        <div id="input-container" class="input-container">
+            <h3 id="payment-title"></h3>
+            <input type="text" id="payment-input" placeholder="Enter details...">
+            <button class="pay-now" onclick="processPayment()">Pay Now</button>
+        </div>
+        
+        <div id="loading" class="loading">Processing payment...</div>
+        <div id="error" class="error">502 Bad Gateway - Contact Site Owner A.weli</div>
+    </div>
+
+    <script>
+        let selectedMethod = "";
+        
+        function showInput(method) {
+            selectedMethod = method;
+            document.getElementById("input-container").style.display = "block";
+            document.getElementById("payment-title").innerText = "Enter details for " + method;
+            let inputField = document.getElementById("payment-input");
+            inputField.value = "";
+            inputField.placeholder = method === "M-Pesa" ? "Enter phone number" : "Enter card/email";
+        }
+        
+        function processPayment() {
+            let inputValue = document.getElementById("payment-input").value;
+            if (!inputValue) {
+                alert("Please enter your " + (selectedMethod === "M-Pesa" ? "phone number" : "payment details"));
+                return;
+            }
+            
+            document.getElementById("loading").style.display = "block";
+            document.getElementById("error").style.display = "none";
+            
+            setTimeout(() => {
+                document.getElementById("loading").style.display = "none";
+                document.getElementById("error").style.display = "block";
+              
+            }, 3000); // Simulates a 3-second processing time
+        }
+    </script>
+</body>
+</html>
