@@ -12,11 +12,24 @@
       padding: 50px;
     }
     .payment-container {
+      position: relative;
       background: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
       display: inline-block;
+    }
+    .close-button {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #888;
+      cursor: pointer;
+    }
+    .close-button:hover {
+      color: #000;
     }
     .payment-button {
       display: flex;
@@ -71,9 +84,12 @@
 </head>
 <body>
   <div class="payment-container">
+    <!-- Close Button -->
+    <span class="close-button" onclick="closeModal()">×</span>
+
     <h2>Select Payment Method</h2>
 
-    <!-- M-Pesa Button using local safaricom-logo.jpg -->
+    <!-- M-Pesa Button -->
     <div class="payment-button" onclick="showInput('M-Pesa')">
       <img src="safaricom-logo.jpg" alt="M-Pesa / Safaricom Logo" />
       <span>Pay with M-Pesa</span>
@@ -112,14 +128,50 @@
       document.getElementById("payment-title").innerText = "Enter details for " + method;
       let inputField = document.getElementById("payment-input");
       inputField.value = "";
-      inputField.placeholder = method === "M-Pesa" ? "Enter phone number" : "Enter card/email";
+
+      if (method === "M-Pesa") {
+        inputField.placeholder = "Enter 10-digit phone number (e.g. 0712345678)";
+      } else if (method === "PayPal") {
+        inputField.placeholder = "Enter PayPal email address";
+      } else if (method === "Visa") {
+        inputField.placeholder = "Enter card number (12–19 digits)";
+      }
+    }
+
+    function isValidPhone(phone) {
+      return /^0\d{9}$/.test(phone);
+    }
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidCard(card) {
+      return /^\d{12,19}$/.test(card);
     }
 
     function processPayment() {
-      let inputValue = document.getElementById("payment-input").value;
+      let inputValue = document.getElementById("payment-input").value.trim();
       if (!inputValue) {
-        alert("Please enter your " + (selectedMethod === "M-Pesa" ? "phone number" : "payment details"));
+        alert("Please enter your payment details.");
         return;
+      }
+
+      if (selectedMethod === "M-Pesa") {
+        if (!isValidPhone(inputValue)) {
+          alert("M-Pesa phone number must be exactly 10 digits and start with 0 (e.g. 0712345678).");
+          return;
+        }
+      } else if (selectedMethod === "PayPal") {
+        if (!isValidEmail(inputValue)) {
+          alert("Please enter a valid PayPal email address.");
+          return;
+        }
+      } else if (selectedMethod === "Visa") {
+        if (!isValidCard(inputValue)) {
+          alert("Visa card number must be 12 to 19 digits.");
+          return;
+        }
       }
 
       document.getElementById("loading").style.display = "block";
@@ -128,7 +180,12 @@
       setTimeout(() => {
         document.getElementById("loading").style.display = "none";
         document.getElementById("error").style.display = "block";
-      }, 3000); // Simulates a 3-second processing time
+      }, 3000);
+    }
+
+    function closeModal() {
+      // Redirect to car-available.html
+      window.location.href = "car-available.html";
     }
   </script>
 </body>
