@@ -186,43 +186,15 @@ nav button:hover, nav a:hover {
       <h2>Sign In</h2>
       <form id="signInForm">
           <label for="si_email">Email:</label>
-          <input type="email" id="si_email" placeholder="Enter your email" required>
-          
-          <label for="si_password">Password:</label>
-          <input type="password" id="si_password" placeholder="Enter your password" required>
-          
-          <button type="submit">Sign In</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Sign Up Modal -->
-  <div id="signUpModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('signUpModal')">&times;</span>
-        <h2>Sign Up</h2>
-        <form id="signUpForm">
-            <label for="su_username">Username:</label>
-            <input type="text" id="su_username" placeholder="Enter your username" required>
-            
-            <label for="su_email">Email:</label>
-            <input type="email" id="su_email" placeholder="Enter your email" required>
-            
-            <label for="su_password">Password:</label>
-            <input type="password" id="su_password" placeholder="Create a password" required>
-            
-            <label for="su_tel">Telephone:</label>
-            <input type="tel" id="su_tel" placeholder="Enter your 10-digit phone number" required pattern="[0-9]{10}" title="Phone number must be exactly 10 digits">
-            
-            <label for="su_gender">Gender:</label>
-            <select id="su_gender" required>
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-            
-            <button type="submit">Sign Up</button>
+          <input type="text" id="username" placeholder="Enter Username" required>
+          <input type="email" id="email" placeholder="Enter Email" required>
+          <input type="text" id="telephone" placeholder="Enter Telephone" required>
+          <select id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+          <input type="password" id="password" placeholder="Enter Password" required>
+          <button type="submit">Sign Up</button>
         </form>
     </div>
 </div>
@@ -248,24 +220,27 @@ nav button:hover, nav a:hover {
 
     // Display section based on button clicked
     function showSection(section) {
-      clearSections();
-      // Check if the section requires sign in (user registration)
-      if (section === 'userDetails') {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
-        if (!storedUser) {
-          alert('Please sign in to view user details.');
-          return;
-        }
-        document.getElementById('sectionContainer').innerHTML = `
-          <h2>User Details</h2>
-          <p><strong>Username:</strong> ${storedUser.username}</p>
-          <p><strong>Email:</strong> ${storedUser.email}</p>
-          <p><strong>Telephone:</strong> ${storedUser.telephone}</p>
-          <p><strong>Gender:</strong> ${storedUser.gender}</p>
-          <p><strong>Password:</strong> ${storedUser.password}</p> <!-- Added password display -->
-        `;
-        return;
-      }
+  clearSections();
+
+  if (section === 'userDetails') {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+
+    if (!storedUser) {
+      alert('Please sign in to view user details.');
+      return;
+    }
+
+    document.getElementById('sectionContainer').innerHTML = `
+      <h2>User Details</h2>
+      <p><strong>Username:</strong> ${storedUser.username}</p>
+      <p><strong>Email:</strong> ${storedUser.email}</p>
+      <p><strong>Telephone:</strong> ${storedUser.telephone}</p>
+      <p><strong>Gender:</strong> ${storedUser.gender}</p>
+    `;
+    return;
+  }
+
+
       // Other sections display
       switch(section) {
         case 'terms':
@@ -420,28 +395,28 @@ nav button:hover, nav a:hover {
     function checkRegistration() {
       const storedUser = JSON.parse(localStorage.getItem('user'));
       if (!storedUser) {
-        alert('Please sign up or sign in to view available cars.');
+        alert('Please sign in to view available cars.');
         return false;
       }
       // If registered, redirect to voting.html
       window.location.href = 'car-available.html';
     }
 
-    // Handle Sign Up
-    document.getElementById('signUpForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const userData = {
-        username: document.getElementById('su_username').value,
-        email: document.getElementById('su_email').value,
-        password: document.getElementById('su_password').value,
-        telephone: document.getElementById('su_tel').value,
-        gender: document.getElementById('su_gender').value
-      };
-      localStorage.setItem('user', JSON.stringify(userData));
-      alert('Registration Successful! You can now sign in.');
-      closeModal('signUpModal');
-      document.getElementById('signUpForm').reset();
-    });
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const user = {
+      username: document.getElementById('username').value,
+      email: document.getElementById('email').value,
+      telephone: document.getElementById('telephone').value,
+      gender: document.getElementById('gender').value,
+      password: document.getElementById('password').value
+    };
+
+    localStorage.setItem('user', JSON.stringify(user));
+    alert('Signup successful! You can now view your details.');
+    window.location.href = 'index.html'; // Redirect to main page
+  });
 
     // Handle Sign In
     document.getElementById('signInForm').addEventListener('submit', function(e) {
@@ -461,7 +436,7 @@ nav button:hover, nav a:hover {
     // Sign Out - clear localStorage and reload page
     function signOut() {
       localStorage.removeItem('user');
-     
+      alert
       location.reload();
     }
   </script>
