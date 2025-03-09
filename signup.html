@@ -1,84 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; background-color: #f0f8ff; padding: 20px; }
-        .container { max-width: 400px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); margin: auto; }
-        h2 { color: #0056b3; }
-        input, select, button { width: 100%; padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: #0056b3; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #003d82; }
-        .terms { display: flex; align-items: center; font-size: 14px; }
-        .terms input { margin-right: 5px; }
-        .terms a { color: #0056b3; text-decoration: none; margin-left: 5px; }
-        .signin-link { margin-top: 10px; font-size: 14px; }
-        .signin-link a { color: #0056b3; text-decoration: none; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Waliko Car Hire - Sign Up</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      color: #0056b3;
+      margin-bottom: 10px;
+    }
+    p {
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      text-align: left;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 3px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .gender-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    .gender-group label {
+      font-weight: normal;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .checkbox-row input {
+      margin-right: 5px;
+    }
+    .checkbox-row a {
+      color: #0056b3;
+      text-decoration: none;
+      margin: 0 2px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #003d82;
+    }
+    .signin {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .signin a {
+      color: #0056b3;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Waliko Car Hire</h2>
+    <p>Join us today and unlock a world of convenience and luxury car rentals tailored just for you!</p>
 
-<div class="container">
-    <h2>Sign Up</h2>
-    <input type="text" id="signupUsername" placeholder="Enter Username">
-    <input type="email" id="signupEmail" placeholder="Enter Email">
-    <input type="password" id="signupPassword" placeholder="Enter Password">
-    <input type="password" id="signupConfirmPassword" placeholder="Confirm Password">
-    <select id="signupGender">
-        <option value="">Select Gender</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-    </select>
-    <div class="terms">
-        <input type="checkbox" id="signupAgree">
-        <label for="signupAgree">I agree to <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a></label>
+    <label>Username:</label>
+    <input type="text" id="signupUsername" placeholder="Type your username" />
+
+    <label>Password:</label>
+    <input type="password" id="signupPassword" placeholder="Type your password" />
+
+    <label>Confirm Password:</label>
+    <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" />
+
+    <label>Gender:</label>
+    <div class="gender-group">
+      <input type="radio" name="gender" value="Male" id="male" />
+      <label for="male">Male</label>
+      <input type="radio" name="gender" value="Female" id="female" />
+      <label for="female">Female</label>
     </div>
+
+    <label>Email:</label>
+    <input type="email" id="signupEmail" placeholder="Type your email" />
+
+    <label>Phone No:</label>
+    <input type="text" id="signupPhone" placeholder="Type your phone number" />
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="signupAgree" />
+      <label for="signupAgree">
+        I agree to the 
+        <a href="#" target="_blank">Terms & Conditions</a> and 
+        <a href="#" target="_blank">Privacy Policy</a>
+      </label>
+    </div>
+
     <button onclick="sendVerificationCode()">Send Verification Code</button>
-    <p id="signupMessage"></p>
 
-    <!-- Sign In Link -->
-    <p class="signin-link">Already have an account? <a href="signin.html">Sign In</a></p>
-</div>
+    <div class="signin">
+      Already have an account? <a href="signin.html">Sign In</a>
+    </div>
+  </div>
 
-<script>
-(function() { emailjs.init("cRP4ovnb5IL3SxrkQ"); })();
+  <script>
+    (function () {
+      emailjs.init("cRP4ovnb5IL3SxrkQ");
+    })();
 
-function sendVerificationCode() {
-    const username = document.getElementById("signupUsername").value.trim();
-    const email = document.getElementById("signupEmail").value.trim();
-    const password = document.getElementById("signupPassword").value.trim();
-    const confirmPassword = document.getElementById("signupConfirmPassword").value.trim();
-    const gender = document.getElementById("signupGender").value;
-    const agree = document.getElementById("signupAgree").checked;
+    function sendVerificationCode() {
+      const username = document.getElementById("signupUsername").value.trim();
+      const email = document.getElementById("signupEmail").value.trim();
+      const password = document.getElementById("signupPassword").value.trim();
+      const confirmPassword = document.getElementById("signupConfirmPassword").value.trim();
+      const phone = document.getElementById("signupPhone").value.trim();
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const agree = document.getElementById("signupAgree").checked;
 
-    if (!username || !email || !password || !confirmPassword || !gender || !agree) {
-        alert("❌ Fill all fields and agree to terms!");
+      if (!username || !email || !password || !confirmPassword || !gender || !phone || !agree) {
+        alert("❌ Please complete all fields and agree to the terms.");
         return;
-    }
+      }
 
-    if (password !== confirmPassword) {
-        alert("❌ Passwords do not match!");
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match.");
         return;
-    }
+      }
 
-    const verificationCode = Math.floor(100000 + Math.random() * 900000);
-    localStorage.setItem("verificationCode", verificationCode);
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userData", JSON.stringify({ username, email, password, gender }));
+      if (!phone.startsWith("07") || phone.length < 10) {
+        alert("❌ Phone number must start with '07' and be at least 10 digits.");
+        return;
+      }
 
-    const templateParams = { to_email: email, verification_code: verificationCode };
+      const verificationCode = Math.floor(100000 + Math.random() * 900000);
+      localStorage.setItem("verificationCode", verificationCode);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userData", JSON.stringify({ username, email, password, gender, phone }));
 
-    emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
+      const templateParams = {
+        to_email: email,
+        verification_code: verificationCode
+      };
+
+      emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
         .then(() => {
-            alert("✅ Code sent to your email!");
-            window.location.href = "verify.html";  // Redirect to verification page
+          alert("✅ Verification code sent to your email.");
+          window.location.href = "verify.html";
         })
-        .catch((error) => alert("❌ Email sending failed! " + error.text));
-}
-</script>
-
+        .catch((error) => {
+          alert("❌ Failed to send email: " + error.text);
+        });
+    }
+  </script>
 </body>
 </html>
