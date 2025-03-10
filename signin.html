@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Waliko Car Hire - Login</title>
+  <meta charset="UTF-8">
+  <title>Login - Waliko Car Hire</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
+      background-color: #e0f7fa;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -18,20 +17,21 @@
     .wrapper {
       background-color: #ffffff;
       padding: 30px;
-      border-radius: 10px;
+      border-radius: 5px;
       box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
-      width: 380px;
+      width: 400px;
     }
 
     h1 {
       text-align: center;
       color: #0277bd;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      font-size: 24px;
     }
 
     p {
       text-align: center;
-      color: #333;
+      color: #555555;
       font-size: 14px;
       margin-bottom: 25px;
     }
@@ -39,10 +39,10 @@
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 12px;
-      margin: 5px 0 15px;
+      padding: 10px;
+      margin: 5px 0;
       border: 1px solid #0277bd;
-      border-radius: 5px;
+      border-radius: 3px;
       box-sizing: border-box;
     }
 
@@ -50,9 +50,9 @@
       width: 100%;
       padding: 12px;
       background-color: #0277bd;
-      color: white;
+      color: #ffffff;
       border: none;
-      border-radius: 5px;
+      border-radius: 3px;
       cursor: pointer;
       font-weight: bold;
     }
@@ -71,53 +71,65 @@
       text-decoration: underline;
     }
 
+    .footer {
+      text-align: center;
+      color: #333333;
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
     .register-link {
       text-align: center;
       margin-top: 15px;
-      font-size: 14px;
     }
 
     #padlock {
-      text-align: center;
       font-size: 50px;
-      margin-top: 15px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .locked {
+      content: "🔒";
+    }
+
+    .unlocked {
+      content: "🔓";
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
     }
 
     .shake {
       animation: shake 0.5s ease-in-out;
     }
-
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      50% { transform: translateX(8px); }
-      75% { transform: translateX(-8px); }
-      100% { transform: translateX(0); }
-    }
   </style>
   <script>
     function handleLogin(event) {
       event.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
 
-      const storedData = JSON.parse(localStorage.getItem("userData"));
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const padlock = document.getElementById('padlock');
+      padlock.classList.remove('shake');
 
-      const padlock = document.getElementById("padlock");
-      padlock.classList.remove("shake");
+      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
-      if (!storedData || email !== storedData.email || password !== storedData.password) {
-        alert("❌ Invalid email or password!");
+      if (email === userData.email && password === userData.password) {
+        padlock.textContent = "🔓";
+        setTimeout(() => {
+          window.location.href = "car-available.html";
+        }, 500);
+      } else {
+        alert("Invalid email or password. Please try again.");
         padlock.textContent = "🔒";
-        padlock.classList.add("shake");
-        return;
+        padlock.classList.add('shake');
       }
-
-      padlock.textContent = "🔓";
-      alert("✅ Successfully logged in!");
-      setTimeout(() => {
-        window.location.href = "car-available.html";
-      }, 1000);
     }
   </script>
 </head>
@@ -125,16 +137,24 @@
   <div class="wrapper">
     <form onsubmit="handleLogin(event)">
       <h1>Waliko Car Hire</h1>
-      <p>Please enter your credentials to sign in</p>
+      <p>Please enter your email and password to log in</p>
 
-      <input type="email" id="email" placeholder="Enter your email" required />
-      <input type="password" id="password" placeholder="Enter your password" required />
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Type your email" required>
 
-      <input type="submit" value="Login" />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Type your password" required>
 
-      <p class="register-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
-      <div id="padlock">🔒</div>
+      <input type="submit" value="Login">
+      <p><a href="forget password.html">Forgot Password?</a></p>
+
+      <div class="register-link">
+        <p>Don't have an account? <a href="fashion register.html">Register</a></p>
+      </div>
     </form>
+
+    <!-- Padlock Icon -->
+    <div id="padlock" class="locked">🔒</div>
   </div>
 </body>
 </html>
