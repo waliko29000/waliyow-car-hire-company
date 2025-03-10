@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Details - Waliko</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .wrapper {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+      width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-spacing: 0px;
+      margin-bottom: 20px;
+    }
+
+    td {
+      padding: 10px 0;
+      vertical-align: top;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .label {
+      font-weight: bold;
+      width: 40%;
+    }
+
+    .value {
+      width: 60%;
+    }
+
+    a {
+      color: #003366;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>User Details</h1>
+    <table>
+      <tr><td class="label">Username:</td><td class="value" id="displayUsername"></td></tr>
+      <tr><td class="label">Email:</td><td class="value" id="displayEmail"></td></tr>
+      <tr><td class="label">Phone:</td><td class="value" id="displayPhone"></td></tr>
+      <tr><td class="label">Gender:</td><td class="value" id="displayGender"></td></tr>
+    </table>
+    <a href="index.html">Back</a>
+  </div>
+
+  <script>
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (userData) {
+      document.getElementById("displayUsername").textContent = userData.username || "";
+      document.getElementById("displayEmail").textContent = userData.email || "";
+      document.getElementById("displayPhone").textContent = userData.phone || "";
+      document.getElementById("displayGender").textContent = userData.gender || "";
+    } else {
+      alert("❌ No user data found. Please register first.");
+      window.location.href = "signup.html";
+    }
+  </script>
+</body>
+</html>
