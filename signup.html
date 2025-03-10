@@ -3,78 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Waliko Car Hire</title>
+  <title>Waliko Car Hire - Register</title>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent scrolling */
       font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
+      background-color: #e0f7fa;
+    }
+
+    .container {
+      height: 100%;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      align-items: flex-start;
+      padding-top: 20px;
     }
 
     .wrapper {
       background-color: #ffffff;
-      padding: 30px;
-      border-radius: 5px;
+      padding: 20px;
+      border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      width: 400px;
+      width: 90%;
+      max-width: 380px;
     }
 
     h1 {
       text-align: center;
       color: #003366;
-      margin-bottom: 15px;
-      font-size: 24px;
+      margin-bottom: 5px;
+      font-size: 22px;
     }
 
     p {
       text-align: center;
-      color: #333333;
+      color: #333;
       font-size: 14px;
-      margin-bottom: 25px;
+      margin-bottom: 15px;
     }
 
-    table {
-      width: 100%;
-      margin-bottom: 20px;
-      border-spacing: 0px;
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
     }
 
-    td {
-      padding: 8px 0;
-      vertical-align: top;
-    }
-
-    input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    input[type="tel"] {
       width: 100%;
       padding: 10px;
-      margin: 5px 0;
       border: 1px solid #003366;
-      border-radius: 3px;
-      box-sizing: border-box;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .gender-options {
+      display: flex;
+      gap: 15px;
+      margin-top: 5px;
+      font-size: 14px;
     }
 
     input[type="radio"] {
       margin-right: 5px;
     }
 
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+
+    .terms {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
     input[type="submit"] {
       width: 100%;
       padding: 12px;
       background-color: #003366;
-      color: #ffffff;
+      color: white;
       border: none;
-      border-radius: 3px;
-      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 15px;
       font-weight: bold;
+      cursor: pointer;
     }
 
     input[type="submit"]:hover {
       background-color: #002244;
+    }
+
+    .signin-link {
+      text-align: center;
+      font-size: 13px;
+      margin-top: 10px;
     }
 
     a {
@@ -85,13 +118,6 @@
 
     a:hover {
       text-decoration: underline;
-    }
-
-    .footer {
-      text-align: center;
-      color: #333333;
-      font-size: 12px;
-      margin-top: 20px;
     }
   </style>
   <script>
@@ -104,6 +130,7 @@
       const password = form["password"].value;
       const confirmPassword = form["confirm_password"].value;
       const termsAccepted = form["terms"].checked;
+      const phone = form["phone"].value;
 
       if (!termsAccepted) {
         alert("❌ You must agree to the terms and conditions to register.");
@@ -115,9 +142,13 @@
         return;
       }
 
+      if (!/^07\d{8}$/.test(phone)) {
+        alert("❌ Phone number must start with 07 and be 10 digits.");
+        return;
+      }
+
       const username = form["username"].value;
       const email = form["email"].value;
-      const phone = form["phone"].value;
       const gender = form["gender"].value;
 
       const code = Math.floor(100000 + Math.random() * 900000);
@@ -143,51 +174,46 @@
   </script>
 </head>
 <body>
-  <div class="wrapper">
-    <form name="registrationForm" onsubmit="validateForm(event)">
-      <h1>Waliko Online Shopping</h1>
-      <p>Join us today and unlock a world of convenience and luxury car rentals tailored just for you!</p>
+  <div class="container">
+    <div class="wrapper">
+      <form name="registrationForm" onsubmit="validateForm(event)">
+        <h1>Waliko Car Hire</h1>
+        <p>Register now for luxury car rentals!</p>
 
-      <table>
-        <tr>
-          <td>Username:</td>
-          <td><input type="text" name="username" placeholder="Type your username" required></td>
-        </tr>
-        <tr>
-          <td>Password:</td>
-          <td><input type="password" name="password" placeholder="Type your password" required></td>
-        </tr>
-        <tr>
-          <td>Confirm Password:</td>
-          <td><input type="password" name="confirm_password" placeholder="Confirm your password" required></td>
-        </tr>
-        <tr>
-          <td>Gender:</td>
-          <td>
-            <input type="radio" name="gender" value="male" required>Male
-            <input type="radio" name="gender" value="female" required>Female
-          </td>
-        </tr>
-        <tr>
-          <td>Email:</td>
-          <td><input type="email" name="email" placeholder="Type your email" required></td>
-        </tr>
-        <tr>
-          <td>Phone No:</td>
-          <td><input type="tel" name="phone" placeholder="Type your phone number" required></td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <input type="checkbox" name="terms" required> I agree to the
+        <label>Username:</label>
+        <input type="text" name="username" placeholder="Enter username" required>
+
+        <label>Password:</label>
+        <input type="password" name="password" placeholder="Enter password" required>
+
+        <label>Confirm Password:</label>
+        <input type="password" name="confirm_password" placeholder="Confirm password" required>
+
+        <label>Gender:</label>
+        <div class="gender-options">
+          <label><input type="radio" name="gender" value="male" required> Male</label>
+          <label><input type="radio" name="gender" value="female" required> Female</label>
+        </div>
+
+        <label>Email:</label>
+        <input type="email" name="email" placeholder="Enter email" required>
+
+        <label>Phone No:</label>
+        <input type="tel" name="phone" placeholder="07XXXXXXXX" required>
+
+        <div class="terms">
+          <label><input type="checkbox" name="terms" required> I agree to the
             <a href="#">terms & conditions</a> and
-            <a href="#">privacy policy</a> of this application
-          </td>
-        </tr>
-      </table>
+            <a href="#">privacy policy</a></label>
+        </div>
 
-      <input type="submit" value="Register">
-      <p>Already have an account? <a href="signin.html">Sign In</a></p>
-    </form>
+        <input type="submit" value="Register">
+
+        <div class="signin-link">
+          <p>Already have an account? <a href="signin.html">Sign In</a></p>
+        </div>
+      </form>
+    </div>
   </div>
 </body>
 </html>
