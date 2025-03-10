@@ -3,125 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Waliko Car Hire - Sign In</title>
+  <title>Waliko Car Hire - Login</title>
   <style>
-    /* Rain animation */
     body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
       font-family: Arial, sans-serif;
-      height: 100vh;
+      background-color: #f0f8ff;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
-      background: #000;
-      color: white;
+      height: 100vh;
+      margin: 0;
     }
 
-    .rain {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      background-image: url('https://i.imgur.com/NM4cTzT.gif');
-      background-size: cover;
-      z-index: -1;
-      opacity: 0.2;
-    }
-
-    .container {
-      background-color: rgba(255, 255, 255, 0.95);
-      color: #000;
+    .wrapper {
+      background-color: #ffffff;
+      padding: 30px;
       border-radius: 10px;
-      padding: 20px;
-      width: 320px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
-      text-align: left;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+      width: 380px;
     }
 
-    h2 {
+    h1 {
       text-align: center;
+      color: #0277bd;
       margin-bottom: 10px;
     }
 
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      border: 1px solid #aaa;
-      border-radius: 5px;
+    p {
+      text-align: center;
+      color: #333;
       font-size: 14px;
+      margin-bottom: 25px;
     }
 
-    button {
-      background-color: #000;
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0 15px;
+      border: 1px solid #0277bd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      padding: 12px;
+      background-color: #0277bd;
       color: white;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
+      font-weight: bold;
     }
 
-    button:hover {
-      background-color: #333;
+    input[type="submit"]:hover {
+      background-color: #01579b;
     }
 
-    .signup-link {
+    a {
+      color: #0277bd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .register-link {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 15px;
       font-size: 14px;
     }
 
-    .signup-link a {
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
+    #padlock {
+      text-align: center;
+      font-size: 50px;
+      margin-top: 15px;
     }
 
-    @media (max-height: 600px) {
-      body {
-        align-items: flex-start;
-        padding-top: 20px;
-      }
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+      100% { transform: translateX(0); }
     }
   </style>
-</head>
-<body>
-  <div class="rain"></div>
-
-  <div class="container">
-    <h2>Waliko Car Hire</h2>
-    <p style="text-align:center;">Welcome back! Please login below.</p>
-    <label>Email:</label>
-    <input type="email" id="signinEmail" placeholder="Type your email">
-    <label>Password:</label>
-    <input type="password" id="signinPassword" placeholder="Type your password">
-    <button onclick="signIn()">Login</button>
-    <p id="signinMessage"></p>
-    <p class="signup-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
-  </div>
-
   <script>
-    function signIn() {
-      const email = document.getElementById("signinEmail").value.trim();
-      const password = document.getElementById("signinPassword").value.trim();
-      const userData = JSON.parse(localStorage.getItem("userData"));
+    function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-      if (!userData) {
-        alert("❌ No account found. Please sign up first.");
-        return;
-      }
+      const storedData = JSON.parse(localStorage.getItem("userData"));
 
-      if (email !== userData.email || password !== userData.password) {
+      const padlock = document.getElementById("padlock");
+      padlock.classList.remove("shake");
+
+      if (!storedData || email !== storedData.email || password !== storedData.password) {
         alert("❌ Invalid email or password!");
+        padlock.textContent = "🔒";
+        padlock.classList.add("shake");
         return;
       }
 
-      localStorage.setItem("isLoggedIn", "true");
-      alert("✅ Successfully logged in! Redirecting...");
-      window.location.href = "car-available.html";
+      padlock.textContent = "🔓";
+      alert("✅ Successfully logged in!");
+      setTimeout(() => {
+        window.location.href = "car-available.html";
+      }, 1000);
     }
   </script>
+</head>
+<body>
+  <div class="wrapper">
+    <form onsubmit="handleLogin(event)">
+      <h1>Waliko Car Hire</h1>
+      <p>Please enter your credentials to sign in</p>
+
+      <input type="email" id="email" placeholder="Enter your email" required />
+      <input type="password" id="password" placeholder="Enter your password" required />
+
+      <input type="submit" value="Login" />
+
+      <p class="register-link">Don't have an account? <a href="signup.html">Sign Up</a></p>
+      <div id="padlock">🔒</div>
+    </form>
+  </div>
 </body>
 </html>
