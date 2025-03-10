@@ -3,62 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <title>Login - Waliko Car Hire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden; /* Prevent scrolling */
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
+    }
+
+    .container {
+      height: 100%;
       display: flex;
       justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+      align-items: flex-start;
+      padding-top: 30px;
     }
 
     .wrapper {
       background-color: #ffffff;
-      padding: 30px;
-      border-radius: 5px;
+      padding: 20px;
+      border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
-      width: 400px;
+      width: 90%;
+      max-width: 370px;
     }
 
     h1 {
       text-align: center;
       color: #0277bd;
-      margin-bottom: 15px;
-      font-size: 24px;
+      margin-bottom: 10px;
+      font-size: 22px;
     }
 
     p {
       text-align: center;
       color: #555555;
       font-size: 14px;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #333;
     }
 
     input[type="email"],
     input[type="password"] {
       width: 100%;
       padding: 10px;
-      margin: 5px 0;
       border: 1px solid #0277bd;
-      border-radius: 3px;
-      box-sizing: border-box;
+      border-radius: 5px;
     }
 
     input[type="submit"] {
       width: 100%;
       padding: 12px;
       background-color: #0277bd;
-      color: #ffffff;
+      color: #fff;
       border: none;
-      border-radius: 3px;
-      cursor: pointer;
+      border-radius: 5px;
       font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
     }
 
     input[type="submit"]:hover {
       background-color: #01579b;
+    }
+
+    .register-link,
+    .forgot-link {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 13px;
     }
 
     a {
@@ -71,30 +98,10 @@
       text-decoration: underline;
     }
 
-    .footer {
-      text-align: center;
-      color: #333333;
-      font-size: 12px;
-      margin-top: 20px;
-    }
-
-    .register-link {
-      text-align: center;
-      margin-top: 15px;
-    }
-
     #padlock {
-      font-size: 50px;
+      font-size: 40px;
       text-align: center;
       margin-top: 20px;
-    }
-
-    .locked {
-      content: "🔒";
-    }
-
-    .unlocked {
-      content: "🔓";
     }
 
     @keyframes shake {
@@ -134,27 +141,30 @@
   </script>
 </head>
 <body>
-  <div class="wrapper">
-    <form onsubmit="handleLogin(event)">
-      <h1>Waliko Car Hire</h1>
-      <p>Please enter your email and password to log in</p>
+  <div class="container">
+    <div class="wrapper">
+      <form onsubmit="handleLogin(event)">
+        <h1>Waliko Car Hire</h1>
+        <p>Enter your email and password to login</p>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Type your email" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="Enter email">
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" placeholder="Type your password" required>
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="Enter password">
 
-      <input type="submit" value="Login">
-      <p><a href="forget password.html">Forgot Password?</a></p>
+        <input type="submit" value="Login">
 
-      <div class="register-link">
-        <p>Don't have an account? <a href="fashion register.html">Register</a></p>
-      </div>
-    </form>
+        <div class="forgot-link">
+          <p><a href="forget password.html">Forgot Password?</a></p>
+        </div>
 
-    <!-- Padlock Icon -->
-    <div id="padlock" class="locked">🔒</div>
+        <div class="register-link">
+          <p>Don't have an account? <a href="signup.html">Register</a></p>
+        </div>
+      </form>
+      <div id="padlock">🔒</div>
+    </div>
   </div>
 </body>
 </html>
