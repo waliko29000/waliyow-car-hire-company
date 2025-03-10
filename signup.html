@@ -1,201 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Waliko Car Hire - Sign Up</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waliko Online Shopping</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    * {
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .wrapper {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+      width: 400px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #003366;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    p {
+      text-align: center;
+      color: #333333;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      margin-bottom: 20px;
+      border-spacing: 0px;
+    }
+
+    td {
+      padding: 8px 0;
+      vertical-align: top;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #003366;
+      border-radius: 3px;
       box-sizing: border-box;
     }
 
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #0f2027;
-      height: 100vh;
-      overflow: hidden;
-      color: white;
-      position: relative;
-    }
-
-    .rain {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: url('https://i.ibb.co/gTD6z4F/rain.gif');
-      background-size: cover;
-      background-position: center;
-      z-index: -1;
-      opacity: 0.3;
-    }
-
-    .signup-box {
-      background-color: rgba(0, 0, 0, 0.75);
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 340px;
-      margin: 0 auto;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    }
-
-    .signup-box h2 {
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
-
-    .signup-box p.subtext {
-      text-align: center;
-      font-size: 13px;
-      margin-bottom: 20px;
-      color: #ccc;
-    }
-
-    .signup-box label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    .signup-box input[type="text"],
-    .signup-box input[type="password"],
-    .signup-box input[type="email"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 2px;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    .gender-options {
-      display: flex;
-      gap: 15px;
-      margin-top: 5px;
-    }
-
-    .gender-options label {
-      font-weight: normal;
-      display: flex;
-      align-items: center;
-    }
-
-    .checkbox {
-      display: flex;
-      align-items: center;
-      font-size: 13px;
-      margin-top: 12px;
-    }
-
-    .checkbox input {
+    input[type="radio"] {
       margin-right: 5px;
     }
 
-    .checkbox a {
-      color: #00ccff;
-      text-decoration: none;
-      margin-left: 2px;
-    }
-
-    .signup-box button {
-      margin-top: 15px;
+    input[type="submit"] {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
+      background-color: #003366;
+      color: #ffffff;
       border: none;
-      background-color: #00ccff;
-      color: #000;
-      font-size: 16px;
-      font-weight: bold;
-      border-radius: 5px;
+      border-radius: 3px;
       cursor: pointer;
+      font-weight: bold;
     }
 
-    .signin-link {
-      margin-top: 10px;
-      text-align: center;
-      font-size: 13px;
+    input[type="submit"]:hover {
+      background-color: #002244;
     }
 
-    .signin-link a {
-      color: #00ccff;
+    a {
+      color: #003366;
       text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      text-align: center;
+      color: #333333;
+      font-size: 12px;
+      margin-top: 20px;
     }
   </style>
-</head>
-<body>
-  <div class="rain"></div>
-
-  <div class="signup-box">
-    <h2>Waliko Car Hire</h2>
-    <p class="subtext">Join us today and unlock a world of style and exclusivity tailored just for you!</p>
-
-    <label>Username:</label>
-    <input type="text" id="username" placeholder="Type your username">
-
-    <label>Password:</label>
-    <input type="password" id="password" placeholder="Type your password">
-
-    <label>Confirm Password:</label>
-    <input type="password" id="confirmPassword" placeholder="Confirm your password">
-
-    <label>Gender:</label>
-    <div class="gender-options">
-      <label><input type="radio" name="gender" value="Male"> Male</label>
-      <label><input type="radio" name="gender" value="Female"> Female</label>
-    </div>
-
-    <label>Email:</label>
-    <input type="email" id="email" placeholder="Type your email">
-
-    <label>Phone No:</label>
-    <input type="text" id="phone" placeholder="Type your phone number">
-
-    <div class="checkbox">
-      <input type="checkbox" id="agree">
-      <label for="agree">I agree to the <a href="#">terms & conditions</a> and <a href="#">privacy policy</a></label>
-    </div>
-
-    <button onclick="submitForm()">Sign Up</button>
-
-    <div class="signin-link">
-      Already have an account? <a href="signin.html">Login</a>
-    </div>
-  </div>
-
   <script>
-    function submitForm() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const agree = document.getElementById('agree').checked;
-      const genderEls = document.getElementsByName('gender');
-      let gender = "";
-      for (let g of genderEls) if (g.checked) gender = g.value;
+    emailjs.init("cRP4ovnb5IL3SxrkQ");
 
-      if (!username || !password || !confirmPassword || !email || !phone || !gender || !agree) {
-        alert("❌ Please fill all fields and agree to the terms.");
+    function validateForm(event) {
+      event.preventDefault();
+
+      const form = document.forms["registrationForm"];
+      const password = form["password"].value;
+      const confirmPassword = form["confirm_password"].value;
+      const termsAccepted = form["terms"].checked;
+
+      if (!termsAccepted) {
+        alert("❌ You must agree to the terms and conditions to register.");
         return;
       }
 
       if (password !== confirmPassword) {
-        alert("❌ Passwords do not match.");
+        alert("❌ Passwords do not match!");
         return;
       }
 
-      if (!/^07\d{8}$/.test(phone)) {
-        alert("❌ Phone number must be 10 digits and start with '07'.");
-        return;
-      }
+      const username = form["username"].value;
+      const email = form["email"].value;
+      const phone = form["phone"].value;
+      const gender = form["gender"].value;
 
-      alert("✅ Signup successful!");
-      // You can store to localStorage or redirect here
+      const code = Math.floor(100000 + Math.random() * 900000);
+
+      localStorage.setItem("verificationCode", code);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userData", JSON.stringify({ username, email, password, phone, gender }));
+
+      const templateParams = {
+        to_email: email,
+        verification_code: code
+      };
+
+      emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
+        .then(() => {
+          alert("✅ Verification code sent to your email!");
+          window.location.href = "verify.html";
+        })
+        .catch((error) => {
+          alert("❌ Failed to send email: " + error.text);
+        });
     }
   </script>
+</head>
+<body>
+  <div class="wrapper">
+    <form name="registrationForm" onsubmit="validateForm(event)">
+      <h1>Waliko Online Shopping</h1>
+      <p>Join us today and unlock a world of convenience and luxury car rentals tailored just for you!</p>
+
+      <table>
+        <tr>
+          <td>Username:</td>
+          <td><input type="text" name="username" placeholder="Type your username" required></td>
+        </tr>
+        <tr>
+          <td>Password:</td>
+          <td><input type="password" name="password" placeholder="Type your password" required></td>
+        </tr>
+        <tr>
+          <td>Confirm Password:</td>
+          <td><input type="password" name="confirm_password" placeholder="Confirm your password" required></td>
+        </tr>
+        <tr>
+          <td>Gender:</td>
+          <td>
+            <input type="radio" name="gender" value="male" required>Male
+            <input type="radio" name="gender" value="female" required>Female
+          </td>
+        </tr>
+        <tr>
+          <td>Email:</td>
+          <td><input type="email" name="email" placeholder="Type your email" required></td>
+        </tr>
+        <tr>
+          <td>Phone No:</td>
+          <td><input type="tel" name="phone" placeholder="Type your phone number" required></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <input type="checkbox" name="terms" required> I agree to the
+            <a href="#">terms & conditions</a> and
+            <a href="#">privacy policy</a> of this application
+          </td>
+        </tr>
+      </table>
+
+      <input type="submit" value="Register">
+      <p>Already have an account? <a href="fashion login.html">Login</a></p>
+    </form>
+  </div>
 </body>
 </html>
