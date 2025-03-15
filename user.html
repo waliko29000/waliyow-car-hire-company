@@ -13,36 +13,34 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      padding: 20px;
     }
 
     .wrapper {
       background-color: #ffffff;
-      padding: 25px;
+      padding: 30px;
       border-radius: 5px;
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      max-width: 400px;
-      width: 100%;
+      width: 400px;
     }
 
     h1 {
       text-align: center;
       color: #003366;
-      margin-bottom: 20px;
-      font-size: 22px;
+      margin-bottom: 15px;
+      font-size: 24px;
     }
 
     table {
       width: 100%;
-      border-spacing: 0;
-      margin-bottom: 15px;
+      border-spacing: 0px;
+      margin-bottom: 20px;
     }
 
     td {
-      padding: 8px 0;
+      padding: 10px 0;
       vertical-align: top;
       font-size: 14px;
-      color: #333;
+      color: #333333;
     }
 
     .label {
@@ -61,23 +59,10 @@
       display: block;
       text-align: center;
       margin-top: 20px;
-      font-size: 14px;
     }
 
     .back-link:hover {
       text-decoration: underline;
-    }
-
-    @media (max-width: 400px) {
-      h1 {
-        font-size: 20px;
-      }
-      td {
-        font-size: 13px;
-      }
-      .back-link {
-        font-size: 13px;
-      }
     }
   </style>
 </head>
@@ -90,6 +75,8 @@
       <tr><td class="label">Phone:</td><td class="value" id="displayPhone"></td></tr>
       <tr><td class="label">Gender:</td><td class="value" id="displayGender"></td></tr>
     </table>
+
+    <!-- This is the link that should go to car-available.html -->
     <a href="car-available.html" class="back-link">← Back</a>
   </div>
 
