@@ -116,7 +116,6 @@
       animation: shake 0.5s ease-in-out;
     }
   </style>
-
   <script>
     function handleLogin(event) {
       event.preventDefault();
@@ -131,8 +130,8 @@
       const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
       if (matchingUser) {
-        // ✅ Save logged-in user's email to be used in userinfo.html
-        localStorage.setItem("currentUserEmail", matchingUser.email);
+        // Save the current logged-in user
+        localStorage.setItem("currentUser", JSON.stringify(matchingUser));
 
         padlock.textContent = "🔓";
         setTimeout(() => {
