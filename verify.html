@@ -1,115 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Verify Email - Waliko Car Hire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       height: 100vh;
       margin: 0;
+      padding-top: 50px;
     }
 
-    .verify-box {
-      background-color: #fff;
-      padding: 20px 30px;
+    .container {
+      background-color: white;
+      padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
+      box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
       width: 90%;
-      max-width: 400px;
+      max-width: 370px;
     }
 
     h2 {
-      color: #003366;
       text-align: center;
-      margin-bottom: 10px;
+      color: #0277bd;
+      margin-bottom: 15px;
     }
 
-    p {
-      text-align: center;
+    label {
       font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
       color: #333;
-      margin-bottom: 20px;
     }
 
     input[type="text"] {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #003366;
-      border-radius: 5px;
+      padding: 10px;
       margin-bottom: 15px;
+      border: 1px solid #0277bd;
+      border-radius: 5px;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      background-color: #003366;
+      background-color: #0277bd;
       color: white;
+      font-weight: bold;
       border: none;
       border-radius: 5px;
-      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #002244;
+      background-color: #01579b;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="verify-box">
+
+  <div class="container">
     <h2>Email Verification</h2>
-    <p>Enter the 6-digit code sent to your email</p>
-    <input type="text" id="code" placeholder="Enter verification code" required />
+    <label for="code">Enter verification code</label>
+    <input type="text" id="code" placeholder="Enter code sent to your email" required>
     <button onclick="verifyCode()">Verify</button>
+    <div id="message"></div>
   </div>
 
   <script>
     function verifyCode() {
       const enteredCode = document.getElementById("code").value.trim();
       const savedCode = localStorage.getItem("verificationCode");
-      const userData = JSON.parse(localStorage.getItem("tempUserData"));
+      const savedUser = localStorage.getItem("tempUserData");
 
-      if (!enteredCode || !savedCode || !userData) {
-        alert("❌ Verification failed. Missing data.");
-        return;
-      }
+      const message = document.getElementById("message");
 
-      if (enteredCode !== savedCode) {
-        alert("❌ Incorrect verification code!");
-        return;
-      }
+      if (enteredCode === savedCode) {
+        message.textContent = "✅ Verification successful!";
+        message.className = "success";
 
-      // ✅ Save verified user to Firebase
-      fetch("https://waliko-car-hire-default-rtdb.firebaseio.com/users.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(userData)
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to save user to Firebase.");
+        // Save user permanently to Firebase
+        const user = JSON.parse(savedUser);
+        if (user) {
+          const dbUrl = "https://waliko-car-hire-default-rtdb.firebaseio.com/users.json";
+
+          fetch(dbUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+          })
+          .then(() => {
+            // Clear temporary values
+            localStorage.removeItem("verificationCode");
+            localStorage.removeItem("tempUserData");
+
+            // Redirect after success
+            setTimeout(() => {
+              window.location.href = "signin.html";
+            }, 1000);
+          });
         }
-
-        // ✅ Clean up and redirect
-        localStorage.removeItem("verificationCode");
-        localStorage.removeItem("userEmail");
-        localStorage.removeItem("tempUserData");
-
-        alert("✅ Verification successful! You can now sign in.");
-        window.location.href = "signin.html";
-      })
-      .catch(error => {
-        alert("❌ Error saving to database: " + error.message);
-      });
+      } else {
+        message.textContent = "❌ Incorrect verification code.";
+        message.className = "error";
+      }
     }
   </script>
 </body>
