@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Waliko Car Hire - Register</title>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
@@ -14,7 +14,7 @@
 
     html, body {
       height: 100%;
-      overflow: hidden; /* Prevent scrolling */
+      overflow: hidden;
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
     }
@@ -96,8 +96,10 @@
       border: none;
       border-radius: 5px;
       margin-top: 15px;
+      margin-bottom: 10px;
       font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     input[type="submit"]:hover {
@@ -120,58 +122,6 @@
       text-decoration: underline;
     }
   </style>
-  <script>
-    emailjs.init("cRP4ovnb5IL3SxrkQ");
-
-    function validateForm(event) {
-      event.preventDefault();
-
-      const form = document.forms["registrationForm"];
-      const password = form["password"].value;
-      const confirmPassword = form["confirm_password"].value;
-      const termsAccepted = form["terms"].checked;
-      const phone = form["phone"].value;
-
-      if (!termsAccepted) {
-        alert("❌ You must agree to the terms and conditions to register.");
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        alert("❌ Passwords do not match!");
-        return;
-      }
-
-      if (!/^07\d{8}$/.test(phone)) {
-        alert("❌ Phone number must start with 07 and be 10 digits.");
-        return;
-      }
-
-      const username = form["username"].value;
-      const email = form["email"].value;
-      const gender = form["gender"].value;
-
-      const code = Math.floor(100000 + Math.random() * 900000);
-
-      localStorage.setItem("verificationCode", code);
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userData", JSON.stringify({ username, email, password, phone, gender }));
-
-      const templateParams = {
-        to_email: email,
-        verification_code: code
-      };
-
-      emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
-        .then(() => {
-          alert("✅ Verification code sent to your email!");
-          window.location.href = "verify.html";
-        })
-        .catch((error) => {
-          alert("❌ Failed to send email: " + error.text);
-        });
-    }
-  </script>
 </head>
 <body>
   <div class="container">
@@ -215,5 +165,79 @@
       </form>
     </div>
   </div>
+
+  <script>
+    emailjs.init("cRP4ovnb5IL3SxrkQ");
+
+    function validateForm(event) {
+      event.preventDefault();
+
+      const form = document.forms["registrationForm"];
+      const submitBtn = form.querySelector('input[type="submit"]');
+      const password = form["password"].value;
+      const confirmPassword = form["confirm_password"].value;
+      const termsAccepted = form["terms"].checked;
+      const phone = form["phone"].value;
+
+      if (!termsAccepted) {
+        alert("❌ You must agree to the terms and conditions to register.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("❌ Passwords do not match!");
+        return;
+      }
+
+      if (!/^07\d{8}$/.test(phone)) {
+        alert("❌ Phone number must start with 07 and be 10 digits.");
+        return;
+      }
+
+      const username = form["username"].value;
+      const email = form["email"].value;
+      const gender = form["gender"].value;
+
+      // Get existing users from localStorage
+      let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+      // Check if email already registered
+      const userExists = allUsers.some(user => user.email === email);
+      if (userExists) {
+        alert("❌ Email is already registered. Please use a different email.");
+        return;
+      }
+
+      // Generate code and save email
+      const code = Math.floor(100000 + Math.random() * 900000);
+      localStorage.setItem("verificationCode", code);
+      localStorage.setItem("userEmail", email);
+
+      // Add new user
+      const newUser = { username, email, password, phone, gender };
+      allUsers.push(newUser);
+      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
+      const templateParams = {
+        to_email: email,
+        verification_code: code
+      };
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.value = "Sending...";
+
+      emailjs.send("service_mne9prb", "template_5bztsmi", templateParams)
+        .then(() => {
+          alert("✅ Verification code sent to your email!");
+          window.location.href = "verify.html";
+        })
+        .catch((error) => {
+          alert("❌ Failed to send email: " + error.text);
+          submitBtn.disabled = false;
+          submitBtn.value = "Register";
+        });
+    }
+  </script>
 </body>
 </html>
