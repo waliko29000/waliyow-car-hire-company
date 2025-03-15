@@ -116,6 +116,7 @@
       animation: shake 0.5s ease-in-out;
     }
   </style>
+
   <script>
     function handleLogin(event) {
       event.preventDefault();
@@ -130,6 +131,9 @@
       const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
       if (matchingUser) {
+        // ✅ Save logged-in user's email to be used in userinfo.html
+        localStorage.setItem("currentUserEmail", matchingUser.email);
+
         padlock.textContent = "🔓";
         setTimeout(() => {
           window.location.href = "car-available.html";
@@ -162,7 +166,7 @@
         </div>
 
         <div class="register-link">
-          <p>Don't have an account? <a href="register.html">Register</a></p>
+          <p>Don't have an account? <a href="signup.html">Register</a></p>
         </div>
       </form>
       <div id="padlock">🔒</div>
