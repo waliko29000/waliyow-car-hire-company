@@ -76,7 +76,6 @@
       <tr><td class="label">Gender:</td><td class="value" id="displayGender"></td></tr>
     </table>
 
-    <!-- This is the link that should go to car-available.html -->
     <a href="car-available.html" class="back-link">← Back</a>
   </div>
 
@@ -85,17 +84,19 @@
     const currentUser = localStorage.getItem("currentUser");
     const userData = JSON.parse(localStorage.getItem("userData"));
 
-    if (!isLoggedIn || isLoggedIn !== "true") {
+    // Check login state
+    if (isLoggedIn !== "true" || !currentUser || !userData) {
       alert("❌ You must be signed in to view user details.");
       window.location.href = "signin.html";
-    } else if (!userData || !currentUser || userData.email !== currentUser) {
-      alert("❌ Access denied. This account doesn't match the signed-in user.");
+    } else if (userData.email !== currentUser) {
+      alert("❌ This session does not match any saved user.");
       window.location.href = "signin.html";
     } else {
-      document.getElementById("displayUsername").textContent = userData.username || "";
-      document.getElementById("displayEmail").textContent = userData.email || "";
-      document.getElementById("displayPhone").textContent = userData.phone || "";
-      document.getElementById("displayGender").textContent = userData.gender || "";
+      // Populate table
+      document.getElementById("displayUsername").textContent = userData.username || "N/A";
+      document.getElementById("displayEmail").textContent = userData.email || "N/A";
+      document.getElementById("displayPhone").textContent = userData.phone || "N/A";
+      document.getElementById("displayGender").textContent = userData.gender || "N/A";
     }
   </script>
 </body>
