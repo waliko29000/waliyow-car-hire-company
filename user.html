@@ -5,22 +5,46 @@
   <title>User Info - Waliko Car Hire</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
-      margin: 0;
-      padding: 20px;
-      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100vh;
+      padding-top: 30px;
     }
 
     .container {
-      position: relative;
-      max-width: 400px;
-      margin: auto;
-      background: #fff;
+      background-color: #fff;
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 10px;
       box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+      width: 90%;
+      max-width: 370px;
+      position: relative;
+    }
+
+    h2 {
+      color: #0277bd;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .info {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .info b {
+      color: #0277bd;
     }
 
     .close-btn {
@@ -28,61 +52,46 @@
       top: 10px;
       right: 15px;
       font-size: 20px;
-      font-weight: bold;
-      color: #0277bd;
-      background: none;
-      border: none;
+      color: #999;
       cursor: pointer;
+      text-decoration: none;
     }
 
     .close-btn:hover {
-      color: red;
-    }
-
-    h2 {
       color: #0277bd;
-      text-align: center;
-      margin-bottom: 20px;
     }
 
-    .info {
-      margin: 10px 0;
-    }
-
-    .label {
-      font-weight: bold;
-    }
-
-    .value {
-      margin-left: 10px;
-      color: #555;
+    @media screen and (max-width: 400px) {
+      .container {
+        padding: 15px;
+      }
+      h2 {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <button class="close-btn" onclick="window.location.href='car-available.html'">✖</button>
-    <h2>User Details</h2>
-    <div class="info"><span class="label">Username:</span><span class="value" id="username"></span></div>
-    <div class="info"><span class="label">Email:</span><span class="value" id="email"></span></div>
-    <div class="info"><span class="label">Phone:</span><span class="value" id="phone"></span></div>
-    <div class="info"><span class="label">Gender:</span><span class="value" id="gender"></span></div>
+    <a href="car-available.html" class="close-btn">&times;</a>
+    <h2>User Information</h2>
+    <div class="info"><b>Username:</b> <span id="username"></span></div>
+    <div class="info"><b>Email:</b> <span id="email"></span></div>
+    <div class="info"><b>Phone:</b> <span id="phone"></span></div>
+    <div class="info"><b>Gender:</b> <span id="gender"></span></div>
   </div>
 
   <script>
-    const currentUserEmail = localStorage.getItem("currentUserEmail");
-    const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    const currentUser = allUsers.find(user => user.email === currentUserEmail);
-
-    if (currentUser) {
-      document.getElementById("username").textContent = currentUser.username || "";
-      document.getElementById("email").textContent = currentUser.email || "";
-      document.getElementById("phone").textContent = currentUser.phone || "";
-      document.getElementById("gender").textContent = currentUser.gender || "";
-    } else {
-      alert("No user logged in. Please sign in.");
+    if (!currentUser) {
+      alert("No user logged in.");
       window.location.href = "signin.html";
+    } else {
+      document.getElementById("username").textContent = currentUser.username || "N/A";
+      document.getElementById("email").textContent = currentUser.email || "N/A";
+      document.getElementById("phone").textContent = currentUser.phone || "N/A";
+      document.getElementById("gender").textContent = currentUser.gender || "N/A";
     }
   </script>
 </body>
