@@ -2,83 +2,730 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Waliko Car Hire - Register</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waliko Car Hire Company</title>
   <style>
+    /* Reset & Base Styles */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background-color: #e0f7fa;
-    }
-
-    .container {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 20px;
-    }
-
-    .wrapper {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      width: 90%;
-      max-width: 380px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #003366;
-      margin-bottom: 5px;
-      font-size: 22px;
-    }
-
-    p {
-      text-align: center;
+    body {
+      background-color: #eef2f3;
       color: #333;
-      font-size: 14px;
-      margin-bottom: 15px;
+      line-height: 1.6;
     }
+    .header {
+  display: flex;
+  align-items: center;
+  background: #242629;
+  color: #fff;
+  padding: 15px 20px;
+  flex-wrap: wrap;
 
-    label {
-      display: block;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #333;
+  position: fixed;       /* 👈 makes it fixed */
+  top: 0;                /* 👈 stick to top */
+  left: 0;
+  width: 100%;           /* 👈 full width */
+  z-index: 1000;         /* 👈 stay on top */
+}
+
+    .left-section {
+      font-size: 24px;
+      font-weight: bold;
     }
-
-    input[type="text"],
-    input[type="password"],
-    input[type="email"],
-    input[type="tel"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #003366;
-      border-radius: 5px;
-      margin-top: 5px;
-    }
-
-    .gender-options {
+    .nav-links {
       display: flex;
       gap: 15px;
-      margin-top: 5px;
+      align-items: center;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      padding: 10px 14px;
+      background: #3498db;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .nav-links a:hover {
+      background: #2980b9;
+    }
+    /* Content Area */
+    #content {
+  padding: 150px 20px 20px 20px; /* ⬅️ push everything down */
+  max-width: 1200px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+
+
+
+
+
+    /* Home Notice (Red) */
+    .notice {
+      background: #ffdddd;
+      border-left: 5px solid #ff0000;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 5px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    .notice h2 {
+      margin-bottom: 15px;
+      color: #a80000;
+    }
+    .notice p {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .instructions {
+      margin-top: 15px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+/* Car Cards Container */
+        .car-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+    }
+    .car-card {
+      background: #fff;
+      flex: 1 1 calc(33.33% - 0px);
+      min-width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      margin: 0;
+    }
+    .car-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .car-details {
+      padding: 15px;
+    }
+    .car-details h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+    .car-details p {
+      margin-bottom: 8px;
+      color: #555;
+      font-size: 15px;
+    }
+    .book-btn {
+      text-decoration: none;
+      color: #fff;
+      font-size: 16px;
+      padding: 8px 12px;
+      background: #e67e22;
+      border-radius: 5px;
+      transition: background 0.3s ease;
+      cursor: pointer;
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+    }
+    .book-btn:hover {
+      background: #d35400;
+    }
+    /* Booking Details */
+    .booking-details {
+      background: #fff;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .booking-info {
+      flex: 1;
+      min-width: 250px;
+    }
+    .booking-info p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+    .pending {
+      color: #c0392b;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .booking-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+    .pay-btn, .delete-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
       font-size: 14px;
+      width: 100px;
+    }
+    .pay-btn {
+      background: #2980b9;
+      color: #fff;
+    }
+    .pay-btn:hover {
+      background: #1c5980;
+    }
+    .delete-btn {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+    /* Payment Statements Note & Receipt Button */
+    .payment-note {
+      background: #ffdddd;
+      border: 1px solid #ff0000;
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #a80000;
+      margin-bottom: 20px;
+    }
+    .receipt-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    .receipt-btn:hover {
+      background: #c0392b;
+    }
+    /* Receipt Modal */
+    .receipt-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .receipt-content {
+      background: #fff;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 5px;
+      position: relative;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+    .receipt-content h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    .receipt-content p {
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    .close-receipt {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+    }
+    /* Modal Styles (Booking, Mpesa, Payment Failed) */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      overflow: auto;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 5px;
+      position: relative;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .modal-content h2 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    .modal-content label {
+      display: block;
+      margin: 12px 0 5px;
+      font-size: 15px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 15px;
+    }
+    .modal-content button {
+      padding: 10px 15px;
+      background: #27ae60;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.3s ease;
+    }
+    .modal-content button:hover {
+      background: #1e8449;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #333;
+    }
+    /* Animation Overlay with Spinner */
+    .animation-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.9);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .spinner {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #2980b9;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Payment Failed Popup (Red Message with Try Again) */
+    .payment-failed {
+      background: #ffdddd;
+      border: 2px solid #ff0000;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .payment-failed p {
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: #a80000;
+    }
+    .try-again-link {
+      color: #ff0000;
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    @media (max-width: 768px) {
+  /* Make headers smaller */
+  h1 {
+    font-size: 20px;
+  }
+  h2 {
+    font-size: 18px;
+  }
+  h3 {
+    font-size: 16px;
+  }
+
+  /* Make buttons smaller */
+  button,
+  .nav-links a,
+  .book-btn,
+  .pay-btn,
+  .delete-btn,
+  .receipt-btn,
+  .modal-content button {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="left-section">Waliko Car Hire</div>
+    <nav class="nav-links">
+      <a href="user.html"><button>user info</button></a>
+      <a id="homeLink">Home</a>
+      <a id="paymentsLink"> Statements</a>
+      <a id="bookingDetailsLink">Booking Info</a>
+      <a id="carsLink">Cars</a>
+      <a id="logoutLink">Logout</a>
+    </nav>
+  </header>
+
+  <!-- Content Area -->
+  <div id="content">
+    <p>Click "Home" to view system instructions.</p>
+  </div>
+
+  <!-- Booking Modal -->
+  <div id="bookingModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeBookingModal">&times;</span>
+      <h2>Book Car</h2>
+      <form id="bookingForm">
+        <label for="bookingId">Booking ID</label>
+        <input type="text" id="bookingId" placeholder="Enter Booking ID" required />
+        <label for="license">Driver Licence No.</label>
+        <input type="text" id="license" placeholder="Enter Licence Number" required />
+        <label for="pickup">Pick Up Date</label>
+        <input type="date" id="pickup" required />
+        <label for="endDate">End Date</label>
+        <input type="date" id="endDate" required />
+        <button type="submit">Submit Booking</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mpesa Modal -->
+  <div id="mpesaModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeMpesaModal">&times;</span>
+      <h2>Enter Mpesa Number</h2>
+      <label for="mpesaNo">Mpesa Number:</label>
+      <input type="text" id="mpesaNo" placeholder="10 digits" />
+      <button id="submitMpesa">Submit Payment</button>
+    </div>
+  </div>
+
+  <!-- Animation Overlay with Spinner -->
+  <div id="animationOverlay" class="animation-overlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Payment Failed Popup Modal -->
+  <div id="paymentFailedModal" class="modal">
+    <div class="modal-content payment-failed">
+      <span class="close-modal" id="closePaymentFailed">&times;</span>
+      <p> Unexpected Error Acquired</p>
+      <p class="try-again-link" id="tryAgainLink">Try Again</p>
+    </div>
+  </div>
+
+  <!-- Receipt Modal -->
+  <div id="receiptModal" class="receipt-modal">
+    <div class="receipt-content">
+      <span class="close-receipt" id="closeReceipt">&times;</span>
+      <h2>Receipt Details</h2>
+      <p>Dear customer, to receive your receipt, you must book a car and pay for it,Thank you!.</p>
+    
+    </div>
+  </div>
+
+  <script>
+    // Car data array (prices in Ksh)
+    const cars = [
+      { name: "Toyota Prado TX", price: 14000, description: "Luxury SUV with 4WD.", image: "car1.jpg", available: true, duration: "24 hours" },
+      { name: "Subaru Forester", price: 12000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Harrier", price: 9000, description: "Comfortable sedan.", image: "car3.jpg", available: false, duration: "24 hours" },
+      { name: "Toyota Wish", price: 4000, description: "Spacious and powerful.", image: "car4.jpg", available: false, duration: "24 hours" },
+      { name: "Mercedes Benz C200", price: 45000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
+      { name: "Range Rover Sport", price: 45000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
+      { name: "Mazda CX-5", price: 13000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
+      { name: "Honda CR-V", price: 12500, description: "Compact SUV with great mileage.", image: "car8.jpg", available: true, duration: "24 hours" },
+      { name: "Hyundai Tucson", price: 15000, description: "Comfortable crossover with modern features.", image: "car9.jpg", available: true, duration: "24 hours" },
+      { name: "Subaru Impreza", price: 10000, description: "Sporty and efficient AWD sedan.", image: "car10.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Vitz", price: 6000, description: "Compact and fuel-efficient city car.", image: "car11.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Wish", price: 4000, description: "Spacious MPV with great reliability.", image: "car12.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Prado TXL", price: 16000, description: "Advanced SUV with a powerful engine.", image: "car13.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Prado TXG", price: 17000, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Land Cruiser V8", price: 50000, description: "Powerful full-size SUV with superior off-road capabilities.", image: "car15.jpg", available: true, duration: "24 hours" }
+    ];
+
+    // DOM References
+    const contentDiv = document.getElementById('content');
+    const homeLink = document.getElementById('homeLink');
+    const carsLink = document.getElementById('carsLink');
+    const bookingDetailsLink = document.getElementById('bookingDetailsLink');
+    const logoutLink = document.getElementById('logoutLink');
+    const paymentsLink = document.getElementById('paymentsLink');
+
+    const bookingModal = document.getElementById('bookingModal');
+    const closeBookingModalBtn = document.getElementById('closeBookingModal');
+    const bookingForm = document.getElementById('bookingForm');
+    const animationOverlay = document.getElementById('animationOverlay');
+
+    const mpesaModal = document.getElementById('mpesaModal');
+    const closeMpesaModalBtn = document.getElementById('closeMpesaModal');
+    const submitMpesaBtn = document.getElementById('submitMpesa');
+    const mpesaNoInput = document.getElementById('mpesaNo');
+
+    const paymentFailedModal = document.getElementById('paymentFailedModal');
+    const closePaymentFailedBtn = document.getElementById('closePaymentFailed');
+    const tryAgainLink = document.getElementById('tryAgainLink');
+
+    const receiptModal = document.getElementById('receiptModal');
+    const closeReceiptBtn = document.getElementById('closeReceipt');
+
+    let currentCar = null; // For booking
+    let currentBookingIndex = null; // For Mpesa payment
+
+    // --- Home View ---
+    function renderHome() {
+      contentDiv.innerHTML = `
+        <div class="notice">
+          <h2>Welcome to Waliko Car Hire</h2>
+          <p>* This system allows you to view and book available cars.</p>
+          <p>* Click "Cars" to see our fleet and "Book Now" on available vehicles.</p>
+          <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button.</p>
+          <p>* Once you pay for your booking, your payment will reflect in the Payment Statements.</p>
+          <p>* To get a receipt, click the "Get Receipt" button in Payment Statements. Get your receipt,and dowload it.</p>
+          <p>* Thank you for choosing Waliko Car Hire!</p>
+        </div>
+      `;
     }
 
-    input[type="radio"] {
-      margin-right: 5px;
+    // --- Cars View ---
+    function renderCars() {
+      contentDiv.innerHTML = '<div class="car-container"></div>';
+      const container = document.querySelector('.car-container');
+      cars.forEach((car, index) => {
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.innerHTML = `
+          <img src="${car.image}" alt="${car.name}">
+          <div class="car-details">
+            <h3>${car.name}</h3>
+            <p><strong>Price:</strong> Ksh ${car.price}</p>
+            <p>${car.description}</p>
+            <p><strong>Duration:</strong> ${car.duration}</p>
+            <p><strong>Available:</strong> ${car.available ? 'Yes' : 'No'}</p>
+          </div>
+        `;
+        if(car.available) {
+          const bookBtn = document.createElement('a');
+          bookBtn.className = 'book-btn';
+          bookBtn.textContent = "Book Now";
+          bookBtn.addEventListener('click', () => {
+            currentCar = { ...car, index };
+            openBookingModal();
+          });
+          card.appendChild(bookBtn);
+        }
+        container.appendChild(card);
+      });
     }
 
-    input[type="checkbox"] {
-      margin-right: 5px;
+    // --- Booking Modal Functions ---
+    function openBookingModal() {
+      bookingModal.style.display = 'flex';
     }
+    function closeBookingModal() {
+      bookingModal.style.display = 'none';
+      bookingForm.reset();
+    }
+    bookingForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const bookingId = document.getElementById('bookingId').value.trim();
+      const license = document.getElementById('license').value.trim();
+      const pickup = document.getElementById('pickup').value;
+      const endDate = document.getElementById('endDate').value;
+      
+      // Validate required fields
+      if (!bookingId || !license || !pickup || !endDate) {
+        alert("Error: Please fill in all booking fields including Pick Up Date and End Date.");
+        return;
+      }
+      // Validate that End Date is later than Pick Up Date
+      if (new Date(endDate) <= new Date(pickup)) {
+        alert("Error: End Date must be later than Pick Up Date.");
+        return;
+      }
+      
+      // Save booking immediately
+      const bookingDetails = {
+        carName: currentCar.name,
+        bookingId,
+        license,
+        pickup,
+        endDate,
+        price: currentCar.price
+      };
+      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      bookings.push(bookingDetails);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      alert("Booking confirmed!");
+      closeBookingModal();
+    });
+
+    // --- Booking Details View ---
+    function renderBookingDetails() {
+      contentDiv.innerHTML = '<h2>Booking Details</h2>';
+      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      if (bookings.length === 0) {
+        contentDiv.innerHTML += "<p>No bookings made yet.</p>";
+        return;
+      }
+      bookings.forEach((booking, idx) => {
+        // Create a flex container to separate details (left) from actions (right)
+        const container = document.createElement('div');
+        container.className = 'booking-details';
+        container.innerHTML = `
+          <div class="booking-info">
+            <p><strong>Car:</strong> ${booking.carName}</p>
+            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+            <p><strong>Licence:</strong> ${booking.license}</p>
+            <p><strong>Pick Up:</strong> ${booking.pickup}</p>
+            <p><strong>End Date:</strong> ${booking.endDate}</p>
+            <p class="pending">Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking,The remaining balance will be paid when picking up the car.</p>
+          </div>
+          <div class="booking-actions">
+            <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+
+            <button class="delete-btn" data-index="${idx}">Delete</button>
+          </div>
+        `;
+        contentDiv.appendChild(container);
+      });
+      // Attach event listeners for Pay and Delete buttons
+      document.querySelectorAll('.pay-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          currentBookingIndex = e.target.getAttribute('data-index');
+          openMpesaModal();
+        });
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          deleteBooking(index);
+        });
+      });
+    }
+
+    // Delete booking function
+    function deleteBooking(index) {
+      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      bookings.splice(index, 1);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      renderBookingDetails();
+    }
+
+    // --- Payment Statements View ---
+    function renderPaymentStatements() {
+      contentDiv.innerHTML = `
+        <div class="payment-note">
+          Dear customer, you don't have any payment or transaction currently.
+        </div>
+        <button class="receipt-btn" id="receiptBtn">Get Receipt</button>
+      `;
+      document.getElementById('receiptBtn').addEventListener('click', () => {
+        openReceiptModal();
+      });
+    }
+
+    // --- Receipt Modal Functions ---
+    function openReceiptModal() {
+      receiptModal.style.display = 'flex';
+    }
+    function closeReceiptModal() {
+      receiptModal.style.display = 'none';
+    }
+    closeReceiptBtn.addEventListener('click', closeReceiptModal);
+
+   
+    submitMpesaBtn.addEventListener('click', () => {
+      const mpesaNo = mpesaNoInput.value.trim();
+      // Validate that the Mpesa number has exactly 10 digits
+      if (!mpesaNo || !/^\d{10}$/.test(mpesaNo)) {
+        alert("Error: Please enter a valid 10-digit Mpesa number.");
+        return;
+      }
+      closeMpesaModal();
+      // Show circular spinner for 5 seconds then display payment failed popup
+      animationOverlay.style.display = 'flex';
+      setTimeout(() => {
+        animationOverlay.style.display = 'none';
+        paymentFailedModal.style.display = 'flex';
+      }, 5000);
+    });
+
+    // Payment Failed Popup - Try Again Flow
+    tryAgainLink.addEventListener('click', () => {
+      paymentFailedModal.style.display = 'none';
+      animationOverlay.style.display = 'flex';
+      setTimeout(() => {
+        animationOverlay.style.display = 'none';
+        paymentFailedModal.style.display = 'flex';
+      }, 5000);
+    });
+    closePaymentFailedBtn.addEventListener('click', () => {
+      paymentFailedModal.style.display = 'none';
+    });
+
+    // --- Logout ---
+    logoutLink.addEventListener('click', () => {
+      window.location.href = "index.html";
+    });
+
+    // --- Navigation Events ---
+    homeLink.addEventListener('click', renderHome);
+    carsLink.addEventListener('click', renderCars);
+    bookingDetailsLink.addEventListener('click', renderBookingDetails);
+    paymentsLink.addEventListener('click', renderPaymentStatements);
+
+    // --- Modal Close Events ---
+    closeBookingModalBtn.addEventListener('click', closeBookingModal);
+    closeMpesaModalBtn.addEventListener('click', closeMpesaModal);
+    window.addEventListener('click', function(e) {
+      if (e.target === bookingModal) closeBookingModal();
+      if (e.target === mpesaModal) closeMpesaModal();
+      if (e.target === paymentFailedModal) paymentFailedModal.style.display = 'none';
+      if (e.target === receiptModal) closeReceiptModal();
+    });
+
+    // --- Initialize with Home View ---
+    renderHome();
+  </script>
+</body>
+</html>
