@@ -1,127 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Verify Email - Waliko Car Hire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #e0f7fa;
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       height: 100vh;
       margin: 0;
-      padding-top: 50px;
     }
 
-    .container {
-      background-color: white;
-      padding: 20px;
+    .verify-box {
+      background-color: #fff;
+      padding: 20px 30px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
       width: 90%;
-      max-width: 370px;
+      max-width: 400px;
     }
 
     h2 {
+      color: #003366;
       text-align: center;
-      color: #0277bd;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
-    label {
+    p {
+      text-align: center;
       font-size: 14px;
-      margin-bottom: 5px;
-      display: block;
       color: #333;
+      margin-bottom: 20px;
     }
 
     input[type="text"] {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #0277bd;
+      padding: 12px;
+      border: 1px solid #003366;
       border-radius: 5px;
+      margin-bottom: 15px;
     }
 
     button {
       width: 100%;
       padding: 12px;
-      background-color: #0277bd;
+      background-color: #003366;
       color: white;
-      font-weight: bold;
       border: none;
       border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #01579b;
-    }
-
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .success {
-      color: green;
-      text-align: center;
-      margin-top: 10px;
+      background-color: #002244;
     }
   </style>
 </head>
 <body>
-
-  <div class="container">
+  <div class="verify-box">
     <h2>Email Verification</h2>
-    <label for="code">Enter verification code</label>
-    <input type="text" id="code" placeholder="Enter code sent to your email" required>
+    <p>Enter the 6-digit code sent to your email</p>
+    <input type="text" id="code" placeholder="Enter verification code" required />
     <button onclick="verifyCode()">Verify</button>
-    <div id="message"></div>
   </div>
 
   <script>
     function verifyCode() {
       const enteredCode = document.getElementById("code").value.trim();
       const savedCode = localStorage.getItem("verificationCode");
-      const savedUser = localStorage.getItem("tempUserData");
 
-      const message = document.getElementById("message");
+      if (!enteredCode || !savedCode) {
+        alert("❌ Verification failed. Please try again.");
+        return;
+      }
 
       if (enteredCode === savedCode) {
-        message.textContent = "✅ Verification successful!";
-        message.className = "success";
-
-        // Save user permanently to Firebase
-        const user = JSON.parse(savedUser);
-        if (user) {
-          const dbUrl = "https://waliko-car-hire-default-rtdb.firebaseio.com/users.json";
-
-          fetch(dbUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user)
-          })
-          .then(() => {
-            // Clear temporary values
-            localStorage.removeItem("verificationCode");
-            localStorage.removeItem("tempUserData");
-
-            // Redirect after success
-            setTimeout(() => {
-              window.location.href = "signin.html";
-            }, 1000);
-          });
-        }
+        alert("✅ Verification successful! You can now sign in.");
+        localStorage.removeItem("verificationCode");
+        localStorage.removeItem("userEmail");
+        setTimeout(() => {
+          window.location.href = "signin.html";
+        }, 1000);
       } else {
-        message.textContent = "❌ Incorrect verification code.";
-        message.className = "error";
+        alert("❌ Incorrect verification code!");
       }
     }
   </script>
