@@ -1,94 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>User Details - Waliko</title>
+  <meta charset="UTF-8">
+  <title>User Info - Waliko Car Hire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background-color: #e0f7fa;
       margin: 0;
+      padding: 20px;
+      color: #333;
     }
 
-    .wrapper {
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 5px;
-      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      width: 400px;
+    .container {
+      position: relative;
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
     }
 
-    h1 {
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #0277bd;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: red;
+    }
+
+    h2 {
+      color: #0277bd;
       text-align: center;
-      color: #003366;
-      margin-bottom: 15px;
-      font-size: 24px;
-    }
-
-    table {
-      width: 100%;
-      border-spacing: 0px;
       margin-bottom: 20px;
     }
 
-    td {
-      padding: 10px 0;
-      vertical-align: top;
-      font-size: 14px;
-      color: #333333;
+    .info {
+      margin: 10px 0;
     }
 
     .label {
       font-weight: bold;
-      width: 40%;
     }
 
     .value {
-      width: 60%;
-    }
-
-    .back-link {
-      color: #003366;
-      text-decoration: none;
-      font-weight: bold;
-      display: block;
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .back-link:hover {
-      text-decoration: underline;
+      margin-left: 10px;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h1>User Details</h1>
-    <table>
-      <tr><td class="label">Username:</td><td class="value" id="displayUsername"></td></tr>
-      <tr><td class="label">Email:</td><td class="value" id="displayEmail"></td></tr>
-      <tr><td class="label">Phone:</td><td class="value" id="displayPhone"></td></tr>
-      <tr><td class="label">Gender:</td><td class="value" id="displayGender"></td></tr>
-    </table>
-
-    <a href="car-available.html" class="back-link">← Back</a>
+  <div class="container">
+    <button class="close-btn" onclick="window.location.href='car-available.html'">✖</button>
+    <h2>User Details</h2>
+    <div class="info"><span class="label">Username:</span><span class="value" id="username"></span></div>
+    <div class="info"><span class="label">Email:</span><span class="value" id="email"></span></div>
+    <div class="info"><span class="label">Phone:</span><span class="value" id="phone"></span></div>
+    <div class="info"><span class="label">Gender:</span><span class="value" id="gender"></span></div>
   </div>
 
   <script>
-    const userData = JSON.parse(localStorage.getItem("userData"));
+    const currentUserEmail = localStorage.getItem("currentUserEmail");
+    const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
 
-    if (userData) {
-      document.getElementById("displayUsername").textContent = userData.username || "";
-      document.getElementById("displayEmail").textContent = userData.email || "";
-      document.getElementById("displayPhone").textContent = userData.phone || "";
-      document.getElementById("displayGender").textContent = userData.gender || "";
+    const currentUser = allUsers.find(user => user.email === currentUserEmail);
+
+    if (currentUser) {
+      document.getElementById("username").textContent = currentUser.username || "";
+      document.getElementById("email").textContent = currentUser.email || "";
+      document.getElementById("phone").textContent = currentUser.phone || "";
+      document.getElementById("gender").textContent = currentUser.gender || "";
     } else {
-      alert("No user details found. Please register or login first.");
+      alert("No user logged in. Please sign in.");
+      window.location.href = "signin.html";
     }
   </script>
 </body>
