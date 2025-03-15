@@ -13,34 +13,36 @@
       align-items: center;
       height: 100vh;
       margin: 0;
+      padding: 20px;
     }
 
     .wrapper {
       background-color: #ffffff;
-      padding: 30px;
+      padding: 25px;
       border-radius: 5px;
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      width: 400px;
+      max-width: 400px;
+      width: 100%;
     }
 
     h1 {
       text-align: center;
       color: #003366;
-      margin-bottom: 15px;
-      font-size: 24px;
+      margin-bottom: 20px;
+      font-size: 22px;
     }
 
     table {
       width: 100%;
-      border-spacing: 0px;
-      margin-bottom: 20px;
+      border-spacing: 0;
+      margin-bottom: 15px;
     }
 
     td {
-      padding: 10px 0;
+      padding: 8px 0;
       vertical-align: top;
       font-size: 14px;
-      color: #333333;
+      color: #333;
     }
 
     .label {
@@ -52,17 +54,30 @@
       width: 60%;
     }
 
-    a {
+    .back-link {
       color: #003366;
       text-decoration: none;
       font-weight: bold;
       display: block;
       text-align: center;
       margin-top: 20px;
+      font-size: 14px;
     }
 
-    a:hover {
+    .back-link:hover {
       text-decoration: underline;
+    }
+
+    @media (max-width: 400px) {
+      h1 {
+        font-size: 20px;
+      }
+      td {
+        font-size: 13px;
+      }
+      .back-link {
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -75,19 +90,25 @@
       <tr><td class="label">Phone:</td><td class="value" id="displayPhone"></td></tr>
       <tr><td class="label">Gender:</td><td class="value" id="displayGender"></td></tr>
     </table>
-    <a href="car-available.html">Back</a>
+    <a href="car-available.html" class="back-link">← Back</a>
   </div>
 
   <script>
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const currentUser = localStorage.getItem("currentUser");
     const userData = JSON.parse(localStorage.getItem("userData"));
-    if (userData) {
+
+    if (!isLoggedIn || isLoggedIn !== "true") {
+      alert("❌ You must be signed in to view user details.");
+      window.location.href = "signin.html";
+    } else if (!userData || !currentUser || userData.email !== currentUser) {
+      alert("❌ Access denied. This account doesn't match the signed-in user.");
+      window.location.href = "signin.html";
+    } else {
       document.getElementById("displayUsername").textContent = userData.username || "";
       document.getElementById("displayEmail").textContent = userData.email || "";
       document.getElementById("displayPhone").textContent = userData.phone || "";
       document.getElementById("displayGender").textContent = userData.gender || "";
-    } else {
-      alert("❌ No user data found. Please register first.");
-      window.location.href = "signup.html";
     }
   </script>
 </body>
