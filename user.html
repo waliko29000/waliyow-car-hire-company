@@ -80,23 +80,15 @@
   </div>
 
   <script>
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-    const currentUser = localStorage.getItem("currentUser");
     const userData = JSON.parse(localStorage.getItem("userData"));
 
-    // Check login state
-    if (isLoggedIn !== "true" || !currentUser || !userData) {
-      alert("❌ You must be signed in to view user details.");
-      window.location.href = "signin.html";
-    } else if (userData.email !== currentUser) {
-      alert("❌ This session does not match any saved user.");
-      window.location.href = "signin.html";
+    if (userData) {
+      document.getElementById("displayUsername").textContent = userData.username || "";
+      document.getElementById("displayEmail").textContent = userData.email || "";
+      document.getElementById("displayPhone").textContent = userData.phone || "";
+      document.getElementById("displayGender").textContent = userData.gender || "";
     } else {
-      // Populate table
-      document.getElementById("displayUsername").textContent = userData.username || "N/A";
-      document.getElementById("displayEmail").textContent = userData.email || "N/A";
-      document.getElementById("displayPhone").textContent = userData.phone || "N/A";
-      document.getElementById("displayGender").textContent = userData.gender || "N/A";
+      alert("No user details found. Please register or login first.");
     }
   </script>
 </body>
