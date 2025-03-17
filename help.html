@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Help Center</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .help-container {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 420px;
+      width: 90%;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .close-btn:hover {
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .note {
+      background: #e6f2ff;
+      padding: 12px 15px;
+      border-left: 5px solid #007bff;
+      margin-bottom: 20px;
+      font-size: 15px;
+      color: #333;
+      border-radius: 5px;
+    }
+
+    .note strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #007bff;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      resize: none;
+      margin-bottom: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .thank-you {
+      display: none;
+      color: green;
+      margin-top: 15px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="help-container">
+  <!-- ✖ Close Button -->
+  <a href="car-available.html" class="close-btn" title="Close">✖</a>
+
+  <div class="note">
+    <strong>Need Help?</strong>
+    If you're experiencing any issues with our system, please describe your problem below and submit it. We usually respond within 24 hours.  
+    For urgent support, you can also call us directly at <b><a href="tel:0729177741">0729177741</a></b>.
+  </div>
+
+  <h2>Help Center</h2>
+  <textarea id="problem" placeholder="Describe your problem here..." required></textarea>
+  <button onclick="submitHelp()">Submit</button>
+  <div class="thank-you" id="thankYouMsg">Thank you! Your issue has been received. We'll look into it shortly.</div>
+</div>
+
+<script>
+  function submitHelp() {
+    const problemText = document.getElementById('problem').value.trim();
+    const messageBox = document.getElementById('thankYouMsg');
+
+    if (problemText === "") {
+      alert("Please describe your problem before submitting.");
+      return;
+    }
+
+    // Simulate submission
+    document.getElementById('problem').value = "";
+    messageBox.style.display = "block";
+
+    setTimeout(() => {
+      messageBox.style.display = "none";
+    }, 5000);
+  }
+</script>
+
+</body>
+</html>
