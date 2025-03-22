@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Waliko Car Hire Company</title>
   <style>
-    /* Reset & Base Styles */
-    * {
+        /* Reset & Base Styles */
+        * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
@@ -18,20 +18,18 @@
       line-height: 1.6;
     }
     .header {
-  display: flex;
-  align-items: center;
-  background: #242629;
-  color: #fff;
-  padding: 15px 20px;
-  flex-wrap: wrap;
-
-  position: fixed;       /* 👈 makes it fixed */
-  top: 0;                /* 👈 stick to top */
-  left: 0;
-  width: 100%;           /* 👈 full width */
-  z-index: 1000;         /* 👈 stay on top */
-}
-
+      display: flex;
+      align-items: center;
+      background: #242629;
+      color: #fff;
+      padding: 15px 20px;
+      flex-wrap: wrap;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+    }
     .left-section {
       font-size: 24px;
       font-weight: bold;
@@ -56,20 +54,12 @@
     .nav-links a:hover {
       background: #2980b9;
     }
-    /* Content Area */
     #content {
-  padding: 150px 20px 20px 20px; /* ⬅️ push everything down */
-  max-width: 1200px;
-  margin: 20px auto;
-  text-align: left;
-}
-
-
-
-
-
-
-    /* Home Notice (Red) */
+      padding: 150px 20px 20px 20px;
+      max-width: 1200px;
+      margin: 20px auto;
+      text-align: left;
+    }
     .notice {
       background: #ffdddd;
       border-left: 5px solid #ff0000;
@@ -91,8 +81,7 @@
       font-size: 15px;
       line-height: 1.5;
     }
-/* Car Cards Container */
-        .car-container {
+    .car-container {
       display: flex;
       flex-wrap: wrap;
       gap: 0;
@@ -141,7 +130,6 @@
     .book-btn:hover {
       background: #d35400;
     }
-    /* Booking Details */
     .booking-details {
       background: #fff;
       padding: 15px;
@@ -193,7 +181,6 @@
     .delete-btn:hover {
       background: #c0392b;
     }
-    /* Payment Statements Note & Receipt Button */
     .payment-note {
       background: #ffdddd;
       border: 1px solid #ff0000;
@@ -216,7 +203,6 @@
     .receipt-btn:hover {
       background: #c0392b;
     }
-    /* Receipt Modal */
     .receipt-modal {
       display: none;
       position: fixed;
@@ -257,7 +243,6 @@
       cursor: pointer;
       color: #333;
     }
-    /* Modal Styles (Booking, Mpesa, Payment Failed) */
     .modal {
       display: none;
       position: fixed;
@@ -319,7 +304,6 @@
       cursor: pointer;
       color: #333;
     }
-    /* Animation Overlay with Spinner */
     .animation-overlay {
       display: none;
       position: fixed;
@@ -344,7 +328,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    /* Payment Failed Popup (Red Message with Try Again) */
     .payment-failed {
       background: #ffdddd;
       border: 2px solid #ff0000;
@@ -363,30 +346,49 @@
       cursor: pointer;
       font-weight: bold;
     }
-    @media (max-width: 768px) {
-  /* Make headers smaller */
-  h1 {
-    font-size: 20px;
-  }
-  h2 {
-    font-size: 18px;
-  }
-  h3 {
-    font-size: 16px;
-  }
 
-  /* Make buttons smaller */
-  button,
-  .nav-links a,
-  .book-btn,
-  .pay-btn,
-  .delete-btn,
-  .receipt-btn,
-  .modal-content button {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-}
+    @media (max-width: 768px) {
+      h1 { font-size: 22px; }
+      h2 { font-size: 18px; }
+      h3 { font-size: 16px; }
+
+      button,
+      .nav-links a,
+      .book-btn,
+      .pay-btn,
+      .delete-btn,
+      .receipt-btn,
+      .modal-content button {
+        font-size: 13px;
+        padding: 6px 10px;
+      }
+
+      .nav-links {
+        gap: 10px;
+        padding-top: 10px;
+      }
+
+      .car-card {
+        flex: 1 1 100%;
+      }
+
+      .modal-content,
+      .receipt-content {
+        width: 100%;
+        max-width: 90%;
+      }
+
+      .booking-details {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .booking-actions {
+        width: 100%;
+        align-items: flex-start;
+        margin-top: 10px;
+      }
+    }
 
   </style>
 </head>
@@ -395,13 +397,13 @@
   <header class="header">
     <div class="left-section">Waliko Car Hire</div>
     <nav class="nav-links">
-   
+     
       <a id="homeLink">Home</a>
-       <a href="user.html">user info</a>
+      <a href="user.html">user info</a>
       <a id="paymentsLink"> Statements</a>
       <a id="bookingDetailsLink">Booking Info</a>
       <a id="carsLink">Cars</a>
-       <a href="help.html">Help</a>
+      <a href="help.html">Help</a>
       <a id="logoutLink">Logout</a>
     </nav>
   </header>
@@ -469,20 +471,24 @@
     // Car data array (prices in Ksh)
     const cars = [
       { name: "Toyota Prado TX", price: 12000, description: "Luxury SUV with 4WD.", image: "car1.jpg", available: true, duration: "24 hours" },
-      { name: "Subaru Forester", price: 6000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
+      { name: "Subaru Forester", price: 7000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Harrier", price: 8000, description: "Comfortable sedan.", image: "car3.jpg", available: false, duration: "24 hours" },
       
       { name: "Mercedes Benz C200", price: 25000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
       { name: "Range Rover Sport", price: 35000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
-      { name: "Mazda CX-5", price: 5000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
-      { name: "Honda CR-V", price: 7500, description: "Compact SUV with great mileage.", image: "car8.jpg", available: true, duration: "24 hours" },
-      { name: "Hyundai Tucson", price: 7000, description: "Comfortable crossover with modern features.", image: "car9.jpg", available: true, duration: "24 hours" },
-      { name: "Subaru Impreza", price: 7000, description: "Sporty and efficient AWD sedan.", image: "car10.jpg", available: true, duration: "24 hours" },
+      { name: "Mazda CX-5", price: 6000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
+      { name: "Honda CR-V", price: 6500, description: "Compact SUV with great mileage.", image: "car8.jpg", available: true, duration: "24 hours" },
+      { name: "Hyundai Tucson", price: 11000, description: "Comfortable crossover with modern features.", image: "car9.jpg", available: true, duration: "24 hours" },
+      { name: "Subaru Impreza", price: 6000, description: "Sporty and efficient AWD sedan.", image: "car10.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Vitz", price: 3500, description: "Compact and fuel-efficient city car.", image: "car11.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Wish", price: 4000, description: "Spacious MPV with great reliability.", image: "car12.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Prado TXL", price: 14000, description: "Advanced SUV with a powerful engine.", image: "car13.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Prado TXG", price: 14000, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Prado TXL", price: 13000, description: "Advanced SUV with a powerful engine.", image: "car13.jpg", available: true, duration: "24 hours" },
+      { name: "Toyota Axio", price: 5000, description: "Reliable and fuel-efficient compact sedan ideal for city and highway driving.", image: "car17.jpg", available: true, duration: "24 hours" },
+{ name: "Toyota Fielder", price: 4000, description: "Spacious and versatile station wagon perfect for families and cargo transport.", image: "car18.jpg", available: true, duration: "24 hours" },
+
+      { name: "Toyota Prado TXG", price: 13500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
       { name: "Toyota Land Cruiser V8", price: 15000, description: "Powerful full-size SUV with superior off-road capabilities.", image: "car15.jpg", available: true, duration: "24 hours" }
+      
     ];
 
     // DOM References
@@ -597,7 +603,7 @@
       let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
       bookings.push(bookingDetails);
       localStorage.setItem('bookings', JSON.stringify(bookings));
-      alert("Booking confirmed!");
+      alert("Booking confirmed! check it at Booking info");
       closeBookingModal();
     });
 
