@@ -29,11 +29,11 @@
       width: 90%;
       max-width: 370px;
       position: relative;
+      text-align: center;
     }
 
     h2 {
       color: #0277bd;
-      text-align: center;
       margin-bottom: 15px;
     }
 
@@ -41,6 +41,7 @@
       font-size: 15px;
       color: #333;
       margin-bottom: 10px;
+      text-align: left;
     }
 
     .info b {
@@ -61,13 +62,50 @@
       color: #0277bd;
     }
 
-    @media screen and (max-width: 400px) {
-      .container {
-        padding: 15px;
-      }
-      h2 {
-        font-size: 20px;
-      }
+    .update-btn {
+      display: block;
+      width: 100%;
+      background-color: #0277bd;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .update-btn:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .update-form {
+      display: none;
+      margin-top: 15px;
+      text-align: left;
+    }
+
+    .update-form input, .update-form select, .update-form textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .save-btn {
+      background-color: #0288d1;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .save-btn:hover {
+      background-color: #0277bd;
     }
   </style>
 </head>
@@ -79,19 +117,95 @@
     <div class="info"><b>Email:</b> <span id="email"></span></div>
     <div class="info"><b>Phone:</b> <span id="phone"></span></div>
     <div class="info"><b>Gender:</b> <span id="gender"></span></div>
+    <div class="info"><b>Status:</b> <span id="status">Active</span></div>
+    <button class="update-btn" id="requestUpdateBtn" onclick="showUpdateForm()">Request Update</button>
+    
+    <div class="update-form" id="updateForm">
+      <h3>Request Info Update</h3>
+      <input type="text" id="newUsername" placeholder="Enter new username">
+      <input type="email" id="newEmail" placeholder="Enter new email">
+      <input type="text" id="newPhone" placeholder="Enter new phone">
+      <select id="newGender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <textarea id="reason" placeholder="Reason for change (required)"></textarea>
+      <button class="save-btn" onclick="requestUpdate()">Submit Request</button>
+    </div>
   </div>
 
   <script>
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
     if (!currentUser) {
       alert("No user logged in.");
       window.location.href = "signin.html";
     } else {
+      displayUserInfo();
+    }
+
+    function displayUserInfo() {
       document.getElementById("username").textContent = currentUser.username || "N/A";
       document.getElementById("email").textContent = currentUser.email || "N/A";
       document.getElementById("phone").textContent = currentUser.phone || "N/A";
       document.getElementById("gender").textContent = currentUser.gender || "N/A";
+      
+      let updateRequest = JSON.parse(localStorage.getItem(`updateRequest_${currentUser.email}`));
+
+      if (updateRequest) {
+        document.getElementById("status").textContent = "Pending Approval";
+        document.getElementById("requestUpdateBtn").disabled = true;
+      }
+    }
+
+    function showUpdateForm() {
+      document.getElementById("updateForm").style.display = "block";
+    }
+
+    function requestUpdate() {
+      let newUsername = document.getElementById("newUsername").value.trim();
+      let newEmail = document.getElementById("newEmail").value.trim();
+      let newPhone = document.getElementById("newPhone").value.trim();
+      let newGender = document.getElementById("newGender").value;
+      let reason = document.getElementById("reason").value.trim();
+      
+      // Email validation
+      let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(newEmail)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+
+      // Phone number validation (10 digits, starts with 07)
+      let phonePattern = /^07\d{8}$/;
+      if (!phonePattern.test(newPhone)) {
+        alert("Phone number must be exactly 10 digits and start with '07'.");
+        return;
+      }
+
+      if (!newUsername || !newEmail || !newPhone || !newGender || !reason) {
+        alert("All fields must be filled out before submitting.");
+        return;
+      }
+
+      let updateRequest = {
+        username: newUsername,
+        email: newEmail,
+        phone: newPhone,
+        gender: newGender,
+        reason: reason,
+        status: "Pending Approval"
+      };
+
+      // Store the update request under the user's email
+      localStorage.setItem(`updateRequest_${currentUser.email}`, JSON.stringify(updateRequest));
+
+      alert("Your request to update your Details has been submitted and is pending admin approval.");
+
+      document.getElementById("updateForm").style.display = "none";
+      document.getElementById("status").textContent = "Pending Approval";
+      document.getElementById("requestUpdateBtn").disabled = true; // Disable button after submission
     }
   </script>
 </body>
