@@ -160,7 +160,8 @@
     }
 
     function showUpdateForm() {
-      document.getElementById("updateForm").style.display = "block";
+      let form = document.getElementById("updateForm");
+      form.style.display = form.style.display === "block" ? "none" : "block";
     }
 
     function requestUpdate() {
@@ -198,14 +199,13 @@
         status: "Pending Approval"
       };
 
-      // Store the update request under the user's email
       localStorage.setItem(`updateRequest_${currentUser.email}`, JSON.stringify(updateRequest));
 
       alert("Your request to update your Details has been submitted and is pending admin approval.");
 
       document.getElementById("updateForm").style.display = "none";
       document.getElementById("status").textContent = "Pending Approval";
-      document.getElementById("requestUpdateBtn").disabled = true; // Disable button after submission
+      document.getElementById("requestUpdateBtn").disabled = true;
     }
   </script>
 </body>
