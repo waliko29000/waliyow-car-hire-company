@@ -22,19 +22,27 @@
       box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
       width: 90%;
       max-width: 400px;
+      text-align: center;
     }
 
     h2 {
       color: #003366;
-      text-align: center;
       margin-bottom: 10px;
     }
 
     p {
-      text-align: center;
       font-size: 14px;
       color: #333;
       margin-bottom: 20px;
+    }
+
+    .email-box {
+      font-weight: bold;
+      color: #003366;
+      background: #e0f7fa;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
     }
 
     input[type="text"] {
@@ -43,6 +51,8 @@
       border: 1px solid #003366;
       border-radius: 5px;
       margin-bottom: 15px;
+      text-align: center;
+      font-size: 16px;
     }
 
     button {
@@ -65,18 +75,34 @@
 <body>
   <div class="verify-box">
     <h2>Email Verification</h2>
-    <p>Enter the 6-digit code sent to your email</p>
+    <p>Enter the 6-digit code sent to:</p>
+    <p class="email-box" id="userEmail">loading...</p>
     <input type="text" id="code" placeholder="Enter verification code" required />
     <button onclick="verifyCode()">Verify</button>
   </div>
 
   <script>
+    // Retrieve stored email
+    document.addEventListener("DOMContentLoaded", function() {
+      const storedEmail = localStorage.getItem("userEmail");
+      if (storedEmail) {
+        document.getElementById("userEmail").textContent = storedEmail;
+      } else {
+        document.getElementById("userEmail").textContent = "Email not found!";
+      }
+    });
+
     function verifyCode() {
       const enteredCode = document.getElementById("code").value.trim();
       const savedCode = localStorage.getItem("verificationCode");
 
-      if (!enteredCode || !savedCode) {
-        alert("❌ Verification failed. Please try again.");
+      if (!enteredCode) {
+        alert("⚠️ Please enter the verification code.");
+        return;
+      }
+
+      if (!savedCode) {
+        alert("❌ Verification code not found. Please request a new one.");
         return;
       }
 
