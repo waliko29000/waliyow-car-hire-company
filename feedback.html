@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback - Waliko Car Hire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #e0f7fa;
+      text-align: center;
+      padding: 20px;
+    }
+    .feedback-box {
+      background: white;
+      padding: 20px;
+      max-width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 51, 102, 0.2);
+    }
+    .stars {
+      display: flex;
+      justify-content: center;
+      margin: 10px 0;
+    }
+    .star {
+      font-size: 30px;
+      cursor: pointer;
+      color: gray;
+    }
+    .star.selected {
+      color: gold;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #003366;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #002244;
+    }
+    .feedback-display {
+      display: none;
+      background: white;
+      padding: 20px;
+      margin: auto;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 51, 102, 0.2);
+    }
+    .delete-btn, .back-btn {
+      background: red;
+      margin-top: 10px;
+    }
+    .back-btn {
+      background: green;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="feedback-box" id="feedbackBox">
+    <h2>Give Your Feedback</h2>
+    <p>Rate our system</p>
+    <div class="stars" id="stars">
+      <span class="star" data-value="1">★</span>
+      <span class="star" data-value="2">★</span>
+      <span class="star" data-value="3">★</span>
+      <span class="star" data-value="4">★</span>
+      <span class="star" data-value="5">★</span>
+    </div>
+    <textarea id="feedbackText" placeholder="Tell us about your experience..."></textarea>
+    <button onclick="submitFeedback()">Submit Feedback</button>
+  </div>
+
+  <div class="feedback-display" id="feedbackDisplay">
+    <h2>Your Feedback</h2>
+    <p><strong>Email:</strong> <span id="feedbackEmail"></span></p>
+    <p><strong>Rating:</strong> <span id="feedbackStars"></span></p>
+    <p><strong>Message:</strong></p>
+    <p id="feedbackMessage"></p>
+    <button class="delete-btn" onclick="deleteFeedback()">Delete Feedback</button>
+    <button class="back-btn" onclick="window.location.href='car-available.html'">Back</button>
+  </div>
+
+  <script>
+    let selectedRating = 0;
+
+    document.addEventListener("DOMContentLoaded", function() {
+      retrieveFeedback();
+    });
+
+    // Handle star click to set rating
+    document.querySelectorAll(".star").forEach(star => {
+      star.addEventListener("click", function() {
+        selectedRating = parseInt(this.getAttribute("data-value"));
+        updateStars(selectedRating);
+      });
+    });
+
+    // Update star colors based on selected rating
+    function updateStars(rating) {
+      document.querySelectorAll(".star").forEach(star => {
+        let starValue = parseInt(star.getAttribute("data-value"));
+        if (starValue <= rating) {
+          star.classList.add("selected");
+        } else {
+          star.classList.remove("selected");
+        }
+      });
+    }
+
+    // Get user email from currentUser in localStorage
+    function getUserEmail() {
+      let user = JSON.parse(localStorage.getItem("currentUser"));
+      return user ? user.email : "Unknown";
+    }
+
+    // Submit feedback
+    function submitFeedback() {
+      let userEmail = getUserEmail();
+      let message = document.getElementById("feedbackText").value.trim();
+
+      if (!selectedRating || message === "") {
+        alert("❌ Please provide a rating and message before submitting.");
+        return;
+      }
+
+      // Check if feedback already exists in localStorage
+      if (localStorage.getItem("userFeedback")) {
+        alert("❌ You already submitted feedback. Please delete your previous feedback to submit again.");
+        retrieveFeedback();
+        return;
+      }
+
+      let feedbackData = {
+        email: userEmail,
+        rating: selectedRating,
+        message: message,
+        time: new Date().toLocaleString()
+      };
+
+      // Store feedback in localStorage
+      localStorage.setItem("userFeedback", JSON.stringify(feedbackData));
+      displayFeedback();
+    }
+
+    // Retrieve and display feedback if exists
+    function retrieveFeedback() {
+      let storedFeedback = JSON.parse(localStorage.getItem("userFeedback"));
+      if (storedFeedback) {
+        document.getElementById("feedbackBox").style.display = "none";
+        document.getElementById("feedbackDisplay").style.display = "block";
+
+        document.getElementById("feedbackEmail").textContent = storedFeedback.email;
+        document.getElementById("feedbackStars").textContent = "★".repeat(storedFeedback.rating);
+        document.getElementById("feedbackMessage").textContent = storedFeedback.message;
+      }
+    }
+
+    // Delete feedback
+    function deleteFeedback() {
+      localStorage.removeItem("userFeedback");
+      document.getElementById("feedbackDisplay").style.display = "none";
+      document.getElementById("feedbackBox").style.display = "block";
+    }
+
+    // Display stored feedback
+    function displayFeedback() {
+      let feedbackData = JSON.parse(localStorage.getItem("userFeedback"));
+      if (feedbackData) {
+        document.getElementById("feedbackBox").style.display = "none";
+        document.getElementById("feedbackDisplay").style.display = "block";
+
+        document.getElementById("feedbackEmail").textContent = feedbackData.email;
+        document.getElementById("feedbackStars").textContent = "★".repeat(feedbackData.rating);
+        document.getElementById("feedbackMessage").textContent = feedbackData.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
