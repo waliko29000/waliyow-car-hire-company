@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deactivate Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Deactivate Your Account</h1>
+        <p class="text-gray-600 mb-4 text-sm">
+            To deactivate your account, please enter your password below.  Your account will be deactivated for the period you specify.
+        </p>
+
+        <form id="deactivateForm" class="space-y-4">
+            <div>
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div id="password-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+            </div>
+
+            <div>
+                <label for="deactivationTime" class="block text-gray-700 text-sm font-bold mb-2">Deactivation Time (Optional):</label>
+                <select id="deactivationTime" name="deactivationTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="">Choose deactivation time</option>
+                    <option value="7_days">7 Days</option>
+                    <option value="14_days">2 Weeks</option>
+                    <option value="30_days">30 Days</option>
+                    <option value="90_days">3 Months</option>
+                    <option value="180_days">6 Months</option>
+                    <option value="365_days">1 Year</option>
+                </select>
+            </div>
+            <div id="form-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Deactivate Account
+            </button>
+        </form>
+
+         <div id="success-message" class="mt-6 text-green-600 text-center font-semibold" style="display: none;">
+            Account deactivated successfully.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deactivateForm = document.getElementById('deactivateForm');
+            const passwordInput = document.getElementById('password');
+            const passwordError = document.getElementById('password-error');
+            const formError = document.getElementById('form-error');
+            const successMessage = document.getElementById('success-message');
+
+            deactivateForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                passwordError.style.display = 'none';
+                formError.style.display = 'none';
+                successMessage.style.display = 'none';
+
+                const enteredPassword = passwordInput.value;
+                const storedPassword = localStorage.getItem('userPassword'); // Get stored password
+                const deactivationTime = document.getElementById('deactivationTime').value;
+
+                if (!storedPassword) {
+                    // Redirect to signin.html
+                    window.location.href = 'signin.html';
+                    return;
+                }
+
+                if (enteredPassword === storedPassword) {
+                    // Simulate deactivation process (replace with actual deactivation logic)
+                    console.log(`Account deactivated for ${deactivationTime}`);
+                    // In a real application, you would send this data to your server
+                    // to actually deactivate the account in your database.
+
+                    // Clear the stored password after successful deactivation
+                    localStorage.removeItem('userPassword');
+                    localStorage.setItem('accountStatus', 'deactivated'); //set account status
+                    if (deactivationTime)
+                      localStorage.setItem('deactivationTime', deactivationTime);
+                    else
+                       localStorage.setItem('deactivationTime', "No deactivation time");
+
+                    // Display success message
+                    successMessage.style.display = 'block';
+                     // Disable form elements after successful submission
+                    passwordInput.disabled = true;
+                    document.getElementById('deactivationTime').disabled = true;
+                    event.target.querySelector('button[type="submit"]').disabled = true;
+
+                    // Clear input fields
+                    passwordInput.value = '';
+                    document.getElementById('deactivationTime').value = '';
+
+                    // Disable all form elements.
+                    const formElements = deactivateForm.elements;
+                    for (let i = 0; i < formElements.length; i++) {
+                        formElements[i].disabled = true;
+                    }
+
+                    // Remove the redirection
+                    // setTimeout(() => {
+                    //    window.location.href = 'deactivation_confirmation.html';
+                    // }, 2000);
+                    // alert(`Account deactivated for ${deactivationTime}.`); // Removed alert
+
+                } else {
+                    passwordError.textContent = "Incorrect password. Please try again.";
+                    passwordError.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
