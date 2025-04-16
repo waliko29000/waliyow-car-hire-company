@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appeal Suspension</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Appeal Account Suspension</h1>
+        <p class="text-gray-600 mb-4 text-sm">
+            Please fill out the form below to appeal the suspension of your account.  We will review your appeal and respond as soon as possible.
+        </p>
+
+        <form id="appealForm" class="space-y-4">
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div id="email-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+            </div>
+            <div>
+                <label for="appealReason" class="block text-gray-700 text-sm font-bold mb-2">Reason for Appeal:</label>
+                <textarea id="appealReason" name="appealReason" rows="4" placeholder="Enter your reason for appealing the suspension" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                <div id="appeal-reason-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+            </div>
+
+            <div id="form-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Submit Appeal
+            </button>
+        </form>
+
+         <div id="success-message" class="mt-6 text-green-600 text-center font-semibold relative" style="display: none;">
+            Your appeal has been submitted successfully. We will follow up within 24 hours.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const appealForm = document.getElementById('appealForm');
+            const formError = document.getElementById('form-error');
+            const successMessage = document.getElementById('success-message');
+            const emailInput = document.getElementById('email');
+            const appealReasonInput = document.getElementById('appealReason');
+            const emailError = document.getElementById('email-error');
+            const appealReasonError = document.getElementById('appeal-reason-error');
+
+
+            appealForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                formError.style.display = 'none';
+                successMessage.style.display = 'none';
+                emailError.style.display = 'none';
+                appealReasonError.style.display = 'none';
+
+                const email = emailInput.value.trim();
+                const appealReason = appealReasonInput.value.trim();
+
+                let hasErrors = false;
+
+                if (!email) {
+                    emailError.textContent = "Please enter your email address.";
+                    emailError.style.display = 'block';
+                    hasErrors = true;
+                } else if (!isValidEmail(email)) {
+                    emailError.textContent = "Please enter a valid email address.";
+                    emailError.style.display = 'block';
+                    hasErrors = true;
+                }
+
+                if (!appealReason) {
+                    appealReasonError.textContent = "Please enter the reason for your appeal.";
+                    appealReasonError.style.display = 'block';
+                    hasErrors = true;
+                }
+
+                if (hasErrors) {
+                    return;
+                }
+
+                // Simulate sending appeal data (in a real application, you'd send this to a server)
+                console.log('Appeal submitted with:', { email, appealReason });
+
+                // Display success message
+                successMessage.style.display = 'block';
+
+                // Clear form
+                emailInput.value = '';
+                appealReasonInput.value = '';
+
+                // Disable form elements
+                const formElements = appealForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    formElements[i].disabled = true;
+                }
+
+                // Hide the success message after 6 seconds and redirect
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    window.location.href = "index.html";
+                }, 6000);
+            });
+
+            function isValidEmail(email) {
+                // Basic email validation regex
+                const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+                return emailRegex.test(email);
+            }
+
+        });
+    </script>
+</body>
+</html>
