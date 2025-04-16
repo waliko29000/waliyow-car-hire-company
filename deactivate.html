@@ -16,10 +16,15 @@
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Deactivate Your Account</h1>
         <p class="text-gray-600 mb-4 text-sm">
-            To deactivate your account, please enter your password below.  Your account will be deactivated for the period you specify.
+            To deactivate your account, please enter your email and password below to confirm deactivation. Your account will be deactivated for the period you specify.
         </p>
 
         <form id="deactivateForm" class="space-y-4">
+            <div>
+                <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <div id="email-error" class="text-red-500 text-xs italic" style="display: none;"></div>
+            </div>
             <div>
                 <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -27,8 +32,8 @@
             </div>
 
             <div>
-                <label for="deactivationTime" class="block text-gray-700 text-sm font-bold mb-2">Deactivation Time (Optional):</label>
-                <select id="deactivationTime" name="deactivationTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="deactivationTime" class="block text-gray-700 text-sm font-bold mb-2">Deactivation Time:</label>
+                <select id="deactivationTime" name="deactivationTime" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="">Choose deactivation time</option>
                     <option value="7_days">7 Days</option>
                     <option value="14_days">2 Weeks</option>
@@ -37,11 +42,12 @@
                     <option value="180_days">6 Months</option>
                     <option value="365_days">1 Year</option>
                 </select>
+                <div id="deactivation-time-error" class="text-red-500 text-xs italic" style="display: none;"></div>
             </div>
             <div id="form-error" class="text-red-500 text-xs italic" style="display: none;"></div>
 
             <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
-                Deactivate Account
+                Confirm Deactivation
             </button>
         </form>
 
@@ -53,67 +59,79 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const deactivateForm = document.getElementById('deactivateForm');
-            const passwordInput = document.getElementById('password');
-            const passwordError = document.getElementById('password-error');
             const formError = document.getElementById('form-error');
             const successMessage = document.getElementById('success-message');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const deactivationTimeInput = document.getElementById('deactivationTime');
+            const deactivationTimeError = document.getElementById('deactivation-time-error');
+
 
             deactivateForm.addEventListener('submit', (event) => {
                 event.preventDefault();
-                passwordError.style.display = 'none';
                 formError.style.display = 'none';
                 successMessage.style.display = 'none';
+                deactivationTimeError.style.display = 'none';
 
-                const enteredPassword = passwordInput.value;
-                const storedPassword = localStorage.getItem('userPassword'); // Get stored password
-                const deactivationTime = document.getElementById('deactivationTime').value;
+                const enteredEmail = emailInput.value.trim();
+                const enteredPassword = passwordInput.value.trim();
+                const deactivationTime = deactivationTimeInput.value;
+                const storedUser = localStorage.getItem('currentUser');
 
-                if (!storedPassword) {
-                    // Redirect to signin.html
-                    window.location.href = 'signin.html';
+                if (!storedUser) {
+                    formError.textContent = "You must be logged in to deactivate your account.";
+                    formError.style.display = 'block';
                     return;
                 }
 
-                if (enteredPassword === storedPassword) {
-                    // Simulate deactivation process (replace with actual deactivation logic)
-                    console.log(`Account deactivated for ${deactivationTime}`);
-                    // In a real application, you would send this data to your server
-                    // to actually deactivate the account in your database.
+                if (!deactivationTime) {
+                    deactivationTimeError.textContent = "Please select a deactivation time.";
+                    deactivationTimeError.style.display = 'block';
+                    return;
+                }
 
-                    // Clear the stored password after successful deactivation
-                    localStorage.removeItem('userPassword');
-                    localStorage.setItem('accountStatus', 'deactivated'); //set account status
-                    if (deactivationTime)
-                      localStorage.setItem('deactivationTime', deactivationTime);
-                    else
-                       localStorage.setItem('deactivationTime', "No deactivation time");
+                try {
+                    const user = JSON.parse(storedUser);
+                    const storedEmail = user.email;
+                    const storedPassword = user.password;
 
-                    // Display success message
-                    successMessage.style.display = 'block';
-                     // Disable form elements after successful submission
-                    passwordInput.disabled = true;
-                    document.getElementById('deactivationTime').disabled = true;
-                    event.target.querySelector('button[type="submit"]').disabled = true;
+                    if (enteredEmail === storedEmail && enteredPassword === storedPassword) {
+                        // Simulate deactivation process
+                        console.log(`Account deactivated for user: ${storedEmail}`);
 
-                    // Clear input fields
-                    passwordInput.value = '';
-                    document.getElementById('deactivationTime').value = '';
+                        // Store the suspended email
+                        localStorage.setItem('suspendedEmail', storedEmail);
+                        localStorage.setItem('suspendedPassword', storedPassword); // Store the password
 
-                    // Disable all form elements.
-                    const formElements = deactivateForm.elements;
-                    for (let i = 0; i < formElements.length; i++) {
-                        formElements[i].disabled = true;
+                        // Clear user data and set account status
+                        localStorage.removeItem('currentUser');
+                        localStorage.setItem('accountStatus', 'deactivated');
+                        localStorage.setItem('deactivationTime', deactivationTime);
+
+
+                        // Display success message
+                        successMessage.style.display = 'block';
+
+                        // Disable form elements
+                        const formElements = deactivateForm.elements;
+                        for (let i = 0; i < formElements.length; i++) {
+                            formElements[i].disabled = true;
+                        }
+
+                        // Clear form
+                        emailInput.value = '';
+                        passwordInput.value = '';
+                        deactivationTimeInput.value = '';
+
+                    } else {
+                        formError.textContent = "Incorrect email or password. Please try again.";
+                        formError.style.display = 'block';
                     }
-
-                    // Remove the redirection
-                    // setTimeout(() => {
-                    //    window.location.href = 'deactivation_confirmation.html';
-                    // }, 2000);
-                    // alert(`Account deactivated for ${deactivationTime}.`); // Removed alert
-
-                } else {
-                    passwordError.textContent = "Incorrect password. Please try again.";
-                    passwordError.style.display = 'block';
+                  } catch (error) {
+                    console.error("Error parsing currentUser from localStorage:", error);
+                    formError.textContent = "Error: Could not retrieve user data. Please log in again.";
+                    formError.style.display = 'block';
+                    localStorage.removeItem('currentUser'); // Clear invalid data
                 }
             });
         });
