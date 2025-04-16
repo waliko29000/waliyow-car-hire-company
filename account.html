@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Menu</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .account-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        #account-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+
+        #account-button svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-right: 5px;
+        }
+
+        .click-me-paragraph {
+            color: red;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .side-nav {
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: #f8f8f8;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .side-nav.open {
+            right: 0;
+        }
+
+        .profile-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            background-color: #007bff;
+            color: white;
+        }
+
+        #profile-pic-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 10px;
+            border: 2px solid white;
+        }
+
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #username-display {
+            margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .side-nav nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-nav nav ul li a, .side-nav nav ul li label {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .side-nav nav ul li a:hover, .side-nav nav ul li label:hover {
+            background-color: #e0f7fa;
+            color: #007bff;
+        }
+
+        #upload-input {
+            display: none;
+        }
+
+        #close-nav-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            padding: 5px 8px;
+        }
+
+        @media (max-width: 600px) {
+            .side-nav {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .side-nav {
+                width: 250px;
+            }
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto;
+        }
+
+        .side-nav nav ul li.emergency-item a {
+            background-color: #dc3545;
+            color: white;
+            border-bottom: none;
+            font-weight: bold;
+        }
+
+        .side-nav nav ul li.emergency-item a:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="account-container">
+        <button id="account-button" aria-label="Open account menu">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 10c-2.04 0-3.87.76-5.19 2.03a8 8 0 0110.38 0C15.87 14.76 14.04 14 12 14zm6 6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 011-1h2a1 1 0 011 1v2zM9 20a1 1 0 01-1 1H6a1 1 0 01-1-1v-2a1 1 0 011-1h2a1 1 0 011 1v2z"></path>
+            </svg>
+            <span>Account</span>
+        </button>
+        <p class="click-me-paragraph">Click Me</p>
+    </div>
+
+    <div id="side-nav" class="side-nav">
+        <button id="close-nav-button" aria-label="Close account menu">&times;</button>
+        <div class="profile-header">
+            <div id="profile-pic-container">
+                <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
+            </div>
+            <h2 id="username-display">Username</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><label for="upload-input">Upload Profile Picture</label><input type="file" id="upload-input" accept="image/*"></li>
+                <li><a href="user.html">Personal Info</a></li>
+                <li><a href="#">Change Password</a></li>
+                <li><a href="help.html">Help Center</a></li>
+                <li><li class="emergency-item"><a href="tel:+2547XXXXXXXXX">Emergency</a></li>
+                <li><a href="#">Deactivate Account</a></li>
+                <li><a href="#">Delete Account</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <footer>
+        Waliko Car Hire
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const accountButton = document.getElementById('account-button');
+            const sideNav = document.getElementById('side-nav');
+            const closeNavButton = document.getElementById('close-nav-button');
+            const uploadInput = document.getElementById('upload-input');
+            const profilePic = document.getElementById('profile-pic');
+            const usernameDisplay = document.getElementById('username-display');
+
+            if (accountButton && sideNav && closeNavButton && uploadInput && profilePic && usernameDisplay) {
+                const storedImage = localStorage.getItem('profilePicture');
+                if (storedImage) {
+                    profilePic.src = storedImage;
+                }
+
+                // Load username from localStorage
+                const storedUsername = localStorage.getItem('username');
+                console.log("Retrieved username:", storedUsername); // ADDED FOR DEBUGGING
+
+                if (storedUsername) {
+                    usernameDisplay.textContent = storedUsername;
+                    console.log("Username displayed:", storedUsername); // ADDED FOR DEBUGGING
+                } else {
+                    console.log("Username not found in localStorage."); // ADDED FOR DEBUGGING
+                }
+
+                accountButton.addEventListener('click', () => {
+                    sideNav.classList.toggle('open');
+                });
+
+                closeNavButton.addEventListener('click', () => {
+                    sideNav.classList.remove('open');
+                   // window.location.href = 'cars-available.html'; // Removed redirection for now, might cause issues
+                });
+
+                uploadInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            profilePic.src = e.target.result;
+                            localStorage.setItem('profilePicture', e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            } else {
+                console.error("One or more required elements not found in the DOM.");
+            }
+        });
+    </script>
+
+</body>
+</html>
