@@ -1,175 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login - Waliko Car Hire</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <title>Login - Waliko Car Hire</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-      background-color: #e0f7fa;
-    }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+        }
 
-    .container {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 30px;
-    }
+        .container {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 30px;
+        }
 
-    .wrapper {
-      background-color: #ffffff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
-      width: 90%;
-      max-width: 370px;
-    }
+        .wrapper {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
+            width: 90%;
+            max-width: 370px;
+        }
 
-    h1 {
-      text-align: center;
-      color: #0277bd;
-      margin-bottom: 10px;
-      font-size: 22px;
-    }
+        h1 {
+            text-align: center;
+            color: #0277bd;
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
 
-    p {
-      text-align: center;
-      color: #555555;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
+        p {
+            text-align: center;
+            color: #555555;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
-    label {
-      display: block;
-      margin-top: 10px;
-      margin-bottom: 5px;
-      font-size: 14px;
-      color: #333;
-    }
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
 
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #0277bd;
-      border-radius: 5px;
-    }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #0277bd;
+            border-radius: 5px;
+        }
 
-    input[type="submit"] {
-      width: 100%;
-      padding: 12px;
-      background-color: #0277bd;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      margin-top: 15px;
-      cursor: pointer;
-    }
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0277bd;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
 
-    input[type="submit"]:hover {
-      background-color: #01579b;
-    }
+        input[type="submit"]:hover {
+            background-color: #01579b;
+        }
 
-    .register-link,
-    .forgot-link {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 13px;
-    }
+        .register-link,
+        .forgot-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+        }
 
-    a {
-      color: #0277bd;
-      text-decoration: none;
-      font-weight: bold;
-    }
+        a {
+            color: #0277bd;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    a:hover {
-      text-decoration: underline;
-    }
+        a:hover {
+            text-decoration: underline;
+        }
 
-    #padlock {
-      font-size: 40px;
-      text-align: center;
-      margin-top: 20px;
-    }
+        #padlock {
+            font-size: 40px;
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    @keyframes shake {
-      0% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      50% { transform: translateX(10px); }
-      75% { transform: translateX(-10px); }
-      100% { transform: translateX(0); }
-    }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
+        }
 
-    .shake {
-      animation: shake 0.5s ease-in-out;
-    }
-  </style>
-  <script>
-    function handleLogin(event) {
-      event.preventDefault();
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const padlock = document.getElementById('padlock');
-      padlock.classList.remove('shake');
+        /* Custom styles for the modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.5); /* Black with opacity */
+        }
 
-      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%; /* Could be more or less, depending on screen size */
+            max-width: 400px;
+            border-radius: 8px;
+            position: relative; /* Needed for close button positioning */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s;
+        }
 
-      const matchingUser = allUsers.find(user => user.email === email && user.password === password);
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-      if (matchingUser) {
-        // Save the current logged-in user
-        localStorage.setItem("currentUser", JSON.stringify(matchingUser));
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
 
-        padlock.textContent = "🔓";
-        setTimeout(() => {
-          window.location.href = "car-available.html";
-        }, 500);
-      } else {
-        alert("❌ Invalid email or password. Please try again.");
-        padlock.textContent = "🔒";
-        padlock.classList.add('shake');
-      }
-    }
-  </script>
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .modal-body {
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal-footer a {
+            background-color: #0277bd;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .modal-footer a:hover {
+            background-color: #01579b;
+        }
+
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="wrapper">
-      <form onsubmit="handleLogin(event)">
-        <h1>Waliko Car Hire</h1>
-        <p>Enter your email and password to login</p>
+    <div class="container">
+        <div class="wrapper">
+            <form onsubmit="handleLogin(event)">
+                <h1>Waliko Car Hire</h1>
+                <p>Enter your email and password to login</p>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" required placeholder="Enter email">
+                <label for="email">Email</label>
+                <input type="email" id="email" required placeholder="Enter your email">
 
-        <label for="password">Password</label>
-        <input type="password" id="password" required placeholder="Enter password">
+                <label for="password">Password</label>
+                <input type="password" id="password" required placeholder="Enter password">
 
-        <input type="submit" value="Login">
+                <input type="submit" value="Login">
 
-        <div class="forgot-link">
-          <p><a href="forget password.html">Forgot Password?</a></p>
+                <div class="forgot-link">
+                    <p><a href="forget password.html">Forgot Password?</a></p>
+                </div>
+
+                <div class="register-link">
+                    <p>Don't have an account? <a href="signup.html">Register</a></p>
+                </div>
+            </form>
+            <div id="padlock">🔒</div>
         </div>
-
-        <div class="register-link">
-          <p>Don't have an account? <a href="signup.html">Register</a></p>
-        </div>
-      </form>
-      <div id="padlock">🔒</div>
     </div>
-  </div>
+
+    <div id="suspensionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="modalCloseBtn">&times;</span>
+            <div class="modal-header">
+                <h2>Account Suspended</h2>
+            </div>
+            <div class="modal-body">
+                <p id="suspensionMessage">Your account is suspended. Please contact support.</p>
+                <p>Click the button below to appeal the suspension.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="appeal.html">Appeal Suspension</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("suspensionModal");
+        const modalCloseBtn = document.getElementById("modalCloseBtn");
+
+        modalCloseBtn.onclick = function() {
+            modal.style.display = "none";
+            window.location.href = "index.html";
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+                 window.location.href = "index.html";
+            }
+        }
+
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const padlock = document.getElementById('padlock');
+            padlock.classList.remove('shake');
+
+            const suspendedEmail = localStorage.getItem('suspendedEmail');
+            const suspendedPassword = localStorage.getItem('suspendedPassword');
+            const deactivationTime = localStorage.getItem('deactivationTime');
+
+            if (suspendedEmail && suspendedPassword && suspendedEmail === email && suspendedPassword === password) {
+                //alert("❌ Your account is suspended. Please contact support. Suspended for: " + deactivationTime);
+                // Instead of alert, show modal
+                const suspensionMessage = document.getElementById("suspensionMessage");
+                suspensionMessage.textContent = "Your account is suspended for: " + deactivationTime + ".";
+                modal.style.display = "block";
+                padlock.textContent = "🔒";
+                padlock.classList.add('shake');
+                return;
+            }
+
+            const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+
+
+            const matchingUser = allUsers.find(user => user.email === email && user.password === password);
+
+            if (matchingUser) {
+                localStorage.setItem("currentUser", JSON.stringify(matchingUser));
+                localStorage.setItem("userEmail", email);
+                localStorage.setItem("userPassword", password);
+                console.log("User data saved to localStorage:", matchingUser);
+                padlock.textContent = "🔓";
+                setTimeout(() => {
+                    window.location.href = "car-available.html";
+                }, 500);
+            } else {
+                alert("❌ Invalid email or password. Please try again.");
+                padlock.textContent = "🔒";
+                padlock.classList.add('shake');
+            }
+        }
+    </script>
 </body>
 </html>
