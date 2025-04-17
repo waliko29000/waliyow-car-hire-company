@@ -56,7 +56,7 @@
         .side-nav {
             position: absolute;
             top: 0;
-            right: -100%;
+            right: -100%; /* Initially hidden off-screen */
             width: 80%;
             max-width: 300px;
             height: 100%;
@@ -172,6 +172,11 @@
         .side-nav nav ul li.emergency-item a:hover {
             background-color: #c82333;
         }
+
+        /* Initially hide the account button and click me paragraph */
+        .account-container {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -186,8 +191,9 @@
         <p class="click-me-paragraph">Click Me</p>
     </div>
 
-    <div id="side-nav" class="side-nav">
-        <button id="close-nav-button" aria-label="Close account menu">&times;</button>
+    <div id="side-nav" class="side-nav open"> <form action="car-available.html" method="get">
+            <button type="submit" id="close-nav-button" aria-label="Go to available cars">&times;</button>
+        </form>
         <div class="profile-header">
             <div id="profile-pic-container">
                 <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
@@ -237,13 +243,14 @@
                     console.log("Username not found in localStorage."); // ADDED FOR DEBUGGING
                 }
 
-                accountButton.addEventListener('click', () => {
-                    sideNav.classList.toggle('open');
-                });
+                // We don't need the click listener for the account button anymore
+                // accountButton.addEventListener('click', () => {
+                //     sideNav.classList.toggle('open');
+                // });
 
                 closeNavButton.addEventListener('click', () => {
                     sideNav.classList.remove('open');
-                   // window.location.href = 'cars-available.html'; // Removed redirection for now, might cause issues
+                    window.location.href = 'car-available.html';
                 });
 
                 uploadInput.addEventListener('change', (event) => {
