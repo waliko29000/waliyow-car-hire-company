@@ -14,15 +14,15 @@
     }
     body {
       background-color: #eef2f3;
-      color: #333;
+      color: #333333;
       line-height: 1.6;
     }
     .header {
   display: flex;
   align-items: center;
-  background: #242629;
+  background: #075ad8;
   color: #fff;
-  padding: 8px 20px;
+  padding: 6px 20px;
   flex-wrap: wrap;
 
   position: fixed;       /* 👈 makes it fixed */
@@ -58,7 +58,7 @@
     }
     /* Content Area */
     #content {
-  padding: 150px 20px 20px 20px; /* ⬅️ push everything down */
+  padding: 115px 20px 20px 20px; /* ⬅️ push everything down */
   max-width: 1200px;
   margin: 20px auto;
   text-align: left;
@@ -72,7 +72,7 @@
     /* Home Notice (Red) */
     .notice {
       background: #ffdddd;
-      border-left: 5px solid #ff0000;
+      border-left: 5px solid #002fff;
       padding: 20px;
       margin-bottom: 30px;
       border-radius: 5px;
@@ -130,7 +130,7 @@
       color: #fff;
       font-size: 16px;
       padding: 8px 12px;
-      background: #e67e22;
+      background: #082aec;
       border-radius: 5px;
       transition: background 0.3s ease;
       cursor: pointer;
@@ -139,7 +139,7 @@
       right: 15px;
     }
     .book-btn:hover {
-      background: #d35400;
+      background: #f30928;
     }
     /* Booking Details */
     .booking-details {
@@ -180,7 +180,7 @@
       width: 100px;
     }
     .pay-btn {
-      background: #2980b9;
+      background: #1d0eee;
       color: #fff;
     }
     .pay-btn:hover {
@@ -398,8 +398,8 @@
      
       <a id="homeLink">Home</a>
       <a id="carsLink">Cars</a>
-      <a id="bookingDetailsLink">Booking Info</a>
-      <a id="paymentsLink"> Statements</a>
+      <a id="bookingDetailsLink">Booking Details</a>
+      <a id="paymentsLink"> Payments</a>
       <a href="account.html">Account</a>
       <a href="feedback.html">Feedback</a>
       <a id="logoutLink">Logout</a>
@@ -417,8 +417,11 @@
       <span class="close-modal" id="closeBookingModal">&times;</span>
       <h2>Book Car</h2>
       <form id="bookingForm">
-        <label for="bookingId">Booking ID</label>
+        <label for="bookingId">National ID</label>
+        
         <input type="text" id="bookingId" placeholder="Enter National ID" required />
+        <label for="tel">Phone Number</label>
+        <input type="number" id="phone" placeholder="Enter Phone Number"
         <label for="license">Driver Licence No.</label>
         <input type="text" id="license" placeholder="Enter Licence Number" required />
         <label for="pickup">Pick Up Date</label>
@@ -464,6 +467,7 @@
     
     </div>
   </div>
+  
 
   <script>
     // Car data array (prices in Ksh)
@@ -575,6 +579,7 @@
       e.preventDefault();
       const bookingId = document.getElementById('bookingId').value.trim();
       const license = document.getElementById('license').value.trim();
+      const phone = document.getElementById('phone').value.trim();
       const pickup = document.getElementById('pickup').value;
       const endDate = document.getElementById('endDate').value;
       
