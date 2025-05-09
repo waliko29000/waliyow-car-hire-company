@@ -20,7 +20,7 @@ body {
 }
 /* Header styling */
 header {
-  background: #333;
+  background: #075ad8;
   color: #fff;
   padding: 8px 15px;
   display: flex;
@@ -155,12 +155,12 @@ nav button:hover, nav a:hover {
     <nav>
       <!-- "Cars Available" now checks if the user is registered -->
       <a href="#" onclick="checkRegistration()">Cars Available</a>
-      <a href="signin.html"><button>Sign In</button></a>
-<a href="signup.html"><button>Sign Up</button></a>
+      <a href="signin.html"><button>LOG IN </button></a>
+<a href="signup.html"><button>REGISTER</button></a>
 
       <button onclick="showSection('terms')">Terms of Service</button>
       <button onclick="showSection('privacy')">Privacy Policy</button>
-      <button onclick="signOut()">Sign Out</button>
+      <button onclick="signOut()">Log Out</button>
       <button onclick="showSection('contact')">Contact Us</button>
       <button onclick="showSection('about us')">about us</button>
      
@@ -227,7 +227,7 @@ nav button:hover, nav a:hover {
     const storedUser = JSON.parse(localStorage.getItem('user'));
 
     if (!storedUser) {
-      alert('Please sign in to view user details.');
+      alert('Please Log in to view user details.');
       return;
     }
 
@@ -337,14 +337,18 @@ nav button:hover, nav a:hover {
 
 <p><strong>7. Data Retention</strong></p>
 <p>We retain your personal data only for as long as necessary to fulfill the purposes outlined in this Privacy Policy. Legal or regulatory obligations may require us to keep certain information for extended periods.</p>
+<p><strong>8. Account Deactivation</strong></p>
+<p>You also have the option to request the deactivation of your account. Deactivation means your account will be suspended and will not be actively used. While your account is deactivated, your personal information may still be retained in our systems to allow for potential reactivation in the future or as required for data retention policies mentioned in section 7. You will not be able to access services or make bookings with a deactivated account. If you wish to permanently close your account and have your data deleted, please refer to the account deletion process outlined in section 9.</p>
 
-<p><strong>8. Third-Party Links</strong></p>
+<p><strong>9. Account Deletion</strong></p>
+<p>You have the right to request the permanent deletion of your account and all associated personal information. Upon receiving a verified deletion request, we will take reasonable steps to delete your data from our active systems. Please note that for legal and regulatory reasons, or for the establishment, exercise, or defense of legal claims, we may be required to retain certain information even after a deletion request. We will inform you of any such necessary retention at the time of your request.</p>
+<p><strong>10. Third-Party Links</strong></p>
 <p>Our website may contain links to third-party websites. We are not responsible for the privacy practices of these external sites. We encourage users to review the privacy policies of any linked websites before providing personal data.</p>
 
-<p><strong>9. Changes to This Privacy Policy</strong></p>
+<p><strong>11. Changes to This Privacy Policy</strong></p>
 <p>We may update this Privacy Policy periodically. Any significant changes will be communicated through our website or via email. Continued use of our services after updates indicates acceptance of the revised policy.</p>
 
-<p><strong>10. Contact Us</strong></p>
+<p><strong>12. Contact Us</strong></p>
 <p>If you have any questions or concerns about this Privacy Policy, you can contact us at:</p>
 <ul>
     <li>Email: support@walikocarhire.com</li>
