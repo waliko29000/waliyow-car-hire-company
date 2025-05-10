@@ -232,6 +232,156 @@
         .mpesa-close-button:hover {
             color: #000;
         }
+
+        /* PayPal Modal Styles */
+        .paypal-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0f0f0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            text-align: center;
+        }
+        .paypal-modal h2 {
+            color: #e6007e; /* M-Pesa brand color */
+            margin-bottom: 20px;
+        }
+        .paypal-modal label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .paypal-modal input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+            margin-bottom: 10px;
+        }
+        .paypal-modal .error-text {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .paypal-modal button {
+            background-color: #e6007e; /* M-Pesa brand color */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .paypal-modal button span {
+            margin-right: 5px;
+        }
+        .paypal-modal .loading-dots-modal {
+            display: none;
+            align-items: center;
+        }
+        .paypal-modal .dot-modal {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: pulse 0.5s infinite alternate;
+        }
+        .paypal-modal .dot-modal:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .paypal-modal .dot-modal:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+        /* Visa Modal Styles */
+        .visa-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0f0f0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            text-align: center;
+        }
+        .visa-modal h2 {
+            color: #e6007e; /* M-Pesa brand color */
+            margin-bottom: 20px;
+        }
+        .visa-modal label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .visa-modal input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+            margin-bottom: 10px;
+        }
+        .visa-modal .error-text {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .visa-modal button {
+            background-color: #e6007e; /* M-Pesa brand color */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .visa-modal button span {
+            margin-right: 5px;
+        }
+        .visa-modal .loading-dots-modal {
+            display: none;
+            align-items: center;
+        }
+        .visa-modal .dot-modal {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: pulse 0.5s infinite alternate;
+        }
+        .visa-modal .dot-modal:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .visa-modal .dot-modal:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+
+
     </style>
 </head>
 <body>
@@ -245,12 +395,12 @@
             <span>Pay with M-Pesa</span>
         </div>
 
-        <div class="payment-button" onclick="showInput('PayPal')">
+        <div class="payment-button" onclick="showPaypalModal()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo" />
             <span>Pay with PayPal</span>
         </div>
 
-        <div class="payment-button" onclick="showInput('Visa')">
+        <div class="payment-button" onclick="showVisaModal()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa Logo" />
             <span>Pay with Visa</span>
         </div>
@@ -288,6 +438,38 @@
         </button>
     </div>
 
+    <div id="paypalModal" class="paypal-modal">
+        <span class="mpesa-close-button" onclick="closePaypalModal()">×</span>
+        <h2>Simulate PayPal Payment</h2>
+        <label for="paypalEmail">Enter PayPal Email:</label>
+        <input type="text" id="paypalEmail" placeholder="e.g., example@paypal.com" />
+        <p id="paypalError" class="error-text" style="display: none;">Please enter a valid email address.</p>
+        <button onclick="handlePaypalPayment()">
+            <span>Pay Now</span>
+            <div class="loading-dots-modal" style="display: none;">
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+            </div>
+        </button>
+    </div>
+
+    <div id="visaModal" class="visa-modal">
+        <span class="mpesa-close-button" onclick="closeVisaModal()">×</span>
+        <h2>Simulate Visa Payment</h2>
+        <label for="visaCard">Enter Visa Card Number:</label>
+        <input type="text" id="visaCard" placeholder="e.g., 4141736888881234" />
+        <p id="visaError" class="error-text" style="display: none;">Please enter a valid card number (12-19 digits).</p>
+        <button onclick="handleVisaPayment()">
+            <span>Pay Now</span>
+            <div class="loading-dots-modal" style="display: none;">
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+            </div>
+        </button>
+    </div>
+
     <div id="modalOverlay" class="modal-overlay"></div>
 
     <script>
@@ -307,6 +489,21 @@
         const mpesaButtonTextSpan = mpesaPayButton.querySelector('span');
         const mpesaLoadingDots = mpesaPayButton.querySelector('.loading-dots-modal');
 
+        const paypalModal = document.getElementById("paypalModal");
+        const paypalEmailInput = document.getElementById("paypalEmail");
+        const paypalError = document.getElementById("paypalError");
+        const paypalPayButton = paypalModal.querySelector('button');
+        const paypalButtonTextSpan = paypalPayButton.querySelector('span');
+        const paypalLoadingDots = paypalPayButton.querySelector('.loading-dots-modal');
+
+        const visaModal = document.getElementById("visaModal");
+        const visaCardInput = document.getElementById("visaCard");
+        const visaError = document.getElementById("visaError");
+        const visaPayButton = visaModal.querySelector('button');
+        const visaButtonTextSpan = visaPayButton.querySelector('span');
+        const visaLoadingDots = visaPayButton.querySelector('.loading-dots-modal');
+
+
         function showInput(method) {
             selectedMethod = method;
             inputContainer.style.display = "block";
@@ -317,9 +514,11 @@
                 inputContainer.style.display = "none"; // Hide the generic input
                 showMpesaModal(); // Show the M-Pesa modal instead
             } else if (method === "PayPal") {
-                paymentInput.placeholder = "Enter PayPal email address";
+                inputContainer.style.display = "none";
+                showPaypalModal();
             } else if (method === "Visa") {
-                paymentInput.placeholder = "Enter card number (12–19 digits)";
+                inputContainer.style.display = "none";
+                showVisaModal();
             }
         }
 
@@ -401,29 +600,98 @@
             // For this simulation, we'll just proceed to the error after the delay
         }
 
+        function showPaypalModal() {
+            paypalModal.style.display = "block";
+            modalOverlay.style.display = "block";
+            paypalError.style.display = "none";
+            paypalButtonTextSpan.style.display = "inline";
+            paypalLoadingDots.style.display = "none";
+            paypalPayButton.disabled = false;
+        }
+
+        function closePaypalModal() {
+            paypalModal.style.display = "none";
+            modalOverlay.style.display = "none";
+        }
+
+        function handlePaypalPayment() {
+            const paypalEmail = document.getElementById("paypalEmail").value.trim();
+            if (!isValidEmail(paypalEmail)) {
+                paypalError.style.display = "block";
+                return;
+            }
+
+            paypalPayButton.disabled = true;
+            paypalButtonTextSpan.style.display = "none";
+            paypalLoadingDots.style.display = "flex";
+
+            setTimeout(() => {
+                closePaypalModal();
+                showUnexpectedError();
+            }, 10000);
+            console.log("PayPal email submitted", paypalEmail);
+        }
+
+        function showVisaModal() {
+            visaModal.style.display = "block";
+            modalOverlay.style.display = "block";
+            visaError.style.display = "none";
+            visaButtonTextSpan.style.display = "inline";
+            visaLoadingDots.style.display = "none";
+            visaPayButton.disabled = false;
+        }
+
+        function closeVisaModal() {
+            visaModal.style.display = "none";
+            modalOverlay.style.display = "none";
+        }
+
+        function handleVisaPayment() {
+            const visaCard = document.getElementById("visaCard").value.trim();
+            if (!isValidCard(visaCard)) {
+                visaError.style.display = "block";
+                return;
+            }
+
+            visaPayButton.disabled = true;
+            visaButtonTextSpan.style.display = "none";
+            visaLoadingDots.style.display = "flex";
+
+            setTimeout(() => {
+                closeVisaModal();
+                showUnexpectedError();
+            }, 10000);
+            console.log("Visa card submitted", visaCard);
+        }
+
+
         function startMainProcessing() {
             payButton.disabled = true;
-            loadingText.style.display = "none";
+            loadingText.style.display = "inline";
             loadingDots.style.display = "flex";
-            successMessage.style.display = "none";
-            errorMessage.style.display = "none";
         }
 
         function stopMainProcessing() {
+            payButton.disabled = false;
             loadingText.style.display = "inline";
             loadingDots.style.display = "none";
-            payButton.disabled = false;
         }
 
         function showUnexpectedError() {
-            successMessage.style.display = "block";
             successMessage.classList.add("fade-in");
+            successMessage.style.display = "block";
+            setTimeout(() => {
+                successMessage.classList.remove("fade-in");
+                successMessage.classList.add("fade-out");
+                setTimeout(() => {
+                    successMessage.style.display = "none";
+                    successMessage.classList.remove("fade-out");
+                }, 500);
+            }, 5000);
         }
 
-
         function closeModal() {
-            // Redirect to car-available.html
-            window.location.href = "car-available.html";
+            inputContainer.style.display = "none";
         }
     </script>
 </body>
