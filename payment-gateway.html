@@ -1,192 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Payment Gateway</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
-      padding: 50px;
-    }
-    .payment-container {
-      position: relative;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      display: inline-block;
-    }
-    .close-button {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #888;
-      cursor: pointer;
-    }
-    .close-button:hover {
-      color: #000;
-    }
-    .payment-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: white;
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .payment-button:hover {
-      background-color: #e0e0e0;
-    }
-    .payment-button img {
-      width: 50px;
-      height: auto;
-      margin-right: 10px;
-    }
-    .input-container {
-      margin-top: 20px;
-      display: none;
-    }
-    .input-container input {
-      padding: 8px;
-      margin: 5px;
-      width: 80%;
-    }
-    .pay-now {
-      background-color: blue;
-      color: white;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .loading {
-      display: none;
-      font-size: 18px;
-      color: green;
-      margin-top: 20px;
-    }
-    .error {
-      display: none;
-      font-size: 18px;
-      color: red;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payment Gateway</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 50px;
+            position: relative; /* To allow absolute positioning of the modal */
+        }
+        .payment-container {
+            position: relative;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            z-index: 20; /* Ensure it's above the modal */
+        }
+        .close-button:hover {
+            color: #000;
+        }
+        .payment-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .payment-button:hover {
+            background-color: #e0e0e0;
+        }
+        .payment-button img {
+            width: 50px;
+            height: auto;
+            margin-right: 10px;
+        }
+        .input-container {
+            margin-top: 20px;
+            display: none;
+        }
+        .input-container input {
+            padding: 8px;
+            margin: 5px;
+            width: 80%;
+        }
+        .pay-now {
+            background-color: blue;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            position: relative; /* For loader positioning */
+            overflow: hidden; /* Clip the loader */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pay-now:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .loading-text {
+            color: white;
+            margin-right: 10px;
+        }
+        .loading-dots {
+            display: flex;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 3px;
+            animation: pulse 0.5s infinite alternate;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .success-message {
+            display: none;
+            font-size: 18px;
+            color: red;
+            margin-top: 20px;
+        }
+        .success-message a {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .error-message {
+            display: none;
+            font-size: 18px;
+            color: red;
+            margin-top: 20px;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-out {
+            animation: fadeOut 0.5s ease-in-out forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* M-Pesa Modal Styles */
+        .mpesa-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0f0f0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            text-align: center;
+        }
+        .mpesa-modal h2 {
+            color: #e6007e; /* M-Pesa brand color */
+            margin-bottom: 20px;
+        }
+        .mpesa-modal label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .mpesa-modal input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 250px;
+            margin-bottom: 10px;
+        }
+        .mpesa-modal .error-text {
+            color: red;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .mpesa-modal button {
+            background-color: #e6007e;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mpesa-modal button span {
+            margin-right: 5px;
+        }
+        .mpesa-modal .loading-dots-modal {
+            display: none;
+            align-items: center;
+        }
+        .mpesa-modal .dot-modal {
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: pulse 0.5s infinite alternate;
+        }
+        .mpesa-modal .dot-modal:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .mpesa-modal .dot-modal:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9;
+        }
+        .mpesa-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+        }
+        .mpesa-close-button:hover {
+            color: #000;
+        }
+    </style>
 </head>
 <body>
-  <div class="payment-container">
-    <!-- Close Button -->
-    <span class="close-button" onclick="closeModal()">×</span>
+    <div class="payment-container">
+        <span class="close-button" onclick="closeModal()">×</span>
 
-    <h2>Select Payment Method</h2>
+        <h2>Select Payment Method</h2>
 
-    <!-- M-Pesa Button -->
-    <div class="payment-button" onclick="showInput('M-Pesa')">
-      <img src="safaricom-logo.jpg" alt="M-Pesa / Safaricom Logo" />
-      <span>Pay with M-Pesa</span>
+        <div class="payment-button" onclick="showMpesaModal()">
+            <img src="safaricom-logo.jpg" alt="M-Pesa / Safaricom Logo" />
+            <span>Pay with M-Pesa</span>
+        </div>
+
+        <div class="payment-button" onclick="showInput('PayPal')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo" />
+            <span>Pay with PayPal</span>
+        </div>
+
+        <div class="payment-button" onclick="showInput('Visa')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa Logo" />
+            <span>Pay with Visa</span>
+        </div>
+
+        <div id="input-container" class="input-container">
+            <h3 id="payment-title"></h3>
+            <input type="text" id="payment-input" placeholder="Enter details..." />
+            <button class="pay-now" onclick="processPayment()" id="payButton">
+                <span class="loading-text" id="loadingText">Pay Now</span>
+                <div class="loading-dots" id="loadingDots" style="display: none;">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </button>
+        </div>
+
+        <div id="successMessage" class="success-message">Unexpected error acquired. <a href="what-happened.html">What happened?</a></div>
+        <div id="errorMessage" class="error-message">502 Bad Gateway - Contact Site Owner A.weli</div>
     </div>
 
-    <!-- PayPal Button -->
-    <div class="payment-button" onclick="showInput('PayPal')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal Logo" />
-      <span>Pay with PayPal</span>
+    <div id="mpesaModal" class="mpesa-modal">
+        <span class="mpesa-close-button" onclick="closeMpesaModal()">×</span>
+        <h2>Simulate M-Pesa Payment</h2>
+        <label for="mpesaNumber">Enter M-Pesa Phone Number:</label>
+        <input type="text" id="mpesaNumber" placeholder="e.g., 07XXXXXXXX" />
+        <p id="mpesaError" class="error-text" style="display: none;">Phone number must be 10 digits and start with 07.</p>
+        <button onclick="handleMpesaPayment()">
+            <span>Pay Now</span>
+            <div class="loading-dots-modal" style="display: none;">
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+                <div class="dot-modal"></div>
+            </div>
+        </button>
     </div>
 
-    <!-- Visa Button -->
-    <div class="payment-button" onclick="showInput('Visa')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa Logo" />
-      <span>Pay with Visa</span>
-    </div>
+    <div id="modalOverlay" class="modal-overlay"></div>
 
-    <!-- Input Section -->
-    <div id="input-container" class="input-container">
-      <h3 id="payment-title"></h3>
-      <input type="text" id="payment-input" placeholder="Enter details..." />
-      <button class="pay-now" onclick="processPayment()">Pay Now</button>
-    </div>
+    <script>
+        let selectedMethod = "";
+        const inputContainer = document.getElementById("input-container");
+        const paymentTitle = document.getElementById("payment-title");
+        const paymentInput = document.getElementById("payment-input");
+        const payButton = document.getElementById("payButton"); // Main "Pay Now" button
+        const loadingText = document.getElementById("loadingText"); // Main loading text
+        const loadingDots = document.getElementById("loadingDots"); // Main loading dots
+        const successMessage = document.getElementById("successMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const mpesaModal = document.getElementById("mpesaModal");
+        const modalOverlay = document.getElementById("modalOverlay");
+        const mpesaError = document.getElementById("mpesaError");
+        const mpesaPayButton = mpesaModal.querySelector('button'); // Get the M-Pesa modal's button
+        const mpesaButtonTextSpan = mpesaPayButton.querySelector('span');
+        const mpesaLoadingDots = mpesaPayButton.querySelector('.loading-dots-modal');
 
-    <!-- Loading and Error -->
-    <div id="loading" class="loading">Processing payment...</div>
-    <div id="error" class="error">502 Bad Gateway - Contact Site Owner A.weli</div>
-  </div>
+        function showInput(method) {
+            selectedMethod = method;
+            inputContainer.style.display = "block";
+            paymentTitle.innerText = "Enter details for " + method;
+            paymentInput.value = "";
 
-  <script>
-    let selectedMethod = "";
-
-    function showInput(method) {
-      selectedMethod = method;
-      document.getElementById("input-container").style.display = "block";
-      document.getElementById("payment-title").innerText = "Enter details for " + method;
-      let inputField = document.getElementById("payment-input");
-      inputField.value = "";
-
-      if (method === "M-Pesa") {
-        inputField.placeholder = "Enter 10-digit phone number (e.g. 0712345678)";
-      } else if (method === "PayPal") {
-        inputField.placeholder = "Enter PayPal email address";
-      } else if (method === "Visa") {
-        inputField.placeholder = "Enter card number (12–19 digits)";
-      }
-    }
-
-    function isValidPhone(phone) {
-      return /^0\d{9}$/.test(phone);
-    }
-
-    function isValidEmail(email) {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function isValidCard(card) {
-      return /^\d{12,19}$/.test(card);
-    }
-
-    function processPayment() {
-      let inputValue = document.getElementById("payment-input").value.trim();
-      if (!inputValue) {
-        alert("Please enter your payment details.");
-        return;
-      }
-
-      if (selectedMethod === "M-Pesa") {
-        if (!isValidPhone(inputValue)) {
-          alert("M-Pesa phone number must be exactly 10 digits and start with 0 (e.g. 0712345678).");
-          return;
+            if (method === "M-Pesa") {
+                inputContainer.style.display = "none"; // Hide the generic input
+                showMpesaModal(); // Show the M-Pesa modal instead
+            } else if (method === "PayPal") {
+                paymentInput.placeholder = "Enter PayPal email address";
+            } else if (method === "Visa") {
+                paymentInput.placeholder = "Enter card number (12–19 digits)";
+            }
         }
-      } else if (selectedMethod === "PayPal") {
-        if (!isValidEmail(inputValue)) {
-          alert("Please enter a valid PayPal email address.");
-          return;
+
+        function isValidPhone(phone) {
+            return /^07\d{8}$/.test(phone) && phone.length === 10;
         }
-      } else if (selectedMethod === "Visa") {
-        if (!isValidCard(inputValue)) {
-          alert("Visa card number must be 12 to 19 digits.");
-          return;
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
-      }
 
-      document.getElementById("loading").style.display = "block";
-      document.getElementById("error").style.display = "none";
+        function isValidCard(card) {
+            return /^\d{12,19}$/.test(card);
+        }
 
-      setTimeout(() => {
-        document.getElementById("loading").style.display = "none";
-        document.getElementById("error").style.display = "block";
-      }, 3000);
-    }
+        function processPayment() {
+            let inputValue = paymentInput.value.trim();
+            if (!inputValue) {
+                alert("Please enter your payment details.");
+                return;
+            }
 
-    function closeModal() {
-      // Redirect to car-available.html
-      window.location.href = "car-available.html";
-    }
-  </script>
+            if (selectedMethod === "PayPal") {
+                if (!isValidEmail(inputValue)) {
+                    alert("Please enter a valid PayPal email address.");
+                    return;
+                }
+                startMainProcessing();
+                setTimeout(() => {
+                    stopMainProcessing();
+                    showUnexpectedError();
+                }, 10000);
+            } else if (selectedMethod === "Visa") {
+                if (!isValidCard(inputValue)) {
+                    alert("Visa card number must be 12 to 19 digits.");
+                    return;
+                }
+                startMainProcessing();
+                setTimeout(() => {
+                    stopMainProcessing();
+                    showUnexpectedError();
+                }, 10000);
+            }
+            // M-Pesa is handled by the modal
+        }
+
+        function showMpesaModal() {
+            mpesaModal.style.display = "block";
+            modalOverlay.style.display = "block";
+            mpesaError.style.display = "none"; // Ensure error message is hidden when modal opens
+            mpesaButtonTextSpan.style.display = "inline";
+            mpesaLoadingDots.style.display = "none";
+            mpesaPayButton.disabled = false; // Enable button
+        }
+
+        function closeMpesaModal() {
+            mpesaModal.style.display = "none";
+            modalOverlay.style.display = "none";
+        }
+
+        function handleMpesaPayment() {
+            const mpesaNumber = document.getElementById("mpesaNumber").value.trim();
+            if (!isValidPhone(mpesaNumber)) {
+                mpesaError.style.display = "block"; // Show the error message
+                return;
+            }
+
+            // Disable M-Pesa modal button and show loading animation
+            mpesaPayButton.disabled = true;
+            mpesaButtonTextSpan.style.display = "none";
+            mpesaLoadingDots.style.display = "flex";
+
+            setTimeout(() => {
+                closeMpesaModal();
+                showUnexpectedError();
+            }, 10000);
+            // In a real scenario, you would send this number to a server for processing
+            console.log("M-Pesa number submitted:", mpesaNumber);
+            // For this simulation, we'll just proceed to the error after the delay
+        }
+
+        function startMainProcessing() {
+            payButton.disabled = true;
+            loadingText.style.display = "none";
+            loadingDots.style.display = "flex";
+            successMessage.style.display = "none";
+            errorMessage.style.display = "none";
+        }
+
+        function stopMainProcessing() {
+            loadingText.style.display = "inline";
+            loadingDots.style.display = "none";
+            payButton.disabled = false;
+        }
+
+        function showUnexpectedError() {
+            successMessage.style.display = "block";
+            successMessage.classList.add("fade-in");
+        }
+
+
+        function closeModal() {
+            // Redirect to car-available.html
+            window.location.href = "car-available.html";
+        }
+    </script>
 </body>
 </html>
