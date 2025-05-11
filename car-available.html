@@ -144,20 +144,20 @@
    /* Booking Details */
 .booking-details {
   background: #fff;
-  padding: 15px;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  padding: 0px;
+  border-radius: 1px;
+  margin-bottom: 2px;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 0px 10px; /* Row gap and column gap (set to 0 for no vertical gap) */
   max-width: 900px; /* Adjust this value as needed */
   margin-left: auto;
   margin-right: auto;
 }
 .booking-info {
-  flex: 60;
-  min-width: 250px;
+  flex: 1;
+  min-width: 2px;
 }
 .booking-info p {
   margin: 8px 0;
@@ -390,6 +390,63 @@
     padding: 6px 10px;
   }
 }
+/* Booking Table - Organized Layout with Side Actions */
+.booking-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.booking-table th, .booking-table td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  display: table-cell; /* VERY IMPORTANT */
+}
+
+.booking-table tr {
+  display: table-row; /* VERY IMPORTANT */
+}
+
+.booking-table th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  width: 150px;
+}
+
+.booking-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.booking-table .pending-payment {
+  text-align: center;
+  font-style: italic;
+  color: #fc0c0c;
+  padding: 1px;
+  font-size: 13px;
+}
+
+.booking-table .booking-actions-cell {
+  text-align: right;
+  padding: 5px 10px;
+}
+
+.booking-table .pay-btn,
+.booking-table .delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 5px;
+  min-width: 0;
+  width: auto;
+}
+ 
 
   </style>
 </head>
@@ -638,53 +695,100 @@
       localStorage.setItem('bookings', JSON.stringify(bookings));
       alert("Booking confirmed! check it at Booking Details");
       closeBookingModal();
-    });
-  // --- Booking Details View ---
-      function renderBookingDetails() {
+    });//// --- Booking Details View ---
+    let allBookings = []; // Store all bookings
+    let displayedBookingsCount = 3; // Initial number of bookings to display
+
+    function renderBookingDetails() {
       contentDiv.innerHTML = '<h2>Booking Details</h2>';
-      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      if (bookings.length === 0) {
+      allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+
+      if (allBookings.length === 0) {
         contentDiv.innerHTML += "<p>No bookings made yet.</p>";
         return;
       }
-      bookings.forEach((booking, idx) => {
-        // Create a flex container to separate details (left) from actions (right)
-        const container = document.createElement('div');
-        container.className = 'booking-details';
-        container.innerHTML = `
-          <div class="booking-info">
-            <p><strong>Car:</strong> ${booking.carName}</p>
-            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
-            <p><strong>National ID:</strong> ${booking.nationalId}</p>
-            <p><strong>Phone:</strong> ${booking.phone}</p>
-            <p><strong>Licence No.:</strong> ${booking.license}</p>
-            <p><strong>Renting Start Date:</strong> ${booking.pickup}</p>
-            <p><strong>Renting End Date:</strong> ${booking.endDate}</p>
-            <p class="pending">Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking,The remaining balance will be paid when picking up the car.</p>
-          </div>
-          <div class="booking-actions">
-            <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
-            <button class="delete-btn" data-index="${idx}">Delete</button>
-          </div>
-        `;
-        contentDiv.appendChild(container);
+
+      const bookingsToDisplay = allBookings.slice(0, displayedBookingsCount);
+
+      bookingsToDisplay.forEach((booking, idx) => {
+        const table = document.createElement('table');
+        table.className = 'booking-table';
+       table.innerHTML = `
+  <tbody>
+    <tr>
+      <th>Car:</th>
+      <td>${booking.carName}</td>
+      <td class="booking-actions-cell">
+        <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+      </td>
+    </tr>
+    <tr>
+      <th>Booking ID:</th>
+      <td>${booking.bookingId}</td>
+      <td class="booking-actions-cell">
+        <button class="delete-btn" data-index="${idx}">DLT</button>
+      </td>
+    </tr>
+    <tr>
+      <th>National ID:</th>
+      <td colspan="2">${booking.nationalId}</td>
+    </tr>
+    <tr>
+      <th>Phone:</th>
+      <td colspan="2">${booking.phone}</td>
+    </tr>
+    <tr>
+      <th>Licence No.:</th>
+      <td colspan="2">${booking.license}</td>
+    </tr>
+    <tr>
+      <th>Renting Start Date:</th>
+      <td colspan="2">${booking.pickup}</td>
+    </tr>
+    <tr>
+      <th>Renting End Date:</th>
+      <td colspan="2">${booking.endDate}</td>
+    </tr>
+    <tr>
+      <td colspan="3" class="pending-payment">
+        Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking, The remaining balance will be paid when picking up the car.
+      </td>
+    </tr>
+  </tbody>
+`;
+        contentDiv.appendChild(table);
       });
+
+      // Add "Show More" button if there are more bookings
+      if (allBookings.length > displayedBookingsCount) {
+        const showMoreButton = document.createElement('button');
+        showMoreButton.textContent = 'Show More Bookings';
+        showMoreButton.id = 'show-more-bookings';
+        contentDiv.appendChild(showMoreButton);
+
+        showMoreButton.addEventListener('click', () => {
+          displayedBookingsCount += 5; // Increase the number of bookings to display
+          renderBookingDetails(); // Re-render the booking details
+        });
+      }
+
       // Attach event listeners for Pay and Delete buttons
       document.querySelectorAll('.pay-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          currentBookingIndex = e.target.getAttribute('data-index');
+          currentBookingIndex = e.target.closest('table').querySelector('.delete-btn').getAttribute('data-index');
           openMpesaModal();
         });
       });
       document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const index = e.target.getAttribute('data-index');
-          deleteBooking(index);
+          if (confirm("Are you sure you want to delete your booking?")) {
+            deleteBooking(index);
+          }
         });
       });
     }
   
-
     // Delete booking function
     function deleteBooking(index) {
       let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
