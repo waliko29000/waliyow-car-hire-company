@@ -141,25 +141,28 @@
     .book-btn:hover {
       background: #f30928;
     }
-    /* Booking Details */
-    .booking-details {
-      background: #fff;
-      padding: 15px;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .booking-info {
-      flex: 1;
-      min-width: 250px;
-    }
-    .booking-info p {
-      margin: 8px 0;
-      font-size: 15px;
-    }
+   /* Booking Details */
+.booking-details {
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 900px; /* Adjust this value as needed */
+  margin-left: auto;
+  margin-right: auto;
+}
+.booking-info {
+  flex: 60;
+  min-width: 250px;
+}
+.booking-info p {
+  margin: 8px 0;
+  font-size: 15px;
+}
     .pending {
       color: #c0392b;
       font-weight: bold;
@@ -417,17 +420,18 @@
       <span class="close-modal" id="closeBookingModal">&times;</span>
       <h2>Book Car</h2>
       <form id="bookingForm">
-        <label for="bookingId">National ID</label>
+        <label for="nationalid">National ID</label>
         
-        <input type="text" id="bookingId" placeholder="Enter National ID" required />
+        <input type="text" id="nationalId" placeholder="Enter National ID" required />
         <label for="tel">Phone Number</label>
-        <input type="number" id="phone" placeholder="Enter Phone Number"
+        <input type="number" id="phone" placeholder="Enter Phone Number">
         <label for="license">Driver Licence No.</label>
         <input type="text" id="license" placeholder="Enter Licence Number" required />
-        <label for="pickup">Pick Up Date</label>
+        <label for="pickup">Renting Start Date</label>
         <input type="date" id="pickup" required />
-        <label for="endDate">End Date</label>
+        <label for="endDate">Renting End Date</label>
         <input type="date" id="endDate" required />
+      
         <button type="submit">Submit Booking</button>
       </form>
     </div>
@@ -578,83 +582,108 @@
       bookingForm.reset();
     }
     bookingForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const bookingId = document.getElementById('bookingId').value.trim();
-      const license = document.getElementById('license').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const pickup = document.getElementById('pickup').value;
-      const endDate = document.getElementById('endDate').value;
-      
-      // Validate required fields
-      if (!bookingId || !license || !pickup || !endDate) {
-        alert("Error: Please fill in all booking fields including Pick Up Date and End Date.");
-        return;
-      }
-      // Validate that End Date is later than Pick Up Date
-      if (new Date(endDate) <= new Date(pickup)) {
-        alert("Error: End Date must be later than Pick Up Date.");
-        return;
-      }
-      
-      // Save booking immediately
-      const bookingDetails = {
-        carName: currentCar.name,
-        bookingId,
-        license,
-        pickup,
-        endDate,
-        price: currentCar.price
-      };
-      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      bookings.push(bookingDetails);
-      localStorage.setItem('bookings', JSON.stringify(bookings));
-      alert("Booking confirmed! check it at Booking info");
-      closeBookingModal();
-    });
+      e.preventDefault();
+      const nationalId = document.getElementById('nationalId').value.trim();
+      const license = document.getElementById('license').value.trim();
+      const phone = document.getElementById('phone').value.trim(); // Get phone number
+      const pickup = document.getElementById('pickup').value;
+      const endDate = document.getElementById('endDate').value;
 
-    // --- Booking Details View ---
-    function renderBookingDetails() {
-      contentDiv.innerHTML = '<h2>Booking Details</h2>';
-      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      if (bookings.length === 0) {
-        contentDiv.innerHTML += "<p>No bookings made yet.</p>";
-        return;
-      }
-      bookings.forEach((booking, idx) => {
-        // Create a flex container to separate details (left) from actions (right)
-        const container = document.createElement('div');
-        container.className = 'booking-details';
-        container.innerHTML = `
-          <div class="booking-info">
-            <p><strong>Car:</strong> ${booking.carName}</p>
-            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
-            <p><strong>Licence:</strong> ${booking.license}</p>
-            <p><strong>Pick Up:</strong> ${booking.pickup}</p>
-            <p><strong>End Date:</strong> ${booking.endDate}</p>
-            <p class="pending">Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking,The remaining balance will be paid when picking up the car.</p>
-          </div>
-          <div class="booking-actions">
-            <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+      // Validate required fields
+      if (!nationalId || !license || !phone || !pickup || !endDate) { // Include phone in validation
+        alert("Error: Please fill in all booking fields including Phone Number, Renting Start Date and Renting End Date.");
+        return;
+      }
 
-            <button class="delete-btn" data-index="${idx}">Delete</button>
-          </div>
-        `;
-        contentDiv.appendChild(container);
-      });
-      // Attach event listeners for Pay and Delete buttons
-      document.querySelectorAll('.pay-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          currentBookingIndex = e.target.getAttribute('data-index');
-          openMpesaModal();
-        });
-      });
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = e.target.getAttribute('data-index');
-          deleteBooking(index);
-        });
-      });
-    }
+      // Validate Phone Number (exactly 10 digits and starts with '07')
+      if (phone.length !== 10 || !phone.startsWith('07')) {
+        alert("Error: Phone number must be exactly 10 digits and start with '07'.");
+        return;
+      }
+
+      // Validate National ID (not less than 7 digits)
+      if (!/^\d{7,}$/.test(nationalId)) {
+        alert("Error: National ID should be at least 7 digits.");
+        return;
+      }
+
+      // Validate Driver's License (not less than 7 characters: letters and digits)
+      if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
+        alert("Error: Licence No. should be at least 7 characters long and contain only letters and digits.");
+        return;
+      }
+
+      // Validate that End Date is later than Pick Up Date
+      if (new Date(endDate) <= new Date(pickup)) {
+        alert("Error: Renting End Date must be later than Renting Start Date.");
+        return;
+      }
+
+      // Generate a unique booking ID
+      const bookingId = 'BOOK' + Date.now() + Math.floor(Math.random() * 1000);
+
+      // Save booking immediately
+      const bookingDetails = {
+        carName: currentCar.name,
+        bookingId, // Use the unique ID as bookingId
+        nationalId,
+        license,
+        phone, // Save the phone number
+        pickup,
+        endDate,
+        price: currentCar.price
+      };
+      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      bookings.push(bookingDetails);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      alert("Booking confirmed! check it at Booking Details");
+      closeBookingModal();
+    });
+  // --- Booking Details View ---
+      function renderBookingDetails() {
+      contentDiv.innerHTML = '<h2>Booking Details</h2>';
+      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      if (bookings.length === 0) {
+        contentDiv.innerHTML += "<p>No bookings made yet.</p>";
+        return;
+      }
+      bookings.forEach((booking, idx) => {
+        // Create a flex container to separate details (left) from actions (right)
+        const container = document.createElement('div');
+        container.className = 'booking-details';
+        container.innerHTML = `
+          <div class="booking-info">
+            <p><strong>Car:</strong> ${booking.carName}</p>
+            <p><strong>Booking ID:</strong> ${booking.bookingId}</p>
+            <p><strong>National ID:</strong> ${booking.nationalId}</p>
+            <p><strong>Phone:</strong> ${booking.phone}</p>
+            <p><strong>Licence No.:</strong> ${booking.license}</p>
+            <p><strong>Renting Start Date:</strong> ${booking.pickup}</p>
+            <p><strong>Renting End Date:</strong> ${booking.endDate}</p>
+            <p class="pending">Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking,The remaining balance will be paid when picking up the car.</p>
+          </div>
+          <div class="booking-actions">
+            <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+            <button class="delete-btn" data-index="${idx}">Delete</button>
+          </div>
+        `;
+        contentDiv.appendChild(container);
+      });
+      // Attach event listeners for Pay and Delete buttons
+      document.querySelectorAll('.pay-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          currentBookingIndex = e.target.getAttribute('data-index');
+          openMpesaModal();
+        });
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          deleteBooking(index);
+        });
+      });
+    }
+  
 
     // Delete booking function
     function deleteBooking(index) {
