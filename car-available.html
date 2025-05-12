@@ -639,155 +639,164 @@
       bookingForm.reset();
     }
     bookingForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const nationalId = document.getElementById('nationalId').value.trim();
-      const license = document.getElementById('license').value.trim();
-      const phone = document.getElementById('phone').value.trim(); // Get phone number
-      const pickup = document.getElementById('pickup').value;
-      const endDate = document.getElementById('endDate').value;
+    e.preventDefault();
+    const nationalId = document.getElementById('nationalId').value.trim();
+    const license = document.getElementById('license').value.trim();
+    const phone = document.getElementById('phone').value.trim(); // Get phone number
+    const pickup = document.getElementById('pickup').value;
+    const endDate = document.getElementById('endDate').value;
 
-      // Validate required fields
-      if (!nationalId || !license || !phone || !pickup || !endDate) { // Include phone in validation
-        alert("Error: Please fill in all booking fields including Phone Number, Renting Start Date and Renting End Date.");
-        return;
-      }
+    // Validate required fields
+    if (!nationalId || !license || !phone || !pickup || !endDate) { // Include phone in validation
+      alert("Error: Please fill in all booking fields including Phone Number, Renting Start Date and Renting End Date.");
+      return;
+    }
 
-      // Validate Phone Number (exactly 10 digits and starts with '07')
-      if (phone.length !== 10 || !phone.startsWith('07')) {
-        alert("Error: Phone number must be exactly 10 digits and start with '07'.");
-        return;
-      }
+    // Validate Phone Number (exactly 10 digits and starts with '07')
+    if (phone.length !== 10 || !phone.startsWith('07')) {
+      alert("Error: Phone number must be exactly 10 digits and start with '07'.");
+      return;
+    }
 
-      // Validate National ID (not less than 7 digits)
-      if (!/^\d{7,}$/.test(nationalId)) {
-        alert("Error: National ID should be at least 7 digits.");
-        return;
-      }
+    // Validate National ID (not less than 7 digits)
+    if (!/^\d{7,}$/.test(nationalId)) {
+      alert("Error: National ID should be at least 7 digits.");
+      return;
+    }
 
-      // Validate Driver's License (not less than 7 characters: letters and digits)
-      if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
-        alert("Error: Licence No. should be at least 7 characters long and contain only letters and digits.");
-        return;
-      }
+    // Validate Driver's License (not less than 7 characters: letters and digits)
+    if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
+      alert("Error: Licence No. should be at least 7 characters long and contain only letters and digits.");
+      return;
+    }
 
-      // Validate that End Date is later than Pick Up Date
-      if (new Date(endDate) <= new Date(pickup)) {
-        alert("Error: Renting End Date must be later than Renting Start Date.");
-        return;
-      }
+    // Validate that End Date is later than Pick Up Date
+    if (new Date(endDate) <= new Date(pickup)) {
+      alert("Error: Renting End Date must be later than Renting Start Date.");
+      return;
+    }
 
-      // Generate a unique booking ID
-      const bookingId = 'BOOK' + Date.now() + Math.floor(Math.random() * 1000);
+    // Generate a unique booking ID
+    const bookingId = 'BOOK' + Date.now() + Math.floor(Math.random() * 1000);
 
-      // Save booking immediately
-      const bookingDetails = {
-        carName: currentCar.name,
-        bookingId, // Use the unique ID as bookingId
-        nationalId,
-        license,
-        phone, // Save the phone number
-        pickup,
-        endDate,
-        price: currentCar.price
-      };
-      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      bookings.push(bookingDetails);
-      localStorage.setItem('bookings', JSON.stringify(bookings));
-      alert("Booking confirmed! check it at Booking Details");
-      closeBookingModal();
-    });//// --- Booking Details View ---
-    let allBookings = []; // Store all bookings
-    let displayedBookingsCount = 3; // Initial number of bookings to display
+    // Get current timestamp
+    const timestamp = new Date().toLocaleString(); // Get a user-friendly date and time string
 
-    function renderBookingDetails() {
-      contentDiv.innerHTML = '<h2>Booking Details</h2>';
-      allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    // Save booking immediately
+    const bookingDetails = {
+      carName: currentCar.name,
+      bookingId, // Use the unique ID as bookingId
+      nationalId,
+      license,
+      phone, // Save the phone number
+      pickup,
+      endDate,
+      price: currentCar.price,
+      timestamp // Add the timestamp to the booking details
+    };
+    let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    bookings.unshift(bookingDetails); // Add the new booking to the beginning of the array
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+    alert(`Booking created successfully!\n\nTo confirm your booking, Check it at "Booking Details" section and Pay`);
+    closeBookingModal();
+  
+    });// --- Booking Details View ---
+  let allBookings = []; // Store all bookings
+  let displayedBookingsCount = 3; // Initial number of bookings to display
 
-      if (allBookings.length === 0) {
-        contentDiv.innerHTML += "<p>No bookings made yet.</p>";
-        return;
-      }
+  function renderBookingDetails() {
+    contentDiv.innerHTML = '<h2>Booking Details</h2>';
+    allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
-      const bookingsToDisplay = allBookings.slice(0, displayedBookingsCount);
+    if (allBookings.length === 0) {
+      contentDiv.innerHTML += "<p>No bookings made yet.</p>";
+      return;
+    }
 
-      bookingsToDisplay.forEach((booking, idx) => {
-        const table = document.createElement('table');
-        table.className = 'booking-table';
-       table.innerHTML = `
-  <tbody>
-    <tr>
-      <th>Car:</th>
-      <td>${booking.carName}</td>
-      <td class="booking-actions-cell">
-        <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
-      </td>
-    </tr>
-    <tr>
-      <th>Booking ID:</th>
-      <td>${booking.bookingId}</td>
-      <td class="booking-actions-cell">
-        <button class="delete-btn" data-index="${idx}">DLT</button>
-      </td>
-    </tr>
-    <tr>
-      <th>National ID:</th>
-      <td colspan="2">${booking.nationalId}</td>
-    </tr>
-    <tr>
-      <th>Phone:</th>
-      <td colspan="2">${booking.phone}</td>
-    </tr>
-    <tr>
-      <th>Licence No.:</th>
-      <td colspan="2">${booking.license}</td>
-    </tr>
-    <tr>
-      <th>Renting Start Date:</th>
-      <td colspan="2">${booking.pickup}</td>
-    </tr>
-    <tr>
-      <th>Renting End Date:</th>
-      <td colspan="2">${booking.endDate}</td>
-    </tr>
-    <tr>
-      <td colspan="3" class="pending-payment">
-        Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking, The remaining balance will be paid when picking up the car.
-      </td>
-    </tr>
-  </tbody>
-`;
-        contentDiv.appendChild(table);
-      });
+    const bookingsToDisplay = allBookings.slice(0, displayedBookingsCount);
 
-      // Add "Show More" button if there are more bookings
-      if (allBookings.length > displayedBookingsCount) {
-        const showMoreButton = document.createElement('button');
-        showMoreButton.textContent = 'Show More Bookings';
-        showMoreButton.id = 'show-more-bookings';
-        contentDiv.appendChild(showMoreButton);
+    bookingsToDisplay.forEach((booking, idx) => {
+      const table = document.createElement('table');
+      table.className = 'booking-table';
+      table.innerHTML = `
+        <tbody>
+          <tr>
+            <th>Car Type:</th>
+            <td>${booking.carName}</td>
+            <td class="booking-actions-cell">
+              <a href="payment-gateway.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Booking ID:</th>
+            <td>${booking.bookingId}</td>
+            <td class="booking-actions-cell">
+              <button class="delete-btn" data-index="${idx}">DLT</button>
+            </td>
+          </tr>
+          <tr>
+            <th>Timestamp:</th>
+            <td colspan="2">${booking.timestamp}</td>
+          </tr>
+          <tr>
+            <th>Phone No.:</th>
+            <td colspan="2">${booking.phone}</td>
+          </tr>
+          <tr>
+            <th>National ID:</th>
+            <td colspan="2">${booking.nationalId}</td>
+          </tr>
+          <tr>
+            <th>Licence No.:</th>
+            <td colspan="2">${booking.license}</td>
+          </tr>
+          <tr>
+            <th>Renting Start Date:</th>
+            <td colspan="2">${booking.pickup}</td>
+          </tr>
+          <tr>
+            <th>Renting End Date:</th>
+            <td colspan="2">${booking.endDate}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="pending-payment">
+              Pending payment: Pay half of the rental fees which is (Ksh ${Math.floor(booking.price/2)}) to confirm your booking, The remaining balance will be paid when picking up the car.
+            </td>
+          </tr>
+        </tbody>
+      `;
+      contentDiv.appendChild(table);
+    });
 
-        showMoreButton.addEventListener('click', () => {
-          displayedBookingsCount += 5; // Increase the number of bookings to display
-          renderBookingDetails(); // Re-render the booking details
-        });
-      }
+    // Add "Show More" button if there are more bookings
+    if (allBookings.length > displayedBookingsCount) {
+      const showMoreButton = document.createElement('button');
+      showMoreButton.textContent = 'Show More Bookings';
+      showMoreButton.id = 'show-more-bookings';
+      contentDiv.appendChild(showMoreButton);
 
-      // Attach event listeners for Pay and Delete buttons
-      document.querySelectorAll('.pay-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          currentBookingIndex = e.target.closest('table').querySelector('.delete-btn').getAttribute('data-index');
-          openMpesaModal();
-        });
-      });
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          const index = e.target.getAttribute('data-index');
-          if (confirm("Are you sure you want to delete your booking?")) {
-            deleteBooking(index);
-          }
-        });
-      });
-    }
+      showMoreButton.addEventListener('click', () => {
+        displayedBookingsCount += 5; // Increase the number of bookings to display
+        renderBookingDetails(); // Re-render the booking details
+      });
+    }
+
+    // Attach event listeners for Pay and Delete buttons
+    document.querySelectorAll('.pay-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        currentBookingIndex = e.target.closest('table').querySelector('.delete-btn').getAttribute('data-index');
+        openMpesaModal();
+      });
+    });
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = e.target.getAttribute('data-index');
+        if (confirm("Are you sure you want to delete your booking?")) {
+          deleteBooking(index);
+        }
+      });
+    });
+  }
   
     // Delete booking function
     function deleteBooking(index) {
