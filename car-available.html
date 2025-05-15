@@ -447,10 +447,45 @@
   min-width: 0;
   width: auto;
 }
+.download-pdf-btn {
+  display: inline-block;
+  padding: 5px 15px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #63ee06; /* Green background */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s ease;
+  margin-top: 10px; /* Add some space above the button */
+}
+
+.download-pdf-btn:hover {
+  background-color: #ee0606; /* Darker green on hover */
+}
+
+.download-pdf-btn:active {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  background-color: #061eee;  /* Even darker green on active */
+}
+
+/* Optional: Add an icon */
+.download-pdf-btn::before {
+  content: "\f1c1"; /* Font Awesome PDF icon (you might need to include Font Awesome in your project) */
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 8px;
+}
+
  
 
   </style>
 </head>
+
 <body>
   <!-- Header -->
   <header class="header">
