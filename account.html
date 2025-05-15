@@ -74,7 +74,7 @@
         }
 
         .profile-header {
-            padding: 20px;
+            padding: 5px;
             text-align: center;
             border-bottom: 1px solid #eee;
             background-color: #007bff;
@@ -203,7 +203,7 @@
         <nav>
             <ul>
                 <li><label for="upload-input">Upload Profile Picture</label><input type="file" id="upload-input" accept="image/*"></li>
-                <li><a href="user.html">Personal Info</a></li>
+                <li><a href="user.html">Personal Information</a></li>
                 <li><a href="change-pass.html">Change Password</a></li>
                 <li><a href="help.html">Help Center</a></li>
                 <li><li class="emergency-item"><a href="tel:+2547XXXXXXXXX">Emergency</a></li>
@@ -219,55 +219,70 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const accountButton = document.getElementById('account-button');
-            const sideNav = document.getElementById('side-nav');
-            const closeNavButton = document.getElementById('close-nav-button');
-            const uploadInput = document.getElementById('upload-input');
-            const profilePic = document.getElementById('profile-pic');
-            const usernameDisplay = document.getElementById('username-display');
+        const accountButton = document.getElementById('account-button');
+        const sideNav = document.getElementById('side-nav');
+        const closeNavButton = document.getElementById('close-nav-button');
+        const uploadInput = document.getElementById('upload-input');
+        const profilePic = document.getElementById('profile-pic');
+        const usernameDisplay = document.getElementById('username-display');
 
-            if (accountButton && sideNav && closeNavButton && uploadInput && profilePic && usernameDisplay) {
-                const storedImage = localStorage.getItem('profilePicture');
-                if (storedImage) {
-                    profilePic.src = storedImage;
-                }
+        if (accountButton && sideNav && closeNavButton && uploadInput && profilePic && usernameDisplay) {
+            // Retrieve the current user object from localStorage
+            const currentUser = localStorage.getItem('currentUser');
 
-                // Load username from localStorage
-                const storedUsername = localStorage.getItem('username');
-                console.log("Retrieved username:", storedUsername); // ADDED FOR DEBUGGING
+            if (currentUser) {
+                const userObject = JSON.parse(currentUser);
 
-                if (storedUsername) {
-                    usernameDisplay.textContent = storedUsername;
-                    console.log("Username displayed:", storedUsername); // ADDED FOR DEBUGGING
-                } else {
-                    console.log("Username not found in localStorage."); // ADDED FOR DEBUGGING
-                }
+                // Display the username
+                if (userObject && userObject.username) {
+                    usernameDisplay.textContent = userObject.username;
+                    console.log("Username displayed:", userObject.username);
+                } else {
+                    console.log("Username not found in currentUser object.");
+                }
 
-                // We don't need the click listener for the account button anymore
-                // accountButton.addEventListener('click', () => {
-                //     sideNav.classList.toggle('open');
-                // });
+                // Load profile picture if it exists in the user object
+                if (userObject && userObject.profilePicture) {
+                    profilePic.src = userObject.profilePicture;
+                } else {
+                    // Fallback to default if no profile picture in user object
+                    const storedImage = localStorage.getItem('profilePicture');
+                    if (storedImage) {
+                        profilePic.src = storedImage;
+                    }
+                }
+            } else {
+                console.log("currentUser object not found in localStorage.");
+                // Optionally set default username or handle the case where no user is logged in
+            }
 
-                closeNavButton.addEventListener('click', () => {
-                    sideNav.classList.remove('open');
-                    window.location.href = 'car-available.html';
-                });
+            closeNavButton.addEventListener('click', () => {
+                sideNav.classList.remove('open');
+                window.location.href = 'car-available.html';
+            });
 
-                uploadInput.addEventListener('change', (event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            profilePic.src = e.target.result;
-                            localStorage.setItem('profilePicture', e.target.result);
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-            } else {
-                console.error("One or more required elements not found in the DOM.");
-            }
-        });
+            uploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        profilePic.src = e.target.result;
+                        localStorage.setItem('profilePicture', e.target.result);
+
+                        // Optionally update the currentUser object with the new profile picture
+                        if (currentUser) {
+                            const userObject = JSON.parse(currentUser);
+                            userObject.profilePicture = e.target.result;
+                            localStorage.setItem('currentUser', JSON.stringify(userObject));
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        } else {
+            console.error("One or more required elements not found in the DOM.");
+        }
+    });
     </script>
 
 </body>
