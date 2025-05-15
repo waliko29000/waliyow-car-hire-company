@@ -759,7 +759,7 @@
             <td colspan="2">${booking.nationalId}</td>
           </tr>
           <tr>
-            <th class="licence-no-header">Licence No.:</th>
+            <th class="licence-no-header">Licence No:</th>
             <td colspan="2">${booking.license}</td>
           </tr>
           <tr>
@@ -863,7 +863,7 @@
       y += lineHeight;
       pdf.text(`National ID: ${booking.nationalId}`, 15, y);
       y += lineHeight;
-      pdf.text(`Licence No.: ${booking.license}`, 15, y);
+      pdf.text(`Licence No.: ${booking.licenseno}`, 15, y);
       y += lineHeight;
       pdf.text(`Timestamp: ${booking.timestamp}`, 15, y);
       y += lineHeight;
