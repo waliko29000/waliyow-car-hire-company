@@ -447,45 +447,24 @@
   min-width: 0;
   width: auto;
 }
+ 
 .download-pdf-btn {
-  display: inline-block;
-  padding: 5px 15px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  text-decoration: none;
-  color: #fff;
-  background-color: #63ee06; /* Green background */
+  padding: 6px 12px; /* Adjust padding to match other buttons if needed */
   border: none;
-  border-radius: 5px;
+  border-radius: 5px; /* Adjust border-radius to match other buttons if needed */
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.3s ease;
-  margin-top: 10px; /* Add some space above the button */
+  font-size: 14px; /* Adjust font-size to match other buttons if needed */
+  background: #1d0eee; /* Blue color */
+  color: #fff;
+  margin-top: 5px; /* Add some top margin for spacing */
+  text-decoration: none; /* Remove default link underline if it was accidentally styled as one */
 }
 
 .download-pdf-btn:hover {
-  background-color: #ee0606; /* Darker green on hover */
+  background: #1c5980; /* Darker blue for hover effect */
 }
-
-.download-pdf-btn:active {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  background-color: #061eee;  /* Even darker green on active */
-}
-
-/* Optional: Add an icon */
-.download-pdf-btn::before {
-  content: "\f1c1"; /* Font Awesome PDF icon (you might need to include Font Awesome in your project) */
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  margin-right: 8px;
-}
-
- 
-
   </style>
 </head>
-
 <body>
   <!-- Header -->
   <header class="header">
@@ -738,15 +717,14 @@
     closeBookingModal();
   
     });
-       
-          // --- Booking Details View ---
-  let allBookings = []; // Store all bookings
+// --- Booking Details View ---
+let allBookings = []; // Store all bookings
   let displayedBookingsCount = 3; // Initial number of bookings to display
 
   function renderBookingDetails() {
     contentDiv.innerHTML = '<h2>Booking Details</h2>';
     allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
-    allBookings.reverse(); // Ensure latest booking is first
+    // REMOVE THIS LINE: allBookings.reverse(); // Ensure latest booking is first
 
     if (allBookings.length === 0) {
       contentDiv.innerHTML += "<p>No bookings made yet.</p>";
@@ -858,6 +836,15 @@
         downloadBookingAsPDF(bookingId);
       });
     });
+  
+       
+
+    document.querySelectorAll('.download-pdf-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const bookingId = e.target.getAttribute('data-booking-id');
+        downloadBookingAsPDF(bookingId);
+      });
+    });
   }
   function downloadBookingAsPDF(bookingId) {
     const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
@@ -898,7 +885,7 @@
       y += lineHeight;
       pdf.text(`National ID: ${booking.nationalId}`, 15, y);
       y += lineHeight;
-      pdf.text(`Licence No.: ${booking.licenseno}`, 15, y);
+      pdf.text(`Licence No.: ${booking.license}`, 15, y);
       y += lineHeight;
       pdf.text(`Timestamp: ${booking.timestamp}`, 15, y);
       y += lineHeight;
