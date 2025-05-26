@@ -18,28 +18,32 @@ body {
   background: #f4f4f4;
   color: #333;
 }
-/* Header styling */
 header {
-  background: hwb(216 4% 45%);
+  background: #1464dd;
   color: #fff;
-  padding: 8px 15px;
+  /* This is the key for space BETWEEN the header's edges and its content */
+  padding: 5px 15px; 
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
+
 header h1 {
   font-size: 1.2em;
 }
 nav {
   display: flex;
   flex-wrap: wrap;
+  /* Add this to create space between navigation items */
+  gap: 5px; 
 }
+
 nav button, nav a {
   background: #0056b3;
   border: none;
   color: #fff;
-  margin: 3px;
+  /* REMOVE any existing 'margin' properties from here */
   padding: 8px 12px;
   cursor: pointer;
   border-radius: 3px;
