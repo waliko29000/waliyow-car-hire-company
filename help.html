@@ -194,9 +194,8 @@
         localStorage.setItem(LOCAL_STORAGE_KEY, problemText);
 
         submittedProblemDiv.textContent = problemText;
-        thankYouMessage.textContent = "Thank you! Your issue has been received. We'll look into it shortly."; // Ensure the correct text
+        thankYouMessage.textContent = "Thank you! Your issue has been received. We'll look into it shortly.";
         thankYouContainer.style.display = "block";
-
         currentMessageTextElement.textContent = problemText;
         currentMessageContainer.style.display = "block";
 
@@ -221,6 +220,10 @@
     }
 
     window.onload = displayLastMessage;
+
+    window.onbeforeunload = function() {
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+    };
 </script>
 
 </body>
