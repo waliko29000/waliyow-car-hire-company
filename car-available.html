@@ -21,7 +21,7 @@
     .header {
   display: flex;
   align-items: center;
-  background: hwb(216 4% 45%);
+  background:  #1464dd;
   color: #fff;
   padding: 6px 20px;
   flex-wrap: wrap;
@@ -59,7 +59,7 @@
     }
     /* Content Area */
     #content {
-  padding: 115px 20px 20px 20px; /* ⬅️ push everything down */
+  padding: 112px 20px 20px 20px; /* ⬅️ push everything down */
   max-width: 1200px;
   margin: 20px auto;
   text-align: left;
@@ -72,8 +72,8 @@
 
     /* Home Notice (Red) */
     .notice {
-      background: #ffdddd;
-      border-left: 5px solid #002fff;
+      background: rgb(241, 238, 59);
+      border-left: 5px solid  #1464dd;
       padding: 20px;
       margin-bottom: 30px;
       border-radius: 5px;
@@ -81,7 +81,7 @@
     }
     .notice h2 {
       margin-bottom: 15px;
-      color: #a80000;
+      color: #a80038;
     }
     .notice p {
       margin-bottom: 10px;
@@ -131,7 +131,7 @@
       color: #fff;
       font-size: 16px;
       padding: 8px 12px;
-      background: hwb(216 4% 45%);
+      background:  #1464dd;
       border-radius: 5px;
       transition: background 0.3s ease;
       cursor: pointer;
@@ -184,7 +184,7 @@
       width: 100px;
     }
     .pay-btn {
-      background: hwb(216 4% 45%);
+      background: #1464dd;
       color: #fff;
     }
     .pay-btn:hover {
@@ -454,7 +454,7 @@
   border-radius: 5px; /* Adjust border-radius to match other buttons if needed */
   cursor: pointer;
   font-size: 14px; /* Adjust font-size to match other buttons if needed */
-  background: hwb(216 4% 45%); /* Blue color */
+  background:  #1464dd; /* Blue color */
   color: #fff;
   margin-top: 5px; /* Add some top margin for spacing */
   text-decoration: none; /* Remove default link underline if it was accidentally styled as one */
@@ -470,6 +470,7 @@
   <header class="header">
     <div class="left-section"> <h5> Waliko Car Hire </h5></div>
     <nav class="nav-links">
+
      
       <a id="homeLink">Home</a>
       <a id="carsLink">Cars</a>
@@ -594,7 +595,7 @@
 
     const receiptModal = document.getElementById('receiptModal');
     const closeReceiptBtn = document.getElementById('closeReceipt');
-
+const headerDepositStatus = document.getElementById('headerDepositStatus');
     let currentCar = null; // For booking
     let currentBookingIndex = null; // For Mpesa payment
 
@@ -908,6 +909,31 @@ let allBookings = []; // Store all bookings
       localStorage.setItem('bookings', JSON.stringify(bookings));
       renderBookingDetails();
     }
+    function closeReceiptModal() {
+     receiptModal.style.display = 'none';
+   }
+   closeReceiptBtn.addEventListener('click', closeReceiptModal);
+   // --- Function to Update Header Deposit Status ---
+   function updateHeaderDepositStatus() {
+     const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+     
+     if (bookings.length > 0) {
+       // Get the most recent booking (as you use unshift to add to the beginning)
+       const latestBooking = bookings[0];
+
+       const startDate = new Date(latestBooking.pickup);
+       const endDate = new Date(latestBooking.endDate);
+       const timeDifference = endDate.getTime() - startDate.getTime();
+       const daysBooked = Math.ceil(timeDifference / (1000 * 3600 * 24));
+       const totalRentalFee = latestBooking.price * daysBooked;
+       const depositAmount = Math.floor(totalRentalFee / 2);
+
+       // Display the deposit amount for the most recent booking
+       headerDepositStatus.textContent = `Deposit Pending: Ksh ${depositAmount}`;
+     } else {
+       headerDepositStatus.textContent = ''; // Clear if no bookings
+     }
+   }
 
     // --- Payment Statements View ---
     function renderPaymentStatements() {
@@ -984,6 +1010,7 @@ let allBookings = []; // Store all bookings
 
     // --- Initialize with Home View ---
     renderHome();
+    document.addEventListener('DOMContentLoaded', updateHeaderDepositStatus);
   </script>
 </body>
 </html>
