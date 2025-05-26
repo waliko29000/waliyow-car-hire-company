@@ -3,378 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Rental Live Chat</title>
+    <title>Account Menu</title>
     <style>
-        /* --- CSS for Chat Widget --- */
-        #chat-widget-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 320px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff;
-            overflow: hidden;
-            z-index: 1000;
-            transition: all 0.3s ease; /* For smooth expansion/collapse */
-            transform-origin: bottom right; /* For scaling from bottom right */
-        }
-
-        #chat-header {
-            background-color: #007bff;
-            color: rgba(255, 255, 255, 0.288);
-            padding: 15px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        #chat-title {
-            font-size: 1.1em;
-        }
-
-        #chat-toggle-button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5em;
-            cursor: pointer;
-            line-height: 1;
-            /* Add a subtle animation to draw attention */
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.05); }
-        }
-
-        #chat-body {
-            display: none;
-            padding: 15px;
-            background-color: #f8f8f8;
-            max-height: 350px;
-            overflow-y: auto;
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f4f4;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            box-sizing: border-box;
         }
 
-        #chat-messages {
-            margin-bottom: 15px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .message {
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            clear: both;
-            max-width: 80%;
-        }
-
-        .user-message {
-            background-color: #e3f2fd;
-            color: #1976d2;
-            align-self: flex-start;
-        }
-
-        .agent-message {
-            background-color: #e0f2f1;
-            color: #00796b;
-            align-self: flex-end;
-        }
-
-        .agent-typing {
-            background-color: #f0f8ff; /* Alice Blue */
-            color: #6495ed; /* Cornflower Blue */
-            font-style: italic;
-            text-align: left;
-        }
-
-        #chat-input-area {
+        .account-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
-        #message-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-
-        #send-button {
-            background-color: #066bd1;
+        #account-button {
+            background-color:  #1464dd;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
         }
 
-        #send-button:hover {
-            background-color: #b30000;
+        #account-button svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            margin-right: 5px;
         }
 
-        .greeting-message {
-            text-align: center;
-            color: #0056b3;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-
-        /* --- Mobile-Specific Styles --- */
-        @media (max-width: 768px) {
-            #chat-widget-container {
-                width: 60px; /* Smaller initial width for the button */
-                height: 60px; /* Circular or square button */
-                border-radius: 50%; /* Make it circular */
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                overflow: hidden; /* Hide header text when collapsed */
-            }
-
-            #chat-header {
-                position: absolute; /* Position it within the container */
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border-radius: 50%;
-                justify-content: center;
-                align-items: center;
-                padding: 0; /* No extra padding */
-                flex-direction: column; /* Stack title and toggle */
-            }
-
-            #chat-title {
-                display: none; /* Hide title when collapsed */
-                font-size: 0.9em;
-                margin-bottom: 5px;
-            }
-
-            #chat-toggle-button {
-                font-size: 2em; /* Larger plus icon */
-                /* Adjust animation for the button */
-                animation: pulse-mobile 1.5s infinite alternate;
-            }
-
-            @keyframes pulse-mobile {
-                0% { transform: scale(1) rotate(0deg); }
-                100% { transform: scale(1.1) rotate(15deg); }
-            }
-
-            #chat-body {
-                position: fixed; /* Overlay the content */
-                top: auto;
-                left: 0;
-                bottom: 0;
-                width: 100%;
-                max-height: 80vh;
-                display: none; /* Initially hidden */
-                border-radius: 10px 10px 0 0; /* Rounded top */
-                box-shadow: 0px -5px 15px rgba(0, 0, 0, 0.2);
-                z-index: 1001; /* Above the button */
-                flex-direction: column;
-            }
-
-            #chat-input-area {
-                padding: 10px;
-            }
-
-            #chat-messages {
-                padding: 10px;
-                flex-grow: 1;
-            }
-
-            /* Expanded state for mobile */
-            #chat-widget-container.expanded {
-                width: 100%;
-                height: auto;
-                border-radius: 10px 10px 0 0;
-                bottom: 0;
-            }
-
-            #chat-widget-container.expanded #chat-header {
-                border-radius: 10px 10px 0 0;
-                justify-content: space-between;
-                flex-direction: row;
-                padding: 15px;
-            }
-
-            #chat-widget-container.expanded #chat-title {
-                display: block;
-            }
-
-            #chat-widget-container.expanded #chat-toggle-button {
-                font-size: 1.5em;
-                animation: none; /* Remove animation when expanded */
-            }
-        }
-
-        /* --- Custom Styling for Instructions --- */
-        .instruction {
+        .click-me-paragraph {
             color: red;
-            font-weight: bold;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .side-nav {
+            position: absolute;
+            top: 0;
+            right: -100%; /* Initially hidden off-screen */
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: #f8f8f8;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            color: #333;
+        }
+
+        .side-nav.open {
+            right: 0;
+        }
+
+        .profile-header {
+            padding: 5px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            background-color: #007bff;
+            color: white;
+        }
+
+        #profile-pic-container {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 10px;
+            border: 2px solid white;
+        }
+
+        #profile-pic {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #username-display {
             margin-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: white;
+        }
+
+        .side-nav nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .side-nav nav ul li a, .side-nav nav ul li label {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .side-nav nav ul li a:hover, .side-nav nav ul li label:hover {
+            background-color: #e0f7fa;
+            color: #007bff;
+        }
+
+        #upload-input {
+            display: none;
+        }
+
+        #close-nav-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            padding: 5px 8px;
+        }
+
+        @media (max-width: 600px) {
+            .side-nav {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .side-nav {
+                width: 250px;
+            }
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto;
+        }
+
+        .side-nav nav ul li.emergency-item a {
+            background-color: #dc3545;
+            color: white;
+            border-bottom: none;
+            font-weight: bold;
+        }
+
+        .side-nav nav ul li.emergency-item a:hover {
+            background-color: #c82333;
+        }
+
+        /* Initially hide the account button and click me paragraph */
+        .account-container {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div id="chat-widget-container">
-        <div id="chat-header">
-            <span id="chat-title">Support</span>
-            <button id="chat-toggle-button">👉</button>
-        </div>
-        <div id="chat-body">
-            <div id="chat-messages">
-                <div class="greeting-message">Welcome! How can we assist you today?</div>
-            </div>
-            <div id="chat-input-area">
-                <input type="text" id="message-input" placeholder="Type your message..." aria-label="Chat message input">
-                <button id="send-button">Send</button>
-            </div>
-        </div>
+    <div class="account-container">
+        <button id="account-button" aria-label="Open account menu">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="vertical-align: middle;">
+                <path d="M12 4a4 4 0 100 8 4 4 0 000-8zm0 10c-2.04 0-3.87.76-5.19 2.03a8 8 0 0110.38 0C15.87 14.76 14.04 14 12 14zm6 6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-2a1 1 0 011-1h2a1 1 0 011 1v2zM9 20a1 1 0 01-1 1H6a1 1 0 01-1-1v-2a1 1 0 011-1h2a1 1 0 011 1v2z"></path>
+            </svg>
+            <span>Account</span>
+        </button>
+        <p class="click-me-paragraph">Click Me</p>
     </div>
 
+    <div id="side-nav" class="side-nav open"> <form action="car-available.html" method="get">
+            <button type="submit" id="close-nav-button" aria-label="Go to available cars">&times;</button>
+        </form>
+        <div class="profile-header">
+            <div id="profile-pic-container">
+                <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
+            </div>
+            <h2 id="username-display">Waliko car hire</h2>
+        </div>
+        <nav>
+            <ul>
+                <li><label for="upload-input">Upload Profile Picture</label><input type="file" id="upload-input" accept="image/*"></li>
+                <li><a href="user.html">Personal Information</a></li>
+                <li><a href="change-pass.html">Change Password</a></li>
+                <li><a href="chat.html">Live Chat</a></li>
+                <li><li class="emergency-item"><a href="tel:+2547XXXXXXXXX">Emergency</a></li>
+                <li><a href="deactivate.html">Deactivate Account</a></li>
+                <li><a href="delete.html">Delete Account</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <footer>
+        Waliko Car Hire
+    </footer>
+
     <script>
-        // --- JavaScript for Chat Functionality ---
-        const chatWidgetContainer = document.getElementById('chat-widget-container');
-        const chatHeader = document.getElementById('chat-header');
-        const chatBody = document.getElementById('chat-body');
-        const chatToggleButton = document.getElementById('chat-toggle-button');
-        const chatMessages = document.getElementById('chat-messages');
-        const messageInput = document.getElementById('message-input');
-        const sendButton = document.getElementById('send-button');
+        document.addEventListener('DOMContentLoaded', () => {
+        const accountButton = document.getElementById('account-button');
+        const sideNav = document.getElementById('side-nav');
+        const closeNavButton = document.getElementById('close-nav-button');
+        const uploadInput = document.getElementById('upload-input');
+        const profilePic = document.getElementById('profile-pic');
+        const usernameDisplay = document.getElementById('username-display');
 
-        let isAgentTyping = false;
-        let isChatOpen = false;
-        let hasUserSentMessage = false; // Track if the user has sent a message
+        if (accountButton && sideNav && closeNavButton && uploadInput && profilePic && usernameDisplay) {
+            // Retrieve the current user object from localStorage
+            const currentUser = localStorage.getItem('currentUser');
 
-        // --- Function to toggle the chat window visibility and mobile state ---
-        function toggleChat() {
-            isChatOpen = !isChatOpen;
-            if (window.innerWidth <= 768) {
-                chatWidgetContainer.classList.toggle('expanded');
-                chatBody.style.display = isChatOpen ? 'flex' : 'none';
-                chatToggleButton.textContent = isChatOpen ? '−' : '👉';
-                if (isChatOpen && !hasUserSentMessage && chatMessages.children.length === 1 && chatMessages.firstChild.classList.contains('greeting-message')) {
-                    simulateInitialGreeting(); // Different initial greeting on open
-                }
-            } else {
-                chatBody.style.display = chatBody.style.display === 'none' ? 'flex' : 'none';
-                chatToggleButton.textContent = chatBody.style.display === 'none' ? '👉' : '−';
-                if (chatBody.style.display === 'flex' && !hasUserSentMessage && chatMessages.children.length === 1 && chatMessages.firstChild.classList.contains('greeting-message')) {
-                    simulateInitialGreeting(); // Different initial greeting on open
-                }
-            }
-        }
+            if (currentUser) {
+                const userObject = JSON.parse(currentUser);
 
-        // --- Function for the initial greeting when chat is opened ---
-        function simulateInitialGreeting() {
-            isAgentTyping = true;
-            const typingElement = addMessage('', 'agent', true);
-            setTimeout(() => {
-                isAgentTyping = false;
-                addMessage("Welcome! Thank you for starting a chat with us.", 'agent');
-            }, Math.random() * 1000 + 500);
-        }
+                // Display the username
+                if (userObject && userObject.username) {
+                    usernameDisplay.textContent = userObject.username;
+                    console.log("Username displayed:", userObject.username);
+                } else {
+                    console.log("Username not found in currentUser object.");
+                }
 
-        // --- Event listener for toggling chat window ---
-        chatHeader.addEventListener('click', toggleChat);
+                // Load profile picture if it exists in the user object
+                if (userObject && userObject.profilePicture) {
+                    profilePic.src = userObject.profilePicture;
+                } else {
+                    // Fallback to default if no profile picture in user object
+                    const storedImage = localStorage.getItem('profilePicture');
+                    if (storedImage) {
+                        profilePic.src = storedImage;
+                    }
+                }
+            } else {
+                console.log("currentUser object not found in localStorage.");
+                // Optionally set default username or handle the case where no user is logged in
+            }
 
-        // --- Function to add a new message to the chat interface ---
-        function addMessage(text, sender, isTyping = false) {
-            if (isTyping) {
-                const typingIndicator = document.createElement('div');
-                typingIndicator.classList.add('message', 'agent-typing');
-                typingIndicator.textContent = 'Support is typing...';
-                chatMessages.appendChild(typingIndicator);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return typingIndicator;
-            } else {
-                const typingIndicator = chatMessages.querySelector('.agent-typing');
-                if (typingIndicator) {
-                    typingIndicator.remove();
-                }
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-                messageDiv.classList.add(`${sender}-message`);
-                messageDiv.textContent = text;
-                chatMessages.appendChild(messageDiv);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-                return messageDiv;
-            }
-        }
+            closeNavButton.addEventListener('click', () => {
+                sideNav.classList.remove('open');
+                window.location.href = 'car-available.html';
+            });
 
-        // --- Function to handle the agent's response after the user sends a message ---
-        function handleUserMessage() {
-            if (!isAgentTyping) {
-                isAgentTyping = true;
-                const typingElement = addMessage('', 'agent', true);
-                setTimeout(() => {
-                    isAgentTyping = false;
-                    addMessage("Welcome! Thank you for chatting with us.", 'agent');
-                    setTimeout(() => {
-                        addMessage("Please note that our agents are currently handling multiple customers. Please provide your issue, and we will respond as soon as possible.", 'agent');
-                    }, Math.random() * 1500 + 1000);
-                }, Math.random() * 1000 + 500);
-            }
-        }
+            uploadInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        profilePic.src = e.target.result;
+                        localStorage.setItem('profilePicture', e.target.result);
 
-        // --- Event listener for sending a message ---
-        sendButton.addEventListener('click', () => {
-            const messageText = messageInput.value.trim();
-            if (messageText !== '' && !hasUserSentMessage) {
-                addMessage(messageText, 'user');
-                messageInput.value = '';
-                handleUserMessage();
-                hasUserSentMessage = true; // Mark that the user has sent a message
-            } else if (messageText !== '') {
-                addMessage(messageText, 'user');
-                messageInput.value = '';
-                simulateAgentTyping(); // Keep the possibility of other simulated responses for subsequent messages
-            }
-        });
-
-        // --- Event listener for Enter key in message input ---
-        messageInput.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                sendButton.click();
-            }
-        });
-
-        // --- Optional: Initial focus on input when expanded on desktop ---
-        chatHeader.addEventListener('click', () => {
-            if (window.innerWidth > 768 && chatBody.style.display === 'flex') {
-                setTimeout(() => {
-                    messageInput.focus();
-                }, 300);
-            }
-        });
-
-        // --- Initial state for mobile ---
-        if (window.innerWidth <= 768) {
-            chatBody.style.display = 'none';
-            chatWidgetContainer.classList.remove('expanded');
-        }
+                        // Optionally update the currentUser object with the new profile picture
+                        if (currentUser) {
+                            const userObject = JSON.parse(currentUser);
+                            userObject.profilePicture = e.target.result;
+                            localStorage.setItem('currentUser', JSON.stringify(userObject));
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        } else {
+            console.error("One or more required elements not found in the DOM.");
+        }
+    });
     </script>
-
-    <p class="instruction">THIS IS A SUPPORT LIVE CHAT FOR OUR CAR RENTAL SYSTEM. TYPE YOUR QUESTIONS OR CONCERNS HERE. OUR AGENTS WILL ASSIST YOU PROMPTLY.</p>
 
 </body>
 </html>
