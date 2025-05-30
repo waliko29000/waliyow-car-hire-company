@@ -1,166 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Car Check In</title>
+  <meta charset="UTF-8" />
+  <title>Car Condition Video Recorder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      background: #e6f0ff;
       margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      padding: 15px;
+      background: #007BFF;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      min-height: 100vh;
     }
     h1 {
-      color: #003366;
+      font-size: 22px;
       margin-bottom: 10px;
+      text-align: center;
     }
     video {
-      width: 95%;
-      max-width: 500px;
-      border: 3px solid #003366;
+      width: 100%;
+      max-width: 400px;
       border-radius: 10px;
-      margin: 10px 0;
+      margin-top: 20px;
+      border: 3px solid #fff;
+      background: black;
     }
-    .controls {
+    .buttons {
+      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: 10px;
-      margin: 10px 0;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 420px;
     }
     button {
-      padding: 12px 16px;
+      flex: 1 1 130px;
+      padding: 12px 18px;
       border: none;
-      background: #003366;
-      color: #fff;
       border-radius: 8px;
-      font-size: 15px;
-      flex: 1 1 140px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+      user-select: none;
     }
-    button:hover {
-      background: #0052cc;
-    }
+    #startBtn { background: #28a745; color: #fff; }
+    #recordBtn { background: #ffc107; color: #000; }
+    #stopRecordBtn { background: #dc3545; color: #fff; }
+    #deleteVideoBtn { background: #6c757d; color: #fff; }
     #timer {
-      font-size: 17px;
-      margin: 8px 0;
-      color: #003366;
-    }
-    #recordedVideo {
-      display: none;
-      margin: 10px 0;
+      font-weight: bold;
+      font-size: 18px;
+      min-width: 60px;
+      text-align: center;
+      user-select: none;
+      color: #fff;
+      font-family: monospace;
     }
     #messageBox {
       position: fixed;
-      bottom: 20px;
+      bottom: 30px;
       left: 50%;
       transform: translateX(-50%);
-      background: #003366;
-      color: #fff;
+      background: rgba(0,0,0,0.75);
+      color: white;
       padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-      z-index: 999;
+      border-radius: 20px;
+      font-size: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+      user-select: none;
+    }
+    #messageBox.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    @media (max-width: 480px) {
+      button {
+        flex: 1 1 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Car Check In</h1>
+  <h1>Record Car Condition Video (Before Pickup)</h1>
 
-  <video id="cameraFeed" autoplay playsinline></video>
-  <div id="timer"></div>
+  <video id="video" autoplay playsinline muted></video>
+  <video id="playback" controls style="display:none; margin-top:15px;"></video>
 
-  <div class="controls">
-    <button onclick="startCamera()">Start Camera</button>
-    <button onclick="startRecording()">Start Recording</button>
-    <button onclick="stopRecording()">Stop Recording</button>
-    <button onclick="deleteVideo()">Delete Saved Video</button>
+  <div class="buttons">
+    <button id="startBtn">Start Camera</button>
+    <button id="recordBtn">Start Recording</button>
+    <button id="stopRecordBtn">Stop Recording</button>
+    <button id="deleteVideoBtn">Delete Saved Video</button>
+    <div id="timer" style="display:none;">0:00</div>
   </div>
-
-  <video id="recordedVideo" controls></video>
 
   <div id="messageBox"></div>
 
   <script>
-    let video = document.getElementById('cameraFeed');
-    let recordedVideo = document.getElementById('recordedVideo');
-    let messageBox = document.getElementById('messageBox');
-    let stream;
-    let recorder;
-    let chunks = [];
-    let timerInterval;
-    let seconds = 0;
+    const video = document.getElementById('video');
+    const playback = document.getElementById('playback');
+    const startBtn = document.getElementById('startBtn');
+    const recordBtn = document.getElementById('recordBtn');
+    const stopRecordBtn = document.getElementById('stopRecordBtn');
+    const deleteVideoBtn = document.getElementById('deleteVideoBtn');
+    const timerDisplay = document.getElementById('timer');
+    const messageBox = document.getElementById('messageBox');
 
-    function startCamera() {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-        .then(s => {
-          stream = s;
-          video.srcObject = stream;
-          showMessage("Camera started");
-        })
-        .catch(e => {
-          if (e.name === "NotAllowedError") {
-            showMessage("Camera permission denied. Enable it in settings.");
-          } else {
-            showMessage("Error: " + e.message);
-          }
-        });
+    let stream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let timerInterval = null;
+    let secondsElapsed = 0;
+
+    // Show messages that auto disappear after 2 seconds
+    function showMessage(text) {
+      messageBox.textContent = text;
+      messageBox.classList.add('show');
+      clearTimeout(messageBox.timeout);
+      messageBox.timeout = setTimeout(() => {
+        messageBox.classList.remove('show');
+      }, 2000);
     }
 
-    function startRecording() {
+    // Format seconds as M:SS
+    function formatTime(s) {
+      const min = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${min}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      secondsElapsed = 0;
+      timerDisplay.textContent = formatTime(secondsElapsed);
+      timerDisplay.style.display = "inline-block";
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        timerDisplay.textContent = formatTime(secondsElapsed);
+      }, 1000);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerDisplay.style.display = "none";
+    }
+
+    // Start camera (video only)
+    startBtn.onclick = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+        showMessage("Camera started");
+      } catch (err) {
+        showMessage("Camera error: " + err.message);
+      }
+    };
+
+    // Start recording
+    recordBtn.onclick = () => {
       if (!stream) {
-        showMessage("Start the camera first");
+        showMessage("Please start the camera first!");
         return;
       }
-      recorder = new MediaRecorder(stream);
-      chunks = [];
-      recorder.ondataavailable = e => chunks.push(e.data);
-      recorder.onstop = e => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        recordedVideo.src = URL.createObjectURL(blob);
-        recordedVideo.style.display = 'block';
-        showMessage("Recording saved");
+      recordedChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = event => {
+        if (event.data.size > 0) recordedChunks.push(event.data);
       };
-      recorder.start();
-      seconds = 0;
-      document.getElementById('timer').textContent = "Recording: 0s";
-      timerInterval = setInterval(() => {
-        seconds++;
-        document.getElementById('timer').textContent = `Recording: ${seconds}s`;
-      }, 1000);
+      mediaRecorder.onstop = () => {
+        saveVideo();
+        stopTimer();
+      };
+      mediaRecorder.start();
+      startTimer();
       showMessage("Recording started");
-    }
+    };
 
-    function stopRecording() {
-      if (recorder && recorder.state === "recording") {
-        recorder.stop();
-        clearInterval(timerInterval);
-        document.getElementById('timer').textContent = "";
+    // Stop recording
+    stopRecordBtn.onclick = () => {
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
         showMessage("Recording stopped");
       } else {
         showMessage("No recording in progress");
       }
+    };
+
+    // Save and preview video
+    function saveVideo() {
+      const blob = new Blob(recordedChunks, { type: 'video/webm' });
+      const videoURL = URL.createObjectURL(blob);
+      localStorage.setItem('carConditionVideo', videoURL);
+      playback.src = videoURL;
+      playback.style.display = 'block';
+      showMessage("Video saved");
     }
 
-    function deleteVideo() {
-      if (recordedVideo.src) {
-        recordedVideo.src = "";
-        recordedVideo.style.display = "none";
-        showMessage("Video deleted");
+    // Delete video
+    deleteVideoBtn.onclick = () => {
+      if (localStorage.getItem('carConditionVideo')) {
+        localStorage.removeItem('carConditionVideo');
+        playback.style.display = 'none';
+        showMessage("Video successfully deleted");
       } else {
-        showMessage("No video to delete");
+        showMessage("No saved video to delete");
       }
-    }
+    };
 
-    function showMessage(text) {
-      messageBox.textContent = text;
-      messageBox.style.display = 'block';
-      clearTimeout(messageBox.timeout);
-      messageBox.timeout = setTimeout(() => {
-        messageBox.style.display = 'none';
-      }, 2000);
-    }
+    // Load saved video on page load
+    window.onload = () => {
+      const savedVideo = localStorage.getItem('carConditionVideo');
+      if (savedVideo) {
+        playback.src = savedVideo;
+        playback.style.display = 'block';
+      }
+    };
   </script>
+
 </body>
 </html>
