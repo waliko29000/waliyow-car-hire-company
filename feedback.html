@@ -12,8 +12,8 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color:white; /* Changed background to black */
-            color: white; /* Changed text color to white for better visibility on black background */
+            background-color: white; /* Changed background to black */
+            color: black; /* Changed text color to white for better visibility on black background */
             text-align: center;
             padding: 20px;
         }
@@ -25,6 +25,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow for black background */
             position: relative;
+            color: white; /* Ensure text in feedback-box is white */
         }
         .stars {
             display: flex;
@@ -46,8 +47,8 @@
             padding: 10px;
             border: 1px solid #555; /* Darker border */
             border-radius: 5px;
-            background:white; /* Darker background for the textarea */
-            color: white;
+            background: white; /* Darker background for the textarea */
+            color: black; /* Changed text color in textarea to black */
         }
         button {
             width: 100%;
@@ -71,6 +72,7 @@
             max-width: 600px; /* Increased width for table */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow */
+            color: white; /* Ensure text in feedback-display is white */
         }
         .delete-btn, .back-btn {
             background: #ff4d4d; /* Red for delete button */
@@ -99,6 +101,43 @@
 
         .feedback-table tr:nth-child(even) {
             background-color: #444;
+        }
+
+        /* Responsive table styles */
+        @media screen and (max-width: 600px) {
+            .feedback-table, .feedback-table tbody, .feedback-table tr, .feedback-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .feedback-table thead {
+                display: none; /* Hide table headers on small screens */
+            }
+
+            .feedback-table tr {
+                margin-bottom: 15px;
+                border: 1px solid #555;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .feedback-table td {
+                text-align: right;
+                padding-left: 50%; /* Adjust padding for pseudo-element label */
+                position: relative;
+                border: none; /* Remove individual cell borders */
+            }
+
+            .feedback-table td::before {
+                content: attr(data-label); /* Use data-label for content */
+                position: absolute;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+            }
         }
     </style>
 </head>
@@ -132,10 +171,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td id="feedbackEmail"></td>
-                    <td id="feedbackStars"></td>
-                    <td id="feedbackMessage"></td>
-                    <td id="feedbackTime"></td>
+                    <td id="feedbackEmail" data-label="Email"></td>
+                    <td id="feedbackStars" data-label="Rating"></td>
+                    <td id="feedbackMessage" data-label="Message"></td>
+                    <td id="feedbackTime" data-label="Time"></td>
                 </tr>
             </tbody>
         </table>
@@ -243,10 +282,10 @@
                 document.getElementById("feedbackBox").style.display = "none";
                 document.getElementById("feedbackDisplay").style.display = "block";
 
-                 document.getElementById("feedbackEmail").textContent = feedbackData.email;
+                document.getElementById("feedbackEmail").textContent = feedbackData.email;
                 document.getElementById("feedbackStars").textContent = "★".repeat(feedbackData.rating);
                 document.getElementById("feedbackMessage").textContent = feedbackData.message;
-                 document.getElementById("feedbackTime").textContent = feedbackData.time;
+                document.getElementById("feedbackTime").textContent = feedbackData.time;
             }
         }
     </script>
