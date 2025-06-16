@@ -12,18 +12,19 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f7fa;
+            background-color: #e0f7fa; /* Light blue background as in original, fits "white and blue" theme */
+            color: #333; /* Darker text for readability on light background */
             text-align: center;
             padding: 20px;
         }
         .feedback-box {
-            background: white;
+            background: white; /* Feedback box background is white */
             padding: 20px;
             max-width: 400px;
             margin: auto;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(31, 9, 228, 0.2);
-            position: relative; /* For positioning the close button */
+            position: relative;
         }
         .stars {
             display: flex;
@@ -33,7 +34,7 @@
         .star {
             font-size: 30px;
             cursor: pointer;
-            color: #3b3939;
+            color: #ccc; /* Lighter grey for stars when not selected */
         }
         .star.selected {
             color: gold;
@@ -45,35 +46,62 @@
             padding: 10px;
             border: 1px solid #003366;
             border-radius: 5px;
+            background: #f0f8ff; /* Very light blue/white background for textarea */
+            color: #333;
         }
         button {
             width: 100%;
-            padding: 10px;
+            padding: 15px; /* Bigger buttons */
             margin-top: 10px;
-            background: #1464dd;
+            background: #1464dd; /* Blue submit button */
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1.1em; /* Slightly larger font size */
         }
         button:hover {
             background: #002244;
         }
         .feedback-display {
             display: none;
-            background: white;
+            background: white; /* Feedback display background is white */
             padding: 20px;
             margin: auto;
-            max-width: 400px;
+            max-width: 600px; /* Increased width for table */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 51, 102, 0.2);
+            color: #333; /* Darker text for readability */
         }
         .delete-btn, .back-btn {
             background: red;
             margin-top: 10px;
+            padding: 15px; /* Bigger buttons */
+            font-size: 1.1em;
         }
         .back-btn {
             background: green;
+        }
+        /* Style for the table */
+        .feedback-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .feedback-table th, .feedback-table td {
+            border: 1px solid #ccc; /* Lighter borders for table */
+            padding: 8px;
+            text-align: left;
+        }
+
+        .feedback-table th {
+            background-color: #f0f0f0; /* Light background for table headers */
+            color: #333;
+        }
+
+        .feedback-table tr:nth-child(even) {
+            background-color: #f9f9f9; /* Slightly different background for even rows */
         }
     </style>
 </head>
@@ -96,10 +124,24 @@
 
     <div class="feedback-display" id="feedbackDisplay">
         <h2>Your Feedback</h2>
-        <p><strong>Email:</strong> <span id="feedbackEmail"></span></p>
-        <p><strong>Rating:</strong> <span id="feedbackStars"></span></p>
-        <p><strong>Message:</strong></p>
-        <p id="feedbackMessage"></p>
+        <table class="feedback-table">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Rating</th>
+                    <th>Message</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="feedbackEmail"></td>
+                    <td id="feedbackStars"></td>
+                    <td id="feedbackMessage"></td>
+                    <td id="feedbackTime"></td>
+                </tr>
+            </tbody>
+        </table>
         <button class="delete-btn" onclick="deleteFeedback()">Delete Feedback</button>
         <button class="back-btn" onclick="window.location.href='car-available.html'">Back</button>
     </div>
@@ -129,7 +171,7 @@
                     star.classList.remove("selected");
                 }
             });
-        }
+        });
 
         // Get user email from currentUser in localStorage
         function getUserEmail() {
@@ -182,6 +224,7 @@
                 document.getElementById("feedbackEmail").textContent = storedFeedback.email;
                 document.getElementById("feedbackStars").textContent = "★".repeat(storedFeedback.rating);
                 document.getElementById("feedbackMessage").textContent = storedFeedback.message;
+                document.getElementById("feedbackTime").textContent = storedFeedback.time; // Display the time
             }
         }
 
@@ -203,9 +246,10 @@
                 document.getElementById("feedbackBox").style.display = "none";
                 document.getElementById("feedbackDisplay").style.display = "block";
 
-                document.getElementById("feedbackEmail").textContent = feedbackData.email;
+                 document.getElementById("feedbackEmail").textContent = feedbackData.email;
                 document.getElementById("feedbackStars").textContent = "★".repeat(feedbackData.rating);
                 document.getElementById("feedbackMessage").textContent = feedbackData.message;
+                 document.getElementById("feedbackTime").textContent = feedbackData.time;
             }
         }
     </script>
