@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Gateway Error</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Pop-up Styles */
+        .info-popup {
+            display: flex; /* Always visible and centered */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffe0e0; /* Light red background */
+            border: 1px solid #d9534f; /* Red border */
+            color: #d9534f; /* Red text */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            text-align: center;
+            max-width: 300px; /* Smaller max-width for mobile */
+            width: 90%; /* Responsive width */
+            line-height: 1.5;
+            font-size: 15px;
+            box-sizing: border-box;
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center items horizontally */
+        }
+
+        .info-popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #d9534f;
+        }
+
+        /* Media queries for larger screens if needed */
+        @media (min-width: 600px) {
+            .info-popup {
+                max-width: 400px; /* Larger max-width for tablets/desktops */
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="info-popup" id="infoPopup">
+        <span class="close-btn" id="closePopup">&times;</span>
+        <p>Dear customer, we cannot redirect you to payment gateways since you are **not logged in** to the service. Please login and try again. Thank you!</p>
+    </div>
+
+    <script>
+        const infoPopup = document.getElementById('infoPopup');
+        const closePopupBtn = document.getElementById('closePopup');
+
+        // Function to hide the pop-up and redirect
+        function hidePopupAndRedirect() {
+            infoPopup.style.display = 'none'; // Hide the pop-up
+            window.location.href = 'car-available.html'; // Redirect to car-available.html
+        }
+
+        // Event listener for the close button
+        closePopupBtn.addEventListener('click', hidePopupAndRedirect);
+
+        // Optional: Hide popup and redirect if user clicks outside of it (if the popup isn't always visible)
+        // Since the popup is now always visible, this might not be strictly necessary
+        // but it's good practice for general modal behavior.
+        window.addEventListener('click', (event) => {
+            if (event.target === infoPopup) {
+                hidePopupAndRedirect();
+            }
+        });
+
+        // The popup is now displayed by default via CSS. No JS needed to show it on load.
+    </script>
+</body>
+</html>
