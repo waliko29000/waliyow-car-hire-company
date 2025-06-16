@@ -12,20 +12,20 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: white; /* Changed background to black */
-            color: black; /* Changed text color to white for better visibility on black background */
+            background-color: white;
+            color: black;
             text-align: center;
             padding: 20px;
         }
         .feedback-box {
-            background: #333; /* Darker background for the box */
+            background: #333;
             padding: 20px;
             max-width: 400px;
             margin: auto;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow for black background */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
             position: relative;
-            color: white; /* Ensure text in feedback-box is white */
+            color: white;
         }
         .stars {
             display: flex;
@@ -35,7 +35,7 @@
         .star {
             font-size: 30px;
             cursor: pointer;
-            color: #ddd; /* Light grey color for stars */
+            color: #ddd;
         }
         .star.selected {
             color: gold;
@@ -45,34 +45,35 @@
             height: 80px;
             margin-top: 10px;
             padding: 10px;
-            border: 1px solid #555; /* Darker border */
+            border: 1px solid #555;
             border-radius: 5px;
-            background: white; /* Darker background for the textarea */
-            color: black; /* Changed text color in textarea to black */
+            background: white;
+            color: black;
         }
+        /* General button styling - applies to submit and also delete/back initially */
         button {
             width: 100%;
             padding: 15px; /* Increased padding for bigger buttons */
             margin-top: 10px;
-            background: #1e90ff; /* Brighter blue for buttons */
+            background: #1e90ff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.1em; /* Slightly larger font size */
+            font-size: 1.1em;
         }
         button:hover {
             background: #0077cc;
         }
         .feedback-display {
             display: none;
-            background: #333; /* Darker background for the display */
+            background: #333;
             padding: 20px;
             margin: auto;
-            max-width: 600px; /* Increased width for table */
+            max-width: 600px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow */
-            color: white; /* Ensure text in feedback-display is white */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            color: white;
         }
         .delete-btn, .back-btn {
             background: #ff4d4d; /* Red for delete button */
@@ -103,7 +104,7 @@
             background-color: #444;
         }
 
-        /* Responsive table styles */
+        /* Responsive table styles and button adjustments */
         @media screen and (max-width: 600px) {
             .feedback-table, .feedback-table tbody, .feedback-table tr, .feedback-table td {
                 display: block;
@@ -111,7 +112,7 @@
             }
 
             .feedback-table thead {
-                display: none; /* Hide table headers on small screens */
+                display: none;
             }
 
             .feedback-table tr {
@@ -123,13 +124,15 @@
 
             .feedback-table td {
                 text-align: right;
-                padding-left: 50%; /* Adjust padding for pseudo-element label */
+                padding-left: 50%;
                 position: relative;
-                border: none; /* Remove individual cell borders */
+                border: none;
+                word-wrap: break-word;
+                word-break: break-all;
             }
 
             .feedback-table td::before {
-                content: attr(data-label); /* Use data-label for content */
+                content: attr(data-label);
                 position: absolute;
                 left: 6px;
                 width: 45%;
@@ -138,13 +141,48 @@
                 text-align: left;
                 font-weight: bold;
             }
+
+            /* Adjust button sizes for mobile */
+            button {
+                /* This applies to all buttons for responsiveness */
+                padding: 10px; /* Smaller padding */
+                font-size: 1em; /* Slightly smaller font size */
+                width: calc(100% - 20px); /* Adjust width to avoid overflow from padding on the parent */
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            /* Specific adjustments for delete and back buttons to be shorter */
+            .delete-btn, .back-btn {
+                width: auto; /* Allow content to dictate width */
+                padding: 8px 15px; /* Shorter vertical padding, same horizontal */
+                display: inline-block; /* Make them inline-block to sit next to each other if space allows */
+                margin: 10px 5px; /* Adjust margin to be closer */
+            }
+
+            /* Center the two buttons if they are inline-block */
+            .feedback-display {
+                text-align: center; /* This will center inline-block elements */
+            }
+
+
+            /* Adjust the feedback display max-width for smaller screens if needed */
+            .feedback-display {
+                max-width: 95%;
+                padding: 15px;
+            }
+
+            .feedback-box {
+                max-width: 95%;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
     <div class="feedback-box" id="feedbackBox">
-        <button onclick="window.location.href='car-available.html'" style="position: absolute; top: -10px; right: -10px; border: none; background: none; font-size: 1.2em; cursor: pointer; color: #888; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;">&times;</button>
+        <button onclick="window.location.href='car-available.html'" style="position: absolute; top: 8px; right: 8px; border: none; background: none; font-size: 1.2em; cursor: pointer; color: #888; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; z-index: 10;">&times;</button>
         <h2>Give Your Feedback</h2>
         <p>Rate our system</p>
         <div class="stars" id="stars">
@@ -183,22 +221,39 @@
     </div>
 
     <script>
+        console.log("Script loaded and starting execution.");
+
         let selectedRating = 0;
 
         document.addEventListener("DOMContentLoaded", function() {
-            retrieveFeedback();
-        });
+            try {
+                console.log("DOM Content Loaded. Initializing feedback system.");
+                retrieveFeedback();
 
-        // Handle star click to set rating
-        document.querySelectorAll(".star").forEach(star => {
-            star.addEventListener("click", function() {
-                selectedRating = parseInt(this.getAttribute("data-value"));
+                const stars = document.querySelectorAll(".star");
+                if (stars.length > 0) {
+                    stars.forEach(star => {
+                        star.addEventListener("click", function() {
+                            console.log("Star clicked! Value:", this.getAttribute("data-value"));
+                            selectedRating = parseInt(this.getAttribute("data-value"));
+                            updateStars(selectedRating);
+                        });
+                    });
+                    console.log("Star click listeners attached.");
+                } else {
+                    console.warn("No stars found, cannot attach listeners.");
+                }
+
                 updateStars(selectedRating);
-            });
+
+            } catch (e) {
+                console.error("Critical Error during DOMContentLoaded setup:", e);
+                alert("An unrecoverable error occurred during page setup. Please check the browser console for details.");
+            }
         });
 
-        // Update star colors based on selected rating
         function updateStars(rating) {
+            console.log("Updating stars to rating:", rating);
             document.querySelectorAll(".star").forEach(star => {
                 let starValue = parseInt(star.getAttribute("data-value"));
                 if (starValue <= rating) {
@@ -209,14 +264,18 @@
             });
         }
 
-        // Get user email from currentUser in localStorage
         function getUserEmail() {
-            let user = JSON.parse(localStorage.getItem("currentUser"));
-            return user ? user.email : "Unknown";
+            try {
+                let user = JSON.parse(localStorage.getItem("currentUser"));
+                return user ? user.email : "Unknown";
+            } catch (e) {
+                console.error("Error parsing currentUser from localStorage:", e);
+                return "Unknown";
+            }
         }
 
-        // Submit feedback
         function submitFeedback() {
+            console.log("submitFeedback function called.");
             let userEmail = getUserEmail();
             let message = document.getElementById("feedbackText").value.trim();
 
@@ -225,13 +284,11 @@
                 return;
             }
 
-            // Prevent submission if user is not logged in (email is 'Unknown')
             if (userEmail === "Unknown") {
                 alert("🔒 You must be logged in to submit feedback.");
                 return;
             }
 
-            // Check if feedback already exists in localStorage
             if (localStorage.getItem("userFeedback")) {
                 alert("❌ You already submitted feedback. Please delete your previous feedback to submit again.");
                 retrieveFeedback();
@@ -245,39 +302,69 @@
                 time: new Date().toLocaleString()
             };
 
-            // Store feedback in localStorage
-            localStorage.setItem("userFeedback", JSON.stringify(feedbackData));
-            displayFeedback();
+            try {
+                localStorage.setItem("userFeedback", JSON.stringify(feedbackData));
+                console.log("Feedback successfully saved to localStorage:", feedbackData);
+                displayFeedback();
+            } catch (e) {
+                console.error("Error saving feedback to localStorage:", e);
+                alert("Failed to save feedback. Your browser might be in private mode or storage is full.");
+            }
         }
 
-        // Retrieve and display feedback if exists
         function retrieveFeedback() {
-            let storedFeedback = JSON.parse(localStorage.getItem("userFeedback"));
+            console.log("retrieveFeedback function called.");
+            let storedFeedback = null;
+            try {
+                storedFeedback = JSON.parse(localStorage.getItem("userFeedback"));
+            } catch (e) {
+                console.error("Error parsing userFeedback from localStorage:", e);
+                localStorage.removeItem("userFeedback");
+            }
+
             if (storedFeedback) {
+                console.log("Found existing feedback, attempting to display.");
                 document.getElementById("feedbackBox").style.display = "none";
                 document.getElementById("feedbackDisplay").style.display = "block";
 
                 document.getElementById("feedbackEmail").textContent = storedFeedback.email;
                 document.getElementById("feedbackStars").textContent = "★".repeat(storedFeedback.rating);
                 document.getElementById("feedbackMessage").textContent = storedFeedback.message;
-                document.getElementById("feedbackTime").textContent = storedFeedback.time; // Display the time
+                document.getElementById("feedbackTime").textContent = storedFeedback.time;
+            } else {
+                console.log("No existing feedback found in localStorage.");
+                document.getElementById("feedbackBox").style.display = "block";
+                document.getElementById("feedbackDisplay").style.display = "none";
             }
         }
 
-        // Delete feedback
         function deleteFeedback() {
-            localStorage.removeItem("userFeedback");
+            console.log("deleteFeedback function called.");
+            try {
+                localStorage.removeItem("userFeedback");
+                console.log("Feedback removed from localStorage.");
+            } catch (e) {
+                console.error("Error removing feedback from localStorage:", e);
+                alert("Failed to delete feedback.");
+            }
+
             document.getElementById("feedbackDisplay").style.display = "none";
             document.getElementById("feedbackBox").style.display = "block";
-            // Reset the form after deletion
             selectedRating = 0;
             updateStars(0);
             document.getElementById("feedbackText").value = "";
         }
 
-        // Display stored feedback
         function displayFeedback() {
-            let feedbackData = JSON.parse(localStorage.getItem("userFeedback"));
+            console.log("displayFeedback function called (showing current feedback).");
+            let feedbackData = null;
+            try {
+                feedbackData = JSON.parse(localStorage.getItem("userFeedback"));
+            } catch (e) {
+                console.error("Error parsing userFeedback from localStorage in displayFeedback:", e);
+                localStorage.removeItem("userFeedback");
+            }
+
             if (feedbackData) {
                 document.getElementById("feedbackBox").style.display = "none";
                 document.getElementById("feedbackDisplay").style.display = "block";
@@ -286,6 +373,8 @@
                 document.getElementById("feedbackStars").textContent = "★".repeat(feedbackData.rating);
                 document.getElementById("feedbackMessage").textContent = feedbackData.message;
                 document.getElementById("feedbackTime").textContent = feedbackData.time;
+            } else {
+                console.warn("No feedback data found to display in displayFeedback function.");
             }
         }
     </script>
