@@ -147,6 +147,12 @@
                 return;
             }
 
+            // Prevent submission if user is not logged in (email is 'Unknown')
+            if (userEmail === "Unknown") {
+                alert("🔒 You must be logged in to submit feedback.");
+                return;
+            }
+
             // Check if feedback already exists in localStorage
             if (localStorage.getItem("userFeedback")) {
                 alert("❌ You already submitted feedback. Please delete your previous feedback to submit again.");
@@ -184,6 +190,10 @@
             localStorage.removeItem("userFeedback");
             document.getElementById("feedbackDisplay").style.display = "none";
             document.getElementById("feedbackBox").style.display = "block";
+            // Reset the form after deletion
+            selectedRating = 0;
+            updateStars(0);
+            document.getElementById("feedbackText").value = "";
         }
 
         // Display stored feedback
@@ -201,4 +211,4 @@
     </script>
 
 </body>
-</html> 
+</html>
