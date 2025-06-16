@@ -12,18 +12,18 @@
         }
         body {
             font-family: Arial, sans-serif;
-            background-color: #e0f7fa; /* Light blue background as in original, fits "white and blue" theme */
-            color: #333; /* Darker text for readability on light background */
+            background-color:white; /* Changed background to black */
+            color: white; /* Changed text color to white for better visibility on black background */
             text-align: center;
             padding: 20px;
         }
         .feedback-box {
-            background: white; /* Feedback box background is white */
+            background: #333; /* Darker background for the box */
             padding: 20px;
             max-width: 400px;
             margin: auto;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(31, 9, 228, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow for black background */
             position: relative;
         }
         .stars {
@@ -34,7 +34,7 @@
         .star {
             font-size: 30px;
             cursor: pointer;
-            color: #ccc; /* Lighter grey for stars when not selected */
+            color: #ddd; /* Light grey color for stars */
         }
         .star.selected {
             color: gold;
@@ -44,16 +44,16 @@
             height: 80px;
             margin-top: 10px;
             padding: 10px;
-            border: 1px solid #003366;
+            border: 1px solid #555; /* Darker border */
             border-radius: 5px;
-            background: #f0f8ff; /* Very light blue/white background for textarea */
-            color: #333;
+            background:white; /* Darker background for the textarea */
+            color: white;
         }
         button {
             width: 100%;
-            padding: 15px; /* Bigger buttons */
+            padding: 15px; /* Increased padding for bigger buttons */
             margin-top: 10px;
-            background: #1464dd; /* Blue submit button */
+            background: #1e90ff; /* Brighter blue for buttons */
             color: white;
             border: none;
             border-radius: 5px;
@@ -61,26 +61,23 @@
             font-size: 1.1em; /* Slightly larger font size */
         }
         button:hover {
-            background: #002244;
+            background: #0077cc;
         }
         .feedback-display {
             display: none;
-            background: white; /* Feedback display background is white */
+            background: #333; /* Darker background for the display */
             padding: 20px;
             margin: auto;
             max-width: 600px; /* Increased width for table */
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 51, 102, 0.2);
-            color: #333; /* Darker text for readability */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); /* Adjusted shadow */
         }
         .delete-btn, .back-btn {
-            background: red;
+            background: #ff4d4d; /* Red for delete button */
             margin-top: 10px;
-            padding: 15px; /* Bigger buttons */
-            font-size: 1.1em;
         }
         .back-btn {
-            background: green;
+            background: #32cd32; /* Green for back button */
         }
         /* Style for the table */
         .feedback-table {
@@ -90,25 +87,25 @@
         }
 
         .feedback-table th, .feedback-table td {
-            border: 1px solid #ccc; /* Lighter borders for table */
+            border: 1px solid #555;
             padding: 8px;
             text-align: left;
         }
 
         .feedback-table th {
-            background-color: #f0f0f0; /* Light background for table headers */
-            color: #333;
+            background-color: #555;
+            color: white;
         }
 
         .feedback-table tr:nth-child(even) {
-            background-color: #f9f9f9; /* Slightly different background for even rows */
+            background-color: #444;
         }
     </style>
 </head>
 <body>
 
     <div class="feedback-box" id="feedbackBox">
-        <button onclick="window.location.href='car-available.html'" style="position: absolute; top: -10px; right: -10px; border: none; background: none; font-size: 1.2em; cursor: pointer; color: #555; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;">&times;</button>
+        <button onclick="window.location.href='car-available.html'" style="position: absolute; top: -10px; right: -10px; border: none; background: none; font-size: 1.2em; cursor: pointer; color: #888; border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center;">&times;</button>
         <h2>Give Your Feedback</h2>
         <p>Rate our system</p>
         <div class="stars" id="stars">
@@ -171,7 +168,7 @@
                     star.classList.remove("selected");
                 }
             });
-        });
+        }
 
         // Get user email from currentUser in localStorage
         function getUserEmail() {
