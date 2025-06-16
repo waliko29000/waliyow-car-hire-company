@@ -126,8 +126,6 @@
                 padding-left: 50%; /* Adjust padding for pseudo-element label */
                 position: relative;
                 border: none; /* Remove individual cell borders */
-                word-wrap: break-word; /* Important for long email addresses */
-                word-break: break-all; /* Fallback for older browsers */
             }
 
             .feedback-table td::before {
@@ -139,26 +137,6 @@
                 white-space: nowrap;
                 text-align: left;
                 font-weight: bold;
-            }
-
-            /* Adjust button sizes for mobile */
-            button {
-                padding: 10px; /* Smaller padding */
-                font-size: 1em; /* Slightly smaller font size */
-                width: calc(100% - 20px); /* Adjust width to avoid overflow from padding on the parent */
-                margin-left: 10px; /* Center with a margin if needed */
-                margin-right: 10px;
-            }
-
-            /* Adjust the feedback display max-width for smaller screens if needed */
-            .feedback-display {
-                max-width: 95%; /* Adjust max-width to give more room */
-                padding: 15px; /* Slightly less padding */
-            }
-
-            .feedback-box {
-                max-width: 95%;
-                padding: 15px;
             }
         }
     </style>
@@ -229,7 +207,7 @@
                     star.classList.remove("selected");
                 }
             });
-        });
+        }
 
         // Get user email from currentUser in localStorage
         function getUserEmail() {
