@@ -951,7 +951,9 @@ let allBookings = []; // Store all bookings
     function renderPaymentStatements() {
       contentDiv.innerHTML = `
         <div class="payment-note">
-          Dear customer, you  haven't made any payment yet.
+         Dear customer, you cannot access this feature since you are **not logged in** to the service. Please login and try again. Thank you!
+    
+
         </div>
         <button class="receipt-btn" id="receiptBtn">Get Receipt</button>
       `;
