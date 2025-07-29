@@ -21,11 +21,18 @@
       margin-bottom: 10px;
       text-align: center;
     }
+    select {
+      padding: 6px 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: none;
+    }
     video {
       width: 100%;
       max-width: 400px;
       border-radius: 10px;
-      margin-top: 20px;
+      margin-top: 10px;
       border: 3px solid #fff;
       background: black;
     }
@@ -95,6 +102,12 @@
 
   <h1>Record Car Condition Video (Before Pickup)</h1>
 
+  <label for="cameraSelect">Choose Camera:</label>
+  <select id="cameraSelect">
+    <option value="environment">Back Camera</option>
+    <option value="user">Front Camera</option>
+  </select>
+
   <video id="video" autoplay playsinline muted></video>
   <video id="playback" controls style="display:none; margin-top:15px;"></video>
 
@@ -117,6 +130,7 @@
     const deleteVideoBtn = document.getElementById('deleteVideoBtn');
     const timerDisplay = document.getElementById('timer');
     const messageBox = document.getElementById('messageBox');
+    const cameraSelect = document.getElementById('cameraSelect');
 
     let stream = null;
     let mediaRecorder = null;
@@ -124,7 +138,6 @@
     let timerInterval = null;
     let secondsElapsed = 0;
 
-    // Show messages that auto disappear after 2 seconds
     function showMessage(text) {
       messageBox.textContent = text;
       messageBox.classList.add('show');
@@ -134,7 +147,6 @@
       }, 2000);
     }
 
-    // Format seconds as M:SS
     function formatTime(s) {
       const min = Math.floor(s / 60);
       const sec = s % 60;
@@ -156,18 +168,25 @@
       timerDisplay.style.display = "none";
     }
 
-    // Start camera (video only)
     startBtn.onclick = async () => {
+      const selectedCamera = cameraSelect.value;
+
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { exact: selectedCamera } },
+          audio: false
+        });
         video.srcObject = stream;
-        showMessage("Camera started");
+        showMessage("Camera started: " + selectedCamera);
       } catch (err) {
         showMessage("Camera error: " + err.message);
       }
     };
 
-    // Start recording
     recordBtn.onclick = () => {
       if (!stream) {
         showMessage("Please start the camera first!");
@@ -187,7 +206,6 @@
       showMessage("Recording started");
     };
 
-    // Stop recording
     stopRecordBtn.onclick = () => {
       if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
@@ -197,7 +215,6 @@
       }
     };
 
-    // Save and preview video
     function saveVideo() {
       const blob = new Blob(recordedChunks, { type: 'video/webm' });
       const videoURL = URL.createObjectURL(blob);
@@ -207,7 +224,6 @@
       showMessage("Video saved");
     }
 
-    // Delete video
     deleteVideoBtn.onclick = () => {
       if (localStorage.getItem('carConditionVideo')) {
         localStorage.removeItem('carConditionVideo');
@@ -218,7 +234,6 @@
       }
     };
 
-    // Load saved video on page load
     window.onload = () => {
       const savedVideo = localStorage.getItem('carConditionVideo');
       if (savedVideo) {
