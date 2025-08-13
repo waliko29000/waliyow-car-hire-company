@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waliko Car Hire - FAQ</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        padding: 15px;
+        background-color: #007BFF;
+        color: white;
+        margin: 0;
+        font-size: 22px; /* smaller main heading */
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 10px;
+    }
+
+    .faq-item {
+        background-color: #f0f8ff;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        border-left: 5px solid #007BFF;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .faq-question {
+        background-color: #007BFF;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        font-size: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        padding: 0 12px;
+        background-color: white;
+        color: black;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .faq-item.active .faq-answer {
+        max-height: 300px;
+        padding: 12px;
+    }
+
+    .faq-question span {
+        font-weight: bold;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 18px;
+            padding: 12px;
+        }
+        .faq-question {
+            font-size: 13px;
+            padding: 8px;
+        }
+        .faq-answer {
+            font-size: 13px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<h1>Waliko Car Hire - Frequently Asked Questions</h1>
+
+<div class="faq-container">
+    <div class="faq-item">
+        <div class="faq-question">How do I book a car? <span>+</span></div>
+        <div class="faq-answer">You can book a car online by selecting your preferred vehicle, choosing rental dates, and completing the booking form on our website.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Do I need a driving license? <span>+</span></div>
+        <div class="faq-answer">Yes, you need a valid driving license. International customers may use an international driving permit.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">What payment methods do you accept? <span>+</span></div>
+        <div class="faq-answer">We accept M-Pesa, Visa, Mastercard, and PayPal for online bookings.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Is fuel included in the rental price? <span>+</span></div>
+        <div class="faq-answer">Fuel is not included. You must return the car with the same fuel level as when you picked it up.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Can I cancel my booking? <span>+</span></div>
+        <div class="faq-answer">Yes, you can cancel up to 24 hours before pickup without penalty. Later cancellations may incur charges.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Do you offer chauffeur services? <span>+</span></div>
+        <div class="faq-answer">Yes, we provide professional drivers at an additional cost. Please select the chauffeur option during booking.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Are there age restrictions for renting a car? <span>+</span></div>
+        <div class="faq-answer">Yes, you must be at least 21 years old with 1 year of driving experience to rent from us.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Do you provide roadside assistance? <span>+</span></div>
+        <div class="faq-answer">Yes, we offer 24/7 roadside assistance in case of breakdowns or emergencies during your rental period.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Can I extend my rental period? <span>+</span></div>
+        <div class="faq-answer">Yes, you can extend your rental by contacting us before your current contract ends. Additional charges apply.</div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">What happens if I return the car late? <span>+</span></div>
+        <div class="faq-answer">Late returns may attract extra charges depending on how long past the agreed time the car is returned.</div>
+    </div>
+</div>
+
+<script>
+    const faqItems = document.querySelectorAll(".faq-item");
+
+    faqItems.forEach(item => {
+        item.querySelector(".faq-question").addEventListener("click", () => {
+            item.classList.toggle("active");
+            const icon = item.querySelector("span");
+            icon.textContent = item.classList.contains("active") ? "-" : "+";
+        });
+    });
+</script>
+
+</body>
+</html>
