@@ -158,11 +158,15 @@ nav button:hover, nav a:hover {
     <h1> Waliko Car Hire </h1>
     <nav>
       <!-- "Cars Available" now checks if the user is registered -->
-      <a href="car-available.html" onclick="checkRegistration()">Start Booking</a>
-      <a href="signin.html"><button>Sign In </button></a>
-<a href="signup.html"><button>Sign Up</button></a>
+     <a href="car-available.html" onclick="checkRegistration()">Start Booking</a>
 
-      <button onclick="showSection('terms')">Terms of Service</button>
+<!-- Sign In and Sign Up as button-style links -->
+<button onclick="location.href='signin.html'">Sign In</button>
+<button onclick="location.href='signup.html'">Sign Up</button>
+
+<!-- Terms of Service -->
+<button onclick="showSection('terms')">Terms of Service</button>
+
       <button onclick="showSection('privacy')">Privacy Policy</button>
       <button onclick="signOut()">Sign Out</button>
       <button onclick="showSection('contact')">Contact Us</button>
@@ -429,7 +433,7 @@ nav button:hover, nav a:hover {
     function checkRegistration() {
       const storedUser = JSON.parse(localStorage.getItem('user'));
       if (!storedUser) {
-        alert
+        alert (PLEASE )
         return false;
       }
       // If registered, redirect to voting.html
@@ -476,4 +480,3 @@ nav button:hover, nav a:hover {
   </script>
 </body>
 </html>
-
