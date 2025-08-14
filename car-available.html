@@ -615,7 +615,7 @@ const headerDepositStatus = document.getElementById('headerDepositStatus');
           <p>* Once you pay for your booking, your payment will reflect in the Payment button .</p>
           <p>* To get a receipt, click the "Get Receipt" button in Payment Button. Get your receipt there.</p>
           
-         By clicking on "Account" button it gives you access to your personal information, lets you change your password, find the live chat, and even handle account deletion or deactivation.
+         By clicking on "Settings" button it gives you access to your personal information, lets you change your password, find the Emergency Servirce, and even handle account deletion or deactivation.
           <p>* Thank you for choosing Waliko Car Hire!</p>
         </div>
       `;
@@ -954,7 +954,8 @@ let allBookings = []; // Store all bookings
     function renderPaymentStatements() {
       contentDiv.innerHTML = `
         <div class="payment-note">
-         Dear customer, you cannot access this feature since you are **not logged in** to the service. Please login and try again. Thank you!
+         Dear customer, you cannot access this feature since you are **not logged in** to the service.Please <a href="signin.html">Login</a> and try again. Thank you!
+
     
 
         </div>
