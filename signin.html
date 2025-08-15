@@ -238,14 +238,14 @@
         <div class="modal-content">
             <span class="close-button" id="modalCloseBtn">&times;</span>
             <div class="modal-header">
-                <h2>Account Suspended</h2>
+                <h2>Account Deactivated</h2>
             </div>
             <div class="modal-body">
-                <p id="suspensionMessage">Your account is suspended. Please contact support.</p>
-                <p>Click the button below to appeal the suspension.</p>
+                <p id="suspensionMessage">Your account is deactivate. Please contact support.</p>
+                <p>Click the button below to appeal the deactivation.</p>
             </div>
             <div class="modal-footer">
-                <a href="APPEAL.HTML">Appeal Suspension</a>
+                <a href="appeal.html">Appeal Suspension</a>
             </div>
         </div>
     </div>
@@ -280,10 +280,10 @@
             const deactivationTime = localStorage.getItem('deactivationTime');
 
             if (suspendedEmail && suspendedPassword && suspendedEmail === email && suspendedPassword === password) {
-                //alert("❌ Your account is suspended. Please contact support. Suspended for: " + deactivationTime);
+                //alert("❌ Your account is deactivated. Please contact support. Suspended for: " + deactivationTime);
                 // Instead of alert, show modal
                 const suspensionMessage = document.getElementById("suspensionMessage");
-                suspensionMessage.textContent = "Your account is suspended for: " + deactivationTime + ".";
+                suspensionMessage.textContent = "Your account is deactivated for: " + deactivationTime + ".";
                 modal.style.display = "block";
                 padlock.textContent = "🔒";
                 padlock.classList.add('shake');
