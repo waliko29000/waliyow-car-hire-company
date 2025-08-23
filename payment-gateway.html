@@ -386,15 +386,33 @@
 </head>
 <body>
     <script>
-  // 🔒 Block access if user is not logged in
-  const isLoggedIn = localStorage.getItem("isLoggedIn"); // 👈 make sure this matches the key you use at login
 
+  // 🔒 Block access if user is not logged in
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
   if (!isLoggedIn) {
     window.location.href = "decline.html"; 
   }
+
+  // 🧾 Display booking info if available
+  const paymentAmount = localStorage.getItem("paymentAmount");
+  const paymentBookingId = localStorage.getItem("paymentBookingId");
+
+  window.addEventListener("DOMContentLoaded", () => {
+    if (paymentAmount && paymentBookingId) {
+      document.getElementById("paymentInfo").innerText =
+        `Booking ID: ${paymentBookingId} | Amount: ${paymentAmount} KES`;
+    } else {
+      document.getElementById("paymentInfo").innerText =
+        "⚠ No booking details found. Please go back and select a booking.";
+    }
+  });
 </script>
 
+
+
   <div class="payment-container">
+    <h3 id="paymentInfo"></h3>
+
     <span class="close-button" onclick="window.location.href='car-available.html'">×</span>
 
 
@@ -607,6 +625,10 @@
             }, 10000);
             // In a real scenario, you would send this number to a server for processing
             console.log("M-Pesa number submitted:", mpesaNumber);
+            // Clear booking data after payment attempt
+localStorage.removeItem("paymentAmount");
+localStorage.removeItem("paymentBookingId");
+
             // For this simulation, we'll just proceed to the error after the delay
         }
 
@@ -640,6 +662,10 @@
                 showUnexpectedError();
             }, 10000);
             console.log("PayPal email submitted", paypalEmail);
+            // Clear booking data after payment attempt
+localStorage.removeItem("paymentAmount");
+localStorage.removeItem("paymentBookingId");
+
         }
 
         function showVisaModal() {
@@ -672,6 +698,10 @@
                 showUnexpectedError();
             }, 10000);
             console.log("Visa card submitted", visaCard);
+            // Clear booking data after payment attempt
+localStorage.removeItem("paymentAmount");
+localStorage.removeItem("paymentBookingId");
+
         }
 
 
