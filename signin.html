@@ -269,6 +269,8 @@
 
         function handleLogin(event) {
             event.preventDefault();
+       
+
 
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
@@ -295,15 +297,21 @@
 
             const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
-            if (matchingUser) {
-                localStorage.setItem("currentUser", JSON.stringify(matchingUser));
-                localStorage.setItem("userEmail", email);
-                localStorage.setItem("userPassword", password);
-                console.log("User data saved to localStorage:", matchingUser);
-                padlock.textContent = "🔓";
-                setTimeout(() => {
-                    window.location.href = "car-available.html";
-                }, 500);
+        if (matchingUser) {
+    localStorage.setItem("currentUser", JSON.stringify(matchingUser));
+    localStorage.setItem("userEmail", email);
+    localStorage.setItem("userPassword", password);
+
+    // ✅ Mark user as logged in
+    localStorage.setItem("isLoggedIn", "true");
+
+    console.log("User data saved to localStorage:", matchingUser);
+    padlock.textContent = "🔓";
+    setTimeout(() => {
+        window.location.href = "car-available.html";
+    }, 500);
+
+
             } else {
                 alert("❌ Invalid email or password. Please try again.");
                 padlock.textContent = "🔒";
@@ -313,3 +321,4 @@
     </script>
 </body>
 </html>
+>
