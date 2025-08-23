@@ -385,6 +385,15 @@
     </style>
 </head>
 <body>
+    <script>
+  // 🔒 Block access if user is not logged in
+  const isLoggedIn = localStorage.getItem("isLoggedIn"); // 👈 make sure this matches the key you use at login
+
+  if (!isLoggedIn) {
+    window.location.href = "decline.html"; 
+  }
+</script>
+
   <div class="payment-container">
     <span class="close-button" onclick="window.location.href='car-available.html'">×</span>
 
