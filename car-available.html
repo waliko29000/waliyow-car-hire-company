@@ -756,13 +756,18 @@ table.innerHTML = `
         <th>Full Name:</th>
         <td colspan="2">${booking.fullName}</td>
     
-      <tr>
-        <th>Car Type:</th>
-        <td>${booking.carName}</td>
-        <td class="booking-actions-cell">
-          <!-- ✅ removed href -->
-          <button class="pay-btn" data-booking-id="${booking.bookingId}">Pay</button>
-        </td>
+   <tr>
+  <th>Car Type:</th>
+  <td>${booking.carName}</td>
+  <td class="booking-actions-cell">
+    <button class="pay-btn" 
+      data-amount="${depositAmount}" 
+      data-booking-id="${booking.bookingId}">
+      Pay
+    </button>
+  </td>
+</tr>
+
           </tr>
           <tr>
             <th>Booking ID:</th>
@@ -830,16 +835,22 @@ table.innerHTML = `
 
   document.querySelectorAll('.pay-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn"); // 👈 use the key you set on login
+    const isLoggedIn = localStorage.getItem("isLoggedIn");  
+    const amount = e.target.getAttribute("data-amount");  // 👈 get deposit
     const bookingId = e.target.getAttribute("data-booking-id");
 
+    // Save to localStorage for use in payment page
+    localStorage.setItem("paymentAmount", amount);
+    localStorage.setItem("paymentBookingId", bookingId);
+
     if (isLoggedIn) {
-      window.location.href = `payment-gateway.html?booking_id=${bookingId}`;
+      window.location.href = "payment-gateway.html";
     } else {
-      window.location.href = `decline.html?booking_id=${bookingId}`;
+      window.location.href = "decline.html";
     }
   });
 });
+
 
 
     document.querySelectorAll('.delete-btn').forEach(btn => {
