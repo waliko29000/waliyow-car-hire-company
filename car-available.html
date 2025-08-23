@@ -614,7 +614,6 @@ const headerDepositStatus = document.getElementById('headerDepositStatus');
           <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button or pay .</p>
           <p>* Once you pay for your booking, your payment will reflect in the Payment button .</p>
           <p>* To get a receipt, click the "Get Receipt" button in Payment Button. Get your receipt there.</p>
-         * press "Help" Botton if you experience problem within our system
           
          By clicking on "Settings" button it gives you access to your personal information, lets you change your password, find the Emergency Servirce, and even handle account deletion or deactivation.
           <p>* Thank you for choosing Waliko Car Hire!</p>
@@ -749,21 +748,21 @@ let allBookings = []; // Store all bookings
       const daysBooked = Math.ceil(timeDifference / (1000 * 3600 * 24));
       const totalRentalFee = booking.price * daysBooked; // Calculate total fee
       const depositAmount = Math.floor(totalRentalFee / 2); // Calculate half for deposit
-
-      const table = document.createElement('table');
-      table.className = 'booking-table';
-      table.innerHTML = `
-        </tr>
-            <tr>
-            <th>Full Name:</th>
-            <td colspan="2">${booking.fullName}</td>
-        
-          <tr>
-            <th>Car Type:</th>
-            <td>${booking.carName}</td>
-            <td class="booking-actions-cell">
-              <a href="decline.html?booking_id=${booking.bookingId}" class="pay-btn">Pay</a>
-            </td>
+const table = document.createElement('table');
+table.className = 'booking-table';
+table.innerHTML = `
+  </tr>
+      <tr>
+        <th>Full Name:</th>
+        <td colspan="2">${booking.fullName}</td>
+    
+      <tr>
+        <th>Car Type:</th>
+        <td>${booking.carName}</td>
+        <td class="booking-actions-cell">
+          <!-- ✅ removed href -->
+          <button class="pay-btn" data-booking-id="${booking.bookingId}">Pay</button>
+        </td>
           </tr>
           <tr>
             <th>Booking ID:</th>
@@ -829,13 +828,20 @@ let allBookings = []; // Store all bookings
       });
     }
 
-    // Attach event listeners for Pay, Delete, and now Download PDF buttons
-    document.querySelectorAll('.pay-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        currentBookingIndex = e.target.closest('table').querySelector('.delete-btn').getAttribute('data-index');
-        openMpesaModal();
-      });
-    });
+  document.querySelectorAll('.pay-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn"); // 👈 use the key you set on login
+    const bookingId = e.target.getAttribute("data-booking-id");
+
+    if (isLoggedIn) {
+      window.location.href = `payment-gateway.html?booking_id=${bookingId}`;
+    } else {
+      window.location.href = `decline.html?booking_id=${bookingId}`;
+    }
+  });
+});
+
+
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const index = e.target.getAttribute('data-index');
@@ -1033,4 +1039,3 @@ let allBookings = []; // Store all bookings
   </script>
 </body>
 </html>
-
