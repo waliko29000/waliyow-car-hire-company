@@ -1011,11 +1011,18 @@ table.innerHTML = `
     closePaymentFailedBtn.addEventListener('click', () => {
       paymentFailedModal.style.display = 'none';
     });
+// --- Logout ---
+logoutLink.addEventListener('click', () => {
+  // Clear login session
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userPassword");
 
-    // --- Logout ---
-    logoutLink.addEventListener('click', () => {
-      window.location.href = "index.html";
-    });
+  // Redirect to home or login
+  window.location.href = "index.html";
+});
+
 
     // --- Navigation Events ---
     homeLink.addEventListener('click', renderHome);
