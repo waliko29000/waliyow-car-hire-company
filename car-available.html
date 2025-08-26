@@ -614,8 +614,8 @@ const headerDepositStatus = document.getElementById('headerDepositStatus');
           <p>* After booking, go to "Booking Details" to see your pending bookings. You can cancel your booking by clicking the Delete button or pay .</p>
           <p>* Once you pay for your booking, your payment will reflect in the Payment button .</p>
           <p>* To get a receipt, click the "Get Receipt" button in Payment Button. Get your receipt there.</p>
-          
-         By clicking on "Settings" button it gives you access to your personal information, lets you change your password, find the Emergency Servirce, and even handle account deletion or deactivation.
+          <p> *Press the "Help" button if you experience a problem while using the system.
+        <p> By clicking on "Settings" button it gives you access to your personal information, lets you change your password, find the Emergency Servirce, and even handle account deletion or deactivation.
           <p>* Thank you for choosing Waliko Car Hire!</p>
         </div>
       `;
@@ -972,9 +972,7 @@ table.innerHTML = `
     function renderPaymentStatements() {
       contentDiv.innerHTML = `
         <div class="payment-note">
-         Dear customer, you cannot access this feature since you are **not logged in** to the service.Please <a href="signin.html">Login</a> and try again. Thank you!
-
-    
+        No data available! Please log in and Try Again.
 
         </div>
         <button class="receipt-btn" id="receiptBtn">Get Receipt</button>
