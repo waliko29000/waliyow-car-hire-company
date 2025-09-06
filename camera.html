@@ -18,20 +18,38 @@
     }
     h1 {
       font-size: 22px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       text-align: center;
     }
-    select {
-      padding: 6px 12px;
+    .camera-switch {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .camera-switch button {
+      flex: 1;
+      padding: 14px;
       font-size: 16px;
-      margin-bottom: 10px;
-      border-radius: 6px;
+      font-weight: bold;
       border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #6c757d;
+      color: #fff;
+      transition: background 0.3s, transform 0.1s;
+    }
+    .camera-switch button:active {
+      transform: scale(0.97);
+    }
+    .camera-switch button.active {
+      background: #28a745;
     }
     video {
       width: 100%;
-      max-width: 400px;
-      border-radius: 10px;
+      max-width: 420px;
+      border-radius: 12px;
       margin-top: 10px;
       border: 3px solid #fff;
       background: black;
@@ -48,15 +66,17 @@
     }
     button {
       flex: 1 1 130px;
-      padding: 12px 18px;
+      padding: 14px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 16px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.1s;
       user-select: none;
     }
-    #startBtn { background: #28a745; color: #fff; }
+    button:active {
+      transform: scale(0.97);
+    }
     #recordBtn { background: #ffc107; color: #000; }
     #stopRecordBtn { background: #dc3545; color: #fff; }
     #deleteVideoBtn { background: #6c757d; color: #fff; }
@@ -92,8 +112,19 @@
       pointer-events: auto;
     }
     @media (max-width: 480px) {
-      button {
-        flex: 1 1 100%;
+      .camera-switch {
+        flex-direction: column;
+      }
+      .camera-switch button {
+        flex: none;
+        width: 100%;
+      }
+      .buttons {
+        flex-direction: column;
+      }
+      .buttons button {
+        flex: none;
+        width: 100%;
       }
     }
   </style>
@@ -102,17 +133,15 @@
 
   <h1>Record Car Condition Video (Before Pickup)</h1>
 
-  <label for="cameraSelect">Choose Camera:</label>
-  <select id="cameraSelect">
-    <option value="environment">Back Camera</option>
-    <option value="user">Front Camera</option>
-  </select>
+  <div class="camera-switch">
+    <button id="frontBtn" class="active">👤 Front Camera</button>
+    <button id="backBtn">📷 Back Camera</button>
+  </div>
 
   <video id="video" autoplay playsinline muted></video>
   <video id="playback" controls style="display:none; margin-top:15px;"></video>
 
   <div class="buttons">
-    <button id="startBtn">Start Camera</button>
     <button id="recordBtn">Start Recording</button>
     <button id="stopRecordBtn">Stop Recording</button>
     <button id="deleteVideoBtn">Delete Saved Video</button>
@@ -124,13 +153,13 @@
   <script>
     const video = document.getElementById('video');
     const playback = document.getElementById('playback');
-    const startBtn = document.getElementById('startBtn');
     const recordBtn = document.getElementById('recordBtn');
     const stopRecordBtn = document.getElementById('stopRecordBtn');
     const deleteVideoBtn = document.getElementById('deleteVideoBtn');
     const timerDisplay = document.getElementById('timer');
     const messageBox = document.getElementById('messageBox');
-    const cameraSelect = document.getElementById('cameraSelect');
+    const frontBtn = document.getElementById('frontBtn');
+    const backBtn = document.getElementById('backBtn');
 
     let stream = null;
     let mediaRecorder = null;
@@ -168,28 +197,25 @@
       timerDisplay.style.display = "none";
     }
 
-    startBtn.onclick = async () => {
-      const selectedCamera = cameraSelect.value;
-
+    async function startCamera(facingMode = "user") {
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
-
       try {
         stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { exact: selectedCamera } },
+          video: { facingMode: { exact: facingMode } },
           audio: false
         });
         video.srcObject = stream;
-        showMessage("Camera started: " + selectedCamera);
+        showMessage("Camera started: " + facingMode);
       } catch (err) {
         showMessage("Camera error: " + err.message);
       }
-    };
+    }
 
     recordBtn.onclick = () => {
       if (!stream) {
-        showMessage("Please start the camera first!");
+        showMessage("Camera not available!");
         return;
       }
       recordedChunks = [];
@@ -234,12 +260,27 @@
       }
     };
 
+    // Camera switch buttons
+    frontBtn.onclick = () => {
+      frontBtn.classList.add("active");
+      backBtn.classList.remove("active");
+      startCamera("user");
+    };
+
+    backBtn.onclick = () => {
+      backBtn.classList.add("active");
+      frontBtn.classList.remove("active");
+      startCamera("environment");
+    };
+
+    // Start with front camera on load
     window.onload = () => {
       const savedVideo = localStorage.getItem('carConditionVideo');
       if (savedVideo) {
         playback.src = savedVideo;
         playback.style.display = 'block';
       }
+      startCamera("user"); // always load front
     };
   </script>
 
