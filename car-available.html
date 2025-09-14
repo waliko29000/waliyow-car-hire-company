@@ -55,7 +55,7 @@
       cursor: pointer;
     }
     .nav-links a:hover {
-      background: #2980b9;
+      background: #1464dd;
     }
     /* Content Area */
     #content {
@@ -699,8 +699,9 @@ const headerDepositStatus = document.getElementById('headerDepositStatus');
       return;
     }
 
-    // Generate a unique booking ID
-    const bookingId = 'BOOK' + Date.now() + Math.floor(Math.random() * 1000);
+  // Generate a unique booking ID: # + 9 digits
+const bookingId = '#' + String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0');
+console.log(bookingId);
 
     // Get current timestamp
     const timestamp = new Date().toLocaleString(); // Get a user-friendly date and time string
@@ -735,7 +736,7 @@ let allBookings = []; // Store all bookings
     // REMOVE THIS LINE: allBookings.reverse(); // Ensure latest booking is first
 
     if (allBookings.length === 0) {
-      contentDiv.innerHTML += "<p>No bookings made yet.</p>";
+      contentDiv.innerHTML += "<p>You haven't made any booking yet. Go to the <strong>Cars</strong> section to book a vehicle.</p>";
       return;
     }
 
