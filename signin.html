@@ -295,14 +295,23 @@
             const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
 
 
-            const matchingUser = allUsers.find(user => user.email === email && user.password === password);
+           const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
-        if (matchingUser) {
+if (matchingUser) {
+    // 🔒 If new user has isVerified property but still false
+    if (matchingUser.hasOwnProperty("isVerified") && !matchingUser.isVerified) {
+        alert("⚠️ Please verify your email before logging in.");
+           localStorage.setItem("userEmail", email); // keep their email
+      window.location.href = "verify.html"; // redirect them
+        padlock.textContent = "🔒";
+        padlock.classList.add('shake');
+        return;
+    }
+
+    // ✅ Old users (no isVerified field) OR new verified users
     localStorage.setItem("currentUser", JSON.stringify(matchingUser));
     localStorage.setItem("userEmail", email);
     localStorage.setItem("userPassword", password);
-
-    // ✅ Mark user as logged in
     localStorage.setItem("isLoggedIn", "true");
 
     console.log("User data saved to localStorage:", matchingUser);
@@ -311,12 +320,12 @@
         window.location.href = "car-available.html";
     }, 500);
 
+} else {
+    alert("❌ Invalid email or password. Please try again.");
+    padlock.textContent = "🔒";
+    padlock.classList.add('shake');
+}
 
-            } else {
-                alert("❌ Invalid email or password. Please try again.");
-                padlock.textContent = "🔒";
-                padlock.classList.add('shake');
-            }
         }
     </script>
 </body>
