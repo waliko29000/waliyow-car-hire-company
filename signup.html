@@ -213,10 +213,18 @@
       localStorage.setItem("verificationCode", code);
       localStorage.setItem("userEmail", email);
 
-      // Add new user
-      const newUser = { username, email, password, phone, gender };
-      allUsers.push(newUser);
-      localStorage.setItem("allUsers", JSON.stringify(allUsers));
+    // Add new user (start as unverified)
+const newUser = { 
+  username, 
+  email, 
+  password, 
+  phone, 
+  gender, 
+  isVerified: false   // 🔒 required field
+};
+allUsers.push(newUser);
+localStorage.setItem("allUsers", JSON.stringify(allUsers));
+
 
       const templateParams = {
         to_email: email,
