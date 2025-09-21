@@ -1,121 +1,213 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Verify Email - Waliko Car Hire</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #e0f7fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-
-    .verify-box {
-      background-color: #fff;
-      padding: 20px 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 51, 102, 0.2);
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-    }
-
-    h2 {
-      color: #003366;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .email-box {
-      font-weight: bold;
-      color: #003366;
-      background: #e0f7fa;
-      padding: 10px;
-      border-radius: 5px;
-      display: inline-block;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #003366;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      text-align: center;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #003366;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #002244;
-    }
+    body { font-family: Arial, sans-serif; background:#e0f7fa; margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .verify-box { background:#fff; padding:20px 28px; border-radius:10px; box-shadow:0 0 15px rgba(0,51,102,0.15); width:90%; max-width:420px; text-align:center; }
+    h2 { color:#003366; margin-bottom:6px; }
+    p { color:#333; margin-bottom:10px; }
+    .email-box { font-weight:700; color:#003366; background:#e0f7fa; padding:8px 10px; border-radius:6px; display:inline-block; margin-bottom:12px; }
+    input[type="text"] { width:100%; padding:12px; border:1px solid #003366; border-radius:6px; text-align:center; font-size:16px; margin-bottom:12px; box-sizing:border-box; }
+    button { width:100%; padding:12px; border-radius:6px; border:none; font-weight:700; cursor:pointer; }
+    #verifyBtn { background:#003366; color:#fff; margin-bottom:8px; }
+    #resendBtn { background:#666; color:#fff; }
+    #countdown { margin-top:8px; font-size:14px; color:#555; }
+    .small-link { margin-top:10px; font-size:13px; color:#003366; display:block; text-decoration:underline; cursor:pointer; }
+    .hidden { display:none; }
   </style>
 </head>
 <body>
   <div class="verify-box">
     <h2>Email Verification</h2>
     <p>Enter the 6-digit code sent to:</p>
-    <p class="email-box" id="userEmail">loading...</p>
-    <input type="text" id="code" placeholder="Enter verification code" required />
-    <button onclick="verifyCode()">Verify</button>
+    <div class="email-box" id="userEmail">loading...</div>
+
+    <input type="text" id="code" inputmode="numeric" maxlength="6" placeholder="Enter verification code" />
+
+    <button id="verifyBtn" onclick="verifyCode()">Verify</button>
+    <button id="resendBtn" onclick="resendCode()">Resend Code</button>
+
+    <div id="countdown">Checking code status...</div>
+    <a class="small-link" id="backToSignup" onclick="goToSignup()" style="display:none">Go back to Sign Up</a>
   </div>
 
   <script>
-    // Retrieve stored email
-    document.addEventListener("DOMContentLoaded", function() {
+    // ---------- CONFIG: change these if your EmailJS details differ ----------
+    const EMAILJS_INIT_KEY = "cRP4ovnb5IL3SxrkQ"; // same key you used in signup
+    const EMAILJS_SERVICE = "service_mne9prb";
+    const EMAILJS_TEMPLATE = "template_5bztsmi";
+    // ------------------------------------------------------------------------
+
+    emailjs.init(EMAILJS_INIT_KEY);
+
+    let countdownInterval = null;
+    let resendCooldownTimer = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
       const storedEmail = localStorage.getItem("userEmail");
-      if (storedEmail) {
-        document.getElementById("userEmail").textContent = storedEmail;
-      } else {
-        document.getElementById("userEmail").textContent = "Email not found!";
+      if (!storedEmail) {
+        document.getElementById("userEmail").textContent = "No email found";
+        document.getElementById("countdown").textContent = "No verification in progress. Please sign up first.";
+        document.getElementById("resendBtn").disabled = true;
+        document.getElementById("backToSignup").style.display = "block";
+        console.warn("verify.html: userEmail not found in localStorage.");
+        return;
       }
+
+      document.getElementById("userEmail").textContent = storedEmail;
+      startCountdown(); // show time left and monitor expiry
     });
+
+    function goToSignup() {
+      window.location.href = "signup.html";
+    }
+
+    function startCountdown() {
+      clearInterval(countdownInterval);
+      const expiry = localStorage.getItem("verificationExpiry");
+      if (!expiry) {
+        document.getElementById("countdown").textContent = "No active code. Click Resend to get a new code.";
+        return;
+      }
+
+      updateCountdown(); // immediate update
+      countdownInterval = setInterval(updateCountdown, 1000);
+
+      function updateCountdown() {
+        const expiryVal = parseInt(localStorage.getItem("verificationExpiry") || "0", 10);
+        const now = Date.now();
+        const msLeft = expiryVal - now;
+
+        if (msLeft <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById("countdown").textContent = "⏰ Code expired. Click Resend to get a new code.";
+          // allow resend
+          document.getElementById("resendBtn").disabled = false;
+          return;
+        }
+
+        const minutes = Math.floor(msLeft / 60000);
+        const seconds = Math.floor((msLeft % 60000) / 1000);
+        document.getElementById("countdown").textContent = `⏳ Code expires in ${minutes}:${String(seconds).padStart(2,"0")}`;
+      }
+    }
 
     function verifyCode() {
       const enteredCode = document.getElementById("code").value.trim();
       const savedCode = localStorage.getItem("verificationCode");
+      const expiry = localStorage.getItem("verificationExpiry");
+      const email = localStorage.getItem("userEmail");
+
+      if (!email) {
+        alert("❌ No email found. Please sign up first.");
+        window.location.href = "signup.html";
+        return;
+      }
 
       if (!enteredCode) {
         alert("⚠️ Please enter the verification code.");
         return;
       }
 
-      if (!savedCode) {
-        alert("❌ Verification code not found. Please request a new one.");
+      if (!savedCode || !expiry) {
+        alert("❌ No verification code available. Click Resend Code.");
         return;
       }
 
-      if (enteredCode === savedCode) {
-        alert("✅ Verification successful! You can now sign in.");
-        localStorage.removeItem("verificationCode");
-        localStorage.removeItem("userEmail");
-        setTimeout(() => {
-          window.location.href = "signin.html";
-        }, 1000);
-      } else {
-        alert("❌ Incorrect verification code!");
+      if (Date.now() > parseInt(expiry, 10)) {
+        alert("⏰ Your verification code has expired. Please click 'Resend Code'.");
+        document.getElementById("countdown").textContent = "⏰ Code expired. Click Resend.";
+        return;
       }
+
+      // savedCode and enteredCode are strings; simple comparison works
+      if (enteredCode === savedCode) {
+        // mark verified in allUsers
+        try {
+          let allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+          const targetEmail = email;
+          let found = false;
+          allUsers = allUsers.map(u => {
+            if (u.email === targetEmail) {
+              found = true;
+              return { ...u, isVerified: true };
+            }
+            return u;
+          });
+          localStorage.setItem("allUsers", JSON.stringify(allUsers));
+          console.log("verify.html: user marked verified (found? " + found + ")");
+        } catch (err) {
+          console.error("verify.html: error updating allUsers:", err);
+        }
+
+        // cleanup
+        localStorage.removeItem("verificationCode");
+        localStorage.removeItem("verificationExpiry");
+        localStorage.removeItem("userEmail");
+
+        clearInterval(countdownInterval);
+        alert("✅ Verification successful! You can now sign in.");
+        setTimeout(() => window.location.href = "signin.html", 700);
+      } else {
+        alert("❌ Incorrect verification code. Please check the email and try again.");
+        console.warn("verify.html: entered:", enteredCode, "expected:", savedCode);
+      }
+    }
+
+    function resendCode() {
+      const email = localStorage.getItem("userEmail");
+      if (!email) {
+        alert("❌ No email found. Please sign up first.");
+        window.location.href = "signup.html";
+        return;
+      }
+
+      // Disable button immediately to prevent double-click spam; re-enabled after cooldown
+      const resendBtn = document.getElementById("resendBtn");
+      resendBtn.disabled = true;
+
+      // New code + new expiry (5 minutes)
+      const newCode = String(Math.floor(100000 + Math.random() * 900000));
+      const newExpiry = Date.now() + 5 * 60 * 1000;
+
+      localStorage.setItem("verificationCode", newCode);
+      localStorage.setItem("verificationExpiry", String(newExpiry));
+
+      // Show updated countdown
+      startCountdown();
+
+      // Send via EmailJS - ensure your service/template match
+      const templateParams = {
+        to_email: email,
+        verification_code: newCode
+      };
+
+      emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, templateParams)
+        .then(() => {
+          alert("✅ A new verification code was sent to your email.");
+          console.log("verify.html: resend success, code:", newCode);
+        })
+        .catch((err) => {
+          console.error("verify.html: EmailJS send failed:", err);
+          alert("❌ Failed to resend verification email. Check console for details.");
+        });
+
+      // 30-second resend cooldown (UI only)
+      let cooldown = 30;
+      resendBtn.textContent = `Resend (${cooldown}s)`;
+      resendCooldownTimer = setInterval(() => {
+        cooldown--;
+        resendBtn.textContent = `Resend (${cooldown}s)`;
+        if (cooldown <= 0) {
+          clearInterval(resendCooldownTimer);
+          resendBtn.textContent = "Resend Code";
+          resendBtn.disabled = false;
+        }
+      }, 1000);
     }
   </script>
 </body>
