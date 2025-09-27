@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Location in Kenya</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Create map centered on Kenya
+    var map = L.map('map').setView([1.2921, 36.8219], 8);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+    }).addTo(map);
+
+    // Use browser geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    function success(position) {
+      var lat = position.coords.latitude;
+      var lon = position.coords.longitude;
+
+      var marker = L.marker([lat, lon]).addTo(map);
+
+      // Reverse geocode to get city + nearby area
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`)
+        .then(response => response.json())
+        .then(data => {
+          let addr = data.address;
+
+          // Main town/city
+          let mainPlace = addr.city || addr.town || addr.village || "Unknown town";
+
+          // Nearest smaller area
+          let nearby = addr.suburb || addr.neighbourhood || addr.quarter || addr.road || "";
+
+          let displayName = mainPlace;
+          if (nearby) {
+            displayName += " – near " + nearby;
+          }
+
+          marker.bindPopup("📍 You are in: <b>" + displayName + ", Kenya</b>").openPopup();
+          map.setView([lat, lon], 15);
+        })
+        .catch(() => {
+          marker.bindPopup("📍 You are here (location name unavailable)").openPopup();
+        });
+    }
+
+    function error(err) {
+      alert("Could not detect location. Error: " + err.message);
+    }
+  </script>
+</body>
+</html>
