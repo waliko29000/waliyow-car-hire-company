@@ -1,71 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Location in Kenya</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-  <style>
-    #map {
-      height: 100vh;
-      width: 100%;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Account Menu</title>
+<style>
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-color: #f4f4f4;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Side navigation full-screen */
+.side-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+    overflow-y: auto;
+}
+
+/* Blue header compact */
+.profile-header {
+    padding: 10px 15px; /* reduced padding */
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    background-color: #007bff;
+    color: white;
+    position: relative;
+}
+
+/* Close button top-right */
+#close-nav-button {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Smaller profile picture */
+#profile-pic-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 5px;
+    border: 2px solid white;
+}
+
+#profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Compact username text */
+#username-display {
+    margin-top: 2px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+}
+
+/* Navigation links */
+.side-nav nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-nav nav ul li a,
+.side-nav nav ul li label {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    font-size: 0.95em;
+}
+
+.side-nav nav ul li a:hover,
+.side-nav nav ul li label:hover {
+    background-color: #e0f7fa;
+    color: #007bff;
+}
+
+#upload-input {
+    display: none;
+}
+
+.side-nav nav ul li.emergency-item a {
+    background-color: #dc3545;
+    color: white;
+    border-bottom: none;
+    font-weight: bold;
+}
+
+.side-nav nav ul li.emergency-item a:hover {
+    background-color: #c82333;
+}
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: auto;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    #profile-pic-container {
+        width: 50px;
+        height: 50px;
     }
-  </style>
+    #username-display {
+        font-size: 0.95em;
+    }
+}
+</style>
 </head>
 <body>
-  <div id="map"></div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    // Create map centered on Kenya
-    var map = L.map('map').setView([1.2921, 36.8219], 8);
+<div id="side-nav" class="side-nav">
+    <div class="profile-header">
+        <button id="close-nav-button" aria-label="Close side menu">&times;</button>
+        <div id="profile-pic-container">
+            <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
+        </div>
+        <h2 id="username-display">Waliko Car Hire</h2>
+    </div>
+    <nav>
+        <ul>
+            <li><label for="upload-input">Upload Profile Picture</label><input type="file" id="upload-input" accept="image/*"></li>
+            <li><a href="user.html">Personal Information</a></li>
+            <li><a href="change-pass.html">Change Password</a></li>
+            <li><a href="faqs.html">Frequently Asked Questions</a></li>
+             <li><a href="ip.html">view your location</a></li>
+            <li><a href="camera.html">Record Car Condition B4 Pick Up</a></li>
+            <li class="emergency-item"><a href="tel:+2547XXXXXXXXX">Emergency</a></li>
+            <li><a href="deactivate.html">Deactivate Account</a></li>
+            <li><a href="delete.html">Delete Account</a></li>
+        </ul>
+    </nav>
+</div>
 
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-    }).addTo(map);
+<footer>Waliko Car Hire</footer>
 
-    // Use browser geolocation
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
-    } else {
-      alert("Geolocation is not supported by this browser.");
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadInput = document.getElementById('upload-input');
+    const profilePic = document.getElementById('profile-pic');
+    const usernameDisplay = document.getElementById('username-display');
+    const closeNavButton = document.getElementById('close-nav-button');
+
+    // Close button redirects to car-available.html
+    closeNavButton.addEventListener('click', () => {
+        window.location.href = 'car-available.html';
+    });
+
+    // Load user info from localStorage
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+        const userObject = JSON.parse(currentUser);
+        if (userObject.username) usernameDisplay.textContent = userObject.username;
+        if (userObject.profilePicture) profilePic.src = userObject.profilePicture;
     }
 
-    function success(position) {
-      var lat = position.coords.latitude;
-      var lon = position.coords.longitude;
+    // Profile picture upload
+    uploadInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                profilePic.src = e.target.result;
+                localStorage.setItem('profilePicture', e.target.result);
+                if (currentUser) {
+                    const userObject = JSON.parse(currentUser);
+                    userObject.profilePicture = e.target.result;
+                    localStorage.setItem('currentUser', JSON.stringify(userObject));
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
 
-      var marker = L.marker([lat, lon]).addTo(map);
-
-      // Reverse geocode to get city + nearby area
-      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`)
-        .then(response => response.json())
-        .then(data => {
-          let addr = data.address;
-
-          // Main town/city
-          let mainPlace = addr.city || addr.town || addr.village || "Unknown town";
-
-          // Nearest smaller area
-          let nearby = addr.suburb || addr.neighbourhood || addr.quarter || addr.road || "";
-
-          let displayName = mainPlace;
-          if (nearby) {
-            displayName += " – near " + nearby;
-          }
-
-          marker.bindPopup("📍 You are in: <b>" + displayName + ", Kenya</b>").openPopup();
-          map.setView([lat, lon], 15);
-        })
-        .catch(() => {
-          marker.bindPopup("📍 You are here (location name unavailable)").openPopup();
-        });
-    }
-
-    function error(err) {
-      alert("Could not detect location. Error: " + err.message);
-    }
-  </script>
 </body>
 </html>
