@@ -4,20 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Payment Gateway</title>
+
 <style>
 body{
-  font-family:Arial,sans-serif;
+  font-family: Arial, sans-serif;
   background:#f4f4f4;
-  padding:50px;
+  padding:20px;
+  margin:0;
   text-align:center;
 }
 .payment-container{
   background:#fff;
-  padding:25px;
+  padding:20px;
   border-radius:10px;
   box-shadow:0 0 10px rgba(0,0,0,.1);
-  display:inline-block;
-  width:380px;
+  width:90%;
+  max-width:380px;
+  margin:auto;
   position:relative;
 }
 .close-button{
@@ -27,11 +30,6 @@ body{
   font-size:22px;
   cursor:pointer;
 }
-.close-button.disabled{
-  pointer-events:none;
-  opacity:.4;
-}
-
 #bookingBox{
   display:none;
   background:#e8f5e9;
@@ -42,7 +40,6 @@ body{
   border-radius:5px;
   font-weight:bold;
 }
-
 #yellowError{
   display:none;
   background:#fff3cd;
@@ -52,7 +49,6 @@ body{
   border-left:5px solid #ffc107;
   border-radius:5px;
 }
-
 #finalError{
   display:none;
   background:#fdecea;
@@ -62,12 +58,6 @@ body{
   border-left:5px solid #f44336;
   border-radius:6px;
 }
-#finalError a{
-  margin-left:6px;
-  color:#0b5ed7;
-  text-decoration:underline;
-}
-
 .payment-button{
   border:1px solid #ccc;
   padding:10px;
@@ -78,46 +68,67 @@ body{
   align-items:center;
   justify-content:center;
 }
-.payment-button:hover{background:#eee}
-.payment-button img{width:45px;margin-right:10px}
-
-.processing{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.dot{
-  width:8px;height:8px;
-  background:#fff;
-  border-radius:50%;
-  margin:0 3px;
-  animation:pulse .6s infinite alternate;
-}
-.dot:nth-child(2){animation-delay:.2s}
-.dot:nth-child(3){animation-delay:.4s}
-@keyframes pulse{from{opacity:.2}to{opacity:1}}
-
-button{
-  background:blue;
-  color:#fff;
-  border:none;
-  padding:10px 20px;
-  border-radius:5px;
-  cursor:pointer;
-}
-button:disabled{background:#aaa}
+.payment-button img{width:40px;margin-right:10px}
 
 .modal{
   display:none;
   position:fixed;
-  top:50%;left:50%;
+  top:50%;
+  left:50%;
   transform:translate(-50%,-50%);
   background:#f0f0f0;
-  padding:25px;
+  padding:20px;
   border-radius:10px;
+  width:90%;
+  max-width:330px;
   z-index:10;
-  width:300px;
+  text-align:left;
 }
+.modal-title{
+  font-weight:bold;
+  text-align:center;
+  margin-bottom:10px;
+}
+.modal-amount{
+  text-align:center;
+  font-weight:bold;
+  margin:10px 0;
+}
+.modal-info{
+  background:#eef4ff;
+  border-left:4px solid #0d6efd;
+  padding:10px;
+  font-size:14px;
+  border-radius:4px;
+  margin-bottom:12px;
+}
+input{
+  width:100%;
+  padding:10px;
+  border-radius:5px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+.error-text{
+  display:none;
+  color:red;
+  font-size:13px;
+  margin-bottom:8px;
+}
+.modal-buttons{
+  display:flex;
+  justify-content:space-between;
+}
+button{
+  width:48%;
+  padding:10px;
+  border:none;
+  border-radius:5px;
+  font-weight:bold;
+}
+.pay{background:#0d6efd;color:#fff;}
+.cancel{background:#dc3545;color:#fff;}
+
 .overlay{
   display:none;
   position:fixed;
@@ -125,19 +136,30 @@ button:disabled{background:#aaa}
   background:rgba(0,0,0,.5);
   z-index:9;
 }
-.overlay.locked{pointer-events:none}
-
-.error-text{
-  color:red;
-  font-size:14px;
-  display:none;
+.processing{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
+.dot{
+  width:8px;
+  height:8px;
+  background:#fff;
+  border-radius:50%;
+  margin:0 3px;
+  animation:pulse .6s infinite alternate;
+  vertical-align:middle;
+}
+
+
+@keyframes pulse{from{opacity:.2}to{opacity:1}}
 </style>
 </head>
+
 <body>
 
 <div class="payment-container">
-<span id="closeBtn" class="close-button" onclick="exitPage()">×</span>
+<span class="close-button" onclick="exitPage()">×</span>
 
 <div id="bookingBox"></div>
 <div id="yellowError"></div>
@@ -145,156 +167,131 @@ button:disabled{background:#aaa}
 <h2>Select Payment Method</h2>
 
 <div class="payment-button" onclick="openModal('mpesa')">
-<img src="mpesa.jpg.png" /> Pay with M-Pesa
+<img src="mpesa.jpg.png"> Pay with M-Pesa
 </div>
-
 <div class="payment-button" onclick="openModal('paypal')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" /> Pay with PayPal
+<img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"> Pay with PayPal
 </div>
-
 <div class="payment-button" onclick="openModal('visa')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" /> Pay with Visa
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"> Pay with Visa
 </div>
 
-<div id="finalError">
-<strong>❌ Technical issue.</strong> Try again later.
-<a href="what-happened.html">What happened?</a>
-</div>
+<div id="finalError"><strong>❌ Technical issue.</strong> Try again later.</div>
 </div>
 
-<div id="overlay" class="overlay"></div>
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-<!-- MODALS -->
+<!-- M-PESA -->
 <div class="modal" id="mpesa">
-<h3>M-Pesa</h3>
-<input id="mpesaInput" placeholder="07XXXXXXXX">
-<p id="mpesaErr" class="error-text">Invalid phone number</p>
-<button type="button" id="mpesaBtn" onclick="processPayment('mpesa')">Pay</button>
+<div class="modal-title">M-Pesa Payment</div>
+
+<input id="mpesaInput" placeholder="07XXXXXXXX" type="tel">
+<div id="mpesaErr" class="error-text">Invalid phone number</div>
+
+<div class="modal-amount" id="mpesaAmount"></div>
+
+<div class="modal-info">
+<strong>What happens next?</strong><br>
+Confirm the payment request on your phone to complete the payment.<br>
+<strong>Note:</strong> Make sure any pop-up blocker is disabled.
 </div>
 
+<div class="modal-buttons">
+<button class="pay" id="mpesaBtn" onclick="processPayment('mpesa')">Pay</button>
+<button class="cancel" onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
+<!-- PAYPAL -->
 <div class="modal" id="paypal">
-<h3>PayPal</h3>
+<div class="modal-title">PayPal Payment</div>
+
 <input id="paypalInput" placeholder="email@example.com">
-<p id="paypalErr" class="error-text">Invalid email</p>
-<button type="button" id="paypalBtn" onclick="processPayment('paypal')">Pay</button>
+<div id="paypalErr" class="error-text">Invalid email</div>
+
+<div class="modal-amount" id="paypalAmount"></div>
+
+<div class="modal-info">
+<strong>What happens next?</strong><br>
+You will be redirected to PayPal to authorize the payment.<br>
+<strong>Note:</strong> Make sure any pop-up blocker is disabled.
 </div>
 
+<div class="modal-buttons">
+<button class="pay" id="paypalBtn" onclick="processPayment('paypal')">Pay</button>
+<button class="cancel" onclick="closeAll()">Cancel</button>
+</div>
+</div>
+
+<!-- VISA -->
 <div class="modal" id="visa">
-<h3>Visa</h3>
+<div class="modal-title">Card Payment</div>
+
 <input id="visaInput" placeholder="Card number">
-<p id="visaErr" class="error-text">Invalid card</p>
-<button type="button" id="visaBtn" onclick="processPayment('visa')">Pay</button>
+<div id="visaErr" class="error-text">Invalid card number</div>
+
+<div class="modal-amount" id="visaAmount"></div>
+
+<div class="modal-info">
+<strong>What happens next?</strong><br>
+Your card will be charged securely to complete the payment.<br>
+<strong>Note:</strong> Make sure any pop-up blocker is disabled.
+</div>
+
+<div class="modal-buttons">
+<button class="pay" id="visaBtn" onclick="processPayment('visa')">Pay</button>
+<button class="cancel" onclick="closeAll()">Cancel</button>
+</div>
 </div>
 
 <script>
 const bookingBox=document.getElementById("bookingBox");
 const yellowError=document.getElementById("yellowError");
-const finalError=document.getElementById("finalError");
 const overlay=document.getElementById("overlay");
-const closeBtn=document.getElementById("closeBtn");
+const finalError=document.getElementById("finalError");
 
-let processing=false;
-
-// SHOW BOOKING INFO
 function showBooking(){
-  const amount=localStorage.getItem("paymentAmount");
-  const booking=localStorage.getItem("paymentBookingId");
-  if(amount && booking){
-    bookingBox.style.display="block";
-    bookingBox.innerText=`Booking ID: #${booking} | Amount: ${amount} KES`;
-    yellowError.style.display="none";
-  }else{
-    yellowError.style.display="block";
-    yellowError.innerText="⚠ No booking found. You left the page or closed the booking.";
-    bookingBox.style.display="none";
-  }
+ const a=localStorage.getItem("paymentAmount");
+ const b=localStorage.getItem("paymentBookingId");
+ if(a&&b){
+  bookingBox.style.display="block";
+  bookingBox.innerText=`Booking ID: #${b} | Amount: ${a} KES`;
+ }else{
+  yellowError.style.display="block";
+  yellowError.innerText="⚠ No booking found.";
+ }
 }
-
-// INITIAL DISPLAY
 showBooking();
 
-// REMOVE BOOKING ONLY ON LEAVE OR CLOSE
-window.addEventListener("beforeunload", ()=>{
-  localStorage.removeItem("paymentAmount");
-  localStorage.removeItem("paymentBookingId");
-});
-
-// BLOCK EXIT DURING PROCESSING
-window.addEventListener("beforeunload", e => {
- if(processing){
-   e.preventDefault();
-   e.returnValue="";
- }
-});
-
-// EXIT BUTTON
-function exitPage(){
-  localStorage.removeItem("paymentAmount");
-  localStorage.removeItem("paymentBookingId");
-  showBooking();
-  window.location.href="car-available.html";
-}
-
-// MODALS
 function openModal(id){
-  const booking=localStorage.getItem("paymentBookingId");
-  if(processing || !booking) return;
-  document.getElementById(id).style.display="block";
-  overlay.style.display="block";
+ const a=localStorage.getItem("paymentAmount");
+ document.getElementById(id).style.display="block";
+ overlay.style.display="block";
+ if(id==="mpesa") mpesaAmount.innerText
+ if(id==="paypal") paypalAmount.innerText;
+ if(id==="visa") visaAmount.innerText;
 }
 
 function closeAll(){
-  if(processing) return;
-  document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
-  overlay.style.display="none";
+ document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
+ overlay.style.display="none";
 }
 
-// PAYMENT PROCESSING
 function processPayment(type){
-  let valid=false, btn;
-
-  if(type==="mpesa"){
-    valid=/^07\d{8}$/.test(mpesaInput.value);
-    mpesaErr.style.display=valid?"none":"block";
-    btn=mpesaBtn;
-  }
-  if(type==="paypal"){
-    valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(paypalInput.value);
-    paypalErr.style.display=valid?"none":"block";
-    btn=paypalBtn;
-  }
-  if(type==="visa"){
-    valid=/^\d{12,19}$/.test(visaInput.value);
-    visaErr.style.display=valid?"none":"block";
-    btn=visaBtn;
-  }
-
-  if(!valid) return;
-
-  processing=true;
-  closeBtn.classList.add("disabled");
-  overlay.classList.add("locked");
-
-  btn.disabled=true;
-  btn.innerHTML=`<div class="processing">
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
-  </div>`;
-
-  setTimeout(()=>{
-    processing=false;
-    closeAll();
-    overlay.classList.remove("locked");
-    closeBtn.classList.remove("disabled");
-    btn.disabled=false;
-    btn.innerText="Pay";
-    finalError.style.display="block";
-
-    // NOTE: Booking NOT removed here! Stays until user leaves
-    showBooking();
-  },10000);
+ let valid=false,btn;
+ if(type==="mpesa"){valid=/^07\d{8}$/.test(mpesaInput.value);mpesaErr.style.display=valid?"none":"block";btn=mpesaBtn;}
+ if(type==="paypal"){valid=/^\S+@\S+\.\S+$/.test(paypalInput.value);paypalErr.style.display=valid?"none":"block";btn=paypalBtn;}
+ if(type==="visa"){valid=/^\d{12,19}$/.test(visaInput.value);visaErr.style.display=valid?"none":"block";btn=visaBtn;}
+ if(!valid) return;
+btn.innerHTML=`<span class="processing">Processing<span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`; setTimeout(()=>{closeAll();finalError.style.display="block";btn.innerText="Pay";},10000);
 }
+function exitPage(){
+  localStorage.removeItem("paymentAmount");
+  localStorage.removeItem("paymentBookingId");
+  window.location.href="car-available.html";
+}
+
 </script>
+
 </body>
 </html>
