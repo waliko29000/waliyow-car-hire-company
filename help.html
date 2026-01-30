@@ -102,10 +102,30 @@
   const problemsKey = "helpMessages";
   let currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  if (!currentUser) {
-    document.body.innerHTML = "<h2 style='text-align:center;color:red;margin-top:50px'>⚠️ Please sign in first!</h2>";
-  }
+ if (!currentUser) {
+  // 1. Replace the page content with the warning box
+  document.body.innerHTML = `
+    <div style="background-color: #fff5f5; border: 2px solid #feb2b2; padding: 40px; margin: 100px auto; max-width: 500px; border-radius: 15px; font-family: system-ui, sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+      <h2 style="text-align: center; color: #c53030; margin: 0;">
+        ⚠️ Please sign in first to access Help services!
+      </h2>
+      <p style="text-align: center; color: #742a2a; margin-top: 20px; font-weight: 500;">
+        Redirecting you to the sign-in page...
+      </p>
+      <div style="display: flex; justify-content: center; margin-top: 20px;">
+         <div style="width: 40px; height: 40px; border: 4px solid #fbb6ce; border-top: 4px solid #c53030; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      </div>
+    </div>
+    <style>
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+  `;
 
+  // 2. Redirect to signin.html after 7 seconds
+  setTimeout(() => {
+    window.location.href = "signin.html";
+  }, 7000);
+}
   // 🔹 Always refresh currentUser status from allUsers
   function refreshCurrentUser() {
     const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
@@ -159,7 +179,7 @@
     problems.filter(p => p.email === currentUser.email).forEach(p => {
       let div = document.createElement("div");
       div.className = "message-box";
-      div.innerHTML = `<b>Your problem:</b> ${p.message}`;
+      div.innerHTML = `<b>Your message:</b> ${p.message}`;
       if (p.reply) {
         div.innerHTML += `<div class="reply"><b>Admin reply:</b> ${p.reply}</div>`;
       }
