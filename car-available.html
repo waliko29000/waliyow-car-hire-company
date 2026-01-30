@@ -559,7 +559,7 @@
       { name: "Suzuki Alto", price: 2000, description: "Compact and fuel-efficient.", image: "alto.jpg", available: true, duration: "24 hours" },
 { name: "Toyota Premio", price: 3000, description: "Spacious sedan with a smooth ride.", image: "premio.jpg", available: true, duration: "24 hours" },
 { name: "Toyota Sienta", price: 3500, description: "Versatile family minivan.", image: "sienta.jpg", available: true, duration: "24 hours" },
-
+{ name: "Toyota Succeed", price: 3500, description: "Compact anf fuel effecient.", image: "", available: true, duration: "24 hours" },
       { name: "Mercedes Benz C200", price: 10000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
       { name: "Range Rover Sport", price: 25000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
       { name: "Mazda CX-5", price: 4000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
@@ -573,7 +573,7 @@
 { name: "Toyota Fielder", price: 3500, description: "Spacious and versatile station wagon perfect for families and cargo transport.", image: "car18.jpg", available: true, duration: "24 hours" },
 
       { name: "Toyota Prado TXG", price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Land Cruiser V8", price: 12000, description: "Powerful full-size SUV with superior off-road capabilities.", image: "car15.jpg", available: true, duration: "24 hours" }
+    
       
     ];
 
@@ -724,7 +724,7 @@ console.log(bookingId);
     let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
     bookings.unshift(bookingDetails); // Add the new booking to the beginning of the array
     localStorage.setItem('bookings', JSON.stringify(bookings));
-    alert(`Booking created successfully!\n\nTo confirm your booking, Check it at "Booking Details" section and Pay`);
+    alert(`Booking created successfully ✅!\n\nTo confirm your booking, Check it at "Booking Details" section and Pay`);
     closeBookingModal();
   
     });
