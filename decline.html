@@ -19,77 +19,113 @@
 
         /* Pop-up Styles */
         .info-popup {
-            display: flex; /* Always visible and centered */
+            display: flex; 
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #ffe0e0; /* Light red background */
-            border: 1px solid #d9534f; /* Red border */
-            color: #d9534f; /* Red text */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background-color: #ffeef0; /* Light red background */
+            border: 2px solid #f5c2c7;
+            color: #842029;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             text-align: center;
-            max-width: 300px; /* Smaller max-width for mobile */
-            width: 90%; /* Responsive width */
-            line-height: 1.5;
-            font-size: 15px;
+            max-width: 450px; 
+            width: 90%;
+            line-height: 1.6;
             box-sizing: border-box;
-            flex-direction: column; /* Stack content vertically */
-            align-items: center; /* Center items horizontally */
+            flex-direction: column;
+            align-items: center;
         }
 
-        .info-popup .close-btn {
+        .info-popup h2 {
+            margin-top: 0;
+            color: #dc3545;
+            font-size: 20px;
+        }
+
+        .close-btn {
             position: absolute;
             top: 10px;
             right: 15px;
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
-            color: #d9534f;
+            color: #dc3545;
         }
 
-        /* Media queries for larger screens if needed */
-        @media (min-width: 600px) {
-            .info-popup {
-                max-width: 400px; /* Larger max-width for tablets/desktops */
-                font-size: 16px;
-            }
+        .login-btn {
+            margin-top: 20px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .login-btn:hover {
+            background-color: #a71d2a;
+        }
+
+        .timer-text {
+            font-size: 13px;
+            margin-top: 15px;
+            color: #666;
+            font-style: italic;
+        }
+
+        #countdown {
+            font-weight: bold;
+            color: #dc3545;
         }
     </style>
 </head>
 <body>
 
     <div class="info-popup" id="infoPopup">
-        <span class="close-btn" id="closePopup">&times;</span>
-        <p>Dear customer, we cannot redirect you to payment gateways since you are **not logged in** to the service. Please login and try again. Thank you!</p>
+        <span class="close-btn" id="closePopup" title="Redirect now">&times;</span>
+        
+        <h2 style="text-align:center; color:red;">
+            ⚠️ Please sign in first to access Payments!
+        </h2>
+
+        <p>Dear customer, we cannot redirect you to payment gateways since you are <strong>not logged in</strong> to the service. Please login and try again. Thank you!</p>
+        
+        <a href="signin.html" class="login-btn">Login Now</a>
+        
+        <p class="timer-text">You will be redirected automatically in <span id="countdown">10</span> seconds...</p>
     </div>
 
     <script>
-        const infoPopup = document.getElementById('infoPopup');
-        const closePopupBtn = document.getElementById('closePopup');
+        const countdownEl = document.getElementById('countdown');
+        let seconds = 10; // Set to 8 seconds
 
-        // Function to hide the pop-up and redirect
-        function hidePopupAndRedirect() {
-            infoPopup.style.display = 'none'; // Hide the pop-up
-            window.location.href = 'car-available.html'; // Redirect to car-available.html
+        function redirectToLogin() {
+            window.location.href = 'signin.html';
         }
 
-        // Event listener for the close button
-        closePopupBtn.addEventListener('click', hidePopupAndRedirect);
-
-        // Optional: Hide popup and redirect if user clicks outside of it (if the popup isn't always visible)
-        // Since the popup is now always visible, this might not be strictly necessary
-        // but it's good practice for general modal behavior.
-        window.addEventListener('click', (event) => {
-            if (event.target === infoPopup) {
-                hidePopupAndRedirect();
+        // Countdown Timer Logic
+        const interval = setInterval(() => {
+            seconds--;
+            countdownEl.textContent = seconds;
+            
+            if (seconds <= 0) {
+                clearInterval(interval);
+                redirectToLogin();
             }
-        });
+        }, 1000);
 
-        // The popup is now displayed by default via CSS. No JS needed to show it on load.
+        // Close button redirects immediately
+        document.getElementById('closePopup').addEventListener('click', () => {
+            clearInterval(interval);
+            redirectToLogin();
+        });
     </script>
 </body>
 </html>
