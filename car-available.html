@@ -3,1058 +3,514 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Waliko Car Hire Company</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Cars – Waliko Car Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset & Base Styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      background-color: #eef2f3;
-      color: #333333;
-      line-height: 1.6;
-    }
-    .header {
-  display: flex;
-  align-items: center;
-  background:  #1464dd;
-  color: #fff;
-  padding: 6px 20px;
-  flex-wrap: wrap;
-
-  position: fixed;       /* 👈 makes it fixed */
-  top: 0;                /* 👈 stick to top */
-  left: 0;
-  width: 100%;           /* 👈 full width */
-  z-index: 1000;         /* 👈 stay on top */
-}
-
-    .left-section {
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .nav-links {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      margin-left: auto;
-      flex-wrap: wrap;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #fff;
-      font-size: 16px;
-      padding: 10px 14px;
-      background: #3498db;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-      cursor: pointer;
-    }
-    .nav-links a:hover {
-      background: #1464dd;
-    }
-    /* Content Area */
-    #content {
-  padding: 112px 20px 20px 20px; /* ⬅️ push everything down */
-  max-width: 1200px;
-  margin: 20px auto;
-  text-align: left;
-}
-
-
-
-
-
-
-    /* Home Notice (Red) */
-    .notice {
-      background: rgb(59, 235, 241);
-      border-left: 5px solid  #1464dd;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 5px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-    .notice h2 {
-      margin-bottom: 15px;
-      color: #0043a8;
-    }
-    .notice p {
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-    .instructions {
-      margin-top: 15px;
-      font-size: 15px;
-      line-height: 1.5;
-    }
-/* Car Cards Container */
-        .car-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0;
-    }
-    .car-card {
-      background: #fff;
-      flex: 1 1 calc(33.33% - 0px);
-      min-width: 300px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-      position: relative;
-      overflow: hidden;
-      margin: 0;
-    }
-    .car-card img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-    }
-    .car-details {
-      padding: 15px;
-    }
-    .car-details h3 {
-      margin-bottom: 10px;
-      font-size: 20px;
-    }
-    .car-details p {
-      margin-bottom: 8px;
-      color: #555;
-      font-size: 15px;
-    }
-    .book-btn {
-      text-decoration: none;
-      color: #fff;
-      font-size: 16px;
-      padding: 8px 12px;
-      background:  #1464dd;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-      cursor: pointer;
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-    }
-    .book-btn:hover {
-      background: hwb(216 4% 45%);
-    }
-   /* Booking Details */
-.booking-details {
-  background: #fff;
-  padding: 0px;
-  border-radius: 1px;
-  margin-bottom: 2px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0px 10px; /* Row gap and column gap (set to 0 for no vertical gap) */
-  max-width: 900px; /* Adjust this value as needed */
-  margin-left: auto;
-  margin-right: auto;
-}
-.booking-info {
-  flex: 1;
-  min-width: 2px;
-}
-.booking-info p {
-  margin: 8px 0;
-  font-size: 15px;
-}
-    .pending {
-      color: #c0392b;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    .booking-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-    }
-    .pay-btn, .delete-btn {
-      padding: 6px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-      width: 100px;
-    }
-    .pay-btn {
-      background: #1464dd;
-      color: #fff;
-    }
-    .pay-btn:hover {
-      background: #1c5980;
-    }
-    .delete-btn {
-      background: #ec210a;
-      color: #fff;
-    }
-    .delete-btn:hover {
-      background: #c0392b;
-    }
-    /* Payment Statements Note & Receipt Button */
-    .payment-note {
-      background: #ffdddd;
-      border: 1px solid #ff0000;
-      padding: 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      color: #a80000;
-      margin-bottom: 20px;
-    }
-    .receipt-btn {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #e74c3c;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .receipt-btn:hover {
-      background: #c0392b;
-    }
-    /* Receipt Modal */
-    .receipt-modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      overflow: auto;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .receipt-content {
-      background: #fff;
-      padding: 20px;
-      width: 100%;
-      max-width: 400px;
-      border-radius: 5px;
-      position: relative;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-      text-align: left;
-    }
-    .receipt-content h2 {
-      margin-bottom: 15px;
-      color: #2c3e50;
-    }
-    .receipt-content p {
-      margin-bottom: 10px;
-      font-size: 15px;
-    }
-    .close-receipt {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
-      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
       color: #333;
     }
-    /* Modal Styles (Booking, Mpesa, Payment Failed) */
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+    }
+
+    header h1 { font-size: 1.2em; font-weight: 700; }
+
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    nav a.logout {
+      border-color: rgba(255,100,100,0.4);
+      color: #ffaaaa;
+    }
+
+    nav a.logout:hover { background: rgba(255,80,80,0.2); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .notice-box { background: #fff; border-radius: 14px; padding: 24px 26px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); }
+    .notice-box h2 { margin-bottom: 16px; color: #1464dd; font-size: 1.1em; font-weight: 700; padding-bottom: 12px; border-bottom: 2px solid #f0f4ff; }
+    .notice-box p { margin-bottom: 10px; font-size: 0.9em; line-height: 1.8; color: #555; }
+    .notice-box p strong { color: #1464dd; font-weight: 600; }
+    .notice-box .notice-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 8px; background: #f0f4ff; margin-bottom: 8px; font-size: 0.88em; color: #444; line-height: 1.6; }
+    .notice-box .notice-item .icon { font-size: 1.1em; flex-shrink: 0; margin-top: 1px; }
+
+    .page-title {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+    }
+
+    /* ── CAR GRID ── */
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .car-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .car-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(20,100,221,0.15);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #e8eef8;
+    }
+
+    .car-card img[src=""],
+    .car-card img:not([src]) {
+      height: 180px;
+      background: linear-gradient(135deg, #e8eef8, #d0dcf5);
+    }
+
+    .car-info {
+      padding: 14px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .car-info h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
+
+    .car-info .price {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin: 4px 0;
+    }
+
+    .car-info p { font-size: 0.8em; color: #666; line-height: 1.5; }
+
+    .car-info .badge {
+      display: inline-block;
+      background: #e6f0ff;
+      color: #1464dd;
+      font-size: 0.72em;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 6px;
+      width: fit-content;
+    }
+
+    .book-btn {
+      margin: 0 16px 16px;
+      padding: 9px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .book-btn:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
+    }
+
+    /* ── BOOKING MODAL ── */
     .modal {
       display: none;
       position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
       z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      overflow: auto;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
     }
-    .modal-content {
+
+    .modal.open { display: flex; }
+
+    .modal-box {
       background: #fff;
-      padding: 20px;
+      border-radius: 16px;
+      padding: 28px 24px;
       width: 100%;
-      max-width: 400px;
-      border-radius: 5px;
+      max-width: 420px;
       position: relative;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .modal-content h2 {
-      margin-bottom: 15px;
-      color: #2c3e50;
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .modal-content label {
+
+    .modal-box h2 {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 4px;
+    }
+
+    .modal-box .car-tag {
+      font-size: 0.8em;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 16px;
+      background: #f0f4ff;
+      border: none;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      font-size: 1em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #555;
+      transition: background 0.2s;
+    }
+
+    .modal-close:hover { background: #dde3f0; color: #1464dd; }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
       display: block;
-      margin: 12px 0 5px;
-      font-size: 15px;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 4px;
     }
-    .modal-content input {
+
+    .form-group input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      font-size: 15px;
+      padding: 9px 12px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      outline: none;
+      transition: border-color 0.2s;
     }
-    .modal-content button {
-      padding: 10px 15px;
-      background: #27ae60;
+
+    .form-group input:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
       color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.92em;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 15px;
-      transition: background 0.3s ease;
+      margin-top: 4px;
+      transition: all 0.2s;
     }
-    .modal-content button:hover {
-      background: #1e8449;
+
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
     }
-    .close-modal {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
-      cursor: pointer;
-      color: #333;
+
+
+
+    @media (max-width: 700px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      nav { margin-top: 4px; width: 100%; }
+      header h1 { font-size: 1em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      main { margin: 12px auto; }
+
+      /* Fix car grid — 1 column on mobile */
+      .car-grid { grid-template-columns: 1fr; gap: 12px; }
+
+      /* Fix card content overflow */
+      .car-card { width: 100%; min-width: 0; }
+      .car-info { padding: 12px; }
+      .car-info h3 { font-size: 0.95em; }
+      .car-info p { font-size: 0.78em; }
+      .car-info .price { font-size: 0.95em; }
+      .book-btn { margin: 0 12px 12px; font-size: 0.82em; padding: 8px; }
+      .car-card img { height: 160px; }
+
+      /* Modal full screen on mobile */
+      .modal { padding: 8px; align-items: flex-end; }
+      .modal-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
     }
-    /* Animation Overlay with Spinner */
-    .animation-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255,255,255,0.9);
-      z-index: 2000;
-      align-items: center;
-      justify-content: center;
-    }
-    .spinner {
-      border: 8px solid #f3f3f3;
-      border-top: 8px solid #2980b9;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    /* Payment Failed Popup (Red Message with Try Again) */
-    .payment-failed {
-      background: #ffdddd;
-      border: 2px solid #ff0000;
-      padding: 20px;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .payment-failed p {
-      margin-bottom: 15px;
-      font-size: 16px;
-      color: #a80000;
-    }
-    .try-again-link {
-      color: #ff0000;
-      text-decoration: underline;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    @media (max-width: 768px) {
-  /* Make headers smaller */
-  h1 {
-    font-size: 20px;
-  }
-  h2 {
-    font-size: 18px;
-  }
-  h3 {
-    font-size: 16px;
-  }
-
-  /* Make buttons smaller */
-  button,
-  .nav-links a,
-  .book-btn,
-  .pay-btn,
-  .delete-btn,
-  .receipt-btn,
-  .modal-content button {
-    font-size: 14px;
-    padding: 6px 10px;
-  }
-}
-/* Booking Table - Organized Layout with Side Actions */
-.booking-table {
-  width: 100%;
-  margin-bottom: 20px;
-  border-collapse: collapse;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.booking-table th, .booking-table td {
-  padding: 8px 10px;
-  text-align: left;
-  border-bottom: 1px solid #050505;
-  font-size: 14px;
-  display: table-cell; /* VERY IMPORTANT */
-}
-
-.booking-table tr {
-  display: table-row; /* VERY IMPORTANT */
-}
-
-.booking-table th {
-  background-color: #f8f8f8;
-  font-weight: bold;
-  width: 150px;
-}
-
-.booking-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.booking-table .pending-payment {
-  text-align: center;
-  font-style: italic;
-  color: #fc0c0c;
-  padding: 1px;
-  font-size: 13px;
-}
-
-.booking-table .booking-actions-cell {
-  text-align: right;
-  padding: 5px 10px;
-}
-
-.booking-table .pay-btn,
-.booking-table .delete-btn {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 12px;
-  margin-left: 5px;
-  min-width: 0;
-  width: auto;
-}
- 
-.download-pdf-btn {
-  padding: 6px 12px; /* Adjust padding to match other buttons if needed */
-  border: none;
-  border-radius: 5px; /* Adjust border-radius to match other buttons if needed */
-  cursor: pointer;
-  font-size: 14px; /* Adjust font-size to match other buttons if needed */
-  background:  #1464dd; /* Blue color */
-  color: #fff;
-  margin-top: 5px; /* Add some top margin for spacing */
-  text-decoration: none; /* Remove default link underline if it was accidentally styled as one */
-}
-
-.download-pdf-btn:hover {
-  background: #1c5980; /* Darker blue for hover effect */
-}
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="left-section"> <h5> Waliko Car Hire </h5></div>
-    <nav class="nav-links">
 
-     
-      <a id="homeLink">Home</a>
-      <a id="carsLink">Cars</a>
-      <a id="bookingDetailsLink">Booking Details</a>
+
+
+  <header>
+    <h1>🚗 Waliko Car Hire</h1>
+    <nav>
+      
+      <a href="#" id="homeLink">Home</a>
+      <a href="#" id="carsLink" class="active">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
       <a href="help.html">Help</a>
-      <a id="paymentsLink"> Payments</a>
       <a href="account.html">Settings</a>
       <a href="feedback.html">Feedback</a>
-      <a id="logoutLink">Logout</a>
-      
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
     </nav>
   </header>
 
-  <!-- Content Area -->
-  <div id="content">
-    <p>Click "Home" to view system instructions.</p>
-  </div>
+
+  <main>
+    <div class="page-title">Available Cars</div>
+    <div class="car-grid" id="carGrid"></div>
+  </main>
 
   <!-- Booking Modal -->
-  <div id="bookingModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeBookingModal">&times;</span>
+  <div class="modal" id="bookingModal">
+    <div class="modal-box">
+      <button class="modal-close" id="closeModal">✕</button>
       <h2>Book Car</h2>
+      <div class="car-tag" id="modalCarName"></div>
       <form id="bookingForm">
-        <label for="fullName">Full Name</label>
-      <input type="text" id="fullName" placeholder="Enter Full Name" required />
-        <label for="nationalid">National ID</label>
-        
-        <input type="text" id="nationalId" placeholder="Enter National ID" required />
-        <label for="tel">Phone Number</label>
-        <input type="number" id="phone" placeholder="Enter Phone Number">
-        <label for="license">Driver Licence No.</label>
-        <input type="text" id="license" placeholder="Enter Licence Number" required />
-        <label for="pickup">Renting Start Date</label>
-        <input type="date" id="pickup" required />
-        <label for="endDate">Renting End Date</label>
-        <input type="date" id="endDate" required />
-      
-        <button type="submit">Submit Booking</button>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter full name" required />
+        </div>
+        <div class="form-group">
+          <label>National ID</label>
+          <input type="text" id="nationalId" placeholder="Enter national ID" required />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="phone" placeholder="07XXXXXXXX" required />
+        </div>
+        <div class="form-group">
+          <label>Driver Licence No.</label>
+          <input type="text" id="license" placeholder="Enter licence number" required />
+        </div>
+        <div class="form-group">
+          <label>Renting Start Date</label>
+          <input type="date" id="pickup" required />
+        </div>
+        <div class="form-group">
+          <label>Renting End Date</label>
+          <input type="date" id="endDate" required />
+        </div>
+        <button type="submit" class="submit-btn">Submit Booking</button>
       </form>
     </div>
   </div>
 
-  <!-- Mpesa Modal -->
-  <div id="mpesaModal" class="modal">
-    <div class="modal-content">
-      <span class="close-modal" id="closeMpesaModal">&times;</span>
-      <h2>Enter Mpesa Number</h2>
-      <label for="mpesaNo">Mpesa Number:</label>
-      <input type="text" id="mpesaNo" placeholder="10 digits" />
-      <button id="submitMpesa">Submit Payment</button>
-    </div>
-  </div>
-
-  <!-- Animation Overlay with Spinner -->
-  <div id="animationOverlay" class="animation-overlay">
-    <div class="spinner"></div>
-  </div>
-
-  <!-- Payment Failed Popup Modal -->
-  <div id="paymentFailedModal" class="modal">
-    <div class="modal-content payment-failed">
-      <span class="close-modal" id="closePaymentFailed">&times;</span>
-      <p> Unexpected Error Acquired</p>
-      <p class="try-again-link" id="tryAgainLink">Try Again</p>
-    </div>
-  </div>
-
-  <!-- Receipt Modal -->
-  <div id="receiptModal" class="receipt-modal">
-    <div class="receipt-content">
-      <span class="close-receipt" id="closeReceipt">&times;</span>
-      <h2>Receipt Details</h2>
-      <p>“Dear Customer, please book a car and complete your payment to receive your receipt. Thank you!”</p>
-    
-    </div>
-  </div>
-  
-
   <script>
-    // Car data array (prices in Ksh)
     const cars = [
-      { name: "Toyota Prado TX", price: 10000, description: "Luxury SUV with 4WD.", image: "car1.jpg", available: true, duration: "24 hours" },
-      { name: "Subaru Forester", price: 5000, description: "Reliable and fuel-efficient.", image: "car2.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Harrier", price: 6500, description: "Comfortable sedan.", image: "car3.jpg", available: true, duration: "24 hours" },
-      { name: "Suzuki Alto", price: 2000, description: "Compact and fuel-efficient.", image: "alto.jpg", available: true, duration: "24 hours" },
-{ name: "Toyota Premio", price: 3000, description: "Spacious sedan with a smooth ride.", image: "premio.jpg", available: true, duration: "24 hours" },
-{ name: "Toyota Sienta", price: 3500, description: "Versatile family minivan.", image: "sienta.jpg", available: true, duration: "24 hours" },
-{ name: "Toyota Succeed", price: 3500, description: "Compact anf fuel effecient.", image: "", available: true, duration: "24 hours" },
-      { name: "Mercedes Benz C200", price: 10000, description: "Luxury executive car.", image: "car5.jpg", available: true, duration: "24 hours" },
-      { name: "Range Rover Sport", price: 25000, description: "Premium off-road vehicle.", image: "car6.jpg", available: true, duration: "24 hours" },
-      { name: "Mazda CX-5", price: 4000, description: "Stylish and fuel-efficient.", image: "car7.jpg", available: true, duration: "24 hours" },
-      { name: "Honda CR-V", price: 4500, description: "Compact SUV with great mileage.", image: "car8.jpg", available: true, duration: "24 hours" },
-      { name: "Hyundai Tucson", price: 8000, description: "Comfortable crossover with modern features.", image: "car9.jpg", available: true, duration: "24 hours" },
-      { name: "Subaru Impreza", price: 4500, description: "Sporty and efficient AWD sedan.", image: "car10.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Vitz", price: 3000, description: "Compact and fuel-efficient city car.", image: "car11.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Wish", price: 3500, description: "Spacious MPV with great reliability.", image: "car12.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Prado TXL", price: 11000, description: "Advanced SUV with a powerful engine.", image: "car13.jpg", available: true, duration: "24 hours" },
-      { name: "Toyota Axio", price: 4000, description: "Reliable and fuel-efficient compact sedan ideal for city and highway driving.", image: "car17.jpg", available: true, duration: "24 hours" },
-{ name: "Toyota Fielder", price: 3500, description: "Spacious and versatile station wagon perfect for families and cargo transport.", image: "car18.jpg", available: true, duration: "24 hours" },
-
-      { name: "Toyota Prado TXG", price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg", available: true, duration: "24 hours" },
-    
-      
+      { name: "Toyota Prado TX",     price: 10000, description: "Luxury SUV with 4WD.",                                         image: "car1.jpg" },
+      { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                 image: "car2.jpg" },
+      { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                           image: "car3.jpg" },
+      { name: "Suzuki Alto",          price: 2000,  description: "Compact and fuel-efficient.",                                  image: "alto.jpg" },
+      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                          image: "premio.jpg" },
+      { name: "Toyota Sienta",        price: 3500,  description: "Versatile family minivan.",                                   image: "sienta.jpg" },
+      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                 image: "" },
+      { name: "Mercedes Benz C200",   price: 10000, description: "Luxury executive car.",                                       image: "car5.jpg" },
+      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                   image: "car6.jpg" },
+      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                 image: "car7.jpg" },
+      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                             image: "car8.jpg" },
+      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                 image: "car9.jpg" },
+      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                             image: "car10.jpg" },
+      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
+      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                       image: "car12.jpg" },
+      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                       image: "car13.jpg" },
+      { name: "Toyota Axio",          price: 4000,  description: "Reliable compact sedan ideal for city and highway driving.", image: "car17.jpg" },
+      { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",     image: "car18.jpg" },
+      { name: "Toyota Prado TXG",     price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg" },
     ];
 
-    // DOM References
-    const contentDiv = document.getElementById('content');
-    const homeLink = document.getElementById('homeLink');
-    const carsLink = document.getElementById('carsLink');
-    const bookingDetailsLink = document.getElementById('bookingDetailsLink');
-    const logoutLink = document.getElementById('logoutLink');
-    const paymentsLink = document.getElementById('paymentsLink');
+    let currentCar = null;
 
-    const bookingModal = document.getElementById('bookingModal');
-    const closeBookingModalBtn = document.getElementById('closeBookingModal');
-    const bookingForm = document.getElementById('bookingForm');
-    const animationOverlay = document.getElementById('animationOverlay');
-
-    const mpesaModal = document.getElementById('mpesaModal');
-    const closeMpesaModalBtn = document.getElementById('closeMpesaModal');
-    const submitMpesaBtn = document.getElementById('submitMpesa');
-    const mpesaNoInput = document.getElementById('mpesaNo');
-
-    const paymentFailedModal = document.getElementById('paymentFailedModal');
-    const closePaymentFailedBtn = document.getElementById('closePaymentFailed');
-    const tryAgainLink = document.getElementById('tryAgainLink');
-
-    const receiptModal = document.getElementById('receiptModal');
-    const closeReceiptBtn = document.getElementById('closeReceipt');
-const headerDepositStatus = document.getElementById('headerDepositStatus');
-    let currentCar = null; // For booking
-    let currentBookingIndex = null; // For Mpesa payment
-
-    // --- Home View ---
-    function renderHome() {
-      contentDiv.innerHTML = `
-     <div class="notice">
-  <h2>Welcome to Our Service!</h2>
-  <p>• This system allows you to view and book available cars.</p>
-  <p>• Click <strong>"Cars"</strong> to explore our fleet and press <strong>"Book Now"</strong> on any available vehicle.</p>
-  <p>• After booking, open <strong>"Booking Details"</strong> to see your pending reservations. You can delete a booking with the <strong>Delete</strong> button or proceed to make payment.</p>
-  <p>• Once payment is made, your status will be updated in the <strong>Payment</strong> section.</p>
-  <p>• To get a receipt, click the <strong>"Get Receipt"</strong> button inside the Payment section.</p>
-  <p>• If you experience a problem while using the system, press the <strong>"Help"</strong> button.</p>
-  <p>• By clicking on the <strong>"Settings"</strong> button, you can update your personal information, change your password, access Emergency Services, or manage account deletion/deactivation.</p>
-  <p><strong>✨ Thank you for choosing Waliko Car Hire!</strong></p>
-</div>
-
-      `;
-    }
-
-    // --- Cars View ---
+    // ── Render cars ──
     function renderCars() {
-      contentDiv.innerHTML = '<div class="car-container"></div>';
-      const container = document.querySelector('.car-container');
-      cars.forEach((car, index) => {
+      document.querySelector('.page-title').style.display = 'block';
+      const grid = document.getElementById('carGrid');
+      grid.innerHTML = '';
+      document.querySelector('.page-title').textContent = 'Available Cars';
+      cars.forEach((car, i) => {
         const card = document.createElement('div');
         card.className = 'car-card';
         card.innerHTML = `
-          <img src="${car.image}" alt="${car.name}">
-          <div class="car-details">
+          <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
+          <div class="car-info">
             <h3>${car.name}</h3>
-            <p><strong>Price:</strong> Ksh ${car.price}</p>
+            <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
             <p>${car.description}</p>
-            <p><strong>Duration:</strong> ${car.duration}</p>
-            <p><strong>Available:</strong> ${car.available ? 'Yes' : 'No'}</p>
+            <span class="badge">✅ Available</span>
           </div>
+          <button class="book-btn" data-index="${i}">Book Now</button>
         `;
-        if(car.available) {
-          const bookBtn = document.createElement('a');
-          bookBtn.className = 'book-btn';
-          bookBtn.textContent = "Book Now";
-          bookBtn.addEventListener('click', () => {
-            currentCar = { ...car, index };
-            openBookingModal();
-          });
-          card.appendChild(bookBtn);
-        }
-        container.appendChild(card);
+        grid.appendChild(card);
       });
     }
 
-    // --- Booking Modal Functions ---
-    function openBookingModal() {
-      bookingModal.style.display = 'flex';
-    }
-    function closeBookingModal() {
-      bookingModal.style.display = 'none';
-      bookingForm.reset();
-    }
-    bookingForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const nationalId = document.getElementById('nationalId').value.trim();
-    const license = document.getElementById('license').value.trim();
-    const phone = document.getElementById('phone').value.trim(); // Get phone number
-    const pickup = document.getElementById('pickup').value;
-    const endDate = document.getElementById('endDate').value;
-    const fullName = document.getElementById('fullName').value.trim();
-
-    // Validate required fields
-    if (!nationalId || !license || !phone || !pickup || !endDate) { // Include phone in validation
-      alert("Error: Please fill in all booking fields including Phone Number, Renting Start Date and Renting End Date.");
-      return;
-    }
-
-    // Validate Phone Number (exactly 10 digits and starts with '07')
-    if (phone.length !== 10 || !phone.startsWith('07')) {
-      alert("Error: Phone number must be exactly 10 digits and start with '07'.");
-      return;
-    }
-
-    // Validate National ID (not less than 7 digits)
-    if (!/^\d{7,}$/.test(nationalId)) {
-      alert("Error: National ID should be at least 7 digits.");
-      return;
-    }
-
-    // Validate Driver's License (not less than 7 characters: letters and digits)
-    if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
-      alert("Error: Licence No. should be at least 7 characters long and contain only letters and digits.");
-      return;
-    }
-
-    // Validate that End Date is later than Pick Up Date
-    if (new Date(endDate) <= new Date(pickup)) {
-      alert("Error: Renting End Date must be later than Renting Start Date.");
-      return;
-    }
-
-  // Generate a unique booking ID: # + 9 digits
-const bookingId = '#' + String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0');
-console.log(bookingId);
-
-    // Get current timestamp
-    const timestamp = new Date().toLocaleString(); // Get a user-friendly date and time string
-
-    // Save booking immediately
-    const bookingDetails = {
-      carName: currentCar.name,
-      bookingId, // Use the unique ID as bookingId
-      nationalId,
-      license,
-      phone, // Save the phone number
-      pickup,
-      endDate,
-      fullName,
-      price: currentCar.price,
-      timestamp // Add the timestamp to the booking details
-    };
-    let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-    bookings.unshift(bookingDetails); // Add the new booking to the beginning of the array
-    localStorage.setItem('bookings', JSON.stringify(bookings));
-    alert(`Booking created successfully ✅!\n\nTo confirm your booking, Check it at "Booking Details" section and Pay`);
-    closeBookingModal();
-  
-    });
-// --- Booking Details View ---
-let allBookings = []; // Store all bookings
-  let displayedBookingsCount = 3; // Initial number of bookings to display
-
-  function renderBookingDetails() {
-    contentDiv.innerHTML = '<h2>Booking Details</h2>';
-    allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
-    // REMOVE THIS LINE: allBookings.reverse(); // Ensure latest booking is first
-
-    if (allBookings.length === 0) {
-      contentDiv.innerHTML += "<p>You haven't made any booking yet. Go to the <strong>Cars</strong> section to book avehicle.</p>";
-      return;
-    }
-
-    const bookingsToDisplay = allBookings.slice(0, displayedBookingsCount);
-
-    bookingsToDisplay.forEach((booking, idx) => {
-      const startDate = new Date(booking.pickup);
-      const endDate = new Date(booking.endDate);
-      const timeDifference = endDate.getTime() - startDate.getTime();
-      const daysBooked = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      const totalRentalFee = booking.price * daysBooked; // Calculate total fee
-      const depositAmount = Math.floor(totalRentalFee / 2); // Calculate half for deposit
-const table = document.createElement('table');
-table.className = 'booking-table';
-table.innerHTML = `
-  </tr>
-      <tr>
-        <th>Full Name:</th>
-        <td colspan="2">${booking.fullName}</td>
-    
-   <tr>
-  <th>Car Type:</th>
-  <td>${booking.carName}</td>
-  <td class="booking-actions-cell">
-    <button class="pay-btn" 
-      data-amount="${depositAmount}" 
-      data-booking-id="${booking.bookingId}">
-      Pay
-    </button>
-  </td>
-</tr>
-
-          </tr>
-          <tr>
-            <th>Booking ID:</th>
-            <td>${booking.bookingId}</td>
-            <td class="booking-actions-cell">
-              <button class="delete-btn" data-index="${idx}">DLT</button>
-            </td>
-           
-          </tr>
-          <tr>
-            <th>Timestamp:</th>
-            <td colspan="2">${booking.timestamp}</td>
-          </tr>
-          <tr>
-            <th>Phone No.:</th>
-            <td colspan="2">${booking.phone}</td>
-          </tr>
-          <tr>
-            <th>National ID:</th>
-            <td colspan="2">${booking.nationalId}</td>
-          </tr>
-          <tr>
-            <th class="licence-no-header">Licence No:</th>
-            <td colspan="2">${booking.license}</td>
-          </tr>
-          <tr>
-            <th>Renting Start Date:</th>
-            <td colspan="2">${booking.pickup}</td>
-          </tr>
-          <tr>
-            <th>Renting End Date:</th>
-            <td colspan="2">${booking.endDate}</td>
-          </tr>
-          <tr>
-            <th>Days of Booking:</th>
-            <td colspan="2">${daysBooked} days</td>
-          </tr>
-          <tr>
-            <td colspan="3" class="pending-payment">
-              Pending payment: Pay half of the rental fees which is (Ksh ${depositAmount}) to confirm your booking, The remaining balance will be paid when picking up the car.
-            </td>
-          </tr>
-          <tr>
-            <td colspan="3" class="booking-actions-cell">
-              <button class="download-pdf-btn" data-booking-id="${booking.bookingId}">Download PDF</button>
-            </td>
-          </tr>
-        </tbody>
-      `;
-      contentDiv.appendChild(table);
-    });
-
-    // Add "Show More" button if there are more bookings
-    if (allBookings.length > displayedBookingsCount) {
-      const showMoreButton = document.createElement('button');
-      showMoreButton.textContent = 'Show More Bookings';
-      showMoreButton.id = 'show-more-bookings';
-      contentDiv.appendChild(showMoreButton);
-
-      showMoreButton.addEventListener('click', () => {
-        displayedBookingsCount += 5; // Increase the number of bookings to display
-        renderBookingDetails(); // Re-render the booking details
-      });
-    }
-
-  document.querySelectorAll('.pay-btn').forEach(btn => {
-  btn.addEventListener('click', (e) => {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");  
-    const amount = e.target.getAttribute("data-amount");  // 👈 get deposit
-    const bookingId = e.target.getAttribute("data-booking-id");
-
-    // Save to localStorage for use in payment page
-    localStorage.setItem("paymentAmount", amount);
-    localStorage.setItem("paymentBookingId", bookingId);
-
-    if (isLoggedIn) {
-      window.location.href = "payment-gateway.html";
-    } else {
-      window.location.href = "decline.html";
-    }
-  });
-});
-
-
-
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const index = e.target.getAttribute('data-index');
-        if (confirm("Are you sure you want to delete your booking?")) {
-          deleteBooking(index);
-        }
-      });
-    });
-    document.querySelectorAll('.download-pdf-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const bookingId = e.target.getAttribute('data-booking-id');
-        downloadBookingAsPDF(bookingId);
-      });
-    });
-  
-       
-
-    document.querySelectorAll('.download-pdf-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const bookingId = e.target.getAttribute('data-booking-id');
-        downloadBookingAsPDF(bookingId);
-      });
-    });
-  }
-  function downloadBookingAsPDF(bookingId) {
-    const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-    const booking = bookings.find(b => b.bookingId === bookingId);
-
-    if (booking) {
-      if (typeof window.jspdf === 'undefined') {
-        alert('Error: jsPDF library not loaded. Please check your internet connection or script inclusion.');
-        return;
-      }
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      pdf.setFontSize(20);
-      pdf.text('Waliko Car Hire', 15, 15);
-      pdf.setFontSize(16);
-      pdf.text('Booking Details', 15, 25);
-      pdf.setFontSize(12);
-      let y = 35;
-      const lineHeight = 10;
-
- pdf.text(`Full Name: ${booking.fullName}`, 15, y); // <--- ADD THIS LINE
-      y += lineHeight;
-      pdf.text(`Booking ID: ${booking.bookingId}`, 15, y);
-      y += lineHeight;
-      pdf.text(`Car Type: ${booking.carName}`, 15, y);
-      y += lineHeight;
-      
-      pdf.text(`Renting Start Date: ${booking.pickup}`, 15, y);
-      y += lineHeight;
-      pdf.text(`Renting End Date: ${booking.endDate}`, 15, y);
-      y += lineHeight;
-
-      const startDate = new Date(booking.pickup);
-      const endDate = new Date(booking.endDate);
-      const timeDifference = endDate.getTime() - startDate.getTime();
-      const daysBooked = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      pdf.text(`Days of Booking: ${daysBooked}`, 15, y);
-      y += lineHeight;
-
-      pdf.text(`Phone No.: ${booking.phone}`, 15, y);
-      y += lineHeight;
-      pdf.text(`National ID: ${booking.nationalId}`, 15, y);
-      y += lineHeight;
-      pdf.text(`Licence No.: ${booking.license}`, 15, y);
-      y += lineHeight;
-      pdf.text(`Timestamp: ${booking.timestamp}`, 15, y);
-      y += lineHeight;
-
-      const totalRentalFee = booking.price * daysBooked;
-      const depositAmount = Math.floor(totalRentalFee / 2);
-      pdf.text(`Total Rental Fee: Ksh ${totalRentalFee}`, 15, y);
-      y += lineHeight;
-      pdf.text(`Pending Payment (Deposit): Ksh ${depositAmount}`, 15, y);
-
-      pdf.save(`booking_${bookingId}.pdf`);
-    } else {
-      alert('Error: Booking details not found.');
-    }
-  }
-    // Delete booking function
-    function deleteBooking(index) {
-      let bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      bookings.splice(index, 1);
-      localStorage.setItem('bookings', JSON.stringify(bookings));
-      renderBookingDetails();
-    }
-    function closeReceiptModal() {
-     receiptModal.style.display = 'none';
-   }
-   closeReceiptBtn.addEventListener('click', closeReceiptModal);
-   // --- Function to Update Header Deposit Status ---
-   function updateHeaderDepositStatus() {
-     const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-     
-     if (bookings.length > 0) {
-       // Get the most recent booking (as you use unshift to add to the beginning)
-       const latestBooking = bookings[0];
-
-       const startDate = new Date(latestBooking.pickup);
-       const endDate = new Date(latestBooking.endDate);
-       const timeDifference = endDate.getTime() - startDate.getTime();
-       const daysBooked = Math.ceil(timeDifference / (1000 * 3600 * 24));
-       const totalRentalFee = latestBooking.price * daysBooked;
-       const depositAmount = Math.floor(totalRentalFee / 2);
-
-       // Display the deposit amount for the most recent booking
-       headerDepositStatus.textContent = `Deposit Pending: Ksh ${depositAmount}`;
-     } else {
-       headerDepositStatus.textContent = ''; // Clear if no bookings
-     }
-   }
-
-    // --- Payment Statements View ---
-    function renderPaymentStatements() {
-      contentDiv.innerHTML = `
-        <div class="payment-note">
-      “No payment has been received yet. Please complete your car booking by making payment.”
-
+    // ── Render home notice ──
+        function renderHome() {
+      document.querySelector('.page-title').style.display = 'none';
+      document.getElementById('carGrid').innerHTML = `
+        <div style="grid-column:1/-1">
+          <div class="notice-box">
+            <p>• This system allows you to view and book available cars.</p>
+            <p>• Click <strong>"Cars"</strong> to explore our fleet and press <strong>"Book Now"</strong> on any available vehicle.</p>
+            <p>• After booking, open <strong>"My Bookings"</strong> to see your pending reservations. You can delete a booking or proceed to make payment.</p>
+            <p>• Once payment is made, your status will be updated in the <strong>Payments</strong> section.</p>
+            <p>• To get a receipt, click the <strong>"Get Receipt"</strong> button inside the Payments section.</p>
+            <p>• If you experience a problem, press the <strong>"Help"</strong> button.</p>
+            <p>• By clicking <strong>"Settings"</strong>, you can update your personal information, change your password, access Emergency Services, or manage account deletion/deactivation.</p>
+            <p><strong>✨ Thank you for choosing Waliko Car Hire!</strong></p>
+          </div>
         </div>
-        <button class="receipt-btn" id="receiptBtn">Get Receipt</button>
       `;
-      document.getElementById('receiptBtn').addEventListener('click', () => {
-        openReceiptModal();
-      });
     }
 
-    // --- Receipt Modal Functions ---
-    function openReceiptModal() {
-      receiptModal.style.display = 'flex';
-    }
-    function closeReceiptModal() {
-      receiptModal.style.display = 'none';
-    }
-    closeReceiptBtn.addEventListener('click', closeReceiptModal);
-
-   
-    submitMpesaBtn.addEventListener('click', () => {
-      const mpesaNo = mpesaNoInput.value.trim();
-      // Validate that the Mpesa number has exactly 10 digits
-      if (!mpesaNo || !/^\d{10}$/.test(mpesaNo)) {
-        alert("Error: Please enter a valid 10-digit Mpesa number.");
-        return;
-      }
-      closeMpesaModal();
-      // Show circular spinner for 5 seconds then display payment failed popup
-      animationOverlay.style.display = 'flex';
-      setTimeout(() => {
-        animationOverlay.style.display = 'none';
-        paymentFailedModal.style.display = 'flex';
-      }, 5000);
-    });
-
-    // Payment Failed Popup - Try Again Flow
-    tryAgainLink.addEventListener('click', () => {
-      paymentFailedModal.style.display = 'none';
-      animationOverlay.style.display = 'flex';
-      setTimeout(() => {
-        animationOverlay.style.display = 'none';
-        paymentFailedModal.style.display = 'flex';
-      }, 5000);
-    });
-    closePaymentFailedBtn.addEventListener('click', () => {
-      paymentFailedModal.style.display = 'none';
-    });
-// --- Logout ---
-logoutLink.addEventListener('click', () => {
-  // Clear login session
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("userEmail");
-  localStorage.removeItem("userPassword");
-
-  // Redirect to home or login
-  window.location.href = "index.html";
-});
 
 
-    // --- Navigation Events ---
-    homeLink.addEventListener('click', renderHome);
-    carsLink.addEventListener('click', renderCars);
-    bookingDetailsLink.addEventListener('click', renderBookingDetails);
-    paymentsLink.addEventListener('click', renderPaymentStatements);
-
-    // --- Modal Close Events ---
-    closeBookingModalBtn.addEventListener('click', closeBookingModal);
-    closeMpesaModalBtn.addEventListener('click', closeMpesaModal);
-    window.addEventListener('click', function(e) {
-      if (e.target === bookingModal) closeBookingModal();
-      if (e.target === mpesaModal) closeMpesaModal();
-      if (e.target === paymentFailedModal) paymentFailedModal.style.display = 'none';
-      if (e.target === receiptModal) closeReceiptModal();
-    });
-
-    // --- Initialize with Home View ---
+    // Show instructions on load
     renderHome();
-    document.addEventListener('DOMContentLoaded', updateHeaderDepositStatus);
+
+    // Home nav click
+    document.getElementById('homeLink').addEventListener('click', e => {
+      e.preventDefault();
+      renderHome();
+    });
+
+    // Cars nav click
+    document.getElementById('carsLink').addEventListener('click', e => {
+      e.preventDefault();
+      renderCars();
+    });
+
+    // Book button click
+    document.getElementById('carGrid').addEventListener('click', e => {
+      if (e.target.classList.contains('book-btn')) {
+        currentCar = cars[e.target.dataset.index];
+        document.getElementById('modalCarName').textContent = `Booking: ${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
+        document.getElementById('bookingForm').reset();
+        document.getElementById('bookingModal').classList.add('open');
+      }
+    });
+
+    // Close modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('bookingModal').classList.remove('open');
+    });
+    document.getElementById('bookingModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('bookingModal'))
+        document.getElementById('bookingModal').classList.remove('open');
+    });
+
+    // Submit booking
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fullName   = document.getElementById('fullName').value.trim();
+      const nationalId = document.getElementById('nationalId').value.trim();
+      const phone      = document.getElementById('phone').value.trim();
+      const license    = document.getElementById('license').value.trim();
+      const pickup     = document.getElementById('pickup').value;
+      const endDate    = document.getElementById('endDate').value;
+
+      if (phone.length !== 10 || !phone.startsWith('07')) {
+        alert("Phone number must be exactly 10 digits and start with '07'."); return;
+      }
+      if (!/^\d{7,}$/.test(nationalId)) {
+        alert("National ID must be at least 7 digits."); return;
+      }
+      if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
+        alert("Licence No. must be at least 7 characters (letters and digits only)."); return;
+      }
+      if (new Date(endDate) <= new Date(pickup)) {
+        alert("End date must be later than start date."); return;
+      }
+
+      const bookingId = '#' + String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0');
+      const booking = {
+        bookingId, fullName, nationalId, phone, license,
+        pickup, endDate, carName: currentCar.name,
+        price: currentCar.price,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      bookings.unshift(booking);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+
+      alert(`✅ Booking created!\n\nBooking ID: ${bookingId}\nGo to "My Bookings" to pay and confirm.`);
+      document.getElementById('bookingModal').classList.remove('open');
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userPassword');
+      window.location.href = 'index.html';
+    });
   </script>
 </body>
 </html>
