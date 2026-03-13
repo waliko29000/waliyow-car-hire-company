@@ -1,155 +1,299 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Car hire company</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset and basic styling */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  background: #f4f4f4;
-  color: #333;
-}
-header {
-  background: #1464dd;
-  color: #fff;
-  /* This is the key for space BETWEEN the header's edges and its content */
-  padding: 5px 15px; 
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-header h1 {
-  font-size: 1.2em;
-}
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  /* Add this to create space between navigation items */
-  gap: 5px; 
-}
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      line-height: 1.6;
+      background: #f0f4ff;
+      color: #333;
+    }
 
-nav button, nav a {
-  background: #0056b3;
-  border: none;
-  color: #fff;
-  /* REMOVE any existing 'margin' properties from here */
-  padding: 10px 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 0.8em;
-  text-decoration: none;
-  display: inline-block;
-}
-nav button:hover, nav a:hover {
-  background: #004494;
-}
-/* Container styling */
-.container {
-  padding: 6px;
-}
-/* Form modal styling */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  padding: 15px;
-}
-.modal.active {
-  display: flex;
-}
-.modal-content {
-  background: #fff;
-  padding: 15px;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 350px;
-  position: relative;
-}
-.modal-content h2 {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-}
-.modal-content label {
-  display: block;
-  margin-top: 8px;
-}
-.modal-content input,
-.modal-content select {
-  width: 100%;
-  padding: 6px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  font-size: 0.9em;
-}
-.modal-content button {
-  margin-top: 12px;
-  width: 100%;
-  background: #007BFF;
-  border: none;
-  color: #fff;
-  padding: 8px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-size: 0.9em;
-}
-.modal-content .close {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  cursor: pointer;
-  font-size: 1em;
-  color: #555;
-}
-/* User Details Section */
-#userDetails {
-  margin-top: 15px;
-  background: #fff;
-  padding: 12px;
-  border-radius: 4px;
-}
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-  }
-  header h1 {
-    font-size: 1em;
-  }
-  nav {
-    margin-top: 5px;
-  }
-  nav button, nav a {
-    font-size: 0.7em;
-    padding: 6px 10px;
-  }
-  .modal-content {
-    max-width: 300px;
-  }
-}
+    header {
+      background: linear-gradient(135deg, #1464dd 0%, #0d47a1 100%);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 3px 15px rgba(20, 100, 221, 0.35);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  
+    header h1 {
+      font-size: 1.3em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    nav button, nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s ease;
+    }
+
+    nav button:hover, nav a:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+      transform: translateY(-1px);
+    }
+
+    .container {
+      padding: 6px;
+    }
+
+    /* Form modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.55);
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 24px 20px;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 350px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-content h2 {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #1464dd;
+    }
+
+    .modal-content label {
+      display: block;
+      margin-top: 8px;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .modal-content input,
+    .modal-content select {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 4px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 7px;
+      font-size: 0.9em;
+      font-family: 'Poppins', sans-serif;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .modal-content input:focus,
+    .modal-content select:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    }
+
+    .modal-content button {
+      margin-top: 12px;
+      width: 100%;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      border: none;
+      color: #fff;
+      padding: 9px;
+      cursor: pointer;
+      border-radius: 7px;
+      font-size: 0.9em;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .modal-content button:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(20,100,221,0.3);
+    }
+
+    .modal-content .close {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+      font-size: 1em;
+      color: #555;
+      background: #f0f4ff;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .modal-content .close:hover {
+      background: #dde3f0;
+    }
+
+    /* User Details Section */
+    #userDetails {
+      margin-top: 15px;
+      background: #fff;
+      padding: 12px;
+      border-radius: 4px;
+    }
+
+    /* Main content & section container polished */
+    #mainContent {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 22px;
+      margin: 16px auto;
+      max-width: 860px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+    }
+
+    #mainContent h4 {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 8px;
+      margin-top: 14px;
+    }
+
+    #mainContent h4:first-child { margin-top: 0; }
+
+    #mainContent p {
+      font-size: 0.9em;
+      color: #555;
+      line-height: 1.75;
+      margin-bottom: 6px;
+    }
+
+    #sectionContainer {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 22px;
+      margin: 0 auto 16px;
+      max-width: 860px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      animation: slideUp 0.3s ease;
+    }
+
+    #sectionContainer:empty { display: none; }
+
+    #sectionContainer h2 {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
+
+    #sectionContainer p {
+      font-size: 0.9em;
+      line-height: 1.75;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    #sectionContainer strong { color: #222; }
+
+    #sectionContainer ul {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    #sectionContainer li {
+      font-size: 0.9em;
+      color: #555;
+      margin-bottom: 5px;
+      line-height: 1.65;
+    }
+
+    #sectionContainer a {
+      color: #1464dd;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    #sectionContainer a:hover { text-decoration: underline; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+        gap: 8px;
+      }
+
+      header h1 { font-size: 1em; }
+
+      nav { margin-top: 5px; }
+
+      nav button, nav a {
+        font-size: 0.7em;
+        padding: 6px 10px;
+      }
+
+      .modal-content { max-width: 300px; }
+
+      #mainContent, #sectionContainer {
+        margin: 10px;
+        padding: 18px 16px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -167,10 +311,12 @@ nav button:hover, nav a:hover {
 <button onclick="showSection('terms')"><b>Terms of Service</b></button>
 
       <button onclick="showSection('privacy')"><b>Privacy Policy</b></button>
-      <button onclick="signOut()"><b>Sign Out</b></button>
+      <button onclick="goHome()"><b>Home</b></button>
       <button onclick="showSection('contact')"><b>Contact Us</b></button>
       <button onclick="showSection('about us')"><b>About us</b></button>
       <button onclick="location.href='faqs.html'"><b>FAQs</b></button>
+      <button onclick="showSection('info')"><b>Quick Info</b></button>
+      <button onclick="showSection('reviews')"><b>Reviews</b></button>
 
      
     </nav>
@@ -219,6 +365,7 @@ nav button:hover, nav a:hover {
   <!-- Section Containers -->
   <div id="sectionContainer" class="container"></div>
 
+
   <script>
     // Utility functions to open and close modals
     function openModal(modalId) {
@@ -265,7 +412,7 @@ nav button:hover, nav a:hover {
             <p>Welcome to Waliko CarHire Company. By using our car rental services, you agree to be bound by the following terms and conditions. Please read them carefully before proceeding with any rental.</p>
 
 <p><strong>1. Eligibility and Rental Requirements</strong></p>
-<p>To rent a vehicle from Waliko CarHire Company, you must be at least 21 years old and hold a valid, non-expired driver’s license. For certain premium vehicles, drivers must be at least 25 years old. Expired or invalid licenses will not be accepted, and failure to provide a valid license at the time of rental will result in cancellation without a refund. Additional requirements, such as a security deposit or additional identification, may be requested based on the rental location and vehicle type.</p>
+<p>To rent a vehicle from Waliko CarHire Company, you must be at least 21 years old and hold a valid, non-expired driver's license. For certain premium vehicles, drivers must be at least 25 years old. Expired or invalid licenses will not be accepted, and failure to provide a valid license at the time of rental will result in cancellation without a refund. Additional requirements, such as a security deposit or additional identification, may be requested based on the rental location and vehicle type.</p>
 
 <p><strong>2. Booking and Payment</strong></p>
 <p>All vehicle bookings must be made in advance either via our website or at our rental offices. A valid credit or debit card is required to secure your booking. Payments for the rental, including any applicable deposits, taxes, and fees, must be completed at the time of booking or upon vehicle pick-up, as specified in your rental agreement.</p>
@@ -310,7 +457,7 @@ nav button:hover, nav a:hover {
 <ul>
     <li>Full name</li>
     <li>Contact details (phone number, email address)</li>
-    <li>Driver’s license details</li>
+    <li>Driver's license details</li>
     <li>Payment information (credit/debit card details)</li>
     <li>Rental history and preferences</li>
     <li>Device and location data (when using our online services)</li>
@@ -320,7 +467,7 @@ nav button:hover, nav a:hover {
 <p>We use the information collected to:</p>
 <ul>
     <li>Process your bookings and rental transactions</li>
-    <li>Verify your identity and driver’s license validity</li>
+    <li>Verify your identity and driver's license validity</li>
     <li>Improve our customer service and support</li>
     <li>Send booking confirmations and updates</li>
     <li>Prevent fraudulent activities and ensure security</li>
@@ -339,7 +486,7 @@ nav button:hover, nav a:hover {
 </ul>
 
 <p><strong>5. Cookies and Online Tracking</strong></p>
-<p>Our website may use cookies and similar tracking technologies to enhance your browsing experience. Cookies help us remember your preferences and improve our website’s functionality. You can adjust your browser settings to refuse cookies, but this may affect the usability of our services.</p>
+<p>Our website may use cookies and similar tracking technologies to enhance your browsing experience. Cookies help us remember your preferences and improve our website's functionality. You can adjust your browser settings to refuse cookies, but this may affect the usability of our services.</p>
 
 <p><strong>6. Your Rights and Choices</strong></p>
 <p>You have the right to:</p>
@@ -371,7 +518,7 @@ nav button:hover, nav a:hover {
     <li>Address: Waliko CarHire Company, Main Street, City, Country</li>
 </ul>
 
-<p>By using Waliko CarHire Company’s services, you acknowledge that you have read and understood this Privacy Policy.</p>
+<p>By using Waliko CarHire Company's services, you acknowledge that you have read and understood this Privacy Policy.</p>
  `;
           break;
         case 'about us':
@@ -380,11 +527,11 @@ nav button:hover, nav a:hover {
 
 <p style="margin-bottom: 16px;"><strong>Waliko Car Hire</strong> was established in <strong>2020</strong> with a vision to make car rental services in Kenya more accessible, affordable, and trustworthy. We began with just a handful of vehicles and a strong desire to serve both locals and visitors with reliability and care.</p>
 
-<p style="margin-bottom: 16px;">Since then, we’ve grown steadily, expanding our fleet to include a wide range of cars—compact cars for city drives, spacious SUVs for family trips, and executive vehicles for business and luxury needs. Our journey from a small startup to a recognized name in the car hire industry has been fueled by dedication, customer feedback, and a passion for excellence.</p>
+<p style="margin-bottom: 16px;">Since then, we've grown steadily, expanding our fleet to include a wide range of cars—compact cars for city drives, spacious SUVs for family trips, and executive vehicles for business and luxury needs. Our journey from a small startup to a recognized name in the car hire industry has been fueled by dedication, customer feedback, and a passion for excellence.</p>
 
-<p style="margin-bottom: 16px;">Over the years, we’ve continuously improved our services. We introduced easier online booking, fast customer support, flexible payment options (including part payments), and regular vehicle maintenance to ensure safety and satisfaction. Each improvement has been made with our clients in mind.</p>
+<p style="margin-bottom: 16px;">Over the years, we've continuously improved our services. We introduced easier online booking, fast customer support, flexible payment options (including part payments), and regular vehicle maintenance to ensure safety and satisfaction. Each improvement has been made with our clients in mind.</p>
 
-<p style="margin-bottom: 16px;">We take pride in the trust we’ve built with hundreds of happy customers. Whether it’s for short-term rentals, airport pickups, road trips, or corporate needs, Waliko Car Hire is known for being dependable, punctual, and transparent.</p>
+<p style="margin-bottom: 16px;">We take pride in the trust we've built with hundreds of happy customers. Whether it's for short-term rentals, airport pickups, road trips, or corporate needs, Waliko Car Hire is known for being dependable, punctual, and transparent.</p>
 
 <p style="margin-bottom: 16px;">Our goal is not just to provide a vehicle but to make every customer feel comfortable, valued, and confident on the road. Every car comes clean, well-maintained, and ready to go—because your journey matters to us.</p>
 
@@ -398,7 +545,7 @@ nav button:hover, nav a:hover {
         case 'contact':
           document.getElementById('sectionContainer').innerHTML = `
             <h2>Contact Us</h2>
-            <p>We’re here to help! Feel free to reach out for any questions, feedback, or support you need. Our dedicated team is always ready to assist you and ensure you have the best experience with us.</p>
+            <p>We're here to help! Feel free to reach out for any questions, feedback, or support you need. Our dedicated team is always ready to assist you and ensure you have the best experience with us.</p>
 
             <p><strong>Customer Support:</strong> For any inquiries, concerns, or assistance with your car rentals, email us at <a href="mailto:walik@gmail.com">walik@gmail.com</a>. We aim to respond within 24 hours.</p>
         
@@ -410,7 +557,7 @@ nav button:hover, nav a:hover {
             NairobiCounty,<br>
             70100,<br>
             Kenya</p>
-            <p><strong>Social Media:</strong> Stay connected! Follow us on social media for the latest updates, new arrivals, and special promotions. Reach out via direct message, and we’ll get back to you promptly!</p>
+            <p><strong>Social Media:</strong> Stay connected! Follow us on social media for the latest updates, new arrivals, and special promotions. Reach out via direct message, and we'll get back to you promptly!</p>
             <ul>
                 <li><a href="https://www.facebook.com/CarRentalService">Facebook</a></li>
                 <li><a href="https://www.instagram.com/CarRentalService">Instagram</a></li>
@@ -418,11 +565,52 @@ nav button:hover, nav a:hover {
                 <li><a href="https://www.linkedin.com/company/carrentalservice">LinkedIn</a></li>
             </ul>
         
-            <p><strong>Business Inquiries:</strong> For partnerships, collaborations, or wholesale inquiries, please contact us at <a href="mailto:business@carrentalservice.com">business@carrentalservice.com</a>. We’re excited to explore new opportunities together!</p>
+            <p><strong>Business Inquiries:</strong> For partnerships, collaborations, or wholesale inquiries, please contact us at <a href="mailto:business@carrentalservice.com">business@carrentalservice.com</a>. We're excited to explore new opportunities together!</p>
         
             <p><strong>FAQ:</strong> Check out our Frequently Asked Questions page for quick answers to common questions about rentals, booking, and more.</p>
         
             <p>Thank you for connecting with us. We look forward to hearing from you!</p>
+          `;
+          break;
+        case 'info':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>📋 Quick Info</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px">
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">🕐</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Opening Hours</strong><span style="font-size:0.8em;color:#666">Mon – Fri: 8am – 7pm<br>Sat – Sun: 9am – 5pm</span></div>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">📞</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Call / WhatsApp</strong><span style="font-size:0.8em;color:#666"><a href="tel:+254790337687" style="color:#1464dd;font-weight:600">0790 337 687</a></span></div>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">📍</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Our Location</strong><span style="font-size:0.8em;color:#666">235 Fashion Street,<br>Nairobi, Kenya</span></div>
+              </div>
+            </div>
+          `;
+          break;
+        case 'reviews':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>💬 What Our Customers Say</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px">
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★★</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Absolutely amazing service! The car was spotless and ready on time. Will definitely use Waliko again.        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— Brian M., Nairobi</span>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★★</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Very affordable and professional. Booking was easy and the team was so helpful throughout.        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— Amina K., Mombasa</span>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★☆</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Great experience overall. The SUV was perfect for our family road trip to Nakuru. Highly recommended!        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— David O., Kisumu</span>
+              </div>
+            </div>
           `;
           break;
         default:
@@ -430,56 +618,23 @@ nav button:hover, nav a:hover {
       }
     }
 
-    // Check if user is registered before redirecting to Cars Available (voting.html)
-    function checkRegistration() {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-      if (!storedUser) {
-        alert (PLEASE )
-        return false;
-      }
-      // If registered, redirect TO car-available.html
-      window.location.href = 'car-available.html';
-    }
 
-    document.getElementById('signupForm').addEventListener('submit', function(event) {
-    event.preventDefault();
 
-    const user = {
-      username: document.getElementById('username').value,
-      email: document.getElementById('email').value,
-      telephone: document.getElementById('telephone').value,
-      gender: document.getElementById('gender').value,
-      password: document.getElementById('password').value
-    };
-
-    localStorage.setItem('user', JSON.stringify(user));
-    alert('Signup successful! You can now view your details.');
-    window.location.href = 'index.html'; // Redirect to main page
-  });
-
-    // Handle Sign In
-    document.getElementById('signInForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('si_email').value;
-      const password = document.getElementById('si_password').value;
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-      if(storedUser && email === storedUser.email && password === storedUser.password) {
-        alert('Sign In Successful!');
-        closeModal('signInModal');
-        document.getElementById('signInForm').reset();
-      } else {
-        alert('Incorrect email or password.');
-      }
-    });
-
-    // Sign Out - clear localStorage and reload page
-    function signOut() {
-      localStorage.removeItem('user');
-      alert
-      location.reload();
+    // Home button - restore main page content
+    function goHome() {
+      document.getElementById('mainContent').innerHTML = `
+        <h4>Welcome to Waliko CarHire: Your Journey Starts Here!</h4>
+        <p>Looking for the perfect ride for your next adventure in Nairobi or beyond? At Waliko CarHire, we make renting a car easy, convenient, and tailored to your needs. We offer a diverse fleet, from luxurious sedans to economical options, ensuring you'll find exactly what you're looking for.</p>
+        ---
+        <h4>How to Get Started</h4>
+        <p>Ready to hit the road? Accessing our services is simple!</p>
+        <p>1. If you're new to Waliko CarHire, you'll need to <b>register</b> for an account. Already a member? Just <b>sign in</b> with your credentials.</p>
+        <p>2. Once logged in, you can effortlessly view our wide selection of available cars and book the vehicle that best fits your plans.</p>
+        ---
+      `;
+      document.getElementById('sectionContainer').innerHTML = '';
     }
   </script>
+
 </body>
 </html>
-
-
