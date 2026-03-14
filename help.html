@@ -2,204 +2,383 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Help Center</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center – Waliko Car Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
-      height: 100vh;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 10px 20px;
       display: flex;
-      justify-content: center;
+      flex-wrap: wrap;
       align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
-    .help-container {
-      background: white;
-      padding: 30px 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      max-width: 420px;
-      width: 90%;
-      position: relative;
-      box-sizing: border-box;
-    }
-    .close-btn {
-      position: absolute;
-      top: 12px;
-      right: 15px;
-      font-size: 22px;
-      font-weight: bold;
-      color: #333;
+
+    header h1 { font-size: 1.2em; font-weight: 700; }
+
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-weight: 500;
       text-decoration: none;
-      background: #e0e0e0;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      text-align: center;
+      transition: all 0.2s;
     }
-    .close-btn:hover { background: #007bff; color: white; cursor: pointer; }
-    .note {
-      background: #e6f2ff;
-      padding: 12px 15px;
-      border-left: 5px solid #007bff;
-      margin-bottom: 20px;
-      font-size: 15px;
+
+    nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
+    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
+    nav a.logout:hover { background: rgba(255,80,80,0.2); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 580px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
+
+    /* ── ACCESS ALERT ── */
+    .access-alert {
+      display: none;
+      background: #fff5e6;
+      border: 1px solid #ffc87a;
+      border-left: 4px solid #f39c12;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 0.88em;
+      color: #b35c00;
+      line-height: 1.6;
+    }
+
+    .access-alert .alert-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 6px;
+      color: #a04000;
+    }
+
+    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
+    .access-alert a:hover { text-decoration: underline; }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      background: #f0f4ff;
+      border-left: 4px solid #1464dd;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.85em;
+      color: #444;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .info-box a { color: #1464dd; font-weight: 600; text-decoration: none; }
+    .info-box a:hover { text-decoration: underline; }
+
+    /* ── STATUS ── */
+    .status-blocked {
+      background: #fff0f0;
+      border: 1px solid #ffcccc;
+      border-left: 4px solid #e74c3c;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.88em;
+      color: #c0392b;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 4px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      outline: none;
+      resize: vertical;
+      min-height: 110px;
+      transition: border-color 0.2s;
       color: #333;
-      border-radius: 5px;
     }
-    h2 { text-align: center; margin-bottom: 15px; color: #333; }
-    textarea {
-      width: 100%; height: 120px; padding: 10px;
-      border: 1px solid #ccc; border-radius: 8px;
-      font-size: 16px; resize: none; margin-bottom: 15px; box-sizing: border-box;
+
+    .form-group textarea:disabled { background: #f5f5f5; cursor: not-allowed; opacity: 0.6; }
+
+    .form-group textarea:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
     }
-    button {
-      width: 100%; padding: 12px; background-color: #007bff;
-      color: white; font-size: 16px; border: none;
-      border-radius: 8px; cursor: pointer;
+
+    .btn-submit {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.92em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    button:hover { background-color: #0056b3; }
-    .message-box {
-      margin-top: 15px; padding: 12px;
-      background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px;
+
+    .btn-submit:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    /* ── MESSAGE CARDS ── */
+    .message-item {
+      background: #f5f8ff;
+      border: 1px solid rgba(20,100,221,0.1);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
     }
-    .reply {
-      margin-top: 10px; padding: 10px;
-      background: #e6f7ff; border-radius: 6px;
+
+    .message-item .msg-label {
+      font-size: 0.75em;
+      font-weight: 700;
+      color: #1464dd;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
-    .blocked {
-      text-align: center;
-      color: red;
-      font-weight: bold;
-      margin-top: 20px;
+
+    .message-item .msg-text {
+      font-size: 0.88em;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    .reply-box {
+      background: #e6f9ee;
+      border: 1px solid #a8ddb9;
+      border-left: 4px solid #27ae60;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 10px;
+    }
+
+    .reply-box .msg-label { color: #1e8449; }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      header h1 { font-size: 1em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      main { margin: 12px auto; }
     }
   </style>
 </head>
 <body>
 
-<div class="help-container" id="helpContainer">
-  <a href="car-available.html" class="close-btn">&times;</a>
+  <header>
+    <h1>🚗 Waliko Car Hire</h1>
+    <nav>
+      <a href="car-available.html">Home</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html" class="active">Help</a>
+      <a href="account.html">Settings</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
 
-  <div class="note">
-    <strong>Need Help?</strong>
-    If you're experiencing any issues with our system, please describe your problem below and submit it.  
-    For urgent support, you can also call us directly at <b><a href="tel:0729177741">0729177741</a></b>.
-  </div>
+  <main>
 
-  <h2>Help Center</h2>
-  <div id="statusMessage"></div>
-  <div id="helpForm">
-    <textarea id="problem" placeholder="Describe your problem here..."></textarea>
-    <button onclick="submitProblem()">Submit</button>
-  </div>
+    <!-- Access Alert -->
+    <div class="access-alert" id="accessAlert">
+      <div class="alert-title">🔒 Access Restricted</div>
+      You must be logged in to access the Help Center. Please
+      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
+    </div>
 
-  <div id="userMessages"></div>
-</div>
+    <!-- Help Form Card -->
+    <div class="card" id="helpCard">
+      <div class="card-title">❓ Help Center</div>
 
-<script>
-  const problemsKey = "helpMessages";
-  let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      <div class="info-box">
+        <strong>Need Help?</strong> Describe your problem below and submit it — our team will get back to you shortly.<br>
+        For urgent support, call us directly at <a href="tel:0729177741"><strong>0729177741</strong></a>.
+      </div>
 
- if (!currentUser) {
-  // 1. Replace the page content with the warning box
-  document.body.innerHTML = `
-    <div style="background-color: #fff5f5; border: 2px solid #feb2b2; padding: 40px; margin: 100px auto; max-width: 500px; border-radius: 15px; font-family: system-ui, sans-serif; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-      <h2 style="text-align: center; color: #c53030; margin: 0;">
-        ⚠️ Please sign in first to access Help services!
-      </h2>
-      <p style="text-align: center; color: #742a2a; margin-top: 20px; font-weight: 500;">
-        Redirecting you to the sign-in page...
-      </p>
-      <div style="display: flex; justify-content: center; margin-top: 20px;">
-         <div style="width: 40px; height: 40px; border: 4px solid #fbb6ce; border-top: 4px solid #c53030; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+      <div id="statusMessage"></div>
+
+      <div id="helpForm">
+        <div class="form-group">
+          <label>Describe your problem</label>
+          <textarea id="problem" placeholder="Describe your problem here..."></textarea>
+        </div>
+        <button class="btn-submit" onclick="submitProblem()">Submit</button>
       </div>
     </div>
-    <style>
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-  `;
 
-  // 2. Redirect to signin.html after 7 seconds
-  setTimeout(() => {
-    window.location.href = "signin.html";
-  }, 7000);
-}
-  // 🔹 Always refresh currentUser status from allUsers
-  function refreshCurrentUser() {
-    const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
-    const freshUser = allUsers.find(u => u.email === currentUser.email);
-    if (freshUser) {
-      currentUser = freshUser;
-      localStorage.setItem("currentUser", JSON.stringify(freshUser)); // keep synced
-    }
-  }
+    <!-- Messages Card -->
+    <div class="card" id="messagesCard" style="display:none">
+      <div class="card-title">📨 Your Messages</div>
+      <div id="userMessages"></div>
+    </div>
 
-  // Check suspension/expulsion
-  function checkStatus() {
-    const statusMessage = document.getElementById("statusMessage");
-    const helpForm = document.getElementById("helpForm");
+  </main>
 
-    if (currentUser && currentUser.status === "Suspended") {
-      statusMessage.innerHTML = "<p class='blocked'>⚠️ Your account has been suspended. You cannot submit help requests.</p>";
-      helpForm.style.display = "none";
-    } else if (currentUser && currentUser.status === "Expelled") {
-      document.body.innerHTML = "<h2 style='color:red;text-align:center;margin-top:50px;'>❌ Your account has been expelled. You cannot access this system.</h2>";
+  <script>
+    const problemsKey = 'helpMessages';
+    let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+    // ── Check login ──
+    if (!currentUser) {
+      document.getElementById('accessAlert').style.display = 'block';
+      document.getElementById('problem').disabled = true;
+      document.getElementById('problem').placeholder = 'Sign in to submit a help request...';
+      document.querySelector('.btn-submit').disabled = true;
+      document.querySelector('.btn-submit').style.background = '#ccc';
+      document.querySelector('.btn-submit').style.cursor = 'not-allowed';
     } else {
-      statusMessage.innerHTML = "";
-      helpForm.style.display = "block";
+      liveCheck();
+      setInterval(liveCheck, 2000);
     }
-  }
 
-  function submitProblem() {
-    const problemText = document.getElementById("problem").value.trim();
-    if (!problemText) { alert("Please describe your problem."); return; }
-
-    let problems = JSON.parse(localStorage.getItem(problemsKey)) || [];
-
-    problems.push({
-      username: currentUser.username,
-      email: currentUser.email,
-      phone: currentUser.phone,
-      message: problemText,
-      reply: ""
-    });
-
-    localStorage.setItem(problemsKey, JSON.stringify(problems));
-    document.getElementById("problem").value = "";
-    renderUserMessages();
-  }
-
-  function renderUserMessages() {
-    let problems = JSON.parse(localStorage.getItem(problemsKey)) || [];
-    let container = document.getElementById("userMessages");
-    container.innerHTML = "";
-
-    problems.filter(p => p.email === currentUser.email).forEach(p => {
-      let div = document.createElement("div");
-      div.className = "message-box";
-      div.innerHTML = `<b>Your message:</b> ${p.message}`;
-      if (p.reply) {
-        div.innerHTML += `<div class="reply"><b>Admin reply:</b> ${p.reply}</div>`;
+    function refreshCurrentUser() {
+      const allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+      const fresh = allUsers.find(u => u.email === currentUser.email);
+      if (fresh) {
+        currentUser = fresh;
+        localStorage.setItem('currentUser', JSON.stringify(fresh));
       }
-      container.appendChild(div);
+    }
+
+    function checkStatus() {
+      const statusEl = document.getElementById('statusMessage');
+      const formEl   = document.getElementById('helpForm');
+
+      if (currentUser.status === 'Suspended') {
+        statusEl.innerHTML = `<div class="status-blocked">⚠️ Your account has been suspended. You cannot submit help requests.</div>`;
+        formEl.style.display = 'none';
+      } else if (currentUser.status === 'Expelled') {
+        document.body.innerHTML = `<div style="text-align:center;margin-top:80px;font-family:Poppins,sans-serif;color:#c0392b"><h2>❌ Your account has been expelled.</h2><p style="margin-top:10px">You cannot access this system.</p></div>`;
+      } else {
+        statusEl.innerHTML = '';
+        formEl.style.display = 'block';
+      }
+    }
+
+    function submitProblem() {
+      const text = document.getElementById('problem').value.trim();
+      if (!text) { alert('Please describe your problem.'); return; }
+
+      const problems = JSON.parse(localStorage.getItem(problemsKey)) || [];
+      problems.push({
+        username: currentUser.username,
+        email: currentUser.email,
+        phone: currentUser.phone,
+        message: text,
+        reply: ''
+      });
+
+      localStorage.setItem(problemsKey, JSON.stringify(problems));
+      document.getElementById('problem').value = '';
+      renderUserMessages();
+    }
+
+    function renderUserMessages() {
+      const problems  = JSON.parse(localStorage.getItem(problemsKey)) || [];
+      const container = document.getElementById('userMessages');
+      const card      = document.getElementById('messagesCard');
+      const mine      = problems.filter(p => p.email === currentUser.email);
+
+      if (mine.length === 0) { card.style.display = 'none'; return; }
+
+      card.style.display = 'block';
+      container.innerHTML = '';
+
+      mine.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'message-item';
+        div.innerHTML = `
+          <div class="msg-label">Your Message</div>
+          <div class="msg-text">${p.message}</div>
+          ${p.reply ? `
+            <div class="reply-box">
+              <div class="msg-label">Admin Reply</div>
+              <div class="msg-text">${p.reply}</div>
+            </div>` : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function liveCheck() {
+      refreshCurrentUser();
+      checkStatus();
+      renderUserMessages();
+    }
+
+    // ── Logout ──
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
     });
-  }
-
-  // 🔄 Live check for suspension and replies
-  function liveCheck() {
-    refreshCurrentUser();  
-    checkStatus();         
-    renderUserMessages();  // ✅ keep replies updated live
-  }
-
-  // Run
-  if (currentUser) {
-    liveCheck();
-    setInterval(liveCheck, 2000); // check every 2s
-  }
-</script>
+  </script>
 
 </body>
 </html>
