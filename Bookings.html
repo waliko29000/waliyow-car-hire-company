@@ -200,12 +200,22 @@
 
     .show-more-btn:hover { background: #f0f4ff; }
 
-    @media (max-width: 600px) {
+    /* ── HAMBURGER ── */
+    @media (max-width: 700px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      nav { margin-top: 4px; width: 100%; }
       header h1 { font-size: 1em; }
-      nav a { font-size: 0.72em; padding: 6px 10px; }
-      .card-header { flex-direction: column; }
-      .card-actions { flex-wrap: wrap; }
-      .info-table th { width: 110px; font-size: 0.73em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      .card-header { flex-direction: column; gap: 10px; }
+      .card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+      .card-actions .btn { flex: 1; text-align: center; min-width: 80px; }
+      .info-table th { width: 100px; font-size: 0.75em; white-space: nowrap; }
+      .info-table td { font-size: 0.82em; word-break: break-word; }
+      .booking-card { padding: 14px; }
+      main { padding: 0 10px 40px; }
+      .page-title { font-size: 1em; }
+      .card-footer .btn { flex: 1; text-align: center; }
+      .pending-notice { font-size: 0.76em; }
     }
   </style>
 </head>
@@ -214,7 +224,7 @@
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
-      <a href="index.html">Home</a>
+      <a href="car-available.html">Home</a>
       <a href="car-available.html">Cars</a>
       <a href="bookings.html" class="active">My Bookings</a>
       <a href="payments.html">Payments</a>
@@ -500,7 +510,7 @@
       pdf.save(`Waliko_Booking_${bookingId}.pdf`);
     }
 
-    // Logout
+    // Hamburger toggle
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
