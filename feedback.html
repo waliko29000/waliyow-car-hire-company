@@ -1,411 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Feedback - Waliko Car Hire</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: white;
-            color: #007BFF;
-            text-align: center;
-            padding: 20px;
-        }
-        .feedback-box {
-            background:#007BFF;
-            padding: 20px;
-            max-width: 400px;
-            margin: auto;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            position: relative;
-            color: white;
-        }
-        .stars {
-            display: flex;
-            justify-content: center;
-            margin: 10px 0;
-        }
-        .star {
-            font-size: 30px;
-            cursor: pointer;
-            color: #ddd;
-        }
-        .star.selected {
-            color: gold;
-        }
-        textarea {
-            width: 100%;
-            height: 80px;
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #555;
-            border-radius: 5px;
-            background: white;
-            color: black;
-        }
-        /* General button styling - applies to submit and also delete/back initially */
-        button {
-            width: 100%;
-            padding: 15px; /* Increased padding for bigger buttons */
-            margin-top: 10px;
-            background: #1e90ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
-        }
-        button:hover {
-            background: #0077cc;
-        }
-        
-      .close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  border: none;
-  background: yellowgreen;   /* 🔴 Change this to any color you want */
-  color: white;
-  font-size: 1.2em;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  transition: 0.3s;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback – Waliko Car Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.close-btn:hover {
-  background: rgb(139, 137, 0); /* hover effect */
-}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      color: #333;
+      min-height: 100vh;
+    }
 
-    
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+    }
 
-        .feedback-display {
-            display: none;
-            background: #333;
-            padding: 20px;
-            margin: auto;
-            max-width: 600px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-        .delete-btn, .back-btn {
-            background: #ff4d4d; /* Red for delete button */
-            margin-top: 10px;
-        }
-        .back-btn {
-            background: #32cd32; /* Green for back button */
-        }
-        /* Style for the table */
-        .feedback-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+    header h1 { font-size: 1.2em; font-weight: 700; }
 
-        .feedback-table th, .feedback-table td {
-            border: 1px solid #555;
-            padding: 8px;
-            text-align: left;
-        }
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
 
-        .feedback-table th {
-            background-color: #555;
-            color: white;
-        }
+    nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
 
-        .feedback-table tr:nth-child(even) {
-            background-color: #444;
-        }
+    nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
+    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
+    nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
-        /* Responsive table styles and button adjustments */
-        @media screen and (max-width: 600px) {
-            .feedback-table, .feedback-table tbody, .feedback-table tr, .feedback-table td {
-                display: block;
-                width: 100%;
-            }
+    /* ── MAIN ── */
+    main {
+      max-width: 560px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
 
-            .feedback-table thead {
-                display: none;
-            }
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
 
-            .feedback-table tr {
-                margin-bottom: 15px;
-                border: 1px solid #555;
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-            .feedback-table td {
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-                border: none;
-                word-wrap: break-word;
-                word-break: break-all;
-            }
+    .card-title {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
 
-            .feedback-table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 6px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left;
-                font-weight: bold;
-            }
+    /* ── ACCESS ALERT ── */
+    .access-alert {
+      display: none;
+      background: #fff5e6;
+      border: 1px solid #ffc87a;
+      border-left: 4px solid #f39c12;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 0.88em;
+      color: #b35c00;
+      line-height: 1.6;
+    }
 
-            /* Adjust button sizes for mobile */
-            button {
-                /* This applies to all buttons for responsiveness */
-                padding: 10px; /* Smaller padding */
-                font-size: 1em; /* Slightly smaller font size */
-                width: calc(100% - 20px); /* Adjust width to avoid overflow from padding on the parent */
-                margin-left: 10px;
-                margin-right: 10px;
-            }
-            
+    .access-alert .alert-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 6px;
+      color: #a04000;
+    }
 
-            /* Specific adjustments for delete and back buttons to be shorter */
-            .delete-btn, .back-btn {
-                width: auto; /* Allow content to dictate width */
-                padding: 8px 15px; /* Shorter vertical padding, same horizontal */
-                display: inline-block; /* Make them inline-block to sit next to each other if space allows */
-                margin: 10px 5px; /* Adjust margin to be closer */
-            }
+    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
+    .access-alert a:hover { text-decoration: underline; }
 
-            /* Center the two buttons if they are inline-block */
-            .feedback-display {
-                text-align: center; /* This will center inline-block elements */
-            }
+    /* ── STARS ── */
+    .stars {
+      display: flex;
+      gap: 6px;
+      margin: 10px 0 16px;
+    }
 
+    .star {
+      font-size: 2rem;
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.15s, transform 0.1s;
+      line-height: 1;
+    }
 
-            /* Adjust the feedback display max-width for smaller screens if needed */
-            .feedback-display {
-                max-width: 95%;
-                padding: 15px;
-            }
+    .star:hover, .star.selected { color: #f0c040; }
+    .star:hover { transform: scale(1.15); }
 
-            .feedback-box {
-                max-width: 95%;
-                padding: 15px;
-            }
-        }
-    </style>
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 4px;
+    }
+
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      outline: none;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color 0.2s;
+      color: #333;
+    }
+
+    .form-group textarea:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    }
+
+    .form-group textarea:disabled {
+      background: #f5f5f5;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-submit {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.92em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+    /* ── FEEDBACK DISPLAY ── */
+    .feedback-display { display: none; }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f4ff;
+      font-size: 0.88em;
+      gap: 12px;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-row .label {
+      color: #888;
+      font-weight: 600;
+      font-size: 0.82em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+      width: 80px;
+    }
+
+    .info-row .value { color: #1a1a2e; font-weight: 500; text-align: right; word-break: break-word; }
+
+    .stars-display { color: #f0c040; font-size: 1.1em; letter-spacing: 2px; }
+
+    .btn-back {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #27ae60, #1e8449);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.92em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 14px;
+    }
+
+    .btn-back:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      header h1 { font-size: 1em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      main { margin: 12px auto; }
+      .star { font-size: 1.8rem; }
+    }
+  </style>
 </head>
 <body>
-    
 
-    <div class="feedback-box" id="feedbackBox">
-       <button class="close-btn" onclick="window.location.href='car-available.html'">&times;</button>
+  <header>
+    <h1>🚗 Waliko Car Hire</h1>
+    <nav>
+      <a href="car-available.html">Home</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html">Help</a>
+      <a href="account.html">Settings</a>
+      <a href="feedback.html" class="active">Feedback</a>
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
 
-        <p>Rate our system</p>
-        <div class="stars" id="stars">
-            <span class="star" data-value="1">★</span>
-            <span class="star" data-value="2">★</span>
-            <span class="star" data-value="3">★</span>
-            <span class="star" data-value="4">★</span>
-            <span class="star" data-value="5">★</span>
+  <main>
+
+    <!-- Access Alert -->
+    <div class="access-alert" id="accessAlert">
+      <div class="alert-title">🔒 Access Restricted</div>
+      You must be logged in to submit feedback. Please
+      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
+    </div>
+
+    <!-- Feedback Form Card -->
+    <div class="card" id="feedbackCard">
+      <div class="card-title">💬 Rate Our Service</div>
+
+      <div class="form-group">
+        <label>Your Rating</label>
+        <div class="stars" id="starsContainer">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>Your Message</label>
         <textarea id="feedbackText" placeholder="Tell us about your experience..."></textarea>
-        <button onclick="submitFeedback()">Submit Feedback</button>
+      </div>
+
+      <button class="btn-submit" id="submitBtn" onclick="submitFeedback()">Submit Feedback</button>
     </div>
 
-    <div class="feedback-display" id="feedbackDisplay">
-        <h2>Your Feedback</h2>
-        <table class="feedback-table">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Rating</th>
-                    <th>Message</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td id="feedbackEmail" data-label="Email"></td>
-                    <td id="feedbackStars" data-label="Rating"></td>
-                    <td id="feedbackMessage" data-label="Message"></td>
-                    <td id="feedbackTime" data-label="Time"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button class="delete-btn" onclick="deleteFeedback()">Delete Feedback</button>
-        <button class="back-btn" onclick="window.location.href='car-available.html'">Back</button>
+    <!-- Feedback Display Card -->
+    <div class="card feedback-display" id="feedbackDisplay">
+      <div class="card-title">✅ Feedback Submitted</div>
+      <div class="info-row">
+        <span class="label">Email</span>
+        <span class="value" id="feedbackEmail"></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Rating</span>
+        <span class="value stars-display" id="feedbackStars"></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Message</span>
+        <span class="value" id="feedbackMessage"></span>
+      </div>
+      <div class="info-row">
+        <span class="label">Time</span>
+        <span class="value" id="feedbackTime"></span>
+      </div>
+      <button class="btn-back" onclick="window.location.href='car-available.html'">← Back to Cars</button>
     </div>
 
-    <script>
-        console.log("Script loaded and starting execution.");
+  </main>
 
-        let selectedRating = 0;
+  <script>
+    let selectedRating = 0;
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
 
-        document.addEventListener("DOMContentLoaded", function() {
-            try {
-                console.log("DOM Content Loaded. Initializing feedback system.");
-                retrieveFeedback();
+    // ── Check login ──
+    if (!isLoggedIn) {
+      document.getElementById('accessAlert').style.display = 'block';
+      document.getElementById('feedbackText').disabled = true;
+      document.getElementById('submitBtn').disabled = true;
+      document.querySelectorAll('.star').forEach(s => s.style.cursor = 'not-allowed');
+    }
 
-                const stars = document.querySelectorAll(".star");
-                if (stars.length > 0) {
-                    stars.forEach(star => {
-                        star.addEventListener("click", function() {
-                            console.log("Star clicked! Value:", this.getAttribute("data-value"));
-                            selectedRating = parseInt(this.getAttribute("data-value"));
-                            updateStars(selectedRating);
-                        });
-                    });
-                    console.log("Star click listeners attached.");
-                } else {
-                    console.warn("No stars found, cannot attach listeners.");
-                }
+    // ── Stars ──
+    document.querySelectorAll('.star').forEach(star => {
+      star.addEventListener('click', function() {
+        if (!isLoggedIn) return;
+        selectedRating = parseInt(this.dataset.value);
+        updateStars(selectedRating);
+      });
+    });
 
-                updateStars(selectedRating);
+    function updateStars(rating) {
+      document.querySelectorAll('.star').forEach(s => {
+        s.classList.toggle('selected', parseInt(s.dataset.value) <= rating);
+      });
+    }
 
-            } catch (e) {
-                console.error("Critical Error during DOMContentLoaded setup:", e);
-                alert("An unrecoverable error occurred during page setup. Please check the browser console for details.");
-            }
-        });
+    function getUserEmail() {
+      try {
+        const user = JSON.parse(localStorage.getItem('currentUser'));
+        return user ? user.email : 'Unknown';
+      } catch(e) { return 'Unknown'; }
+    }
 
-        function updateStars(rating) {
-            console.log("Updating stars to rating:", rating);
-            document.querySelectorAll(".star").forEach(star => {
-                let starValue = parseInt(star.getAttribute("data-value"));
-                if (starValue <= rating) {
-                    star.classList.add("selected");
-                } else {
-                    star.classList.remove("selected");
-                }
-            });
+    // ── Submit ──
+    function submitFeedback() {
+      if (!isLoggedIn) {
+        document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+
+      const message = document.getElementById('feedbackText').value.trim();
+      const userEmail = getUserEmail();
+
+      if (!selectedRating || !message) {
+        alert('❌ Please provide a rating and message before submitting.'); return;
+      }
+
+      if (localStorage.getItem('userFeedback')) {
+        alert('❌ You already submitted feedback.');
+        retrieveFeedback(); return;
+      }
+
+      const feedbackData = {
+        email: userEmail,
+        rating: selectedRating,
+        message,
+        time: new Date().toLocaleString()
+      };
+
+      localStorage.setItem('userFeedback', JSON.stringify(feedbackData));
+      displayFeedback(feedbackData);
+    }
+
+    // ── Display ──
+    function displayFeedback(data) {
+      document.getElementById('feedbackCard').style.display = 'none';
+      document.getElementById('feedbackDisplay').style.display = 'block';
+      document.getElementById('feedbackEmail').textContent   = data.email;
+      document.getElementById('feedbackStars').textContent   = '★'.repeat(data.rating);
+      document.getElementById('feedbackMessage').textContent = data.message;
+      document.getElementById('feedbackTime').textContent    = data.time;
+    }
+
+    // ── Retrieve on load ──
+    function retrieveFeedback() {
+      try {
+        const stored = JSON.parse(localStorage.getItem('userFeedback'));
+        if (stored) {
+          displayFeedback(stored);
         }
+      } catch(e) { localStorage.removeItem('userFeedback'); }
+    }
 
-        function getUserEmail() {
-            try {
-                let user = JSON.parse(localStorage.getItem("currentUser"));
-                return user ? user.email : "Unknown";
-            } catch (e) {
-                console.error("Error parsing currentUser from localStorage:", e);
-                return "Unknown";
-            }
-        }
+    retrieveFeedback();
 
-        function submitFeedback() {
-            console.log("submitFeedback function called.");
-            let userEmail = getUserEmail();
-            let message = document.getElementById("feedbackText").value.trim();
-
-            if (!selectedRating || message === "") {
-                alert("❌ Please provide a rating and message before submitting.");
-                return;
-            }
-
-            if (userEmail === "Unknown") {
-                alert("🔒 You must be logged in to submit feedback.");
-                return;
-            }
-
-            if (localStorage.getItem("userFeedback")) {
-                alert("❌ You already submitted feedback. Please delete your previous feedback to submit again.");
-                retrieveFeedback();
-                return;
-            }
-
-            let feedbackData = {
-                email: userEmail,
-                rating: selectedRating,
-                message: message,
-                time: new Date().toLocaleString()
-            };
-
-            try {
-                localStorage.setItem("userFeedback", JSON.stringify(feedbackData));
-                console.log("Feedback successfully saved to localStorage:", feedbackData);
-                displayFeedback();
-            } catch (e) {
-                console.error("Error saving feedback to localStorage:", e);
-                alert("Failed to save feedback. Your browser might be in private mode or storage is full.");
-            }
-        }
-
-        function retrieveFeedback() {
-            console.log("retrieveFeedback function called.");
-            let storedFeedback = null;
-            try {
-                storedFeedback = JSON.parse(localStorage.getItem("userFeedback"));
-            } catch (e) {
-                console.error("Error parsing userFeedback from localStorage:", e);
-                localStorage.removeItem("userFeedback");
-            }
-
-            if (storedFeedback) {
-                console.log("Found existing feedback, attempting to display.");
-                document.getElementById("feedbackBox").style.display = "none";
-                document.getElementById("feedbackDisplay").style.display = "block";
-
-                document.getElementById("feedbackEmail").textContent = storedFeedback.email;
-                document.getElementById("feedbackStars").textContent = "★".repeat(storedFeedback.rating);
-                document.getElementById("feedbackMessage").textContent = storedFeedback.message;
-                document.getElementById("feedbackTime").textContent = storedFeedback.time;
-            } else {
-                console.log("No existing feedback found in localStorage.");
-                document.getElementById("feedbackBox").style.display = "block";
-                document.getElementById("feedbackDisplay").style.display = "none";
-            }
-        }
-
-        function deleteFeedback() {
-            console.log("deleteFeedback function called.");
-            try {
-                localStorage.removeItem("userFeedback");
-                console.log("Feedback removed from localStorage.");
-            } catch (e) {
-                console.error("Error removing feedback from localStorage:", e);
-                alert("Failed to delete feedback.");
-            }
-
-            document.getElementById("feedbackDisplay").style.display = "none";
-            document.getElementById("feedbackBox").style.display = "block";
-            selectedRating = 0;
-            updateStars(0);
-            document.getElementById("feedbackText").value = "";
-        }
-
-        function displayFeedback() {
-            console.log("displayFeedback function called (showing current feedback).");
-            let feedbackData = null;
-            try {
-                feedbackData = JSON.parse(localStorage.getItem("userFeedback"));
-            } catch (e) {
-                console.error("Error parsing userFeedback from localStorage in displayFeedback:", e);
-                localStorage.removeItem("userFeedback");
-            }
-
-            if (feedbackData) {
-                document.getElementById("feedbackBox").style.display = "none";
-                document.getElementById("feedbackDisplay").style.display = "block";
-
-                document.getElementById("feedbackEmail").textContent = feedbackData.email;
-                document.getElementById("feedbackStars").textContent = "★".repeat(feedbackData.rating);
-                document.getElementById("feedbackMessage").textContent = feedbackData.message;
-                document.getElementById("feedbackTime").textContent = feedbackData.time;
-            } else {
-                console.warn("No feedback data found to display in displayFeedback function.");
-            }
-        }
-    </script>
+    // ── Logout ──
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    });
+  </script>
 
 </body>
 </html>
