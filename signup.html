@@ -13,7 +13,10 @@
       font-family: 'Poppins', sans-serif;
       background: #f0f4ff;
       color: #333;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ── HEADER ── */
@@ -48,19 +51,26 @@
 
     /* ── MAIN ── */
     main {
-      max-width: 460px;
-      margin: 28px auto;
-      padding: 0 16px 40px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow: hidden;
     }
 
     /* ── CARD ── */
     .card {
       background: #fff;
       border-radius: 14px;
-      padding: 28px 24px;
+      padding: 22px 20px;
       box-shadow: 0 3px 16px rgba(20,100,221,0.09);
       border: 1px solid rgba(20,100,221,0.07);
       animation: fadeIn 0.3s ease;
+      width: 100%;
+      max-width: 420px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
     }
 
     @keyframes fadeIn {
@@ -70,7 +80,7 @@
 
     .card-header {
       text-align: center;
-      margin-bottom: 22px;
+      margin-bottom: 14px;
     }
 
     .card-header h2 {
@@ -86,7 +96,7 @@
     }
 
     /* ── FORM ── */
-    .form-group { margin-bottom: 14px; }
+    .form-group { margin-bottom: 10px; }
 
     .form-group label {
       display: block;
@@ -144,7 +154,7 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       font-size: 0.82em;
       color: #555;
       line-height: 1.5;
