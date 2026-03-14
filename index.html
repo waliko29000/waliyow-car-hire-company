@@ -34,9 +34,8 @@
     }
 
     header h1 {
-      font-size: 1.3em;
+      font-size: 1.2em;
       font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
     nav {
@@ -49,7 +48,7 @@
       background: rgba(255,255,255,0.15);
       border: 1px solid rgba(255,255,255,0.25);
       color: #fff;
-      padding: 8px 14px;
+      padding: 7px 13px;
       cursor: pointer;
       border-radius: 25px;
       font-size: 0.78em;
@@ -57,17 +56,43 @@
       font-weight: 500;
       text-decoration: none;
       display: inline-block;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
     nav button:hover, nav a:hover {
       background: rgba(255,255,255,0.3);
       border-color: rgba(255,255,255,0.6);
-      transform: translateY(-1px);
     }
 
     .container {
       padding: 6px;
+    }
+
+    #mainContent {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 22px;
+      margin: 16px auto;
+      max-width: 860px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+    }
+
+    #mainContent h4 {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 8px;
+      margin-top: 14px;
+    }
+
+    #mainContent h4:first-child { margin-top: 0; }
+
+    #mainContent p {
+      font-size: 0.9em;
+      color: #555;
+      line-height: 1.75;
+      margin-bottom: 6px;
     }
 
     /* Form modal styling */
@@ -271,28 +296,12 @@
 
     /* Responsive */
     @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 10px;
-        gap: 8px;
-      }
-
+      header { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
       header h1 { font-size: 1em; }
-
-      nav { margin-top: 5px; }
-
-      nav button, nav a {
-        font-size: 0.7em;
-        padding: 6px 10px;
-      }
-
+      nav { margin-top: 4px; }
+      nav button, nav a { font-size: 0.7em; padding: 6px 10px; }
       .modal-content { max-width: 300px; }
-
-      #mainContent, #sectionContainer {
-        margin: 10px;
-        padding: 18px 16px;
-      }
+      #mainContent, #sectionContainer { margin: 10px; padding: 16px; }
     }
   </style>
 </head>
@@ -301,22 +310,14 @@
   <header>
     <h1> Waliko Car Hire </h1>
     <nav>
-      <!-- "Cars Available" now checks if the user is registered -->
-    <a href="car-available.html"><b>Dashboard</b></a>
-<!-- Sign In and Sign Up as button-style links -->
-<button onclick="location.href='signin.html'"><b>Sign In</b></button>
-<button onclick="location.href='signup.html'"><b>Sign Up</b></button>
-
-<!-- Terms of Service -->
-<button onclick="showSection('terms')"><b>Terms of Service</b></button>
-
-      <button onclick="showSection('privacy')"><b>Privacy Policy</b></button>
-      <button onclick="signOut()"><b>Sign Out</b></button>
-      <button onclick="showSection('contact')"><b>Contact Us</b></button>
-      <button onclick="showSection('about us')"><b>About us</b></button>
-      <button onclick="location.href='faqs.html'"><b>FAQs</b></button>
-
-     
+      <a href="car-available.html">Dashboard</a>
+      <button onclick="location.href='signin.html'">Sign In</button>
+      <button onclick="location.href='signup.html'">Sign Up</button>
+      <button onclick="showSection('terms')">Terms of Service</button>
+      <button onclick="showSection('privacy')">Privacy Policy</button>
+      <button onclick="showSection('contact')">Contact Us</button>
+      <button onclick="showSection('about us')">About Us</button>
+      <button onclick="goHome()">Home</button>
     </nav>
   </header>
 
@@ -363,115 +364,6 @@
   <!-- Section Containers -->
   <div id="sectionContainer" class="container"></div>
 
-  <!-- Info Bits + Testimonials -->
-  <div id="extraSections">
-  <style>
-    #extraSections {
-      max-width: 860px;
-      margin: 0 auto 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .info-bits, .testimonials {
-      background: #fff;
-      border-radius: 14px;
-      padding: 20px 22px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-    }
-    .info-bits h4, .testimonials h4 {
-      font-size: 1em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 14px;
-    }
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .info-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: #f0f4ff;
-      border-radius: 10px;
-      padding: 12px 14px;
-    }
-    .info-item .icon { font-size: 1.4rem; flex-shrink: 0; }
-    .info-item .info-text strong { display: block; font-size: 0.82em; font-weight: 700; color: #222; margin-bottom: 2px; }
-    .info-item .info-text span { font-size: 0.78em; color: #666; line-height: 1.5; }
-    .info-item .info-text a { color: #1464dd; text-decoration: none; font-weight: 500; }
-    .testi-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .testi-card {
-      background: #f0f4ff;
-      border-radius: 10px;
-      padding: 14px;
-      border-left: 3px solid #1464dd;
-    }
-    .testi-card .stars { font-size: 0.8rem; margin-bottom: 6px; color: #f0c040; }
-    .testi-card p { font-size: 0.8em; color: #555; line-height: 1.6; margin-bottom: 8px; font-style: italic; }
-    .testi-card .name { font-size: 0.78em; font-weight: 700; color: #1464dd; }
-    @media (max-width: 600px) {
-      #extraSections { padding: 0 10px; }
-      .info-grid, .testi-grid { grid-template-columns: 1fr; }
-    }
-  </style>
-
-    <div class="info-bits">
-      <h4>📋 Quick Info</h4>
-      <div class="info-grid">
-        <div class="info-item">
-          <span class="icon">🕐</span>
-          <div class="info-text">
-            <strong>Opening Hours</strong>
-            <span>Mon – Fri: 8am – 7pm<br>Sat – Sun: 9am – 5pm</span>
-          </div>
-        </div>
-        <div class="info-item">
-          <span class="icon">📞</span>
-          <div class="info-text">
-            <strong>Call / WhatsApp</strong>
-            <span><a href="tel:+254790337687">0790 337 687</a></span>
-          </div>
-        </div>
-        <div class="info-item">
-          <span class="icon">📍</span>
-          <div class="info-text">
-            <strong>Our Location</strong>
-            <span>235 Fashion Street,<br>Nairobi, Kenya</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="testimonials">
-      <h4>💬 What Our Customers Say</h4>
-      <div class="testi-grid">
-        <div class="testi-card">
-          <div class="stars">★★★★★</div>
-          <p>"Absolutely amazing service! The car was spotless and ready on time. Will definitely use Waliko again."</p>
-          <span class="name">— Brian M., Nairobi</span>
-        </div>
-        <div class="testi-card">
-          <div class="stars">★★★★★</div>
-          <p>"Very affordable and professional. Booking was easy and the team was so helpful throughout."</p>
-          <span class="name">— Amina K., Mombasa</span>
-        </div>
-        <div class="testi-card">
-          <div class="stars">★★★★☆</div>
-          <p>"Great experience overall. The SUV was perfect for our family road trip to Nakuru. Highly recommended!"</p>
-          <span class="name">— David O., Kisumu</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
 
   <script>
     // Utility functions to open and close modals
@@ -679,61 +571,69 @@
             <p>Thank you for connecting with us. We look forward to hearing from you!</p>
           `;
           break;
+        case 'info':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>📋 Quick Info</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px">
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">🕐</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Opening Hours</strong><span style="font-size:0.8em;color:#666">Mon – Fri: 8am – 7pm<br>Sat – Sun: 9am – 5pm</span></div>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">📞</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Call / WhatsApp</strong><span style="font-size:0.8em;color:#666"><a href="tel:+254790337687" style="color:#1464dd;font-weight:600">0790 337 687</a></span></div>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;display:flex;gap:10px;align-items:flex-start">
+                <span style="font-size:1.4rem">📍</span>
+                <div><strong style="display:block;font-size:0.85em;color:#222;margin-bottom:3px">Our Location</strong><span style="font-size:0.8em;color:#666">235 Fashion Street,<br>Nairobi, Kenya</span></div>
+              </div>
+            </div>
+          `;
+          break;
+        case 'reviews':
+          document.getElementById('sectionContainer').innerHTML = `
+            <h2>💬 What Our Customers Say</h2>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px">
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★★</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Absolutely amazing service! The car was spotless and ready on time. Will definitely use Waliko again.        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— Brian M., Nairobi</span>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★★</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Very affordable and professional. Booking was easy and the team was so helpful throughout.        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— Amina K., Mombasa</span>
+              </div>
+              <div style="background:#f0f4ff;border-radius:10px;padding:14px;border-left:3px solid #1464dd">
+                <div style="color:#f0c040;font-size:0.85rem;margin-bottom:6px">★★★★☆</div>
+                <p style="font-size:0.82em;color:#555;font-style:italic;margin-bottom:8px">        default:quot;Great experience overall. The SUV was perfect for our family road trip to Nakuru. Highly recommended!        default:quot;</p>
+                <span style="font-size:0.78em;font-weight:700;color:#1464dd">— David O., Kisumu</span>
+              </div>
+            </div>
+          `;
+          break;
         default:
           document.getElementById('sectionContainer').innerHTML = `<p>Select a service from the header above.</p>`;
       }
     }
 
-    // Check if user is registered before redirecting to Cars Available (voting.html)
-    function checkRegistration() {
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-      if (!storedUser) {
-        alert('PLEASE sign in or register first.');
-        return false;
-      }
-      // If registered, redirect TO car-available.html
-      window.location.href = 'car-available.html';
-    }
 
-    document.getElementById('signupForm') && document.getElementById('signupForm').addEventListener('submit', function(event) {
-    event.preventDefault();
 
-    const user = {
-      username: document.getElementById('username').value,
-      email: document.getElementById('email').value,
-      telephone: document.getElementById('telephone').value,
-      gender: document.getElementById('gender').value,
-      password: document.getElementById('password').value
-    };
-
-    localStorage.setItem('user', JSON.stringify(user));
-    alert('Signup successful! You can now view your details.');
-    window.location.href = 'index.html'; // Redirect to main page
-  });
-
-    // Handle Sign In
-    document.getElementById('signInForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const email = document.getElementById('si_email') ? document.getElementById('si_email').value : '';
-      const password = document.getElementById('si_password') ? document.getElementById('si_password').value : '';
-      const storedUser = JSON.parse(localStorage.getItem('user'));
-      if(storedUser && email === storedUser.email && password === storedUser.password) {
-        alert('Sign In Successful!');
-        closeModal('signInModal');
-        document.getElementById('signInForm').reset();
-      } else {
-        alert('Incorrect email or password.');
-      }
-    });
-
-    // Sign Out - clear localStorage and reload page
-    function signOut() {
-      localStorage.removeItem('user');
-      alert('Signed out successfully.');
-      location.reload();
+    // Home button - restore main page content
+    function goHome() {
+      document.getElementById('mainContent').innerHTML = `
+        <h4>Welcome to Waliko CarHire: Your Journey Starts Here!</h4>
+        <p>Looking for the perfect ride for your next adventure in Nairobi or beyond? At Waliko CarHire, we make renting a car easy, convenient, and tailored to your needs. We offer a diverse fleet, from luxurious sedans to economical options, ensuring you'll find exactly what you're looking for.</p>
+        ---
+        <h4>How to Get Started</h4>
+        <p>Ready to hit the road? Accessing our services is simple!</p>
+        <p>1. If you're new to Waliko CarHire, you'll need to <b>register</b> for an account. Already a member? Just <b>sign in</b> with your credentials.</p>
+        <p>2. Once logged in, you can effortlessly view our wide selection of available cars and book the vehicle that best fits your plans.</p>
+        ---
+      `;
+      document.getElementById('sectionContainer').innerHTML = '';
     }
   </script>
 
--e 
 </body>
 </html>
