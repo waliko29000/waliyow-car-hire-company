@@ -1,297 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Gateway</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway – Waliko Car Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f4f4f4;
-  padding:20px;
-  margin:0;
-  text-align:center;
-}
-.payment-container{
-  background:#fff;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 0 10px rgba(0,0,0,.1);
-  width:90%;
-  max-width:380px;
-  margin:auto;
-  position:relative;
-}
-.close-button{
-  position:absolute;
-  top:10px;
-  right:15px;
-  font-size:22px;
-  cursor:pointer;
-}
-#bookingBox{
-  display:none;
-  background:#e8f5e9;
-  color:#1b5e20;
-  padding:12px;
-  margin:15px 0;
-  border-left:5px solid #2e7d32;
-  border-radius:5px;
-  font-weight:bold;
-}
-#yellowError{
-  display:none;
-  background:#fff3cd;
-  color:#856404;
-  padding:12px;
-  margin:15px 0;
-  border-left:5px solid #ffc107;
-  border-radius:5px;
-}
-#finalError{
-  display:none;
-  background:#fdecea;
-  color:#611a15;
-  padding:14px;
-  margin-top:20px;
-  border-left:5px solid #f44336;
-  border-radius:6px;
-}
-.payment-button{
-  border:1px solid #ccc;
-  padding:10px;
-  margin:10px 0;
-  border-radius:5px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.payment-button img{width:40px;margin-right:10px}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      color: #333;
+      min-height: 100vh;
+    }
 
-.modal{
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:#f0f0f0;
-  padding:20px;
-  border-radius:10px;
-  width:90%;
-  max-width:330px;
-  z-index:10;
-  text-align:left;
-}
-.modal-title{
-  font-weight:bold;
-  text-align:center;
-  margin-bottom:10px;
-}
-.modal-amount{
-  text-align:center;
-  font-weight:bold;
-  margin:10px 0;
-}
-.modal-info{
-  background:#eef4ff;
-  border-left:4px solid #0d6efd;
-  padding:10px;
-  font-size:14px;
-  border-radius:4px;
-  margin-bottom:12px;
-}
-input{
-  width:100%;
-  padding:10px;
-  border-radius:5px;
-  border:1px solid #ccc;
-  font-size:16px;
-}
-.error-text{
-  display:none;
-  color:red;
-  font-size:13px;
-  margin-bottom:8px;
-}
-.modal-buttons{
-  display:flex;
-  justify-content:space-between;
-}
-button{
-  width:48%;
-  padding:10px;
-  border:none;
-  border-radius:5px;
-  font-weight:bold;
-}
-.pay{background:#0d6efd;color:#fff;}
-.cancel{background:#dc3545;color:#fff;}
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+    }
 
-.overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:9;
-}
-.processing{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-.dot{
-  width:8px;
-  height:8px;
-  background:#fff;
-  border-radius:50%;
-  margin:0 3px;
-  animation:pulse .6s infinite alternate;
-  vertical-align:middle;
-}
+    header h1 { font-size: 1.2em; font-weight: 700; }
 
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
 
-@keyframes pulse{from{opacity:.2}to{opacity:1}}
-</style>
+    nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    nav a:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
+    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
+    nav a.logout:hover { background: rgba(255,80,80,0.2); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 520px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      margin-bottom: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
+
+    /* ── LOGIN ALERT ── */
+    .access-alert {
+      display: none;
+      background: #fff5e6;
+      border: 1px solid #ffc87a;
+      border-left: 4px solid #f39c12;
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 16px;
+      font-size: 0.88em;
+      color: #b35c00;
+      line-height: 1.6;
+    }
+
+    .access-alert .alert-title {
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 6px;
+      color: #a04000;
+    }
+
+    .access-alert a {
+      color: #1464dd;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .access-alert a:hover { text-decoration: underline; }
+
+    /* ── BOOKING INFO BOX ── */
+    .booking-info-box {
+      background: #f0f4ff;
+      border-left: 4px solid #1464dd;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.85em;
+      color: #1a1a2e;
+      font-weight: 600;
+    }
+
+    .no-booking-box {
+      background: #fff5e6;
+      border-left: 4px solid #ffc107;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 0.85em;
+      color: #b35c00;
+      font-weight: 500;
+    }
+
+    /* ── PAYMENT METHODS ── */
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9em;
+      font-weight: 600;
+      color: #1a1a2e;
+      background: #fff;
+    }
+
+    .payment-method:hover:not(.disabled) {
+      border-color: #1464dd;
+      background: #f5f8ff;
+      box-shadow: 0 2px 10px rgba(20,100,221,0.1);
+    }
+
+    .payment-method.disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .payment-method img {
+      width: 38px;
+      height: 24px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .payment-method .method-arrow {
+      margin-left: auto;
+      color: #ccc;
+      font-size: 1em;
+    }
+
+    /* ── FINAL ERROR ── */
+    .final-error {
+      display: none;
+      background: #fff0f0;
+      border: 1px solid #ffcccc;
+      border-left: 4px solid #e74c3c;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.88em;
+      color: #c0392b;
+      margin-top: 4px;
+    }
+
+    .final-error a {
+      color: #1464dd;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .modal.open { display: flex; }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-box h3 {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
+
+    .modal-amount {
+      background: #f0f4ff;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.9em;
+      font-weight: 700;
+      color: #1464dd;
+      margin-bottom: 14px;
+    }
+
+    .modal-info {
+      background: #f5f8ff;
+      border-left: 3px solid #1464dd;
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 0.78em;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .modal-info strong { color: #1a1a2e; }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    }
+
+    .error-text {
+      display: none;
+      font-size: 0.75em;
+      color: #e74c3c;
+      margin-top: 4px;
+    }
+
+    .modal-btns { display: flex; gap: 10px; margin-top: 4px; }
+
+    .btn-pay {
+      flex: 1;
+      padding: 10px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pay:hover { background: linear-gradient(135deg, #0d47a1, #083080); }
+
+    .btn-cancel {
+      flex: 1;
+      padding: 10px;
+      background: #fff0f0;
+      color: #c0392b;
+      border: 1px solid #ffcccc;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel:hover { background: #ffe0e0; }
+
+    /* Processing dots */
+    .dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      background: #fff;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: pulse 0.6s infinite alternate;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse { from { opacity: 0.2; } to { opacity: 1; } }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      header h1 { font-size: 1em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      main { margin: 12px auto; }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="payment-container">
-<span class="close-button" onclick="exitPage()">×</span>
+  <header>
+    <h1>🚗 Waliko Car Hire</h1>
+    <nav>
+      <a href="car-available.html">Home</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html">Help</a>
+      <a href="account.html">Settings</a>
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
 
-<div id="bookingBox"></div>
-<div id="yellowError"></div>
+  <main>
 
-<h2>Select Payment Method</h2>
+    <!-- Access Alert (shown if not logged in) -->
+    <div class="access-alert" id="accessAlert">
+      <div class="alert-title">🔒 Access Restricted</div>
+      You must be logged in to make a payment. Please
+      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
+    </div>
 
-<div class="payment-button" onclick="openModal('mpesa')">
-<img src="mpesa.jpg.png"> Pay with M-Pesa
-</div>
-<div class="payment-button" onclick="openModal('paypal')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"> Pay with PayPal
-</div>
-<div class="payment-button" onclick="openModal('visa')">
-<img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png"> Pay with Visa
-</div>
-""
-<div id="finalError"><strong>❌ Sorry, Unexpected error occurred,</strong> Please Try again later.<a href="what-happened.html">&nbsp;What happened?</a></div>
-</div>
+    <!-- Booking Summary Card -->
+    <div class="card">
+      <div class="card-title">💳 Payment Gateway</div>
+      <div class="booking-info-box" id="bookingBox" style="display:none"></div>
+      <div class="no-booking-box" id="noBookingBox" style="display:none">⚠️ No booking found. Please go to <a href="bookings.html" style="color:#1464dd;font-weight:600">My Bookings</a> first.</div>
 
-<div class="overlay" id="overlay" onclick="closeAll()"></div>
+      <!-- Payment Methods -->
+      <div class="payment-method" id="mpesaBtn" onclick="openModal('mpesa')">
+        <img src="mpesa.jpg.png" alt="Mpesa">
+        Pay with M-Pesa
+        <span class="method-arrow">›</span>
+      </div>
+      <div class="payment-method" id="paypalBtn" onclick="openModal('paypal')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+        Pay with PayPal
+        <span class="method-arrow">›</span>
+      </div>
+      <div class="payment-method" id="visaBtn" onclick="openModal('visa')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">
+        Pay with Visa / Card
+        <span class="method-arrow">›</span>
+      </div>
 
-<!-- M-PESA -->
-<div class="modal" id="mpesa">
-<div class="modal-title">M-Pesa Payment</div>
+      <div class="final-error" id="finalError">
+        ❌ <strong>Unexpected error occurred.</strong> Please try again later.
+        <a href="what-happened.html"> What happened?</a>
+      </div>
+    </div>
 
-<input id="mpesaInput" placeholder="07XXXXXXXX" type="tel">
-<div id="mpesaErr" class="error-text">Invalid phone number</div>
+  </main>
 
-<div class="modal-amount" id="mpesaAmount"></div>
+  <!-- M-PESA Modal -->
+  <div class="modal" id="mpesaModal">
+    <div class="modal-box">
+      <h3>📱 M-Pesa Payment</h3>
+      <div class="modal-amount" id="mpesaAmount"></div>
+      <div class="form-group">
+        <label>M-Pesa Phone Number</label>
+        <input type="tel" id="mpesaInput" placeholder="07XXXXXXXX">
+        <div class="error-text" id="mpesaErr">❌ Invalid phone number — must be 10 digits starting with 07</div>
+      </div>
+      <div class="modal-info">
+        <strong>What happens next?</strong><br>
+        A payment request will be sent to your phone. Confirm it to complete the payment.
+        Make sure no pop-up blocker is enabled.
+      </div>
+      <div class="modal-btns">
+        <button class="btn-pay" id="mpesaPayBtn" onclick="processPayment('mpesa')">Pay</button>
+        <button class="btn-cancel" onclick="closeModal('mpesaModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-<div class="modal-info">
-<strong>What happens next?</strong><br>
-Confirm the payment request on your phone to complete the payment.<br>
-<strong>Note:</strong> Make sure any pop-up blocker is disabled.
-</div>
+  <!-- PAYPAL Modal -->
+  <div class="modal" id="paypalModal">
+    <div class="modal-box">
+      <h3>🅿️ PayPal Payment</h3>
+      <div class="modal-amount" id="paypalAmount"></div>
+      <div class="form-group">
+        <label>PayPal Email Address</label>
+        <input type="email" id="paypalInput" placeholder="email@example.com">
+        <div class="error-text" id="paypalErr">❌ Invalid email address</div>
+      </div>
+      <div class="modal-info">
+        <strong>What happens next?</strong><br>
+        You will be redirected to PayPal to authorize the payment.
+        Make sure no pop-up blocker is enabled.
+      </div>
+      <div class="modal-btns">
+        <button class="btn-pay" id="paypalPayBtn" onclick="processPayment('paypal')">Pay</button>
+        <button class="btn-cancel" onclick="closeModal('paypalModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-<div class="modal-buttons">
-<button class="pay" id="mpesaBtn" onclick="processPayment('mpesa')">Pay</button>
-<button class="cancel" onclick="closeAll()">Cancel</button>
-</div>
-</div>
+  <!-- VISA Modal -->
+  <div class="modal" id="visaModal">
+    <div class="modal-box">
+      <h3>💳 Card Payment</h3>
+      <div class="modal-amount" id="visaAmount"></div>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" id="visaInput" placeholder="Enter card number">
+        <div class="error-text" id="visaErr">❌ Invalid card number — must be 12–19 digits</div>
+      </div>
+      <div class="modal-info">
+        <strong>What happens next?</strong><br>
+        Your card will be charged securely to complete the payment.
+        Make sure no pop-up blocker is enabled.
+      </div>
+      <div class="modal-btns">
+        <button class="btn-pay" id="visaPayBtn" onclick="processPayment('visa')">Pay</button>
+        <button class="btn-cancel" onclick="closeModal('visaModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
 
-<!-- PAYPAL -->
-<div class="modal" id="paypal">
-<div class="modal-title">PayPal Payment</div>
+  <script>
+    const amount    = localStorage.getItem('paymentAmount');
+    const bookingId = localStorage.getItem('paymentBookingId');
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
 
-<input id="paypalInput" placeholder="email@example.com">
-<div id="paypalErr" class="error-text">Invalid email</div>
+    // ── Check login ──
+    if (!isLoggedIn) {
+      // Show access alert
+      document.getElementById('accessAlert').style.display = 'block';
+      // Disable all payment methods
+      ['mpesaBtn','paypalBtn','visaBtn'].forEach(id => {
+        const el = document.getElementById(id);
+        el.classList.add('disabled');
+        el.onclick = () => {
+          document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
+        };
+      });
+    }
 
-<div class="modal-amount" id="paypalAmount"></div>
+    // ── Show booking info ──
+    if (amount && bookingId) {
+      const box = document.getElementById('bookingBox');
+      box.style.display = 'block';
+      box.innerHTML = `📋 Booking ID: <strong>${bookingId}</strong> &nbsp;|&nbsp; 💰 Amount Due: <strong>Ksh ${Number(amount).toLocaleString()}</strong>`;
+      // Set amount in all modals
+      document.getElementById('mpesaAmount').textContent  = `Amount: Ksh ${Number(amount).toLocaleString()}`;
+      document.getElementById('paypalAmount').textContent = `Amount: Ksh ${Number(amount).toLocaleString()}`;
+      document.getElementById('visaAmount').textContent   = `Amount: Ksh ${Number(amount).toLocaleString()}`;
+    } else {
+      document.getElementById('noBookingBox').style.display = 'block';
+    }
 
-<div class="modal-info">
-<strong>What happens next?</strong><br>
-You will be redirected to PayPal to authorize the payment.<br>
-<strong>Note:</strong> Make sure any pop-up blocker is disabled.
-</div>
+    // ── Modal open/close ──
+    function openModal(type) {
+      if (!isLoggedIn) {
+        document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      document.getElementById(type + 'Modal').classList.add('open');
+    }
 
-<div class="modal-buttons">
-<button class="pay" id="paypalBtn" onclick="processPayment('paypal')">Pay</button>
-<button class="cancel" onclick="closeAll()">Cancel</button>
-</div>
-</div>
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
 
-<!-- VISA -->
-<div class="modal" id="visa">
-<div class="modal-title">Card Payment</div>
+    // Close modal on backdrop click
+    document.querySelectorAll('.modal').forEach(m => {
+      m.addEventListener('click', e => {
+        if (e.target === m) m.classList.remove('open');
+      });
+    });
 
-<input id="visaInput" placeholder="Card number">
-<div id="visaErr" class="error-text">Invalid card number</div>
+    // ── Process payment ──
+    function processPayment(type) {
+      let valid = false;
+      let btn;
 
-<div class="modal-amount" id="visaAmount"></div>
+      if (type === 'mpesa') {
+        valid = /^07\d{8}$/.test(document.getElementById('mpesaInput').value);
+        document.getElementById('mpesaErr').style.display = valid ? 'none' : 'block';
+        btn = document.getElementById('mpesaPayBtn');
+      }
+      if (type === 'paypal') {
+        valid = /^\S+@\S+\.\S+$/.test(document.getElementById('paypalInput').value);
+        document.getElementById('paypalErr').style.display = valid ? 'none' : 'block';
+        btn = document.getElementById('paypalPayBtn');
+      }
+      if (type === 'visa') {
+        valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value);
+        document.getElementById('visaErr').style.display = valid ? 'none' : 'block';
+        btn = document.getElementById('visaPayBtn');
+      }
 
-<div class="modal-info">
-<strong>What happens next?</strong><br>
-Your card will be charged securely to complete the payment.<br>
-<strong>Note:</strong> Make sure any pop-up blocker is disabled.
-</div>
+      if (!valid) return;
 
-<div class="modal-buttons">
-<button class="pay" id="visaBtn" onclick="processPayment('visa')">Pay</button>
-<button class="cancel" onclick="closeAll()">Cancel</button>
-</div>
-</div>
+      // Show processing
+      btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
+      btn.disabled = true;
 
-<script>
-const bookingBox=document.getElementById("bookingBox");
-const yellowError=document.getElementById("yellowError");
-const overlay=document.getElementById("overlay");
-const finalError=document.getElementById("finalError");
+      setTimeout(() => {
+        closeModal(type + 'Modal');
+        document.getElementById('finalError').style.display = 'block';
+        btn.textContent = 'Pay';
+        btn.disabled = false;
+      }, 10000);
+    }
 
-function showBooking(){
- const a=localStorage.getItem("paymentAmount");
- const b=localStorage.getItem("paymentBookingId");
- if(a&&b){
-  bookingBox.style.display="block";
-  bookingBox.innerText=`Booking ID: #${b} | Amount: ${a} KES`;
- }else{
-  yellowError.style.display="block";
-  yellowError.innerText="⚠ No booking found.";
- }
-}
-showBooking();
-
-function openModal(id){
- const a=localStorage.getItem("paymentAmount");
- document.getElementById(id).style.display="block";
- overlay.style.display="block";
- if(id==="mpesa") mpesaAmount.innerText
- if(id==="paypal") paypalAmount.innerText;
- if(id==="visa") visaAmount.innerText;
-}
-
-function closeAll(){
- document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
- overlay.style.display="none";
-}
-
-function processPayment(type){
- let valid=false,btn;
- if(type==="mpesa"){valid=/^07\d{8}$/.test(mpesaInput.value);mpesaErr.style.display=valid?"none":"block";btn=mpesaBtn;}
- if(type==="paypal"){valid=/^\S+@\S+\.\S+$/.test(paypalInput.value);paypalErr.style.display=valid?"none":"block";btn=paypalBtn;}
- if(type==="visa"){valid=/^\d{12,19}$/.test(visaInput.value);visaErr.style.display=valid?"none":"block";btn=visaBtn;}
- if(!valid) return;
-btn.innerHTML=`<span class="processing">Processing<span class="dot"></span><span class="dot"></span><span class="dot"></span></span>`; setTimeout(()=>{closeAll();finalError.style.display="block";btn.innerText="Pay";},10000);
-}
-function exitPage(){
-  localStorage.removeItem("paymentAmount");
-  localStorage.removeItem("paymentBookingId");
-  window.location.href="car-available.html";
-}
-
-</script>
+    // ── Logout ──
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('paymentAmount');
+      localStorage.removeItem('paymentBookingId');
+      window.location.href = 'index.html';
+    });
+  </script>
 
 </body>
 </html>
