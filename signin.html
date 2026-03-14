@@ -1,333 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Login - Waliko Car Hire</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <title>Login - Waliko Car Hire</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background-color: #e0f7fa;
-        }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+    }
 
-        .container {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 30px;
-        }
+    .container {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 30px;
+      position: relative;
+    }
 
-        .wrapper {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.2);
-            width: 90%;
-            max-width: 370px;
-        }
+    .wrapper {
+      position: relative;
+      background: #fff;
+      padding: 28px 24px;
+      border-radius: 14px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.12);
+      border: 1px solid rgba(20,100,221,0.08);
+      width: 90%;
+      max-width: 370px;
+      overflow: hidden;
+    }
 
-        h1 {
-            text-align: center;
-            color: #0277bd;
-            margin-bottom: 10px;
-            font-size: 22px;
-        }
+    /* LED border animation */
+    .wrapper::before {
+      content: "";
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+      background-size: 400%;
+      z-index: -1;
+      filter: blur(3px);
+      animation: moveLights 5s linear infinite;
+      border-radius: 16px;
+    }
 
-        p {
-            text-align: center;
-            color: #555555;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
+    @keyframes moveLights {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
 
-        label {
-            display: block;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #333;
-        }
+    h1 {
+      text-align: center;
+      color: #1464dd;
+      margin-bottom: 6px;
+      font-size: 1.2em;
+      font-weight: 700;
+    }
 
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #0277bd;
-            border-radius: 5px;
-        }
+    p {
+      text-align: center;
+      color: #888;
+      font-size: 0.8em;
+      margin-bottom: 18px;
+    }
 
-        input[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background-color: #0277bd;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 15px;
-            cursor: pointer;
-        }
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: #444;
+    }
 
-        input[type="submit"]:hover {
-            background-color: #01579b;
-        }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88em;
+      outline: none;
+      transition: border-color 0.2s;
+      color: #333;
+    }
 
-        .register-link,
-        .forgot-link {
-            text-align: center;
-            margin-top: 10px;
-            font-size: 13px;
-        }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #1464dd;
+      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    }
 
-        a {
-            color: #0277bd;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    input[type="submit"] {
+      width: 100%;
+      padding: 11px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 0.92em;
+      margin-top: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
 
-        a:hover {
-            text-decoration: underline;
-        }
+    input[type="submit"]:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
+    }
 
-        #padlock {
-            font-size: 40px;
-            text-align: center;
-            margin-top: 20px;
-        }
+    .register-link,
+    .forgot-link {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 0.8em;
+      color: #888;
+    }
 
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
-        }
+    a {
+      color: #1464dd;
+      text-decoration: none;
+      font-weight: 600;
+    }
 
-        .shake {
-            animation: shake 0.5s ease-in-out;
-        }
+    a:hover {
+      text-decoration: underline;
+    }
 
-        /* Custom styles for the modal */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.5); /* Black with opacity */
-        }
+    #padlock {
+      font-size: 40px;
+      text-align: center;
+      margin-top: 16px;
+    }
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 90%; /* Could be more or less, depending on screen size */
-            max-width: 400px;
-            border-radius: 8px;
-            position: relative; /* Needed for close button positioning */
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            animation: fadeIn 0.3s;
-        }
+    @keyframes shake {
+      0%   { transform: translateX(0); }
+      25%  { transform: translateX(-10px); }
+      50%  { transform: translateX(10px); }
+      75%  { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
+    }
 
-        /* Fade in animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-        }
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+    }
 
-        .modal-header h2 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #333;
-        }
+    .modal-content {
+      background: #fff;
+      margin: 10% auto;
+      padding: 24px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 14px;
+      position: relative;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s;
+      border: 1px solid rgba(20,100,221,0.08);
+    }
 
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            cursor: pointer;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-        .close-button:hover,
-        .close-button:focus {
-            color: #000;
-            text-decoration: none;
-        }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f4ff;
+    }
 
-        .modal-body {
-            margin-bottom: 15px;
-            font-size: 1rem;
-            color: #444;
-        }
+    .modal-header h2 {
+      margin: 0;
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+    }
 
-        .modal-footer {
-            text-align: right;
-        }
+    .close-button {
+      color: #aaa;
+      font-size: 22px;
+      font-weight: bold;
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      cursor: pointer;
+      background: #f0f4ff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
 
-        .modal-footer a {
-            background-color: #0277bd;
-            color: #fff;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: bold;
-        }
+    .close-button:hover { background: #dde3f0; color: #1464dd; }
 
-        .modal-footer a:hover {
-            background-color: #01579b;
-        }
+    .modal-body {
+      margin-bottom: 16px;
+      font-size: 0.88em;
+      color: #555;
+      line-height: 1.7;
+    }
 
-    </style>
+    .modal-footer {
+      text-align: right;
+    }
+
+    .modal-footer a {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88em;
+      transition: all 0.2s;
+    }
+
+    .modal-footer a:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="wrapper">
-            <form onsubmit="handleLogin(event)">
-                <h1>Waliko Car Hire</h1>
-                <p>Enter your email and password to login</p>
+  <div class="container">
+    <div class="wrapper">
+      <form onsubmit="handleLogin(event)">
+        <h1>Welcome Back🤝</h1>
+        <p>Enter your email and password to login</p>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" required placeholder="Enter your email">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="Enter your email">
 
-                <label for="password">Password</label>
-                <input type="password" id="password" required placeholder="Enter password">
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="Enter password">
 
-                <input type="submit" value="Login">
+        <input type="submit" value="Login">
 
-                <div class="forgot-link">
-                    <p><a href="forget password.html">Forgot Password?</a></p>
-                </div>
-
-                <div class="register-link">
-                    <p>Don't have an account? <a href="signup.html">Register</a></p>
-                </div>
-            </form>
-            <div id="padlock">🔒</div>
+        <div class="forgot-link">
+          <p><a href="forget password.html">Forgot Password?</a></p>
         </div>
-    </div>
 
-    <div id="suspensionModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="modalCloseBtn">&times;</span>
-            <div class="modal-header">
-                <h2>Account Deactivated</h2>
-            </div>
-            <div class="modal-body">
-                <p id="suspensionMessage">Your account is deactivate. Please contact support.</p>
-                <p>Click the button below to appeal the deactivation.</p>
-            </div>
-            <div class="modal-footer">
-                <a href="APPEAL.HTML">Appeal Deactivation</a>
-            </div>
+        <div class="register-link">
+          <p>Don't have an account? <a href="signup.html">Register</a></p>
         </div>
+      </form>
+      <div id="padlock">🔒</div>
     </div>
+  </div>
 
-    <script>
-        const modal = document.getElementById("suspensionModal");
-        const modalCloseBtn = document.getElementById("modalCloseBtn");
+  <div id="suspensionModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="modalCloseBtn">&times;</span>
+      <div class="modal-header">
+        <h2>Account Deactivated</h2>
+      </div>
+      <div class="modal-body">
+        <p id="suspensionMessage">Your account is deactivated. Please contact support.</p>
+        <p>Click the button below to appeal the deactivation.</p>
+      </div>
+      <div class="modal-footer">
+        <a href="APPEAL.HTML">Appeal Deactivation</a>
+      </div>
+    </div>
+  </div>
 
-        modalCloseBtn.onclick = function() {
-            modal.style.display = "none";
-            window.location.href = "index.html";
-        }
+  <script>
+    const modal = document.getElementById("suspensionModal");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
 
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-                 window.location.href = "index.html";
-            }
-        }
+    modalCloseBtn.onclick = function() {
+      modal.style.display = "none";
+      window.location.href = "index.html";
+    }
 
+    window.onclick = function(event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+        window.location.href = "index.html";
+      }
+    }
 
-        function handleLogin(event) {
-            event.preventDefault();
-       
+    function handleLogin(event) {
+      event.preventDefault();
 
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const padlock = document.getElementById('padlock');
+      padlock.classList.remove('shake');
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const padlock = document.getElementById('padlock');
-            padlock.classList.remove('shake');
+      const suspendedEmail = localStorage.getItem('suspendedEmail');
+      const suspendedPassword = localStorage.getItem('suspendedPassword');
+      const deactivationTime = localStorage.getItem('deactivationTime');
 
-            const suspendedEmail = localStorage.getItem('suspendedEmail');
-            const suspendedPassword = localStorage.getItem('suspendedPassword');
-            const deactivationTime = localStorage.getItem('deactivationTime');
-
-            if (suspendedEmail && suspendedPassword && suspendedEmail === email && suspendedPassword === password) {
-                //alert("❌ Your account is deactivated. Please contact support. Suspended for: " + deactivationTime);
-                // Instead of alert, show modal
-                const suspensionMessage = document.getElementById("suspensionMessage");
-                suspensionMessage.textContent = "Your account is deactivated for: " + deactivationTime + ".";
-                modal.style.display = "block";
-                padlock.textContent = "🔒";
-                padlock.classList.add('shake');
-                return;
-            }
-
-            const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
-
-
-           const matchingUser = allUsers.find(user => user.email === email && user.password === password);
-
-if (matchingUser) {
-    // 🔒 If new user has isVerified property but still false
-    if (matchingUser.hasOwnProperty("isVerified") && !matchingUser.isVerified) {
-        alert("⚠️ Please verify your email before logging in.");
-           localStorage.setItem("userEmail", email); // keep their email
-      window.location.href = "verify.html"; // redirect them
+      if (suspendedEmail && suspendedPassword && suspendedEmail === email && suspendedPassword === password) {
+        const suspensionMessage = document.getElementById("suspensionMessage");
+        suspensionMessage.textContent = "Your account is deactivated for: " + deactivationTime + ".";
+        modal.style.display = "block";
         padlock.textContent = "🔒";
         padlock.classList.add('shake');
         return;
-    }
+      }
 
-    // ✅ Old users (no isVerified field) OR new verified users
-    localStorage.setItem("currentUser", JSON.stringify(matchingUser));
-    localStorage.setItem("userEmail", email);
-    localStorage.setItem("userPassword", password);
-    localStorage.setItem("isLoggedIn", "true");
+      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
-    console.log("User data saved to localStorage:", matchingUser);
-    padlock.textContent = "🔓";
-    setTimeout(() => {
-        window.location.href = "car-available.html";
-    }, 500);
-
-} else {
-    alert("❌ Invalid email or password. Please try again.");
-    padlock.textContent = "🔒";
-    padlock.classList.add('shake');
-}
-
+      if (matchingUser) {
+        if (matchingUser.hasOwnProperty("isVerified") && !matchingUser.isVerified) {
+          alert("⚠️ Please verify your email before logging in.");
+          localStorage.setItem("userEmail", email);
+          window.location.href = "verify.html";
+          padlock.textContent = "🔒";
+          padlock.classList.add('shake');
+          return;
         }
-    </script>
+
+        localStorage.setItem("currentUser", JSON.stringify(matchingUser));
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userPassword", password);
+        localStorage.setItem("isLoggedIn", "true");
+
+        padlock.textContent = "🔓";
+        setTimeout(() => {
+          window.location.href = "car-available.html";
+        }, 500);
+
+      } else {
+        alert("❌ Invalid email or password. Please try again.");
+        padlock.textContent = "🔒";
+        padlock.classList.add('shake');
+      }
+    }
+  </script>
 </body>
 </html>
->
