@@ -1,207 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Menu</title>
-<style>
-body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    color: #333;
-    background-color: #f4f4f4;
-    min-height: 100vh;
-    box-sizing: border-box;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings – Waliko Car Hire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Side navigation full-screen */
-.side-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #f8f8f8;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    color: #333;
-    overflow-y: auto;
-}
-
-/* Blue header compact */
-.profile-header {
-    padding: 10px 15px; /* reduced padding */
-    text-align: center;
-    border-bottom: 1px solid #eee;
-    background-color: #007bff;
-    color: white;
-    position: relative;
-}
-
-/* Close button top-right */
-#close-nav-button {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-}
-
-/* Smaller profile picture */
-#profile-pic-container {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto 5px;
-    border: 2px solid white;
-}
-
-#profile-pic {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Compact username text */
-#username-display {
-    margin-top: 2px;
-    font-size: 1em;
-    font-weight: bold;
-    color: white;
-}
-
-/* Navigation links */
-.side-nav nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.side-nav nav ul li a,
-.side-nav nav ul li label {
-    display: block;
-    padding: 12px 20px;
-    text-decoration: none;
-    color: #333;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    font-size: 0.95em;
-}
-
-.side-nav nav ul li a:hover,
-.side-nav nav ul li label:hover {
-    background-color: #e0f7fa;
-    color: #007bff;
-}
-
-#upload-input {
-    display: none;
-}
-
-.side-nav nav ul li.emergency-item a {
-    background-color: #dc3545;
-    color: white;
-    border-bottom: none;
-    font-weight: bold;
-}
-
-.side-nav nav ul li.emergency-item a:hover {
-    background-color: #c82333;
-}
-
-/* Footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    margin-top: auto;
-}
-
-/* Mobile adjustments */
-@media (max-width: 600px) {
-    #profile-pic-container {
-        width: 50px;
-        height: 50px;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      color: #333;
+      min-height: 100vh;
     }
-    #username-display {
-        font-size: 0.95em;
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
-}
-</style>
+
+    header h1 { font-size: 1.2em; font-weight: 700; }
+
+    nav { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    nav a {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      padding: 7px 13px;
+      border-radius: 25px;
+      font-size: 0.78em;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
+    nav a.logout:hover { background: rgba(255,80,80,0.2); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 600px;
+      margin: 24px auto;
+      padding: 0 16px 40px;
+    }
+
+    /* ── PROFILE CARD ── */
+    .profile-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .profile-pic-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    #profile-pic {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #1464dd;
+      display: block;
+    }
+
+    .upload-label {
+      position: absolute;
+      bottom: 0; right: 0;
+      background: #1464dd;
+      color: #fff;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      font-size: 0.75em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    #upload-input { display: none; }
+
+    .profile-info h2 {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .profile-info p {
+      font-size: 0.8em;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    /* ── MENU CARD ── */
+    .menu-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .menu-card .section-label {
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #1464dd;
+      padding: 12px 18px 6px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 18px;
+      border-bottom: 1px solid #f0f4ff;
+      text-decoration: none;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.88em;
+      font-weight: 500;
+    }
+
+    .menu-item:last-child { border-bottom: none; }
+
+    .menu-item:hover { background: #f5f8ff; }
+
+    .menu-item .item-icon {
+      font-size: 1.1em;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #f0f4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .menu-item .arrow {
+      margin-left: auto;
+      color: #ccc;
+      font-size: 0.85em;
+    }
+
+    /* Emergency item */
+    .menu-item.emergency {
+      color: #c0392b;
+    }
+
+    .menu-item.emergency .item-icon {
+      background: #fff0f0;
+    }
+
+    .menu-item.emergency:hover { background: #fff5f5; }
+
+    /* Danger items */
+    .menu-item.danger { color: #c0392b; }
+    .menu-item.danger .item-icon { background: #fff0f0; }
+    .menu-item.danger:hover { background: #fff5f5; }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      header h1 { font-size: 1em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      main { margin: 12px auto; }
+      .profile-card { padding: 16px; }
+    }
+  </style>
 </head>
 <body>
 
-<div id="side-nav" class="side-nav">
-    <div class="profile-header">
-        <button id="close-nav-button" aria-label="Close side menu">&times;</button>
-        <div id="profile-pic-container">
-            <img id="profile-pic" src="default-profile.png" alt="Profile Picture">
-        </div>
-        <h2 id="username-display">Waliko Car Hire</h2>
-    </div>
+  <header>
+    <h1>🚗 Waliko Car Hire</h1>
     <nav>
-        <ul>
-            <li><label for="upload-input">Upload Profile Picture</label><input type="file" id="upload-input" accept="image/*"></li>
-            <li><a href="user.html">Personal Information</a></li>
-            <li><a href="change-pass.html">Change Password</a></li>
-            <li><a href="faqs.html">Frequently Asked Questions</a></li>
-             <li><a href="ip.html">view your location</a></li>
-            <li><a href="camera.html">Record Car Condition B4 Pick Up</a></li>
-            <li class="emergency-item"><a href="tel:+2547XXXXXXXXX">Emergency</a></li>
-            <li><a href="deactivate.html">Deactivate Account</a></li>
-            <li><a href="delete.html">Delete Account</a></li>
-        </ul>
+      <a href="index.html">Home</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html">Help</a>
+      <a href="account.html" class="active">Settings</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
     </nav>
-</div>
+  </header>
 
-<footer>Waliko Car Hire</footer>
+  <main>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const uploadInput = document.getElementById('upload-input');
-    const profilePic = document.getElementById('profile-pic');
-    const usernameDisplay = document.getElementById('username-display');
-    const closeNavButton = document.getElementById('close-nav-button');
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="profile-pic-wrap">
+        <img id="profile-pic" src="default-profile.png" alt="Profile">
+        <label class="upload-label" for="upload-input" title="Change photo">✏️</label>
+        <input type="file" id="upload-input" accept="image/*">
+      </div>
+      <div class="profile-info">
+        <h2 id="username-display">Waliko Car Hire</h2>
+        <p>Tap ✏️ to update your photo</p>
+      </div>
+    </div>
 
-    // Close button redirects to car-available.html
-    closeNavButton.addEventListener('click', () => {
-        window.location.href = 'car-available.html';
-    });
+    <!-- Account Menu -->
+    <div class="menu-card">
+      <div class="section-label">Account</div>
+      <a class="menu-item" href="user.html">
+        <span class="item-icon">👤</span> Personal Information <span class="arrow">›</span>
+      </a>
+      <a class="menu-item" href="change-pass.html">
+        <span class="item-icon">🔒</span> Change Password <span class="arrow">›</span>
+      </a>
+      <label class="menu-item" for="upload-input">
+        <span class="item-icon">🖼️</span> Upload Profile Picture <span class="arrow">›</span>
+      </label>
+    </div>
 
-    // Load user info from localStorage
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) {
+    <div class="menu-card">
+      <div class="section-label">Support</div>
+      <a class="menu-item" href="faqs.html">
+        <span class="item-icon">❓</span> Frequently Asked Questions <span class="arrow">›</span>
+      </a>
+      <a class="menu-item" href="call.html">
+        <span class="item-icon">📞</span> Request a Call From Support <span class="arrow">›</span>
+      </a>
+      <a class="menu-item" href="camera.html">
+        <span class="item-icon">📷</span> Record Car Condition Before Pickup <span class="arrow">›</span>
+      </a>
+      <a class="menu-item emergency" href="tel:+2547XXXXXXXXX">
+        <span class="item-icon">🚨</span> Emergency <span class="arrow">›</span>
+      </a>
+    </div>
+
+    <div class="menu-card">
+      <div class="section-label">Danger Zone</div>
+      <a class="menu-item danger" href="deactivate.html">
+        <span class="item-icon">⏸️</span> Deactivate Account <span class="arrow">›</span>
+      </a>
+      <a class="menu-item danger" href="delete.html">
+        <span class="item-icon">🗑️</span> Delete Account <span class="arrow">›</span>
+      </a>
+    </div>
+
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const uploadInput = document.getElementById('upload-input');
+      const profilePic = document.getElementById('profile-pic');
+      const usernameDisplay = document.getElementById('username-display');
+
+      // Load user info from localStorage
+      const currentUser = localStorage.getItem('currentUser');
+      if (currentUser) {
         const userObject = JSON.parse(currentUser);
         if (userObject.username) usernameDisplay.textContent = userObject.username;
         if (userObject.profilePicture) profilePic.src = userObject.profilePicture;
-    }
+      }
 
-    // Profile picture upload
-    uploadInput.addEventListener('change', (event) => {
+      // Profile picture upload
+      uploadInput.addEventListener('change', (event) => {
         const file = event.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                profilePic.src = e.target.result;
-                localStorage.setItem('profilePicture', e.target.result);
-                if (currentUser) {
-                    const userObject = JSON.parse(currentUser);
-                    userObject.profilePicture = e.target.result;
-                    localStorage.setItem('currentUser', JSON.stringify(userObject));
-                }
-            };
-            reader.readAsDataURL(file);
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            profilePic.src = e.target.result;
+            if (currentUser) {
+              const userObject = JSON.parse(currentUser);
+              userObject.profilePicture = e.target.result;
+              localStorage.setItem('currentUser', JSON.stringify(userObject));
+            }
+            localStorage.setItem('profilePicture', e.target.result);
+          };
+          reader.readAsDataURL(file);
         }
+      });
+
+      // Logout
+      document.getElementById('logoutBtn').addEventListener('click', e => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('currentUser');
+        window.location.href = 'index.html';
+      });
     });
-});
-</script>
+  </script>
 
 </body>
 </html>
