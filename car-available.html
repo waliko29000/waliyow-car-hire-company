@@ -304,7 +304,7 @@
 
 
   <header>
-    <h1>🚗 Waliko Car Hire</h1>
+    <h1>Waliko Car Hire(Dashboard)</h1>
     <nav>
       
       <a href="#" id="homeLink">Home</a>
@@ -385,31 +385,14 @@
 
     let currentCar = null;
 
-    // ── Render cars ──
-    function renderCars() {
-      document.querySelector('.page-title').style.display = 'block';
-      const grid = document.getElementById('carGrid');
-      grid.innerHTML = '';
-      document.querySelector('.page-title').textContent = 'Available Cars';
-      cars.forEach((car, i) => {
-        const card = document.createElement('div');
-        card.className = 'car-card';
-        card.innerHTML = `
-          <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
-          <div class="car-info">
-            <h3>${car.name}</h3>
-            <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
-            <p>${car.description}</p>
-            <span class="badge">✅ Available</span>
-          </div>
-          <button class="book-btn" data-index="${i}">Book Now</button>
-        `;
-        grid.appendChild(card);
-      });
+    function setActive(id) {
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
     }
 
-    // ── Render home notice ──
-        function renderHome() {
+    // ── Show Home instructions ──
+    function renderHome() {
+      setActive('homeLink');
       document.querySelector('.page-title').style.display = 'none';
       document.getElementById('carGrid').innerHTML = `
         <div style="grid-column:1/-1">
@@ -427,24 +410,45 @@
       `;
     }
 
+    // ── Show Cars grid ──
+    function renderCars() {
+      setActive('carsLink');
+      document.querySelector('.page-title').style.display = 'block';
+      document.querySelector('.page-title').textContent = 'Available Cars';
+      const grid = document.getElementById('carGrid');
+      grid.innerHTML = '';
+      cars.forEach((car, i) => {
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.innerHTML = `
+          <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
+          <div class="car-info">
+            <h3>${car.name}</h3>
+            <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
+            <p>${car.description}</p>
+            <span class="badge">✅ Available</span>
+          </div>
+          <button class="book-btn" data-index="${i}">Book Now</button>
+        `;
+        grid.appendChild(card);
+      });
+    }
 
-
-    // Show instructions on load
+    // ── Load: show Home instructions by default ──
     renderHome();
 
-    // Home nav click
+    // ── Nav clicks ──
     document.getElementById('homeLink').addEventListener('click', e => {
       e.preventDefault();
       renderHome();
     });
 
-    // Cars nav click
     document.getElementById('carsLink').addEventListener('click', e => {
       e.preventDefault();
       renderCars();
     });
 
-    // Book button click
+    // ── Book button click ──
     document.getElementById('carGrid').addEventListener('click', e => {
       if (e.target.classList.contains('book-btn')) {
         currentCar = cars[e.target.dataset.index];
@@ -454,7 +458,7 @@
       }
     });
 
-    // Close modal
+    // ── Close modal ──
     document.getElementById('closeModal').addEventListener('click', () => {
       document.getElementById('bookingModal').classList.remove('open');
     });
@@ -463,7 +467,7 @@
         document.getElementById('bookingModal').classList.remove('open');
     });
 
-    // Submit booking
+    // ── Submit booking ──
     document.getElementById('bookingForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const fullName   = document.getElementById('fullName').value.trim();
@@ -502,7 +506,7 @@
       document.getElementById('bookingModal').classList.remove('open');
     });
 
-    // Logout
+    // ── Logout ──
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
