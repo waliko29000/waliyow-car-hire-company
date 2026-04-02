@@ -458,7 +458,7 @@
 
   <script>
     // ── CHANGE THIS to your InfinityFree domain ──
-    const BACKEND_URL = 'https://kornel.free.nf/mpesa';
+    const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
 
     const amount     = localStorage.getItem('paymentAmount');
     const bookingId  = localStorage.getItem('paymentBookingId');
@@ -523,23 +523,24 @@
         btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
         btn.disabled = true;
 
-        // ── REAL STK PUSH to InfinityFree ──
+        // ── REAL STK PUSH — uses FormData matching your stkpush.php $_POST ──
+        const formData = new FormData();
+        formData.append('phone', phone);
+        formData.append('amount', amount || 1);
+
         fetch(`${BACKEND_URL}/stkpush.php`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: phone,
-            amount: amount || 1
-          })
+          body: formData
         })
         .then(res => res.json())
         .then(data => {
           closeModal('mpesaModal');
-          if (data.ResponseCode === '0') {
+          if (data.success === true) {
             document.getElementById('successBox').style.display = 'block';
             document.getElementById('successBox').scrollIntoView({ behavior: 'smooth' });
           } else {
             document.getElementById('finalError').style.display = 'block';
+            document.getElementById('finalError').innerHTML = '❌ <strong>' + (data.message || 'Payment failed.') + '</strong> Please try again. <a href="help.html"> Need help?</a>';
             console.error('STK Push error:', data);
           }
         })
