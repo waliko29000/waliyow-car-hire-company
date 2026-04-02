@@ -15,7 +15,6 @@
       min-height: 100vh;
     }
 
-    /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #1464dd, #0d47a1);
       color: #fff;
@@ -50,14 +49,12 @@
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
-    /* ── MAIN ── */
     main {
       max-width: 520px;
       margin: 24px auto;
       padding: 0 16px 40px;
     }
 
-    /* ── CARD ── */
     .card {
       background: #fff;
       border-radius: 14px;
@@ -82,7 +79,6 @@
       border-bottom: 2px solid #f0f4ff;
     }
 
-    /* ── LOGIN ALERT ── */
     .access-alert {
       display: none;
       background: #fff5e6;
@@ -103,15 +99,9 @@
       color: #a04000;
     }
 
-    .access-alert a {
-      color: #1464dd;
-      font-weight: 600;
-      text-decoration: none;
-    }
-
+    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
     .access-alert a:hover { text-decoration: underline; }
 
-    /* ── BOOKING INFO BOX ── */
     .booking-info-box {
       background: #f0f4ff;
       border-left: 4px solid #1464dd;
@@ -134,7 +124,6 @@
       font-weight: 500;
     }
 
-    /* ── PAYMENT METHODS ── */
     .payment-method {
       display: flex;
       align-items: center;
@@ -157,10 +146,7 @@
       box-shadow: 0 2px 10px rgba(20,100,221,0.1);
     }
 
-    .payment-method.disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+    .payment-method.disabled { opacity: 0.45; cursor: not-allowed; }
 
     .payment-method img {
       width: 38px;
@@ -169,13 +155,8 @@
       flex-shrink: 0;
     }
 
-    .payment-method .method-arrow {
-      margin-left: auto;
-      color: #ccc;
-      font-size: 1em;
-    }
+    .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
 
-    /* ── FINAL ERROR ── */
     .final-error {
       display: none;
       background: #fff0f0;
@@ -188,13 +169,20 @@
       margin-top: 4px;
     }
 
-    .final-error a {
-      color: #1464dd;
-      font-weight: 600;
-      text-decoration: none;
+    .final-error a { color: #1464dd; font-weight: 600; text-decoration: none; }
+
+    .success-box {
+      display: none;
+      background: #f0fff4;
+      border: 1px solid #b2f5c8;
+      border-left: 4px solid #27ae60;
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 0.88em;
+      color: #1a6e3a;
+      margin-top: 4px;
     }
 
-    /* ── MODAL ── */
     .modal {
       display: none;
       position: fixed;
@@ -306,7 +294,8 @@
       transition: all 0.2s;
     }
 
-    .btn-pay:hover { background: linear-gradient(135deg, #0d47a1, #083080); }
+    .btn-pay:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); }
+    .btn-pay:disabled { opacity: 0.7; cursor: not-allowed; }
 
     .btn-cancel {
       flex: 1;
@@ -324,7 +313,6 @@
 
     .btn-cancel:hover { background: #ffe0e0; }
 
-    /* Processing dots */
     .dot {
       display: inline-block;
       width: 6px; height: 6px;
@@ -364,20 +352,19 @@
 
   <main>
 
-    <!-- Access Alert (shown if not logged in) -->
     <div class="access-alert" id="accessAlert">
       <div class="alert-title">🔒 Access Restricted</div>
       You must be logged in to make a payment. Please
       <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
     </div>
 
-    <!-- Booking Summary Card -->
     <div class="card">
       <div class="card-title">💳 Payment Gateway</div>
       <div class="booking-info-box" id="bookingBox" style="display:none"></div>
-      <div class="no-booking-box" id="noBookingBox" style="display:none">⚠️ No booking found. Please go to <a href="bookings.html" style="color:#1464dd;font-weight:600">My Bookings</a> first.</div>
+      <div class="no-booking-box" id="noBookingBox" style="display:none">
+        ⚠️ No booking found. Please go to <a href="bookings.html" style="color:#1464dd;font-weight:600">My Bookings</a> first.
+      </div>
 
-      <!-- Payment Methods -->
       <div class="payment-method" id="mpesaBtn" onclick="openModal('mpesa')">
         <img src="mpesa.jpg.png" alt="Mpesa">
         Pay with M-Pesa
@@ -394,9 +381,13 @@
         <span class="method-arrow">›</span>
       </div>
 
+      <div class="success-box" id="successBox">
+        ✅ <strong>STK Push Sent!</strong> Check your phone and enter your M-Pesa PIN to complete payment.
+      </div>
+
       <div class="final-error" id="finalError">
-        ❌ <strong>Unexpected error occurred.</strong> Please try again later.
-        <a href="what-happened.html"> What happened?</a>
+        ❌ <strong>Payment failed.</strong> Please try again or contact support.
+        <a href="help.html"> Need help?</a>
       </div>
     </div>
 
@@ -409,13 +400,12 @@
       <div class="modal-amount" id="mpesaAmount"></div>
       <div class="form-group">
         <label>M-Pesa Phone Number</label>
-        <input type="tel" id="mpesaInput" placeholder="07XXXXXXXX">
+        <input type="tel" id="mpesaInput" placeholder="07XXXXXXXX" maxlength="10">
         <div class="error-text" id="mpesaErr">❌ Invalid phone number — must be 10 digits starting with 07</div>
       </div>
       <div class="modal-info">
         <strong>What happens next?</strong><br>
-        A payment request will be sent to your phone. Confirm it to complete the payment.
-        Make sure no pop-up blocker is enabled.
+        A payment request will be sent to your phone. Enter your M-Pesa PIN to confirm.
       </div>
       <div class="modal-btns">
         <button class="btn-pay" id="mpesaPayBtn" onclick="processPayment('mpesa')">Pay</button>
@@ -437,7 +427,6 @@
       <div class="modal-info">
         <strong>What happens next?</strong><br>
         You will be redirected to PayPal to authorize the payment.
-        Make sure no pop-up blocker is enabled.
       </div>
       <div class="modal-btns">
         <button class="btn-pay" id="paypalPayBtn" onclick="processPayment('paypal')">Pay</button>
@@ -453,13 +442,12 @@
       <div class="modal-amount" id="visaAmount"></div>
       <div class="form-group">
         <label>Card Number</label>
-        <input type="text" id="visaInput" placeholder="Enter card number">
+        <input type="text" id="visaInput" placeholder="Enter card number" maxlength="19">
         <div class="error-text" id="visaErr">❌ Invalid card number — must be 12–19 digits</div>
       </div>
       <div class="modal-info">
         <strong>What happens next?</strong><br>
         Your card will be charged securely to complete the payment.
-        Make sure no pop-up blocker is enabled.
       </div>
       <div class="modal-btns">
         <button class="btn-pay" id="visaPayBtn" onclick="processPayment('visa')">Pay</button>
@@ -469,30 +457,28 @@
   </div>
 
   <script>
-    const amount    = localStorage.getItem('paymentAmount');
-    const bookingId = localStorage.getItem('paymentBookingId');
+    // ── CHANGE THIS to your InfinityFree domain ──
+    const BACKEND_URL = 'https://kornel.free.nf';
+
+    const amount     = localStorage.getItem('paymentAmount');
+    const bookingId  = localStorage.getItem('paymentBookingId');
     const isLoggedIn = localStorage.getItem('isLoggedIn');
 
-    // ── Check login ──
+    // Check login
     if (!isLoggedIn) {
-      // Show access alert
       document.getElementById('accessAlert').style.display = 'block';
-      // Disable all payment methods
       ['mpesaBtn','paypalBtn','visaBtn'].forEach(id => {
         const el = document.getElementById(id);
         el.classList.add('disabled');
-        el.onclick = () => {
-          document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
-        };
+        el.onclick = () => document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
       });
     }
 
-    // ── Show booking info ──
+    // Show booking info
     if (amount && bookingId) {
       const box = document.getElementById('bookingBox');
       box.style.display = 'block';
       box.innerHTML = `📋 Booking ID: <strong>${bookingId}</strong> &nbsp;|&nbsp; 💰 Amount Due: <strong>Ksh ${Number(amount).toLocaleString()}</strong>`;
-      // Set amount in all modals
       document.getElementById('mpesaAmount').textContent  = `Amount: Ksh ${Number(amount).toLocaleString()}`;
       document.getElementById('paypalAmount').textContent = `Amount: Ksh ${Number(amount).toLocaleString()}`;
       document.getElementById('visaAmount').textContent   = `Amount: Ksh ${Number(amount).toLocaleString()}`;
@@ -500,7 +486,7 @@
       document.getElementById('noBookingBox').style.display = 'block';
     }
 
-    // ── Modal open/close ──
+    // Modal open/close
     function openModal(type) {
       if (!isLoggedIn) {
         document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
@@ -513,37 +499,78 @@
       document.getElementById(id).classList.remove('open');
     }
 
-    // Close modal on backdrop click
     document.querySelectorAll('.modal').forEach(m => {
-      m.addEventListener('click', e => {
-        if (e.target === m) m.classList.remove('open');
-      });
+      m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });
 
-    // ── Process payment ──
+    // Process payment
     function processPayment(type) {
       let valid = false;
       let btn;
 
+      // Hide previous messages
+      document.getElementById('successBox').style.display = 'none';
+      document.getElementById('finalError').style.display = 'none';
+
       if (type === 'mpesa') {
-        valid = /^07\d{8}$/.test(document.getElementById('mpesaInput').value);
+        const phone = document.getElementById('mpesaInput').value.trim();
+        valid = /^07\d{8}$/.test(phone);
         document.getElementById('mpesaErr').style.display = valid ? 'none' : 'block';
         btn = document.getElementById('mpesaPayBtn');
+
+        if (!valid) return;
+
+        btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
+        btn.disabled = true;
+
+        // ── REAL STK PUSH to InfinityFree ──
+        fetch(`${BACKEND_URL}/stkpush.php`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: phone,
+            amount: amount || 1
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          closeModal('mpesaModal');
+          if (data.ResponseCode === '0') {
+            document.getElementById('successBox').style.display = 'block';
+            document.getElementById('successBox').scrollIntoView({ behavior: 'smooth' });
+          } else {
+            document.getElementById('finalError').style.display = 'block';
+            console.error('STK Push error:', data);
+          }
+        })
+        .catch(err => {
+          closeModal('mpesaModal');
+          document.getElementById('finalError').style.display = 'block';
+          console.error('Network error:', err);
+        })
+        .finally(() => {
+          btn.textContent = 'Pay';
+          btn.disabled = false;
+        });
+
+        return; // stop — async handles rest
       }
+
       if (type === 'paypal') {
         valid = /^\S+@\S+\.\S+$/.test(document.getElementById('paypalInput').value);
         document.getElementById('paypalErr').style.display = valid ? 'none' : 'block';
         btn = document.getElementById('paypalPayBtn');
       }
+
       if (type === 'visa') {
-        valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value);
+        valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value.replace(/\s/g,''));
         document.getElementById('visaErr').style.display = valid ? 'none' : 'block';
         btn = document.getElementById('visaPayBtn');
       }
 
       if (!valid) return;
 
-      // Show processing
+      // PayPal & Visa — still show error (not implemented yet)
       btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
       btn.disabled = true;
 
@@ -552,10 +579,10 @@
         document.getElementById('finalError').style.display = 'block';
         btn.textContent = 'Pay';
         btn.disabled = false;
-      }, 10000);
+      }, 3000);
     }
 
-    // ── Logout ──
+    // Logout
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
