@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Gateway – Waliko Car Hire</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cars – Waliko Car Hire</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,9 +12,9 @@
       font-family: 'Poppins', sans-serif;
       background: #f0f4ff;
       color: #333;
-      min-height: 100vh;
     }
 
+    /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #1464dd, #0d47a1);
       color: #fff;
@@ -45,144 +45,126 @@
       transition: all 0.2s;
     }
 
-    nav a:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
-    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    nav a.logout {
+      border-color: rgba(255,100,100,0.4);
+      color: #ffaaaa;
+    }
+
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
+    /* ── MAIN ── */
     main {
-      max-width: 520px;
+      max-width: 1100px;
       margin: 24px auto;
-      padding: 0 16px 40px;
+      padding: 0 16px;
     }
 
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      margin-bottom: 16px;
-      animation: fadeIn 0.3s ease;
-    }
+    .notice-box { background: #fff; border-radius: 14px; padding: 24px 26px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); }
+    .notice-box h2 { margin-bottom: 16px; color: #1464dd; font-size: 1.1em; font-weight: 700; padding-bottom: 12px; border-bottom: 2px solid #f0f4ff; }
+    .notice-box p { margin-bottom: 10px; font-size: 0.9em; line-height: 1.8; color: #555; }
+    .notice-box p strong { color: #1464dd; font-weight: 600; }
+    .notice-box .notice-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 8px; background: #f0f4ff; margin-bottom: 8px; font-size: 0.88em; color: #444; line-height: 1.6; }
+    .notice-box .notice-item .icon { font-size: 1.1em; flex-shrink: 0; margin-top: 1px; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-title {
-      font-size: 1em;
+    .page-title {
+      font-size: 1.2em;
       font-weight: 700;
       color: #1464dd;
       margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
     }
 
-    .access-alert {
-      display: none;
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-left: 4px solid #f39c12;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      font-size: 0.88em;
-      color: #b35c00;
-      line-height: 1.6;
+    /* ── CAR GRID ── */
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
 
-    .access-alert .alert-title {
-      font-weight: 700;
-      font-size: 0.95em;
-      margin-bottom: 6px;
-      color: #a04000;
-    }
-
-    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .access-alert a:hover { text-decoration: underline; }
-
-    .booking-info-box {
-      background: #f0f4ff;
-      border-left: 4px solid #1464dd;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-size: 0.85em;
-      color: #1a1a2e;
-      font-weight: 600;
-    }
-
-    .no-booking-box {
-      background: #fff5e6;
-      border-left: 4px solid #ffc107;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-size: 0.85em;
-      color: #b35c00;
-      font-weight: 500;
-    }
-
-    .payment-method {
+    .car-card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07);
       display: flex;
-      align-items: center;
-      gap: 14px;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .car-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(20,100,221,0.15);
+    }
+
+    .car-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #e8eef8;
+    }
+
+    .car-card img[src=""],
+    .car-card img:not([src]) {
+      height: 180px;
+      background: linear-gradient(135deg, #e8eef8, #d0dcf5);
+    }
+
+    .car-info {
       padding: 14px 16px;
-      border: 1.5px solid #dde3f0;
-      border-radius: 10px;
-      margin-bottom: 10px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .car-info h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
+
+    .car-info .price {
+      font-size: 1em;
+      font-weight: 700;
+      color: #1464dd;
+      margin: 4px 0;
+    }
+
+    .car-info p { font-size: 0.8em; color: #666; line-height: 1.5; }
+
+    .car-info .badge {
+      display: inline-block;
+      background: #e6f0ff;
+      color: #1464dd;
+      font-size: 0.72em;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-top: 6px;
+      width: fit-content;
+    }
+
+    .book-btn {
+      margin: 0 16px 16px;
+      padding: 9px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85em;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      font-size: 0.9em;
-      font-weight: 600;
-      color: #1a1a2e;
-      background: #fff;
     }
 
-    .payment-method:hover:not(.disabled) {
-      border-color: #1464dd;
-      background: #f5f8ff;
-      box-shadow: 0 2px 10px rgba(20,100,221,0.1);
+    .book-btn:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
     }
 
-    .payment-method.disabled { opacity: 0.45; cursor: not-allowed; }
-
-    .payment-method img {
-      width: 38px;
-      height: 24px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
-
-    .final-error {
-      display: none;
-      background: #fff0f0;
-      border: 1px solid #ffcccc;
-      border-left: 4px solid #e74c3c;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.88em;
-      color: #c0392b;
-      margin-top: 4px;
-    }
-
-    .final-error a { color: #1464dd; font-weight: 600; text-decoration: none; }
-
-    .success-box {
-      display: none;
-      background: #f0fff4;
-      border: 1px solid #b2f5c8;
-      border-left: 4px solid #27ae60;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.88em;
-      color: #1a6e3a;
-      margin-top: 4px;
-    }
-
+    /* ── BOOKING MODAL ── */
     .modal {
       display: none;
       position: fixed;
@@ -202,48 +184,47 @@
       border-radius: 16px;
       padding: 28px 24px;
       width: 100%;
-      max-width: 380px;
+      max-width: 420px;
       position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
       animation: slideUp 0.25s ease;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
+      from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .modal-box h3 {
-      font-size: 1em;
+    .modal-box h2 {
+      font-size: 1.2em;
       font-weight: 700;
       color: #1464dd;
+      margin-bottom: 4px;
+    }
+
+    .modal-box .car-tag {
+      font-size: 0.8em;
+      color: #888;
       margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
     }
 
-    .modal-amount {
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 16px;
       background: #f0f4ff;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.9em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 14px;
-    }
-
-    .modal-info {
-      background: #f5f8ff;
-      border-left: 3px solid #1464dd;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-size: 0.78em;
+      border: none;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      font-size: 1em;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       color: #555;
-      line-height: 1.6;
-      margin-bottom: 14px;
+      transition: background 0.2s;
     }
 
-    .modal-info strong { color: #1a1a2e; }
+    .modal-close:hover { background: #dde3f0; color: #1464dd; }
 
     .form-group { margin-bottom: 12px; }
 
@@ -271,410 +252,269 @@
       box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
     }
 
-    .error-text {
-      display: none;
-      font-size: 0.75em;
-      color: #e74c3c;
-      margin-top: 4px;
-    }
-
-    .modal-btns { display: flex; gap: 10px; margin-top: 4px; }
-
-    .btn-pay {
-      flex: 1;
-      padding: 10px;
+    .submit-btn {
+      width: 100%;
+      padding: 11px;
       background: linear-gradient(135deg, #1464dd, #0d47a1);
       color: #fff;
       border: none;
       border-radius: 8px;
       font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      font-weight: 700;
+      font-size: 0.92em;
+      font-weight: 600;
       cursor: pointer;
+      margin-top: 4px;
       transition: all 0.2s;
     }
 
-    .btn-pay:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); }
-    .btn-pay:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    .btn-cancel {
-      flex: 1;
-      padding: 10px;
-      background: #fff0f0;
-      color: #c0392b;
-      border: 1px solid #ffcccc;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
+    .submit-btn:hover {
+      background: linear-gradient(135deg, #0d47a1, #083080);
+      transform: translateY(-1px);
     }
 
-    .btn-cancel:hover { background: #ffe0e0; }
 
-    .dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: #fff;
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: pulse 0.6s infinite alternate;
-    }
 
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes pulse { from { opacity: 0.2; } to { opacity: 1; } }
-
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      nav { margin-top: 4px; width: 100%; }
       header h1 { font-size: 1em; }
       nav a { font-size: 0.7em; padding: 6px 10px; }
       main { margin: 12px auto; }
+
+      /* Fix car grid — 1 column on mobile */
+      .car-grid { grid-template-columns: 1fr; gap: 12px; }
+
+      /* Fix card content overflow */
+      .car-card { width: 100%; min-width: 0; }
+      .car-info { padding: 12px; }
+      .car-info h3 { font-size: 0.95em; }
+      .car-info p { font-size: 0.78em; }
+      .car-info .price { font-size: 0.95em; }
+      .book-btn { margin: 0 12px 12px; font-size: 0.82em; padding: 8px; }
+      .car-card img { height: 160px; }
+
+      /* Modal full screen on mobile */
+      .modal { padding: 8px; align-items: flex-end; }
+      .modal-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
     }
   </style>
 </head>
 <body>
 
+
+
   <header>
-    <h1>🚗 Waliko Car Hire</h1>
+    <h1>Waliko Car Hire(Dashboard)</h1>
     <nav>
-      <a href="car-available.html">Home</a>
-      <a href="car-available.html">Cars</a>
+      
+      <a href="#" id="homeLink">Home</a>
+      <a href="#" id="carsLink" class="active">Cars</a>
       <a href="bookings.html">My Bookings</a>
       <a href="payments.html">Payments</a>
       <a href="help.html">Help</a>
       <a href="account.html">Settings</a>
+      <a href="feedback.html">Feedback</a>
       <a href="index.html" class="logout" id="logoutBtn">Logout</a>
     </nav>
   </header>
 
+
   <main>
-
-    <div class="access-alert" id="accessAlert">
-      <div class="alert-title">🔒 Access Restricted</div>
-      You must be logged in to make a payment. Please
-      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
-    </div>
-
-    <div class="card">
-      <div class="card-title">💳 Payment Gateway</div>
-      <div class="booking-info-box" id="bookingBox" style="display:none"></div>
-      <div class="no-booking-box" id="noBookingBox" style="display:none">
-        ⚠️ No booking found. Please go to <a href="bookings.html" style="color:#1464dd;font-weight:600">My Bookings</a> first.
-      </div>
-
-      <div class="payment-method" id="mpesaBtn" onclick="openModal('mpesa')">
-        <img src="mpesa.jpg.png" alt="Mpesa">
-        Pay with M-Pesa
-        <span class="method-arrow">›</span>
-      </div>
-      <div class="payment-method" id="paypalBtn" onclick="openModal('paypal')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
-        Pay with PayPal
-        <span class="method-arrow">›</span>
-      </div>
-      <div class="payment-method" id="visaBtn" onclick="openModal('visa')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">
-        Pay with Visa / Card
-        <span class="method-arrow">›</span>
-      </div>
-
-      <div class="success-box" id="successBox">
-        ✅ <strong>STK Push Sent!</strong> Check your phone and enter your M-Pesa PIN to complete payment.
-      </div>
-
-      <div class="final-error" id="finalError">
-        ❌ <strong>Payment failed.</strong> Please try again or contact support.
-        <a href="help.html"> Need help?</a>
-      </div>
-    </div>
-
+    <div class="page-title">Available Cars</div>
+    <div class="car-grid" id="carGrid"></div>
   </main>
 
-  <!-- M-PESA Modal -->
-  <div class="modal" id="mpesaModal">
+  <!-- Booking Modal -->
+  <div class="modal" id="bookingModal">
     <div class="modal-box">
-      <h3>📱 M-Pesa Payment</h3>
-      <div class="modal-amount" id="mpesaAmount"></div>
-      <div class="form-group">
-        <label>M-Pesa Phone Number</label>
-        <input type="tel" id="mpesaInput" placeholder="07XXXXXXXX" maxlength="10">
-        <div class="error-text" id="mpesaErr">❌ Invalid phone number — must be 10 digits starting with 07</div>
-      </div>
-      <div class="modal-info">
-        <strong>What happens next?</strong><br>
-        A payment request will be sent to your phone. Enter your M-Pesa PIN to confirm.
-      </div>
-      <div class="modal-btns">
-        <button class="btn-pay" id="mpesaPayBtn" onclick="processPayment('mpesa')">Pay</button>
-        <button class="btn-cancel" onclick="closeModal('mpesaModal')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- PAYPAL Modal -->
-  <div class="modal" id="paypalModal">
-    <div class="modal-box">
-      <h3>🅿️ PayPal Payment</h3>
-      <div class="modal-amount" id="paypalAmount"></div>
-      <div class="form-group">
-        <label>PayPal Email Address</label>
-        <input type="email" id="paypalInput" placeholder="email@example.com">
-        <div class="error-text" id="paypalErr">❌ Invalid email address</div>
-      </div>
-      <div class="modal-info">
-        <strong>What happens next?</strong><br>
-        You will be redirected to PayPal to authorize the payment.
-      </div>
-      <div class="modal-btns">
-        <button class="btn-pay" id="paypalPayBtn" onclick="processPayment('paypal')">Pay</button>
-        <button class="btn-cancel" onclick="closeModal('paypalModal')">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- VISA Modal -->
-  <div class="modal" id="visaModal">
-    <div class="modal-box">
-      <h3>💳 Card Payment</h3>
-      <div class="modal-amount" id="visaAmount"></div>
-      <div class="form-group">
-        <label>Card Number</label>
-        <input type="text" id="visaInput" placeholder="Enter card number" maxlength="19">
-        <div class="error-text" id="visaErr">❌ Invalid card number — must be 12–19 digits</div>
-      </div>
-      <div class="modal-info">
-        <strong>What happens next?</strong><br>
-        Your card will be charged securely to complete the payment.
-      </div>
-      <div class="modal-btns">
-        <button class="btn-pay" id="visaPayBtn" onclick="processPayment('visa')">Pay</button>
-        <button class="btn-cancel" onclick="closeModal('visaModal')">Cancel</button>
-      </div>
+      <button class="modal-close" id="closeModal">✕</button>
+      <h2>Book Car</h2>
+      <div class="car-tag" id="modalCarName"></div>
+      <form id="bookingForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter full name" required />
+        </div>
+        <div class="form-group">
+          <label>National ID</label>
+          <input type="text" id="nationalId" placeholder="Enter national ID" required />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="text" id="phone" placeholder="07XXXXXXXX" required />
+        </div>
+        <div class="form-group">
+          <label>Driver Licence No.</label>
+          <input type="text" id="license" placeholder="Enter licence number" required />
+        </div>
+        <div class="form-group">
+          <label>Renting Start Date</label>
+          <input type="date" id="pickup" required />
+        </div>
+        <div class="form-group">
+          <label>Renting End Date</label>
+          <input type="date" id="endDate" required />
+        </div>
+        <button type="submit" class="submit-btn">Submit Booking</button>
+      </form>
     </div>
   </div>
 
   <script>
-    // ── CHANGE THIS to your InfinityFree domain ──
-    const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
+    const cars = [
+      { name: "Toyota Prado TX",     price: 10000, description: "Luxury SUV with 4WD.",                                         image: "car1.jpg" },
+      { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                 image: "car2.jpg" },
+      { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                           image: "car3.jpg" },
+      { name: "Suzuki Alto",          price: 2000,  description: "Compact and fuel-efficient.",                                  image: "alto.jpg" },
+      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                          image: "premio.jpg" },
+      { name: "Toyota Sienta",        price: 3500,  description: "Versatile family minivan.",                                   image: "sienta.jpg" },
+      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                 image: "" },
+      { name: "Mercedes Benz C200",   price: 10000, description: "Luxury executive car.",                                       image: "car5.jpg" },
+      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                   image: "car6.jpg" },
+      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                 image: "car7.jpg" },
+      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                             image: "car8.jpg" },
+      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                 image: "car9.jpg" },
+      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                             image: "car10.jpg" },
+      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
+      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                       image: "car12.jpg" },
+      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                       image: "car13.jpg" },
+      { name: "Toyota Axio",          price: 4000,  description: "Reliable compact sedan ideal for city and highway driving.", image: "car17.jpg" },
+      { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",     image: "car18.jpg" },
+      { name: "Toyota Prado TXG",     price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg" },
+    ];
 
-    const amount     = localStorage.getItem('paymentAmount');
-    const bookingId  = localStorage.getItem('paymentBookingId');
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    let currentCar = null;
 
-    // Check login
-    if (!isLoggedIn) {
-      document.getElementById('accessAlert').style.display = 'block';
-      ['mpesaBtn','paypalBtn','visaBtn'].forEach(id => {
-        const el = document.getElementById(id);
-        el.classList.add('disabled');
-        el.onclick = () => document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
+    function setActive(id) {
+      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ── Show Home instructions ──
+    function renderHome() {
+      setActive('homeLink');
+      document.querySelector('.page-title').style.display = 'none';
+      document.getElementById('carGrid').innerHTML = `
+        <div style="grid-column:1/-1">
+          <div class="notice-box">
+            <p>• This system allows you to view and book available cars.</p>
+            <p>• Click <strong>"Cars"</strong> to explore our fleet and press <strong>"Book Now"</strong> on any available vehicle.</p>
+            <p>• After booking, open <strong>"My Bookings"</strong> to see your pending reservations. You can delete a booking or proceed to make payment.</p>
+            <p>• Once payment is made, your status will be updated in the <strong>Payments</strong> section.</p>
+            <p>• To get a receipt, click the <strong>"Get Receipt"</strong> button inside the Payments section.</p>
+            <p>• If you experience a problem, press the <strong>"Help"</strong> button.</p>
+            <p>• By clicking <strong>"Settings"</strong>, you can update your personal information, change your password, access Emergency Services, or manage account deletion/deactivation.</p>
+            <p><strong>✨ Thank you for choosing Waliko Car Hire!</strong></p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Show Cars grid ──
+    function renderCars() {
+      setActive('carsLink');
+      document.querySelector('.page-title').style.display = 'block';
+      document.querySelector('.page-title').textContent = 'Available Cars';
+      const grid = document.getElementById('carGrid');
+      grid.innerHTML = '';
+      cars.forEach((car, i) => {
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.innerHTML = `
+          <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
+          <div class="car-info">
+            <h3>${car.name}</h3>
+            <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
+            <p>${car.description}</p>
+            <span class="badge">✅ Available</span>
+          </div>
+          <button class="book-btn" data-index="${i}">Book Now</button>
+        `;
+        grid.appendChild(card);
       });
     }
 
-    // Show booking info
-    if (amount && bookingId) {
-      const box = document.getElementById('bookingBox');
-      box.style.display = 'block';
-      box.innerHTML = `📋 Booking ID: <strong>${bookingId}</strong> &nbsp;|&nbsp; 💰 Amount Due: <strong>Ksh ${Number(amount).toLocaleString()}</strong>`;
-      document.getElementById('mpesaAmount').textContent  = `Amount: Ksh ${Number(amount).toLocaleString()}`;
-      document.getElementById('paypalAmount').textContent = `Amount: Ksh ${Number(amount).toLocaleString()}`;
-      document.getElementById('visaAmount').textContent   = `Amount: Ksh ${Number(amount).toLocaleString()}`;
-    } else {
-      document.getElementById('noBookingBox').style.display = 'block';
-    }
+    // ── Load: show Home instructions by default ──
+    renderHome();
 
-    // Modal open/close
-    function openModal(type) {
-      if (!isLoggedIn) {
-        document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-      document.getElementById(type + 'Modal').classList.add('open');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-    }
-
-    document.querySelectorAll('.modal').forEach(m => {
-      m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+    // ── Nav clicks ──
+    document.getElementById('homeLink').addEventListener('click', e => {
+      e.preventDefault();
+      renderHome();
     });
 
-    // Process payment
-    function processPayment(type) {
-      let valid = false;
-      let btn;
+    document.getElementById('carsLink').addEventListener('click', e => {
+      e.preventDefault();
+      renderCars();
+    });
 
-      // Hide previous messages
-      document.getElementById('successBox').style.display = 'none';
-      document.getElementById('finalError').style.display = 'none';
+    // ── Book button click ──
+    document.getElementById('carGrid').addEventListener('click', e => {
+      if (e.target.classList.contains('book-btn')) {
+        currentCar = cars[e.target.dataset.index];
+        document.getElementById('modalCarName').textContent = `Booking: ${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
+        document.getElementById('bookingForm').reset();
+        document.getElementById('bookingModal').classList.add('open');
+      }
+    });
 
-      if (type === 'mpesa') {
-        const phone = document.getElementById('mpesaInput').value.trim();
-        valid = /^07\d{8}$/.test(phone);
-        document.getElementById('mpesaErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('mpesaPayBtn');
+    // ── Close modal ──
+    document.getElementById('closeModal').addEventListener('click', () => {
+      document.getElementById('bookingModal').classList.remove('open');
+    });
+    document.getElementById('bookingModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('bookingModal'))
+        document.getElementById('bookingModal').classList.remove('open');
+    });
 
-        if (!valid) return;
+    // ── Submit booking ──
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fullName   = document.getElementById('fullName').value.trim();
+      const nationalId = document.getElementById('nationalId').value.trim();
+      const phone      = document.getElementById('phone').value.trim();
+      const license    = document.getElementById('license').value.trim();
+      const pickup     = document.getElementById('pickup').value;
+      const endDate    = document.getElementById('endDate').value;
 
-        btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-        btn.disabled = true;
-
-        // ── REAL STK PUSH — uses FormData matching your stkpush.php $_POST ──
-        const formData = new FormData();
-        formData.append('phone', phone);
-        formData.append('amount', amount || 1);
-        formData.append('booking_id', bookingId || '');
-
-        fetch(`${BACKEND_URL}/Stk_push.php`, {
-          method: 'POST',
-          headers: { 'ngrok-skip-browser-warning': 'true' },
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success === true) {
-            // STK push sent — now show waiting message and poll status
-            closeModal('mpesaModal');
-            showStatus('success', '✅ Payment request sent! Check your phone and enter your M-Pesa PIN.');
-            pollPaymentStatus(data.CheckoutRequestID, btn);
-          } else {
-            closeModal('mpesaModal');
-            showStatus('error', '❌ ' + (data.message || 'Failed to send STK Push.'));
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-          }
-        })
-        .catch(err => {
-          closeModal('mpesaModal');
-          showStatus('error', '❌ Network error. Make sure your connection is stable.');
-          btn.textContent = 'Pay';
-          btn.disabled = false;
-          console.error('Network error:', err);
-        });
-
-        return;
+      if (phone.length !== 10 || !phone.startsWith('07')) {
+        alert("Phone number must be exactly 10 digits and start with '07'."); return;
+      }
+      if (!/^\d{7,}$/.test(nationalId)) {
+        alert("National ID must be at least 7 digits."); return;
+      }
+      if (!/^[a-zA-Z0-9]{7,}$/.test(license)) {
+        alert("Licence No. must be at least 7 characters (letters and digits only)."); return;
+      }
+      if (new Date(endDate) <= new Date(pickup)) {
+        alert("End date must be later than start date."); return;
       }
 
-      if (type === 'paypal') {
-        valid = /^\S+@\S+\.\S+$/.test(document.getElementById('paypalInput').value);
-        document.getElementById('paypalErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('paypalPayBtn');
-      }
+      const bookingId = '#' + String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0');
+      const booking = {
+        bookingId, fullName, nationalId, phone, license,
+        pickup, endDate, carName: currentCar.name,
+        price: currentCar.price,
+        timestamp: new Date().toLocaleString()
+      };
 
-      if (type === 'visa') {
-        valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value.replace(/\s/g,''));
-        document.getElementById('visaErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('visaPayBtn');
-      }
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      bookings.unshift(booking);
+      localStorage.setItem('bookings', JSON.stringify(bookings));
 
-      if (!valid) return;
+      alert(`✅ Booking created!\n\nBooking ID: ${bookingId}\nGo to "My Bookings" to pay and confirm.`);
+      document.getElementById('bookingModal').classList.remove('open');
+    });
 
-      // PayPal & Visa — still show error (not implemented yet)
-      btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-      btn.disabled = true;
-
-      setTimeout(() => {
-        closeModal(type + 'Modal');
-        document.getElementById('finalError').style.display = 'block';
-        btn.textContent = 'Pay';
-        btn.disabled = false;
-      }, 3000);
-    }
-
-    // ── Show status message ──
-    function showStatus(type, message) {
-      const successBox = document.getElementById('successBox');
-      const errorBox   = document.getElementById('finalError');
-
-      successBox.style.display = 'none';
-      errorBox.style.display   = 'none';
-
-      if (type === 'success') {
-        successBox.innerHTML = message;
-        successBox.style.cssText = 'display:block;background:#f0fff4;border:1px solid #b2f5c8;border-left:4px solid #27ae60;border-radius:10px;padding:14px 16px;font-size:0.88em;color:#1a6e3a;margin-top:4px;';
-        successBox.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        errorBox.innerHTML = "⚠️ Your deposit wasn't approved. It's possible that the PIN was entered incorrectly, too late, not at all or the transaction was rejected. Please try again.";
-        errorBox.style.display = 'block';
-        errorBox.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-
-    // ── Poll payment status every 3 seconds ──
-    function pollPaymentStatus(checkoutRequestID, btn) {
-      let attempts = 0;
-      const maxAttempts = 10; // 30 seconds total
-
-      const interval = setInterval(() => {
-        attempts++;
-
-        const fd = new FormData();
-        fd.append('checkout_request_id', checkoutRequestID);
-
-        fetch(`${BACKEND_URL}/check_status.php`, {
-          method: 'POST',
-          headers: { 'ngrok-skip-browser-warning': 'true' },
-          body: fd
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-
-            // ── Update booking status in localStorage ──
-            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-            const bookingId = localStorage.getItem('paymentBookingId');
-            const paidAmount = localStorage.getItem('paymentAmount');
-            const updatedBookings = bookings.map(b => {
-              if (b.bookingId === bookingId) {
-                return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt, paidAmount: paidAmount, paidAt: new Date().toLocaleString() };
-              }
-              return b;
-            });
-            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-
-            showStatus('success', '🎉 Woohoo! Payment received successfully. Receipt: ' + (data.receipt || '') + '. Your booking is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
-          } else if (data.status === 'failed') {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', '❌ <strong>' + (data.message || 'Payment failed.') + '</strong>');
-          } else if (attempts >= maxAttempts) {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', '❌ <strong>⏰ Request expired. You took too long to enter PIN. Try again.</strong>');
-          }
-          // still pending → keep polling
-        })
-        .catch(() => {
-          if (attempts >= maxAttempts) {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', '❌ <strong>Could not verify payment. Please check your M-Pesa messages.</strong>');
-          }
-        });
-
-      }, 1000); // poll every 1 second
-    }
-
-    // Logout
+    // ── Logout ──
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('currentUser');
-      localStorage.removeItem('paymentAmount');
-      localStorage.removeItem('paymentBookingId');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('userPassword');
       window.location.href = 'index.html';
     });
   </script>
-
 </body>
 </html>
