@@ -538,7 +538,7 @@
           if (data.success === true) {
             // STK push sent — now show waiting message and poll status
             closeModal('mpesaModal');
-            showStatus('waiting', '⏳ STK Push sent! Enter your M-Pesa PIN on your phone...');
+            showStatus('success', '✅ Payment request sent! Check your phone and enter your M-Pesa PIN.');
             pollPaymentStatus(data.CheckoutRequestID, btn);
           } else {
             closeModal('mpesaModal');
@@ -642,7 +642,7 @@
             clearInterval(interval);
             btn.textContent = 'Pay';
             btn.disabled = false;
-            showStatus('error', '❌ <strong>Payment timed out.</strong> If you entered your PIN, wait a moment and refresh.');
+            showStatus('error', '❌ <strong>⏰ Request expired. You took too long to enter PIN. Try again.</strong>');
           }
           // still pending → keep polling
         })
@@ -651,7 +651,7 @@
             clearInterval(interval);
             btn.textContent = 'Pay';
             btn.disabled = false;
-            showStatus('error', '❌ <strong>Could not verify payment.</strong> Please check your M-Pesa messages.');
+            showStatus('error', '❌ <strong>Could not verify payment. Please check your M-Pesa messages.</strong>');
           }
         });
 
