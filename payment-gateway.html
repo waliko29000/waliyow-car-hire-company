@@ -558,9 +558,6 @@
         return;
       }
 
-        return; // stop — async handles rest
-      }
-
       if (type === 'paypal') {
         valid = /^\S+@\S+\.\S+$/.test(document.getElementById('paypalInput').value);
         document.getElementById('paypalErr').style.display = valid ? 'none' : 'block';
