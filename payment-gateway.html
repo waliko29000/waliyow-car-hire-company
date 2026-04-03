@@ -607,7 +607,7 @@
     // ── Poll payment status every 3 seconds ──
     function pollPaymentStatus(checkoutRequestID, btn) {
       let attempts = 0;
-      const maxAttempts = 10; // 30 seconds total
+      const maxAttempts = 30; // 60 seconds total
 
       const interval = setInterval(() => {
         attempts++;
@@ -640,11 +640,11 @@
             localStorage.setItem('bookings', JSON.stringify(updatedBookings));
 
             showStatus('success', '🎉 Woohoo! Payment received successfully. Receipt: ' + (data.receipt || '') + '. Your booking is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
-          } else if (data.status === 'failed') {
+          } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
             clearInterval(interval);
             btn.textContent = 'Pay';
             btn.disabled = false;
-            showStatus('error', '❌ <strong>' + (data.message || 'Payment failed.') + '</strong>');
+            showStatus('error', 'error');
           } else if (attempts >= maxAttempts) {
             clearInterval(interval);
             btn.textContent = 'Pay';
@@ -662,7 +662,7 @@
           }
         });
 
-      }, 1000); // poll every 1 second
+      }, 2000); // poll every 2 seconds
     }
 
     // Logout
