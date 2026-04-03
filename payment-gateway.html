@@ -527,6 +527,7 @@
         const formData = new FormData();
         formData.append('phone', phone);
         formData.append('amount', amount || 1);
+        formData.append('booking_id', bookingId || '');
 
         fetch(`${BACKEND_URL}/Stk_push.php`, {
           method: 'POST',
@@ -625,7 +626,20 @@
             clearInterval(interval);
             btn.textContent = 'Pay';
             btn.disabled = false;
-            showStatus('success', '✅ <strong>Payment Successful!</strong> Receipt: ' + (data.receipt || '') + '. Thank you for paying via M-Pesa!');
+
+            // ── Update booking status in localStorage ──
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            const bookingId = localStorage.getItem('paymentBookingId');
+            const paidAmount = localStorage.getItem('paymentAmount');
+            const updatedBookings = bookings.map(b => {
+              if (b.bookingId === bookingId) {
+                return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt, paidAmount: paidAmount, paidAt: new Date().toLocaleString() };
+              }
+              return b;
+            });
+            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+
+            showStatus('success', '🎉 Woohoo! Payment received successfully. Receipt: ' + (data.receipt || '') + '. Your booking is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
           } else if (data.status === 'failed') {
             clearInterval(interval);
             btn.textContent = 'Pay';
