@@ -528,7 +528,7 @@
         formData.append('phone', phone);
         formData.append('amount', amount || 1);
 
-        fetch(`${BACKEND_URL}/stkpush.php`, {
+        fetch(`${BACKEND_URL}/Stk_push.php`, {
           method: 'POST',
           headers: { 'ngrok-skip-browser-warning': 'true' },
           body: formData
