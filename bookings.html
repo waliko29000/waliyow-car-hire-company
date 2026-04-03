@@ -8,204 +8,103 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-      color: #333;
-    }
-
-    /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+      color: #fff; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; position: sticky; top: 0;
+      z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
-
     header h1 { font-size: 1.2em; font-weight: 700; }
-
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
-
     nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      padding: 7px 13px;
-      border-radius: 25px;
-      font-size: 0.78em;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; padding: 7px 13px; border-radius: 25px;
+      font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s;
     }
-
-    nav a:hover, nav a.active {
-      background: rgba(255,255,255,0.3);
-      border-color: rgba(255,255,255,0.6);
-    }
-
+    nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
-    /* ── MAIN ── */
-    main {
-      max-width: 900px;
-      margin: 24px auto;
-      padding: 0 16px 40px;
-    }
-
-    .page-title {
-      font-size: 1.2em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 16px;
-    }
+    main { max-width: 900px; margin: 24px auto; padding: 0 16px 40px; }
+    .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; margin-bottom: 16px; }
 
     .empty-msg {
-      background: #fff;
-      border-radius: 14px;
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      color: #666;
-      font-size: 0.92em;
-      line-height: 1.7;
+      background: #fff; border-radius: 14px; padding: 32px 24px;
+      text-align: center; box-shadow: 0 3px 16px rgba(20,100,221,0.09);
+      border: 1px solid rgba(20,100,221,0.07); color: #666; font-size: 0.92em; line-height: 1.7;
     }
-
     .empty-msg a { color: #1464dd; font-weight: 600; text-decoration: none; }
 
-    /* ── BOOKING CARD ── */
     .booking-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
+      background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px;
       box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      animation: fadeIn 0.3s ease;
+      border: 1px solid rgba(20,100,221,0.07); animation: fadeIn 0.3s ease;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
     .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
+      display: flex; justify-content: space-between;
+      align-items: flex-start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
     }
-
-    .card-header h3 {
-      font-size: 1em;
-      font-weight: 700;
-      color: #1a1a2e;
-    }
-
-    .card-header .booking-id {
-      font-size: 0.75em;
-      color: #888;
-      margin-top: 2px;
-    }
-
+    .card-header h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
+    .card-header .booking-id { font-size: 0.75em; color: #888; margin-top: 2px; }
     .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
     .btn {
-      padding: 7px 14px;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.78em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
+      padding: 7px 14px; border: none; border-radius: 8px;
+      font-family: 'Poppins', sans-serif; font-size: 0.78em;
+      font-weight: 600; cursor: pointer; transition: all 0.2s;
     }
-
     .btn-pay { background: #1464dd; color: #fff; }
     .btn-pay:hover { background: #0d47a1; }
-
     .btn-delete { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; }
     .btn-delete:hover { background: #ffe0e0; }
-
     .btn-pdf { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
     .btn-pdf:hover { background: #e0eaff; }
 
-    /* ── BOOKING TABLE ── */
     .info-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
-
     .info-table tr { border-bottom: 1px solid #f0f4ff; }
     .info-table tr:last-child { border-bottom: none; }
+    .info-table th { text-align: left; font-size: 0.78em; font-weight: 600; color: #888; padding: 6px 8px 6px 0; width: 140px; white-space: nowrap; }
+    .info-table td { font-size: 0.85em; color: #333; padding: 6px 8px 6px 0; }
 
-    .info-table th {
-      text-align: left;
-      font-size: 0.78em;
-      font-weight: 600;
-      color: #888;
-      padding: 6px 8px 6px 0;
-      width: 140px;
-      white-space: nowrap;
+    /* Payment status boxes */
+    .payment-status {
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 0.8em; margin-bottom: 12px; line-height: 1.6;
     }
+    .status-pending  { background:#fff5e6; border:1px solid #ffc87a; border-left:4px solid #f39c12; color:#b35c00; }
+    .status-success  { background:#f0fff4; border:1px solid #b2f5c8; border-left:4px solid #27ae60; color:#1a6e3a; }
+    .status-failed   { background:#fff0f0; border:1px solid #ffcccc; border-left:4px solid #e74c3c; color:#c0392b; }
+    .status-loading  { background:#f5f8ff; border:1px solid #c5d5f5; border-left:4px solid #1464dd; color:#555; }
 
-    .info-table td {
-      font-size: 0.85em;
-      color: #333;
-      padding: 6px 8px 6px 0;
-    }
+    .card-footer { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
-    .pending-notice {
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.8em;
-      color: #b35c00;
-      margin-bottom: 12px;
-      line-height: 1.6;
-    }
-
-    .card-footer {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-    }
-
-    /* show more */
     .show-more-btn {
-      display: block;
-      width: 100%;
-      padding: 11px;
-      background: #fff;
-      border: 1.5px solid #c5d5f5;
-      border-radius: 10px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      font-weight: 600;
-      color: #1464dd;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 4px;
+      display: block; width: 100%; padding: 11px;
+      background: #fff; border: 1.5px solid #c5d5f5; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 0.88em;
+      font-weight: 600; color: #1464dd; cursor: pointer; transition: all 0.2s; margin-top: 4px;
     }
-
     .show-more-btn:hover { background: #f0f4ff; }
 
-    @media (max-width: 600px) {
+    @media (max-width: 700px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      nav { margin-top: 4px; width: 100%; }
       header h1 { font-size: 1em; }
-      nav a { font-size: 0.72em; padding: 6px 10px; }
-      .card-header { flex-direction: column; }
-      .card-actions { flex-wrap: wrap; }
-      .info-table th { width: 110px; font-size: 0.73em; }
+      nav a { font-size: 0.7em; padding: 6px 10px; }
+      .card-header { flex-direction: column; gap: 10px; }
+      .card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+      .card-actions .btn { flex: 1; text-align: center; min-width: 80px; }
+      .info-table th { width: 100px; font-size: 0.75em; }
+      .info-table td { font-size: 0.82em; word-break: break-word; }
+      .booking-card { padding: 14px; }
+      main { padding: 0 10px 40px; }
+      .page-title { font-size: 1em; }
+      .card-footer .btn { flex: 1; text-align: center; }
     }
   </style>
 </head>
@@ -214,7 +113,7 @@
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
-      <a href="index.html">Home</a>
+      <a href="car-available.html">Home</a>
       <a href="car-available.html">Cars</a>
       <a href="bookings.html" class="active">My Bookings</a>
       <a href="payments.html">Payments</a>
@@ -231,31 +130,26 @@
   </main>
 
   <script>
-    const cars = [
-      { name: "Toyota Prado TX",     price: 10000, image: "car1.jpg" },
-      { name: "Subaru Forester",      price: 5000,  image: "car2.jpg" },
-      { name: "Toyota Harrier",       price: 6500,  image: "car3.jpg" },
-      { name: "Suzuki Alto",          price: 2000,  image: "alto.jpg" },
-      { name: "Toyota Premio",        price: 3000,  image: "premio.jpg" },
-      { name: "Toyota Sienta",        price: 3500,  image: "sienta.jpg" },
-      { name: "Toyota Succeed",       price: 3500,  image: "" },
-      { name: "Mercedes Benz C200",   price: 10000, image: "car5.jpg" },
-      { name: "Range Rover Sport",    price: 25000, image: "car6.jpg" },
-      { name: "Mazda CX-5",           price: 4000,  image: "car7.jpg" },
-      { name: "Honda CR-V",           price: 4500,  image: "car8.jpg" },
-      { name: "Hyundai Tucson",       price: 8000,  image: "car9.jpg" },
-      { name: "Subaru Impreza",       price: 4500,  image: "car10.jpg" },
-      { name: "Toyota Vitz",          price: 3000,  image: "car11.jpg" },
-      { name: "Toyota Wish",          price: 3500,  image: "car12.jpg" },
-      { name: "Toyota Prado TXL",     price: 11000, image: "car13.jpg" },
-      { name: "Toyota Axio",          price: 4000,  image: "car17.jpg" },
-      { name: "Toyota Fielder",       price: 3500,  image: "car18.jpg" },
-      { name: "Toyota Prado TXG",     price: 11500, image: "car14.jpg" },
-    ];
+    const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
+
     let displayCount = 3;
 
-    function renderBookings() {
-      const list = document.getElementById('bookingsList');
+
+
+    function getStatusBox(b, deposit) {
+      // Check localStorage first (fastest)
+      if (b.paymentStatus === 'paid') {
+        return `<div class="payment-status status-success">
+          ✅ <strong>Deposit Paid!</strong> Receipt: <strong>${b.mpesaReceipt || ''}</strong> — Your booking is confirmed. Balance due at pickup.
+        </div>`;
+      }
+      return `<div class="payment-status status-pending">
+        ⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh ${deposit.toLocaleString()}</strong> to confirm your booking.
+      </div>`;
+    }
+
+    async function renderBookings() {
+      const list     = document.getElementById('bookingsList');
       list.innerHTML = '';
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
@@ -268,9 +162,10 @@
         return;
       }
 
-      bookings.slice(0, displayCount).forEach((b, idx) => {
-        const days = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
-        const total = b.price * days;
+      for (let idx = 0; idx < Math.min(displayCount, bookings.length); idx++) {
+        const b       = bookings[idx];
+        const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+        const total   = b.price * days;
         const deposit = Math.floor(total / 2);
 
         const card = document.createElement('div');
@@ -299,9 +194,8 @@
             <tr><th>Total Fee</th><td>Ksh ${total.toLocaleString()}</td></tr>
           </table>
 
-          <div class="pending-notice">
-            ⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh ${deposit.toLocaleString()}</strong> to confirm your booking.
-            The remaining <strong>Ksh ${(total - deposit).toLocaleString()}</strong> is paid when picking up the car.
+          <div class="payment-status status-loading" id="status-${b.bookingId}">
+            ⏳ Checking payment status...
           </div>
 
           <div class="card-footer">
@@ -309,7 +203,15 @@
           </div>
         `;
         list.appendChild(card);
-      });
+
+        // Check payment status from localStorage instantly
+        const statusEl = document.getElementById(`status-${b.bookingId}`);
+        if (statusEl) statusEl.outerHTML = getStatusBox(b, deposit);
+        if (b.paymentStatus === 'paid') {
+          const payBtn = card.querySelector('.btn-pay');
+          if (payBtn) payBtn.style.display = 'none';
+        }
+      }
 
       if (bookings.length > displayCount) {
         const btn = document.createElement('button');
@@ -358,10 +260,8 @@
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
-      const W = 210, H = 297;
-      const L = 14, R = 196, CW = 182;
+      const W = 210, H = 297, L = 14, R = 196, CW = 182;
 
-      // ── HEADER ──
       pdf.setFillColor(20, 100, 221);
       pdf.rect(0, 0, W, 30, 'F');
       pdf.setTextColor(255, 255, 255);
@@ -369,40 +269,29 @@
       pdf.text('WALIKO CAR HIRE', L, 12);
       pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
       pdf.text('235 Fashion Street, Nairobi  |  0790 337 687  |  walik@gmail.com', L, 19);
-
-      // Gold badge
       pdf.setFillColor(255, 200, 50);
       pdf.roundedRect(148, 7, 48, 10, 2, 2, 'F');
       pdf.setTextColor(20, 60, 130);
       pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
       pdf.text('BOOKING CONFIRMATION', 172, 13.5, { align: 'center' });
 
-      // ── BOOKING ID BAND ──
       let y = 36;
       pdf.setFillColor(242, 246, 255);
       pdf.roundedRect(L, y, CW, 22, 2, 2, 'F');
       pdf.setDrawColor(20, 100, 221); pdf.setLineWidth(0.3);
       pdf.roundedRect(L, y, CW, 22, 2, 2, 'S');
-
-      // Booking ID (left)
       pdf.setTextColor(20, 100, 221); pdf.setFontSize(7); pdf.setFont('helvetica', 'bold');
       pdf.text('BOOKING ID', L + 4, y + 7);
       pdf.setFontSize(11); pdf.setTextColor(10, 30, 80);
       pdf.text(b.bookingId, L + 4, y + 15);
-
-      // Status badge (right)
       pdf.setFillColor(255, 235, 180);
       pdf.roundedRect(148, y + 6, 44, 8, 2, 2, 'F');
       pdf.setTextColor(160, 90, 0); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
       pdf.text('PENDING PAYMENT', 170, y + 11.5, { align: 'center' });
-
-      // Date issued
       pdf.setTextColor(100, 100, 100); pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
       pdf.text('Issued: ' + b.timestamp, L + 4, y + 21);
-
       y += 28;
 
-      // ── CUSTOMER DETAILS ──
       pdf.setFillColor(20, 100, 221);
       pdf.rect(L, y, CW, 7, 'F');
       pdf.setTextColor(255, 255, 255); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
@@ -410,23 +299,17 @@
       y += 7;
 
       const details = [
-        ['Full Name',    b.fullName],
-        ['Phone',        b.phone],
-        ['National ID',  b.nationalId],
-        ['Licence No.',  b.license],
-        ['Car',          b.carName],
-        ['Start Date',   b.pickup],
-        ['End Date',     b.endDate],
-        ['Days Booked',  `${days} day${days !== 1 ? 's' : ''}`],
+        ['Full Name', b.fullName], ['Phone', b.phone],
+        ['National ID', b.nationalId], ['Licence No.', b.license],
+        ['Car', b.carName], ['Start Date', b.pickup],
+        ['End Date', b.endDate], ['Days Booked', `${days} day${days !== 1 ? 's' : ''}`],
       ];
 
       details.forEach((row, i) => {
         const ry = y + i * 8;
         pdf.setFillColor(i % 2 === 0 ? 248 : 255, i % 2 === 0 ? 250 : 255, i % 2 === 0 ? 255 : 255);
         pdf.rect(L, ry, CW, 8, 'F');
-        // left border accent
-        pdf.setFillColor(20, 100, 221);
-        pdf.rect(L, ry, 2, 8, 'F');
+        pdf.setFillColor(20, 100, 221); pdf.rect(L, ry, 2, 8, 'F');
         pdf.setTextColor(100, 100, 100); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
         pdf.text(row[0], L + 5, ry + 5.5);
         pdf.setTextColor(20, 20, 20); pdf.setFont('helvetica', 'normal');
@@ -435,7 +318,6 @@
 
       y += details.length * 8 + 6;
 
-      // ── PAYMENT SUMMARY ──
       pdf.setFillColor(20, 100, 221);
       pdf.rect(L, y, CW, 7, 'F');
       pdf.setTextColor(255, 255, 255); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
@@ -443,11 +325,11 @@
       y += 7;
 
       const payments = [
-        { label: 'Price Per Day',     val: `Ksh ${b.price.toLocaleString()}`,    hi: false, gold: false },
-        { label: 'Number of Days',    val: `${days}`,                             hi: false, gold: false },
-        { label: 'Total Rental Fee',  val: `Ksh ${total.toLocaleString()}`,       hi: true,  gold: false },
-        { label: 'Deposit Due (50%)', val: `Ksh ${deposit.toLocaleString()}`,     hi: false, gold: true  },
-        { label: 'Balance on Pickup', val: `Ksh ${balance.toLocaleString()}`,     hi: false, gold: false },
+        { label: 'Price Per Day',     val: `Ksh ${b.price.toLocaleString()}`,  hi: false, gold: false },
+        { label: 'Number of Days',    val: `${days}`,                           hi: false, gold: false },
+        { label: 'Total Rental Fee',  val: `Ksh ${total.toLocaleString()}`,     hi: true,  gold: false },
+        { label: 'Deposit Due (50%)', val: `Ksh ${deposit.toLocaleString()}`,   hi: false, gold: true  },
+        { label: 'Balance on Pickup', val: `Ksh ${balance.toLocaleString()}`,   hi: false, gold: false },
       ];
 
       payments.forEach((row, i) => {
@@ -458,9 +340,8 @@
         pdf.rect(L, ry, CW, 8, 'F');
         pdf.setFillColor(row.hi ? 20 : row.gold ? 255 : 20, row.hi ? 100 : row.gold ? 180 : 100, row.hi ? 221 : row.gold ? 0 : 221);
         pdf.rect(L, ry, 2, 8, 'F');
-
-        const lc = row.gold ? [150, 85, 0]  : [100, 100, 100];
-        const vc = row.hi   ? [20, 100, 221] : row.gold ? [170, 95, 0] : [20, 20, 20];
+        const lc = row.gold ? [150, 85, 0] : [100, 100, 100];
+        const vc = row.hi ? [20, 100, 221] : row.gold ? [170, 95, 0] : [20, 20, 20];
         pdf.setTextColor(...lc); pdf.setFontSize(8); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
         pdf.text(row.label, L + 5, ry + 5.5);
         pdf.setTextColor(...vc); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
@@ -469,7 +350,6 @@
 
       y += payments.length * 8 + 6;
 
-      // ── NOTE BOX ──
       pdf.setFillColor(255, 248, 228);
       pdf.setDrawColor(255, 180, 60); pdf.setLineWidth(0.4);
       pdf.roundedRect(L, y, CW, 16, 2, 2, 'FD');
@@ -479,10 +359,8 @@
       pdf.text(`Pay Ksh ${deposit.toLocaleString()} deposit to confirm. Balance Ksh ${balance.toLocaleString()} due at pickup.`, L + 18, y + 6.5);
       pdf.setTextColor(100, 100, 100);
       pdf.text('Present this document when collecting your vehicle.', L + 4, y + 13);
-
       y += 22;
 
-      // ── SIGNATURE LINE ──
       pdf.setDrawColor(180, 180, 180); pdf.setLineWidth(0.3);
       pdf.line(L, y + 10, L + 80, y + 10);
       pdf.line(L + 100, y + 10, R, y + 10);
@@ -490,7 +368,6 @@
       pdf.text('Customer Signature', L, y + 14);
       pdf.text('Authorized by Waliko', L + 100, y + 14);
 
-      // ── FOOTER ──
       pdf.setFillColor(20, 100, 221);
       pdf.rect(0, H - 14, W, 14, 'F');
       pdf.setTextColor(255, 255, 255); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
@@ -500,7 +377,6 @@
       pdf.save(`Waliko_Booking_${bookingId}.pdf`);
     }
 
-    // Logout
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
