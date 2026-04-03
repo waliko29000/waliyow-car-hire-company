@@ -530,6 +530,7 @@
 
         fetch(`${BACKEND_URL}/stkpush.php`, {
           method: 'POST',
+          headers: { 'ngrok-skip-browser-warning': 'true' },
           body: formData
         })
         .then(res => res.json())
