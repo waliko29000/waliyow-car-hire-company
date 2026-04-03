@@ -535,25 +535,28 @@
         })
         .then(res => res.json())
         .then(data => {
-          closeModal('mpesaModal');
           if (data.success === true) {
-            document.getElementById('successBox').style.display = 'block';
-            document.getElementById('successBox').scrollIntoView({ behavior: 'smooth' });
+            // STK push sent — now show waiting message and poll status
+            closeModal('mpesaModal');
+            showStatus('waiting', '⏳ STK Push sent! Enter your M-Pesa PIN on your phone...');
+            pollPaymentStatus(data.CheckoutRequestID, btn);
           } else {
-            document.getElementById('finalError').style.display = 'block';
-            document.getElementById('finalError').innerHTML = '❌ <strong>' + (data.message || 'Payment failed.') + '</strong> Please try again. <a href="help.html"> Need help?</a>';
-            console.error('STK Push error:', data);
+            closeModal('mpesaModal');
+            showStatus('error', '❌ ' + (data.message || 'Failed to send STK Push.'));
+            btn.textContent = 'Pay';
+            btn.disabled = false;
           }
         })
         .catch(err => {
           closeModal('mpesaModal');
-          document.getElementById('finalError').style.display = 'block';
-          console.error('Network error:', err);
-        })
-        .finally(() => {
+          showStatus('error', '❌ Network error. Make sure your connection is stable.');
           btn.textContent = 'Pay';
           btn.disabled = false;
+          console.error('Network error:', err);
         });
+
+        return;
+      }
 
         return; // stop — async handles rest
       }
@@ -582,6 +585,80 @@
         btn.textContent = 'Pay';
         btn.disabled = false;
       }, 3000);
+    }
+
+    // ── Show status message ──
+    function showStatus(type, message) {
+      const successBox = document.getElementById('successBox');
+      const errorBox   = document.getElementById('finalError');
+      successBox.style.display = 'none';
+      errorBox.style.display   = 'none';
+
+      if (type === 'success') {
+        successBox.innerHTML = message;
+        successBox.style.display = 'block';
+        successBox.scrollIntoView({ behavior: 'smooth' });
+      } else if (type === 'waiting') {
+        successBox.innerHTML = message;
+        successBox.style.display = 'block';
+        successBox.style.background = '#fff8e1';
+        successBox.style.borderColor = '#ffe082';
+        successBox.style.borderLeftColor = '#f39c12';
+        successBox.style.color = '#7d5a00';
+        successBox.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        errorBox.innerHTML = message + ' <a href="help.html"> Need help?</a>';
+        errorBox.style.display = 'block';
+        errorBox.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // ── Poll payment status every 3 seconds ──
+    function pollPaymentStatus(checkoutRequestID, btn) {
+      let attempts = 0;
+      const maxAttempts = 10; // 30 seconds total
+
+      const interval = setInterval(() => {
+        attempts++;
+
+        const fd = new FormData();
+        fd.append('checkout_request_id', checkoutRequestID);
+
+        fetch(`${BACKEND_URL}/check_status.php`, {
+          method: 'POST',
+          headers: { 'ngrok-skip-browser-warning': 'true' },
+          body: fd
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            clearInterval(interval);
+            btn.textContent = 'Pay';
+            btn.disabled = false;
+            showStatus('success', '✅ <strong>Payment Successful!</strong> Receipt: ' + (data.receipt || '') + '. Thank you for paying via M-Pesa!');
+          } else if (data.status === 'failed') {
+            clearInterval(interval);
+            btn.textContent = 'Pay';
+            btn.disabled = false;
+            showStatus('error', '❌ <strong>' + (data.message || 'Payment failed.') + '</strong>');
+          } else if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            btn.textContent = 'Pay';
+            btn.disabled = false;
+            showStatus('error', '❌ <strong>Payment timed out.</strong> If you entered your PIN, wait a moment and refresh.');
+          }
+          // still pending → keep polling
+        })
+        .catch(() => {
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            btn.textContent = 'Pay';
+            btn.disabled = false;
+            showStatus('error', '❌ <strong>Could not verify payment.</strong> Please check your M-Pesa messages.');
+          }
+        });
+
+      }, 3000); // poll every 3 seconds
     }
 
     // Logout
