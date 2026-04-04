@@ -205,6 +205,9 @@
       }
 
       bookings.slice(0, displayCount).forEach((b, idx) => {
+        // Normalize: if receipt exists treat as paid regardless of paymentStatus field
+        if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
+
         const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
         const total   = b.price * days;
         const deposit = Math.floor(total / 2);
@@ -320,11 +323,14 @@
 
     // ── PDF GENERATION ──
     function downloadPDF(idx) {
+      // Always re-read fresh from localStorage at the moment of click
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-
-      // Use index directly — zero type mismatch risk
       const b = bookings[idx];
       if (!b) { alert('Booking not found.'); return; }
+      // Normalize paymentStatus — treat any truthy receipt as paid too
+      if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A' && b.paymentStatus !== 'paid') {
+        b.paymentStatus = 'paid';
+      }
 
       const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
       const total   = b.price * days;
