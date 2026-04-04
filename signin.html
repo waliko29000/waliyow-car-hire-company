@@ -6,54 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f4ff; }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-    }
-
-    .container {
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 30px;
-      position: relative;
-    }
+    .container { height: 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 30px; position: relative; }
 
     .wrapper {
-      position: relative;
-      background: #fff;
-      padding: 28px 24px;
-      border-radius: 14px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.12);
-      border: 1px solid rgba(20,100,221,0.08);
-      width: 90%;
-      max-width: 370px;
-      overflow: hidden;
+      position: relative; background: #fff; padding: 28px 24px; border-radius: 14px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.12); border: 1px solid rgba(20,100,221,0.08);
+      width: 90%; max-width: 370px; overflow: hidden;
     }
 
-    /* LED border animation */
     .wrapper::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
+      content: ""; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
       background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
-      background-size: 400%;
-      z-index: -1;
-      filter: blur(3px);
-      animation: moveLights 5s linear infinite;
-      border-radius: 16px;
+      background-size: 400%; z-index: -1; filter: blur(3px);
+      animation: moveLights 5s linear infinite; border-radius: 16px;
     }
 
     @keyframes moveLights {
@@ -62,92 +30,32 @@
       100% { background-position: 0% 50%; }
     }
 
-    h1 {
-      text-align: center;
-      color: #1464dd;
-      margin-bottom: 6px;
-      font-size: 1.2em;
-      font-weight: 700;
+    h1 { text-align: center; color: #1464dd; margin-bottom: 6px; font-size: 1.2em; font-weight: 700; }
+    p { text-align: center; color: #888; font-size: 0.8em; margin-bottom: 18px; }
+    label { display: block; margin-top: 12px; margin-bottom: 4px; font-size: 0.8em; font-weight: 600; color: #444; }
+
+    input[type="email"], input[type="password"] {
+      width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px;
+      font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none;
+      transition: border-color 0.2s; color: #333;
     }
 
-    p {
-      text-align: center;
-      color: #888;
-      font-size: 0.8em;
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-      margin-top: 12px;
-      margin-bottom: 4px;
-      font-size: 0.8em;
-      font-weight: 600;
-      color: #444;
-    }
-
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1.5px solid #dde3f0;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      outline: none;
-      transition: border-color 0.2s;
-      color: #333;
-    }
-
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #1464dd;
-      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
+    input[type="email"]:focus, input[type="password"]:focus {
+      border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
     }
 
     input[type="submit"] {
-      width: 100%;
-      padding: 11px;
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 0.92em;
-      margin-top: 16px;
-      cursor: pointer;
-      transition: all 0.2s;
+      width: 100%; padding: 11px; background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif;
+      font-weight: 600; font-size: 0.92em; margin-top: 16px; cursor: pointer; transition: all 0.2s;
     }
+    input[type="submit"]:hover { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
 
-    input[type="submit"]:hover {
-      background: linear-gradient(135deg, #0d47a1, #083080);
-      transform: translateY(-1px);
-    }
+    .register-link, .forgot-link { text-align: center; margin-top: 10px; font-size: 0.8em; color: #888; }
+    a { color: #1464dd; text-decoration: none; font-weight: 600; }
+    a:hover { text-decoration: underline; }
 
-    .register-link,
-    .forgot-link {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 0.8em;
-      color: #888;
-    }
-
-    a {
-      color: #1464dd;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    #padlock {
-      font-size: 40px;
-      text-align: center;
-      margin-top: 16px;
-    }
+    #padlock { font-size: 40px; text-align: center; margin-top: 16px; }
 
     @keyframes shake {
       0%   { transform: translateX(0); }
@@ -156,129 +64,189 @@
       75%  { transform: translateX(-10px); }
       100% { transform: translateX(0); }
     }
+    .shake { animation: shake 0.5s ease-in-out; }
 
-    .shake {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    /* Modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(4px);
-    }
-
-    .modal-content {
-      background: #fff;
-      margin: 10% auto;
-      padding: 24px;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 14px;
-      position: relative;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-      animation: fadeIn 0.3s;
-      border: 1px solid rgba(20,100,221,0.08);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 1em;
-      font-weight: 700;
-      color: #1464dd;
-    }
-
-    .close-button {
-      color: #aaa;
-      font-size: 22px;
-      font-weight: bold;
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      cursor: pointer;
-      background: #f0f4ff;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
+    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); }
+    .modal-content { background: #fff; margin: 10% auto; padding: 24px; width: 90%; max-width: 400px; border-radius: 14px; position: relative; box-shadow: 0 8px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s; border: 1px solid rgba(20,100,221,0.08); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
+    .modal-header h2 { margin: 0; font-size: 1em; font-weight: 700; color: #1464dd; }
+    .close-button { color: #aaa; font-size: 22px; font-weight: bold; position: absolute; top: 12px; right: 16px; cursor: pointer; background: #f0f4ff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
     .close-button:hover { background: #dde3f0; color: #1464dd; }
+    .modal-body { margin-bottom: 16px; font-size: 0.88em; color: #555; line-height: 1.7; }
+    .modal-footer { text-align: right; }
+    .modal-footer a { background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; padding: 9px 18px; border-radius: 8px; cursor: pointer; text-decoration: none; font-weight: 600; font-size: 0.88em; transition: all 0.2s; }
+    .modal-footer a:hover { background: linear-gradient(135deg, #0d47a1, #083080); }
 
-    .modal-body {
-      margin-bottom: 16px;
-      font-size: 0.88em;
-      color: #555;
-      line-height: 1.7;
-    }
+    /* ── CINEMATIC OVERLAY ── */
+    #redirectOverlay { display: none; position: fixed; inset: 0; z-index: 99999; overflow: hidden; }
+    #redirectOverlay.active { display: block; }
+    .sky-layer { position: absolute; inset: 0; background: linear-gradient(175deg, #040d1e 0%, #0a1f4e 25%, #1464dd 55%, #1e88e5 70%, #e65100 88%, #bf360c 100%); opacity: 0; animation: skyIn 0.5s ease forwards; }
+    @keyframes skyIn { to { opacity: 1; } }
+    .stars { position: absolute; inset: 0; overflow: hidden; }
+    .star { position: absolute; background: #fff; border-radius: 50%; animation: twinkle var(--dur, 1.5s) ease-in-out infinite alternate; }
+    @keyframes twinkle { from { opacity: 0.2; transform: scale(0.8); } to { opacity: 1; transform: scale(1.3); } }
+    .moon { position: absolute; top: 8%; right: 12%; width: 55px; height: 55px; background: #fffde7; border-radius: 50%; box-shadow: 0 0 30px rgba(255,253,200,0.5), 0 0 60px rgba(255,253,200,0.2); opacity: 0; animation: moonRise 0.8s ease 0.3s forwards; }
+    .moon::after { content: ''; position: absolute; top: 4px; right: -4px; width: 44px; height: 44px; background: #0a1f4e; border-radius: 50%; }
+    @keyframes moonRise { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .mountains { position: absolute; bottom: 36%; left: 0; right: 0; }
+    .skyline-wrap { position: absolute; bottom: 36%; left: 0; right: 0; height: 100px; overflow: hidden; }
+    .skyline { display: flex; width: 200%; height: 100%; animation: skylineScroll 4s linear infinite; }
+    @keyframes skylineScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    .road { position: absolute; bottom: 0; left: 0; right: 0; height: 36%; background: #111827; }
+    .road::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,150,0,0.7), transparent); }
+    .road-dashes { position: absolute; top: 40%; left: 0; right: 0; height: 4px; background: repeating-linear-gradient(90deg, transparent 0, transparent 30px, rgba(255,255,255,0.45) 30px, rgba(255,255,255,0.45) 65px); animation: dashMove 0.25s linear infinite; }
+    @keyframes dashMove { to { background-position: -95px 0; } }
+    .road-edge-left, .road-edge-right { position: absolute; left: 0; right: 0; height: 2px; background: rgba(255,200,50,0.4); }
+    .road-edge-left { top: 10%; }
+    .road-edge-right { bottom: 8%; background: rgba(255,255,255,0.25); }
+    .speed-lines { position: absolute; top: 50%; right: 55%; transform: translateY(-50%); width: 280px; display: flex; flex-direction: column; gap: 9px; opacity: 0; animation: fadeInAnim 0.3s ease 0.8s forwards; }
+    .sl { height: 2px; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 100%); border-radius: 2px; transform-origin: right; animation: slPulse 0.25s ease-in-out infinite alternate; }
+    .sl:nth-child(1) { width: 260px; } .sl:nth-child(2) { width: 190px; animation-delay: 0.04s; } .sl:nth-child(3) { width: 220px; animation-delay: 0.02s; } .sl:nth-child(4) { width: 160px; animation-delay: 0.06s; } .sl:nth-child(5) { width: 200px; animation-delay: 0.08s; }
+    @keyframes slPulse { from { opacity: 0.5; transform: scaleX(0.7); } to { opacity: 1; transform: scaleX(1); } }
+    @keyframes fadeInAnim { to { opacity: 1; } }
+    .car-stage { position: absolute; bottom: 36%; left: 50%; transform: translate(-50%, 55%); width: 220px; animation: carSlideIn 0.8s cubic-bezier(0.22,1,0.36,1) 0.15s both, carFloat 0.55s ease-in-out 1s infinite alternate; }
+    @keyframes carSlideIn { from { transform: translate(-250%, 55%); opacity: 0; } to { transform: translate(-50%, 55%); opacity: 1; } }
+    @keyframes carFloat { from { transform: translate(-50%, 55%) rotate(-0.7deg); } to { transform: translate(-50%, 52%) rotate(0.7deg); } }
+    .w1 { animation: wspin 0.35s linear infinite; transform-origin: 52px 78px; }
+    .w2 { animation: wspin 0.35s linear infinite; transform-origin: 153px 78px; }
+    @keyframes wspin { to { transform: rotate(360deg); } }
+    .beam { position: absolute; bottom: 42%; left: 58%; width: 260px; height: 70px; clip-path: polygon(0 38%, 100% 0%, 100% 100%, 0 62%); background: linear-gradient(90deg, rgba(255,240,120,0.45), transparent); border-radius: 0 60px 60px 0; animation: beamPulse 0.15s ease infinite alternate; }
+    @keyframes beamPulse { from { opacity: 0.7; } to { opacity: 1; } }
+    .puff { position: absolute; border-radius: 50%; background: rgba(180,180,180,0.22); pointer-events: none; animation: puffAnim 0.7s ease forwards; }
+    @keyframes puffAnim { 0% { transform: scale(0.2) translateX(0); opacity: 0.8; } 100% { transform: scale(2.8) translateX(-18px); opacity: 0; } }
+    .overlay-panel { position: absolute; top: 0; left: 0; right: 0; height: 64%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 20px; pointer-events: none; }
+    .ov-title { font-family: 'Poppins', sans-serif; font-size: clamp(1.5em, 5vw, 2.6em); font-weight: 700; color: #fff; text-align: center; letter-spacing: 0.05em; text-shadow: 0 2px 24px rgba(0,0,0,0.5); opacity: 0; animation: textPop 0.7s cubic-bezier(0.22,1,0.36,1) 0.45s forwards; }
+    .ov-sub { font-family: 'Poppins', sans-serif; font-size: clamp(0.7em, 2vw, 0.95em); color: rgba(255,255,255,0.7); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; animation: textPop 0.6s ease 0.65s forwards; }
+    @keyframes textPop { from { opacity: 0; transform: translateY(24px) scale(0.94); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .ov-counter { font-family: 'Poppins', sans-serif; font-size: clamp(0.8em, 2vw, 1em); color: rgba(255,255,255,0.55); letter-spacing: 0.1em; opacity: 0; animation: textPop 0.4s ease 0.85s forwards; }
+    .prog-wrap { width: min(300px, 75vw); height: 4px; background: rgba(255,255,255,0.18); border-radius: 99px; overflow: hidden; opacity: 0; animation: textPop 0.4s ease 0.75s forwards; }
+    .prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #fff 0%, #ffd740 100%); border-radius: 99px; animation: progFill 1.6s cubic-bezier(0.4,0,0.2,1) 0.9s forwards; }
+    @keyframes progFill { 0% { width: 0%; } 50% { width: 65%; } 80% { width: 88%; } 100% { width: 100%; } }
+    .flash-out { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+    .flash-out.go { animation: doFlash 0.4s ease forwards; }
+    @keyframes doFlash { 0% { opacity: 0; } 45% { opacity: 1; } 100% { opacity: 0; } }
 
-    .modal-footer {
-      text-align: right;
-    }
-
-    .modal-footer a {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 9px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.88em;
-      transition: all 0.2s;
-    }
-
-    .modal-footer a:hover {
-      background: linear-gradient(135deg, #0d47a1, #083080);
-    }
+    @media (max-width: 600px) { .car-stage { width: 160px; } .beam { width: 170px; } }
   </style>
 </head>
 <body>
+
+  <!-- CINEMATIC OVERLAY -->
+  <div id="redirectOverlay">
+    <div class="sky-layer"></div>
+    <div class="stars" id="starsEl"></div>
+    <div class="moon"></div>
+    <div class="mountains">
+      <svg width="100%" height="130" viewBox="0 0 1440 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="0,130 200,18 380,75 540,8 720,60 870,4 1060,55 1220,10 1380,50 1440,30 1440,130" fill="#071530" opacity="0.95"/>
+        <polygon points="0,130 150,55 320,90 460,40 640,82 800,32 980,75 1140,22 1300,65 1440,42 1440,130" fill="#050f25" opacity="0.8"/>
+      </svg>
+    </div>
+    <div class="skyline-wrap">
+      <div class="skyline">
+        <svg width="50%" height="100" viewBox="0 0 720 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="50" width="32" height="50" fill="#0a1530"/><rect x="10" y="36" width="12" height="14" fill="#0a1530"/>
+          <rect x="42" y="28" width="55" height="72" fill="#071525"/><rect x="56" y="14" width="25" height="14" fill="#071525"/>
+          <rect x="107" y="48" width="28" height="52" fill="#0a1530"/>
+          <rect x="145" y="18" width="48" height="82" fill="#071525"/><rect x="158" y="8" width="22" height="10" fill="#071525"/>
+          <rect x="203" y="42" width="38" height="58" fill="#0a1530"/>
+          <rect x="251" y="14" width="62" height="86" fill="#071525"/><rect x="265" y="4" width="28" height="10" fill="#071525"/>
+          <rect x="323" y="38" width="33" height="62" fill="#0a1530"/>
+          <rect x="366" y="22" width="50" height="78" fill="#071525"/>
+          <rect x="426" y="52" width="22" height="48" fill="#0a1530"/>
+          <rect x="458" y="10" width="65" height="90" fill="#071525"/><rect x="476" y="0" width="30" height="10" fill="#071525"/>
+          <rect x="533" y="30" width="40" height="70" fill="#0a1530"/>
+          <rect x="583" y="20" width="55" height="80" fill="#071525"/>
+          <rect x="648" y="44" width="28" height="56" fill="#0a1530"/>
+          <rect x="686" y="15" width="34" height="85" fill="#071525"/>
+          <rect x="60" y="30" width="5" height="4" fill="rgba(255,220,100,0.6)"/><rect x="70" y="40" width="5" height="4" fill="rgba(255,220,100,0.4)"/>
+          <rect x="160" y="25" width="6" height="4" fill="rgba(255,220,100,0.5)"/><rect x="267" y="18" width="5" height="4" fill="rgba(255,220,100,0.6)"/>
+          <rect x="462" y="22" width="6" height="4" fill="rgba(255,220,100,0.4)"/><rect x="480" y="35" width="5" height="4" fill="rgba(255,220,100,0.5)"/>
+          <rect x="587" y="32" width="5" height="4" fill="rgba(255,220,100,0.4)"/><rect x="690" y="28" width="5" height="4" fill="rgba(255,220,100,0.6)"/>
+        </svg>
+        <svg width="50%" height="100" viewBox="0 0 720 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="50" width="32" height="50" fill="#0a1530"/><rect x="10" y="36" width="12" height="14" fill="#0a1530"/>
+          <rect x="42" y="28" width="55" height="72" fill="#071525"/><rect x="56" y="14" width="25" height="14" fill="#071525"/>
+          <rect x="107" y="48" width="28" height="52" fill="#0a1530"/>
+          <rect x="145" y="18" width="48" height="82" fill="#071525"/><rect x="158" y="8" width="22" height="10" fill="#071525"/>
+          <rect x="203" y="42" width="38" height="58" fill="#0a1530"/>
+          <rect x="251" y="14" width="62" height="86" fill="#071525"/><rect x="265" y="4" width="28" height="10" fill="#071525"/>
+          <rect x="323" y="38" width="33" height="62" fill="#0a1530"/>
+          <rect x="366" y="22" width="50" height="78" fill="#071525"/>
+          <rect x="426" y="52" width="22" height="48" fill="#0a1530"/>
+          <rect x="458" y="10" width="65" height="90" fill="#071525"/><rect x="476" y="0" width="30" height="10" fill="#071525"/>
+          <rect x="533" y="30" width="40" height="70" fill="#0a1530"/>
+          <rect x="583" y="20" width="55" height="80" fill="#071525"/>
+          <rect x="648" y="44" width="28" height="56" fill="#0a1530"/>
+          <rect x="686" y="15" width="34" height="85" fill="#071525"/>
+          <rect x="60" y="30" width="5" height="4" fill="rgba(255,220,100,0.6)"/><rect x="70" y="40" width="5" height="4" fill="rgba(255,220,100,0.4)"/>
+          <rect x="160" y="25" width="6" height="4" fill="rgba(255,220,100,0.5)"/><rect x="267" y="18" width="5" height="4" fill="rgba(255,220,100,0.6)"/>
+          <rect x="462" y="22" width="6" height="4" fill="rgba(255,220,100,0.4)"/><rect x="480" y="35" width="5" height="4" fill="rgba(255,220,100,0.5)"/>
+          <rect x="587" y="32" width="5" height="4" fill="rgba(255,220,100,0.4)"/><rect x="690" y="28" width="5" height="4" fill="rgba(255,220,100,0.6)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="road">
+      <div class="road-edge-left"></div>
+      <div class="road-dashes"></div>
+      <div class="road-edge-right"></div>
+    </div>
+    <div class="beam"></div>
+    <div class="speed-lines">
+      <div class="sl"></div><div class="sl"></div><div class="sl"></div><div class="sl"></div><div class="sl"></div>
+    </div>
+    <div class="car-stage" id="carEl">
+      <svg viewBox="0 0 220 96" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="107" cy="90" rx="82" ry="5" fill="rgba(0,0,0,0.4)"/>
+        <rect x="14" y="48" width="192" height="36" rx="9" fill="#1565c0"/>
+        <path d="M58 48 Q70 20 96 17 L148 17 Q172 20 182 48 Z" fill="#1976d2"/>
+        <path d="M66 46 Q73 26 94 23 L142 23 Q162 26 167 46 Z" fill="rgba(160,230,255,0.65)" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <rect x="69" y="29" width="31" height="15" rx="3" fill="rgba(140,210,255,0.6)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+        <rect x="110" y="29" width="46" height="15" rx="3" fill="rgba(140,210,255,0.6)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+        <line x1="107" y1="48" x2="107" y2="82" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+        <path d="M20 60 Q65 54 107 56 Q149 58 198 55" stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <rect x="189" y="62" width="17" height="14" rx="4" fill="#0d47a1"/>
+        <rect x="14" y="62" width="17" height="14" rx="4" fill="#0d47a1"/>
+        <rect x="198" y="53" width="11" height="7" rx="2" fill="#fff176"/>
+        <rect x="198" y="62" width="9" height="5" rx="2" fill="rgba(255,240,100,0.5)"/>
+        <rect x="11" y="53" width="11" height="7" rx="2" fill="#ef5350"/>
+        <rect x="11" y="62" width="9" height="5" rx="2" fill="rgba(244,67,54,0.4)"/>
+        <rect x="197" y="70" width="16" height="8" rx="2" fill="#0a3d8f"/>
+        <line x1="200" y1="72" x2="200" y2="76" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <line x1="204" y1="72" x2="204" y2="76" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <line x1="208" y1="72" x2="208" y2="76" stroke="rgba(255,255,255,0.3)" stroke-width="0.8"/>
+        <ellipse cx="52" cy="82" rx="18" ry="6" fill="#0d47a1"/>
+        <ellipse cx="158" cy="82" rx="18" ry="6" fill="#0d47a1"/>
+        <g class="w2"><circle cx="158" cy="82" r="14" fill="#1a1a2e" stroke="#37474f" stroke-width="1.5"/><circle cx="158" cy="82" r="6" fill="#546e7a"/><line x1="158" y1="68" x2="158" y2="96" stroke="#455a64" stroke-width="2"/><line x1="144" y1="82" x2="172" y2="82" stroke="#455a64" stroke-width="2"/><line x1="148" y1="72" x2="168" y2="92" stroke="#455a64" stroke-width="1.5"/><line x1="168" y1="72" x2="148" y2="92" stroke="#455a64" stroke-width="1.5"/><circle cx="158" cy="82" r="2.5" fill="#cfd8dc"/></g>
+        <g class="w1"><circle cx="52" cy="82" r="14" fill="#1a1a2e" stroke="#37474f" stroke-width="1.5"/><circle cx="52" cy="82" r="6" fill="#546e7a"/><line x1="52" y1="68" x2="52" y2="96" stroke="#455a64" stroke-width="2"/><line x1="38" y1="82" x2="66" y2="82" stroke="#455a64" stroke-width="2"/><line x1="42" y1="72" x2="62" y2="92" stroke="#455a64" stroke-width="1.5"/><line x1="62" y1="72" x2="42" y2="92" stroke="#455a64" stroke-width="1.5"/><circle cx="52" cy="82" r="2.5" fill="#cfd8dc"/></g>
+        <rect x="14" y="74" width="12" height="4" rx="2" fill="#263238"/>
+        <text x="107" y="70" text-anchor="middle" font-family="Poppins,sans-serif" font-size="7.5" font-weight="700" fill="rgba(255,255,255,0.55)" letter-spacing="1.5">WALIKO</text>
+      </svg>
+    </div>
+    <div id="puffEl" style="position:absolute;inset:0;pointer-events:none;"></div>
+    <div class="overlay-panel">
+      <div class="ov-title" id="ovTitle">Welcome Back!</div>
+      <div class="ov-sub">Waliko Car Hire &nbsp;&bull;&nbsp; Nairobi, Kenya</div>
+      <div class="prog-wrap"><div class="prog-fill"></div></div>
+      <div class="ov-counter" id="ctrEl">Loading your dashboard…</div>
+    </div>
+    <div class="flash-out" id="flashEl"></div>
+  </div>
+  <!-- END OVERLAY -->
+
   <div class="container">
     <div class="wrapper">
       <form onsubmit="handleLogin(event)">
         <h1>Welcome Back🤝</h1>
         <p>Enter your email and password to login</p>
-
         <label for="email">Email</label>
         <input type="email" id="email" required placeholder="Enter your email">
-
         <label for="password">Password</label>
         <input type="password" id="password" required placeholder="Enter password">
-
         <input type="submit" value="Login">
-
-        <div class="forgot-link">
-          <p><a href="forget password.html">Forgot Password?</a></p>
-        </div>
-
-        <div class="register-link">
-          <p>Don't have an account? <a href="signup.html">Register</a></p>
-        </div>
+        <div class="forgot-link"><p><a href="forget password.html">Forgot Password?</a></p></div>
+        <div class="register-link"><p>Don't have an account? <a href="signup.html">Register</a></p></div>
       </form>
       <div id="padlock">🔒</div>
     </div>
@@ -287,20 +255,67 @@
   <div id="suspensionModal" class="modal">
     <div class="modal-content">
       <span class="close-button" id="modalCloseBtn">&times;</span>
-      <div class="modal-header">
-        <h2>Account Deactivated</h2>
-      </div>
+      <div class="modal-header"><h2>Account Deactivated</h2></div>
       <div class="modal-body">
         <p id="suspensionMessage">Your account is deactivated. Please contact support.</p>
         <p>Click the button below to appeal the deactivation.</p>
       </div>
-      <div class="modal-footer">
-        <a href="APPEAL.HTML">Appeal Deactivation</a>
-      </div>
+      <div class="modal-footer"><a href="APPEAL.HTML">Appeal Deactivation</a></div>
     </div>
   </div>
 
   <script>
+    // Stars
+    (function() {
+      const c = document.getElementById('starsEl');
+      for (let i = 0; i < 90; i++) {
+        const s = document.createElement('div');
+        const sz = Math.random() * 2.8 + 0.4;
+        s.className = 'star';
+        s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*58}%;left:${Math.random()*100}%;--dur:${(Math.random()*1.5+0.8).toFixed(2)}s;animation-delay:${(Math.random()*2).toFixed(2)}s`;
+        c.appendChild(s);
+      }
+    })();
+
+    let puffTimer = null, ctrTimer = null;
+
+    function spawnPuff() {
+      const car = document.getElementById('carEl');
+      const pc  = document.getElementById('puffEl');
+      const r   = car.getBoundingClientRect();
+      const p   = document.createElement('div');
+      const sz  = Math.random() * 16 + 8;
+      p.className = 'puff';
+      p.style.cssText = `width:${sz}px;height:${sz}px;left:${r.left - sz + Math.random()*4}px;top:${r.bottom - 26 + (Math.random()*10-5)}px`;
+      pc.appendChild(p);
+      setTimeout(() => p.remove(), 750);
+    }
+
+    function launchAnimation(userName) {
+      // Update title with user's name
+      const firstName = userName ? userName.split(' ')[0] : '';
+      if (firstName) document.getElementById('ovTitle').textContent = 'Welcome, ' + firstName + '!';
+
+      const ov = document.getElementById('redirectOverlay');
+      ov.classList.add('active');
+      puffTimer = setInterval(spawnPuff, 110);
+
+      const msgs = ['Loading your dashboard…', 'Almost there…', 'Ready to go! 🚗'];
+      let mi = 0;
+      ctrTimer = setInterval(() => {
+        mi++;
+        const el = document.getElementById('ctrEl');
+        if (el && msgs[mi]) el.textContent = msgs[mi];
+      }, 700);
+
+      setTimeout(() => {
+        clearInterval(puffTimer);
+        clearInterval(ctrTimer);
+        document.getElementById('flashEl').classList.add('go');
+        setTimeout(() => { window.location.href = 'car-available.html'; }, 380);
+      }, 2500);
+    }
+
     const modal = document.getElementById("suspensionModal");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
 
@@ -319,25 +334,24 @@
     function handleLogin(event) {
       event.preventDefault();
 
-      const email = document.getElementById('email').value.trim();
+      const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-      const padlock = document.getElementById('padlock');
+      const padlock  = document.getElementById('padlock');
       padlock.classList.remove('shake');
 
-      const suspendedEmail = localStorage.getItem('suspendedEmail');
+      const suspendedEmail    = localStorage.getItem('suspendedEmail');
       const suspendedPassword = localStorage.getItem('suspendedPassword');
-      const deactivationTime = localStorage.getItem('deactivationTime');
+      const deactivationTime  = localStorage.getItem('deactivationTime');
 
       if (suspendedEmail && suspendedPassword && suspendedEmail === email && suspendedPassword === password) {
-        const suspensionMessage = document.getElementById("suspensionMessage");
-        suspensionMessage.textContent = "Your account is deactivated for: " + deactivationTime + ".";
+        document.getElementById("suspensionMessage").textContent = "Your account is deactivated for: " + deactivationTime + ".";
         modal.style.display = "block";
         padlock.textContent = "🔒";
         padlock.classList.add('shake');
         return;
       }
 
-      const allUsers = JSON.parse(localStorage.getItem("allUsers")) || [];
+      const allUsers    = JSON.parse(localStorage.getItem("allUsers")) || [];
       const matchingUser = allUsers.find(user => user.email === email && user.password === password);
 
       if (matchingUser) {
@@ -356,9 +370,9 @@
         localStorage.setItem("isLoggedIn", "true");
 
         padlock.textContent = "🔓";
-        setTimeout(() => {
-          window.location.href = "car-available.html";
-        }, 500);
+
+        // 🔥 Launch cinematic animation!
+        setTimeout(() => launchAnimation(matchingUser.username || matchingUser.name || ''), 300);
 
       } else {
         alert("❌ Invalid email or password. Please try again.");
