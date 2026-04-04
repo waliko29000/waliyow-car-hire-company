@@ -1,1 +1,256 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debug – Waliko</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; padding: 20px; }
+    h1 { color: #1464dd; font-size: 1.2em; margin-bottom: 4px; }
+    .sub { color: #888; font-size: 0.8em; margin-bottom: 20px; }
+
+    .card {
+      background: #fff; border-radius: 14px; padding: 20px;
+      margin-bottom: 20px; box-shadow: 0 4px 20px rgba(20,100,221,0.08);
+      border: 1px solid rgba(20,100,221,0.09);
+    }
+    .card h2 { font-size: 0.95em; font-weight: 700; color: #1464dd; margin-bottom: 14px; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.82em; }
+    tr { border-bottom: 1px solid #f0f4ff; }
+    tr:last-child { border-bottom: none; }
+    td { padding: 8px 10px; vertical-align: top; }
+    td:first-child { font-weight: 600; color: #555; width: 180px; white-space: nowrap; }
+    td:last-child { color: #222; word-break: break-all; }
+
+    .tag {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.75em; font-weight: 700;
+    }
+    .tag-ok { background: #d4f5e2; color: #1a6e3a; }
+    .tag-bad { background: #ffe0e0; color: #c0392b; }
+    .tag-warn { background: #fff3cd; color: #856404; }
+
+    .diagnosis {
+      border-radius: 10px; padding: 14px 16px; font-size: 0.83em;
+      line-height: 1.8; margin-top: 14px;
+    }
+    .diagnosis.ok { background: #f0fff6; border-left: 4px solid #27ae60; color: #1a6e3a; }
+    .diagnosis.bad { background: #fff0f0; border-left: 4px solid #e74c3c; color: #c0392b; }
+    .diagnosis.warn { background: #fff8ee; border-left: 4px solid #f39c12; color: #905000; }
+
+    .fix-btn {
+      margin-top: 12px; padding: 10px 18px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff; border: none; border-radius: 8px;
+      font-family: 'Poppins', sans-serif; font-size: 0.82em;
+      font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .fix-btn:hover { background: #0d47a1; }
+    .fix-btn.danger { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+
+    .section-title {
+      font-size: 0.72em; font-weight: 700; color: #1464dd;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      margin: 14px 0 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: #e0eaff; }
+
+    .raw {
+      background: #f8faff; border: 1px solid #e0eaff; border-radius: 8px;
+      padding: 12px; font-family: monospace; font-size: 0.75em;
+      white-space: pre-wrap; word-break: break-all; color: #333;
+      max-height: 200px; overflow-y: auto; margin-top: 8px;
+    }
+
+    .empty { color: #888; font-size: 0.88em; font-style: italic; }
+
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+  <h1>🔍 Waliko Debug Tool</h1>
+  <p class="sub">Reads your localStorage and tells you exactly what's wrong with each booking.</p>
+
+  <div id="output"></div>
+
+  <script>
+    (function() {
+    const out = document.getElementById('output');
+
+    function tag(text, type) {
+      return `<span class="tag tag-${type}">${text}</span>`;
+    }
+
+    function val(v) {
+      if (v === undefined) return tag('MISSING', 'bad');
+      if (v === null)      return tag('NULL', 'bad');
+      if (v === '')        return tag('EMPTY STRING', 'bad');
+      if (v === 'N/A')     return tag('N/A (not set)', 'warn');
+      return `<span style="color:#1a6e3a;font-weight:600">${v}</span>`;
+    }
+
+    // ── PAYMENT TEMP KEYS ──
+    const payAmount    = localStorage.getItem('paymentAmount');
+    const payBookingId = localStorage.getItem('paymentBookingId');
+    const isLoggedIn   = localStorage.getItem('isLoggedIn');
+
+    let html = `
+      <div class="card">
+        <h2>⚙️ General localStorage Keys</h2>
+        <table>
+          <tr><td>isLoggedIn</td><td>${val(isLoggedIn)}</td></tr>
+          <tr><td>paymentAmount</td><td>${val(payAmount)}</td></tr>
+          <tr><td>paymentBookingId</td><td>${val(payBookingId)} ${payBookingId !== null ? '— type: <strong>' + typeof payBookingId + '</strong>' : ''}</td></tr>
+        </table>
+      </div>
+    `;
+
+    // ── BOOKINGS ──
+    const raw = localStorage.getItem('bookings');
+    if (!raw) {
+      html += `<div class="card"><p class="empty">❌ No 'bookings' key found in localStorage at all.</p></div>`;
+      out.innerHTML = html;
+      return;
+    }
+
+    let bookings;
+    try {
+      bookings = JSON.parse(raw);
+    } catch(e) {
+      html += `<div class="card"><div class="diagnosis bad">❌ bookings key exists but JSON is CORRUPT: ${e.message}</div></div>`;
+      out.innerHTML = html;
+      return;
+    }
+
+    if (!bookings.length) {
+      html += `<div class="card"><p class="empty">Bookings array is empty.</p></div>`;
+      out.innerHTML = html;
+      return;
+    }
+
+    bookings.forEach((b, idx) => {
+      const hasReceipt     = b.mpesaReceipt && b.mpesaReceipt.trim() !== '' && b.mpesaReceipt !== 'N/A';
+      const hasStatus      = b.paymentStatus === 'paid';
+      const isPaid         = hasReceipt || hasStatus;
+      const idType         = typeof b.bookingId;
+      const idTypeProblem  = idType === 'number';
+
+      // Diagnosis
+      let diagClass = 'ok';
+      let diagMsg   = '✅ This booking looks healthy. PDF should work correctly.';
+
+      if (!isPaid) {
+        diagClass = 'warn';
+        diagMsg   = '⏳ This booking is genuinely UNPAID — no receipt and no paymentStatus. PDF will correctly show pending.';
+      } else if (!hasReceipt && hasStatus) {
+        diagClass = 'warn';
+        diagMsg   = '⚠️ paymentStatus is "paid" but mpesaReceipt is missing/empty. PDF will show paid note but receipt row will say N/A.';
+      } else if (hasReceipt && !hasStatus) {
+        diagClass = 'bad';
+        diagMsg   = '🚨 ROOT CAUSE FOUND: mpesaReceipt exists (' + b.mpesaReceipt + ') but paymentStatus is NOT "paid" — it is "' + b.paymentStatus + '". This is why PDF shows DEPOSIT PAID badge but note says pending. The payment-gateway old bug did not save paymentStatus correctly. Click FIX below.';
+      }
+
+      if (idTypeProblem) {
+        diagMsg += ' Also: bookingId is stored as a NUMBER not a string — this causes PDF lookup failures.';
+      }
+
+      html += `
+        <div class="card">
+          <h2>📋 Booking ${idx + 1} of ${bookings.length}</h2>
+
+          <div class="section-title">Identity</div>
+          <table>
+            <tr><td>bookingId</td><td>${val(b.bookingId)} — type: <strong>${idType}</strong> ${idTypeProblem ? tag('⚠ Should be string', 'warn') : tag('OK', 'ok')}</td></tr>
+            <tr><td>timestamp</td><td>${val(b.timestamp)}</td></tr>
+            <tr><td>carName</td><td>${val(b.carName)}</td></tr>
+          </table>
+
+          <div class="section-title">Customer</div>
+          <table>
+            <tr><td>fullName</td><td>${val(b.fullName)}</td></tr>
+            <tr><td>phone</td><td>${val(b.phone)}</td></tr>
+            <tr><td>nationalId</td><td>${val(b.nationalId)}</td></tr>
+            <tr><td>license</td><td>${val(b.license)}</td></tr>
+          </table>
+
+          <div class="section-title">Dates & Price</div>
+          <table>
+            <tr><td>pickup</td><td>${val(b.pickup)}</td></tr>
+            <tr><td>endDate</td><td>${val(b.endDate)}</td></tr>
+            <tr><td>price</td><td>${val(b.price)}</td></tr>
+          </table>
+
+          <div class="section-title">Payment — THIS IS THE KEY PART</div>
+          <table>
+            <tr><td>paymentStatus</td><td>${val(b.paymentStatus)} ${hasStatus ? tag('✓ PAID', 'ok') : tag('NOT PAID', 'bad')}</td></tr>
+            <tr><td>mpesaReceipt</td><td>${val(b.mpesaReceipt)} ${hasReceipt ? tag('✓ EXISTS', 'ok') : tag('MISSING', 'bad')}</td></tr>
+            <tr><td>paidAmount</td><td>${val(b.paidAmount)}</td></tr>
+            <tr><td>paidAt</td><td>${val(b.paidAt)}</td></tr>
+          </table>
+
+          <div class="diagnosis ${diagClass}">${diagMsg}</div>
+
+          ${(hasReceipt && !hasStatus) || idTypeProblem ? `
+          <div class="actions">
+            <button class="fix-btn" onclick="fixBooking(${idx})">🔧 Auto-Fix This Booking</button>
+          </div>` : ''}
+
+        </div>
+      `;
+    });
+
+    // ── RAW DATA ──
+    html += `
+      <div class="card">
+        <h2>📦 Raw bookings JSON</h2>
+        <div class="raw">${JSON.stringify(bookings, null, 2)}</div>
+        <div class="actions" style="margin-top:12px">
+          <button class="fix-btn danger" onclick="clearAll()">🗑 Clear ALL bookings</button>
+        </div>
+      </div>
+    `;
+
+    out.innerHTML = html;
+
+    // ── FIX FUNCTION ──
+    window.fixBooking = function(idx) {
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const b = bookings[idx];
+
+      // Fix paymentStatus
+      b.paymentStatus = 'paid';
+
+      // Fix bookingId type
+      b.bookingId = String(b.bookingId);
+
+      // Set paidAt if missing
+      if (!b.paidAt) b.paidAt = new Date().toLocaleString();
+
+      // Set receipt placeholder if missing
+      if (!b.mpesaReceipt || b.mpesaReceipt === 'N/A') {
+        b.mpesaReceipt = 'VERIFIED-PAID';
+      }
+
+      bookings[idx] = b;
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      alert('✅ Booking ' + (idx+1) + ' fixed! Reload this page to verify, then download PDF.');
+      location.reload();
+    };
+
+    window.clearAll = function() {
+      if (confirm('Delete ALL bookings? This cannot be undone.')) {
+        localStorage.removeItem('bookings');
+        location.reload();
+      }
+    };
+
+    })(); // end IIFE
+  </script>
+</body>
+</html>
