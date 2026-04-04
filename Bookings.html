@@ -188,11 +188,13 @@
 
   <script>
     let displayCount = 3;
+    let allBookings = []; // single source of truth for PDF
 
     function renderBookings() {
       const list = document.getElementById('bookingsList');
       list.innerHTML = '';
-      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const bookings = allBookings;
 
       if (bookings.length === 0) {
         list.innerHTML = `
@@ -204,8 +206,9 @@
         return;
       }
 
-      bookings.slice(0, displayCount).forEach((b, idx) => {
-        // Normalize: if receipt exists treat as paid regardless of paymentStatus field
+      bookings.slice(0, displayCount).forEach((b, sliceIdx) => {
+        const realIdx = bookings.indexOf(b); // real index in full array
+        // Normalize: if receipt exists treat as paid
         if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
 
         const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
@@ -276,10 +279,10 @@
           <div class="card-footer">
             <div class="card-footer-left">
               ${!isPaid ? `<button class="btn btn-pay" data-amount="${deposit}" data-id="${b.bookingId}">💳 Pay Deposit</button>` : ''}
-              <button class="btn btn-delete" data-idx="${idx}">🗑 Delete</button>
+              <button class="btn btn-delete" data-idx="${realIdx}">🗑 Delete</button>
             </div>
             <div class="card-footer-right">
-              <button class="btn btn-pdf" data-idx="${idx}">⬇ Download PDF</button>
+              <button class="btn btn-pdf" data-idx="${realIdx}">⬇ Download PDF</button>
             </div>
           </div>
         `;
@@ -323,15 +326,14 @@
 
     // ── PDF GENERATION ──
     function downloadPDF(idx) {
-      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      const b = bookings[idx];
+      const b = allBookings[idx];
       if (!b) { alert('Booking not found.'); return; }
 
-      // ── SINGLE SOURCE OF TRUTH FOR PAID STATUS ──
-      // Paid = has a real receipt OR paymentStatus is 'paid'
-      const receipt = (b.mpesaReceipt && b.mpesaReceipt.trim() !== '' && b.mpesaReceipt !== 'N/A')
-                      ? b.mpesaReceipt.trim() : null;
-      const isPaid  = receipt !== null || b.paymentStatus === 'paid';
+      // Same normalization as the card — receipt = paid, no arguments
+      if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
+
+      const isPaid  = b.paymentStatus === 'paid';
+      const receipt = b.mpesaReceipt || 'N/A';
       const paidAt  = b.paidAt || 'N/A';
 
       const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
@@ -445,10 +447,10 @@
       // ── M-PESA RECEIPT (only if paid) ──
       if (isPaid) {
         sectionHeader('M-PESA PAYMENT DETAILS');
-        row('Receipt No.',    receipt || 'N/A',                    { bg: [220, 255, 235], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Amount Paid',    'Ksh ' + deposit.toLocaleString(),   { bg: [240, 255, 248], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Payment Date',   paidAt,                              { bg: [220, 255, 235], lc: [15, 110, 55], vc: [20, 20, 40] });
-        row('Payment Status', 'CONFIRMED',                         { bg: [200, 255, 225], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Receipt No.',    receipt,                             { bg: [220, 255, 235], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Amount Paid',    'Ksh ' + deposit.toLocaleString(),  { bg: [240, 255, 248], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Payment Date',   paidAt,                             { bg: [220, 255, 235], lc: [15, 110, 55], vc: [20, 20, 40] });
+        row('Payment Status', 'CONFIRMED',                        { bg: [200, 255, 225], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
       }
 
       // ── NOTE BOX — isPaid controls everything ──
