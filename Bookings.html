@@ -427,37 +427,27 @@
       row('Duration',         days + ' day' + (days !== 1 ? 's' : ''), { bg: [255, 255, 255] });
       row('Daily Rate',       'Ksh ' + b.price.toLocaleString(),       { bg: [250, 252, 255] });
 
-      // ── PAYMENT SUMMARY ──
-      sectionHeader('PAYMENT SUMMARY');
-      row('Total Rental Cost',
-          'Ksh ' + total.toLocaleString(),
-          { bg: [228, 240, 255], lc: [20, 60, 160], vc: [20, 60, 160], bold: true });
-      row('Deposit (50%)',
-          'Ksh ' + deposit.toLocaleString(),
-          {
-            bg:   isPaid ? [220, 255, 235] : [255, 248, 220],
-            lc:   isPaid ? [15, 110, 55]   : [130, 75, 0],
-            vc:   isPaid ? [15, 110, 55]   : [130, 75, 0],
-            bold: true
-          });
-      row('Balance Due at Pickup',
-          'Ksh ' + balance.toLocaleString(),
-          { bg: [255, 255, 255], lc: [100, 100, 120], vc: [20, 20, 40] });
-
-      // ── M-PESA RECEIPT (only if paid) ──
       if (isPaid) {
+        // ── PAID: show receipt only ──
         sectionHeader('M-PESA PAYMENT DETAILS');
-        row('Receipt No.',    receipt,                             { bg: [220, 255, 235], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Amount Paid',    'Ksh ' + deposit.toLocaleString(),  { bg: [240, 255, 248], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Payment Date',   paidAt,                             { bg: [220, 255, 235], lc: [15, 110, 55], vc: [20, 20, 40] });
-        row('Payment Status', 'CONFIRMED',                        { bg: [200, 255, 225], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Receipt No.',    receipt,                            { bg: [220, 255, 235], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Amount Paid',    'Ksh ' + deposit.toLocaleString(), { bg: [240, 255, 248], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+        row('Balance at Pickup', 'Ksh ' + balance.toLocaleString(), { bg: [220, 255, 235], lc: [15, 110, 55], vc: [20, 20, 40] });
+        row('Payment Date',   paidAt,                            { bg: [240, 255, 248], lc: [15, 110, 55], vc: [20, 20, 40] });
+        row('Payment Status', 'CONFIRMED',                       { bg: [200, 255, 225], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
+      } else {
+        // ── PENDING: show payment summary ──
+        sectionHeader('PAYMENT SUMMARY');
+        row('Total Rental Cost',  'Ksh ' + total.toLocaleString(),    { bg: [228, 240, 255], lc: [20, 60, 160], vc: [20, 60, 160], bold: true });
+        row('Deposit Due (50%)',  'Ksh ' + deposit.toLocaleString(),  { bg: [255, 248, 220], lc: [130, 75, 0],  vc: [130, 75, 0],  bold: true });
+        row('Balance at Pickup',  'Ksh ' + balance.toLocaleString(),  { bg: [255, 255, 255], lc: [100, 100, 120], vc: [20, 20, 40] });
       }
 
-      // ── NOTE BOX — isPaid controls everything ──
+      // ── NOTE BOX ──
       y += 6;
       const noteText = isPaid
-        ? 'Payment confirmed! You paid Ksh ' + deposit.toLocaleString() + ' deposit. Present this document at pickup. Remaining balance of Ksh ' + balance.toLocaleString() + ' is due at pickup.'
-        : 'Please pay your deposit of Ksh ' + deposit.toLocaleString() + ' to confirm this booking. The remaining Ksh ' + balance.toLocaleString() + ' is paid at pickup.';
+        ? 'You have paid Ksh ' + deposit.toLocaleString() + ' deposit. Present this document when collecting your vehicle. Remaining balance of Ksh ' + balance.toLocaleString() + ' is due at pickup.'
+        : 'Pay a deposit of Ksh ' + deposit.toLocaleString() + ' to confirm this booking. Remaining Ksh ' + balance.toLocaleString() + ' is paid at pickup.';
 
       const noteBg     = isPaid ? [235, 255, 244] : [255, 249, 230];
       const noteBorder = isPaid ? [39, 174, 96]   : [243, 156, 18];
