@@ -221,114 +221,156 @@
       const deposit = Math.floor(total / 2);
       const balance = total - deposit;
       const isPaid  = b.paymentStatus === 'paid';
+      const receipt = b.mpesaReceipt || '';
+      const paidAt  = b.paidAt || '';
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
       const W = 210, H = 297, L = 14, R = 196, CW = 182;
 
-      pdf.setFillColor(20, 100, 221); pdf.rect(0, 0, W, 30, 'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(16); pdf.setFont('helvetica','bold');
-      pdf.text('WALIKO CAR HIRE', L, 12);
-      pdf.setFontSize(7.5); pdf.setFont('helvetica','normal');
-      pdf.text('235 Fashion Street, Nairobi  |  0790 337 687  |  walik@gmail.com', L, 19);
-      pdf.setFillColor(255,200,50); pdf.roundedRect(148,7,48,10,2,2,'F');
-      pdf.setTextColor(20,60,130); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
-      pdf.text('BOOKING CONFIRMATION', 172, 13.5, { align:'center' });
-
-      let y = 36;
-      pdf.setFillColor(242,246,255); pdf.roundedRect(L,y,CW,22,2,2,'F');
-      pdf.setDrawColor(20,100,221); pdf.setLineWidth(0.3); pdf.roundedRect(L,y,CW,22,2,2,'S');
-      pdf.setTextColor(20,100,221); pdf.setFontSize(7); pdf.setFont('helvetica','bold');
-      pdf.text('BOOKING ID', L+4, y+7);
-      pdf.setFontSize(11); pdf.setTextColor(10,30,80); pdf.text(b.bookingId, L+4, y+15);
+      // HEADER
+      pdf.setFillColor(20,100,221); pdf.rect(0,0,W,38,'F');
+      pdf.setFillColor(13,71,161); pdf.triangle(0,38,70,0,0,0,'F');
+      pdf.setTextColor(255,255,255);
+      pdf.setFontSize(22); pdf.setFont('helvetica','bold');
+      pdf.text('WALIKO', L, 17);
+      pdf.setFontSize(9); pdf.setFont('helvetica','normal');
+      pdf.text('CAR HIRE', L, 25);
+      pdf.setFontSize(6.5); pdf.setTextColor(180,210,255);
+      pdf.text('235 Fashion Street, Nairobi  |  0790 337 687  |  walik@gmail.com', L, 32);
 
       if (isPaid) {
-        pdf.setFillColor(180,245,200); pdf.roundedRect(148,y+6,44,8,2,2,'F');
-        pdf.setTextColor(20,120,60); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
-        pdf.text('DEPOSIT PAID ✓', 170, y+11.5, { align:'center' });
+        pdf.setFillColor(39,174,96); pdf.roundedRect(145,8,51,14,3,3,'F');
+        pdf.setTextColor(255,255,255); pdf.setFontSize(8.5); pdf.setFont('helvetica','bold');
+        pdf.text('DEPOSIT PAID', 170, 16, { align:'center' });
+        pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
+        pdf.text('Booking Confirmed', 170, 20.5, { align:'center' });
       } else {
-        pdf.setFillColor(255,235,180); pdf.roundedRect(148,y+6,44,8,2,2,'F');
-        pdf.setTextColor(160,90,0); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
-        pdf.text('PENDING PAYMENT', 170, y+11.5, { align:'center' });
+        pdf.setFillColor(255,193,7); pdf.roundedRect(145,8,51,14,3,3,'F');
+        pdf.setTextColor(60,30,0); pdf.setFontSize(8.5); pdf.setFont('helvetica','bold');
+        pdf.text('PENDING PAYMENT', 170, 16, { align:'center' });
+        pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
+        pdf.text('Action Required', 170, 20.5, { align:'center' });
       }
 
-      pdf.setTextColor(100,100,100); pdf.setFontSize(7); pdf.setFont('helvetica','normal');
-      pdf.text('Issued: ' + b.timestamp, L+4, y+21);
-      y += 28;
+      let y = 46;
 
-      pdf.setFillColor(20,100,221); pdf.rect(L,y,CW,7,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
-      pdf.text('CUSTOMER & BOOKING DETAILS', L+3, y+5);
-      y += 7;
+      // BOOKING ID BAND
+      pdf.setFillColor(235,242,255); pdf.roundedRect(L,y,CW,20,3,3,'F');
+      pdf.setDrawColor(20,100,221); pdf.setLineWidth(0.4); pdf.roundedRect(L,y,CW,20,3,3,'S');
+      pdf.setFillColor(20,100,221); pdf.roundedRect(L,y,5,20,2,2,'F');
+      pdf.setTextColor(100,120,180); pdf.setFontSize(6); pdf.setFont('helvetica','bold');
+      pdf.text('BOOKING REFERENCE', L+9, y+7);
+      pdf.setFontSize(14); pdf.setTextColor(10,30,100); pdf.setFont('helvetica','bold');
+      pdf.text(b.bookingId, L+9, y+16);
+      pdf.setTextColor(150,150,160); pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
+      pdf.text('Issued: ' + b.timestamp, R-2, y+16, { align:'right' });
+      y += 26;
+
+      // RECEIPT BOX (only if paid)
+      if (isPaid && receipt) {
+        pdf.setFillColor(240,255,248); pdf.roundedRect(L,y,CW,20,3,3,'F');
+        pdf.setDrawColor(39,174,96); pdf.setLineWidth(0.5); pdf.roundedRect(L,y,CW,20,3,3,'S');
+        pdf.setFillColor(39,174,96); pdf.roundedRect(L,y,5,20,2,2,'F');
+        pdf.setTextColor(15,100,50); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
+        pdf.text('M-PESA RECEIPT NO: ' + receipt, L+9, y+8);
+        pdf.setFontSize(7); pdf.setFont('helvetica','normal');
+        pdf.text('Deposit of Ksh ' + deposit.toLocaleString() + ' successfully received' + (paidAt ? ' on ' + paidAt : ''), L+9, y+14);
+        pdf.setTextColor(100,140,110);
+        pdf.text('Remaining balance: Ksh ' + balance.toLocaleString() + ' — payable at vehicle pickup', L+9, y+19);
+        y += 26;
+      }
+
+      // CUSTOMER DETAILS HEADER
+      pdf.setFillColor(20,100,221); pdf.roundedRect(L,y,CW,9,2,2,'F');
+      pdf.setTextColor(255,255,255); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
+      pdf.text('CUSTOMER & VEHICLE DETAILS', L+5, y+6);
+      y += 9;
 
       const details = [
-        ['Full Name', b.fullName], ['Phone', b.phone],
-        ['National ID', b.nationalId], ['Licence No.', b.license],
-        ['Car', b.carName], ['Start Date', b.pickup],
-        ['End Date', b.endDate], ['Days Booked', `${days} day${days!==1?'s':''}`],
+        ['Full Name', b.fullName],
+        ['Phone', b.phone],
+        ['National ID', b.nationalId],
+        ['Licence No.', b.license],
+        ['Vehicle', b.carName],
+        ['Pickup Date', b.pickup],
+        ['Return Date', b.endDate],
+        ['Duration', days + ' day' + (days!==1?'s':'')],
       ];
       details.forEach((row,i) => {
-        const ry = y+i*8;
-        pdf.setFillColor(i%2===0?248:255,i%2===0?250:255,i%2===0?255:255);
-        pdf.rect(L,ry,CW,8,'F'); pdf.setFillColor(20,100,221); pdf.rect(L,ry,2,8,'F');
-        pdf.setTextColor(100,100,100); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
-        pdf.text(row[0], L+5, ry+5.5);
-        pdf.setTextColor(20,20,20); pdf.setFont('helvetica','normal');
-        pdf.text(String(row[1]), L+75, ry+5.5);
+        const ry = y+i*8.5;
+        pdf.setFillColor(i%2===0?248:255, i%2===0?250:255, i%2===0?255:255);
+        pdf.rect(L,ry,CW,8.5,'F');
+        pdf.setFillColor(20,100,221); pdf.rect(L,ry,3,8.5,'F');
+        pdf.setTextColor(130,130,150); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
+        pdf.text(row[0], L+6, ry+5.8);
+        pdf.setTextColor(20,20,40); pdf.setFont('helvetica','normal');
+        pdf.text(String(row[1]), L+72, ry+5.8);
       });
-      y += details.length*8+6;
+      y += details.length*8.5+6;
 
-      pdf.setFillColor(20,100,221); pdf.rect(L,y,CW,7,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
-      pdf.text('PAYMENT SUMMARY', L+3, y+5);
-      y += 7;
+      // PAYMENT SUMMARY HEADER
+      pdf.setFillColor(20,100,221); pdf.roundedRect(L,y,CW,9,2,2,'F');
+      pdf.setTextColor(255,255,255); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
+      pdf.text('PAYMENT SUMMARY', L+5, y+6);
+      y += 9;
 
-      const payments = [
-        { label:'Price Per Day',     val:`Ksh ${b.price.toLocaleString()}`,  hi:false, gold:false },
-        { label:'Number of Days',    val:`${days}`,                           hi:false, gold:false },
-        { label:'Total Rental Fee',  val:`Ksh ${total.toLocaleString()}`,     hi:true,  gold:false },
-        { label:'Deposit Due (50%)', val:`Ksh ${deposit.toLocaleString()}`,   hi:false, gold:true  },
-        { label:'Balance on Pickup', val:`Ksh ${balance.toLocaleString()}`,   hi:false, gold:false },
+      const payRows = [
+        { label:'Daily Rate',        val:'Ksh ' + b.price.toLocaleString(),   bold:false, hi:false, green:false },
+        { label:'Number of Days',    val:days + ' days',                       bold:false, hi:false, green:false },
+        { label:'Total Rental Cost', val:'Ksh ' + total.toLocaleString(),      bold:true,  hi:true,  green:false },
+        { label:'Deposit (50%)',     val:'Ksh ' + deposit.toLocaleString(),    bold:true,  hi:false, green:isPaid },
+        { label:'Balance on Pickup', val:'Ksh ' + balance.toLocaleString(),    bold:false, hi:false, green:false },
       ];
-      payments.forEach((row,i) => {
-        const ry = y+i*8;
-        if(row.hi) pdf.setFillColor(224,238,255);
-        else if(row.gold) pdf.setFillColor(255,246,218);
-        else pdf.setFillColor(i%2===0?248:255,i%2===0?250:255,i%2===0?255:255);
-        pdf.rect(L,ry,CW,8,'F');
-        pdf.setFillColor(row.hi?20:row.gold?255:20,row.hi?100:row.gold?180:100,row.hi?221:row.gold?0:221);
-        pdf.rect(L,ry,2,8,'F');
-        const lc=row.gold?[150,85,0]:[100,100,100];
-        const vc=row.hi?[20,100,221]:row.gold?[170,95,0]:[20,20,20];
-        pdf.setTextColor(...lc); pdf.setFontSize(8); pdf.setFont('helvetica',row.hi||row.gold?'bold':'normal');
-        pdf.text(row.label, L+5, ry+5.5);
-        pdf.setTextColor(...vc); pdf.setFont('helvetica',row.hi||row.gold?'bold':'normal');
-        pdf.text(row.val, L+75, ry+5.5);
+      payRows.forEach((row,i) => {
+        const ry = y+i*9;
+        if(row.hi) pdf.setFillColor(228,240,255);
+        else if(row.green) pdf.setFillColor(235,255,244);
+        else pdf.setFillColor(i%2===0?248:255, i%2===0?250:255, i%2===0?255:255);
+        pdf.rect(L,ry,CW,9,'F');
+        const ac = row.hi?[20,100,221]:row.green?[39,174,96]:[20,100,221];
+        pdf.setFillColor(...ac); pdf.rect(L,ry,3,9,'F');
+        const lc = row.hi?[20,80,180]:row.green?[20,120,60]:[130,130,150];
+        const vc = row.hi?[20,80,180]:row.green?[20,120,60]:[20,20,40];
+        pdf.setTextColor(...lc); pdf.setFontSize(7.5); pdf.setFont('helvetica',row.bold?'bold':'normal');
+        pdf.text(row.label, L+6, ry+6);
+        pdf.setTextColor(...vc); pdf.setFont('helvetica',row.bold?'bold':'normal');
+        pdf.text(row.val, R-2, ry+6, { align:'right' });
       });
-      y += payments.length*8+6;
+      y += payRows.length*9+8;
 
-      pdf.setFillColor(255,248,228); pdf.setDrawColor(255,180,60); pdf.setLineWidth(0.4);
-      pdf.roundedRect(L,y,CW,16,2,2,'FD');
-      pdf.setTextColor(140,80,0); pdf.setFontSize(8); pdf.setFont('helvetica','bold');
-      pdf.text('NOTE:', L+4, y+6.5);
-      pdf.setFont('helvetica','normal'); pdf.setFontSize(7.5);
-      pdf.text(`Pay Ksh ${deposit.toLocaleString()} deposit to confirm. Balance Ksh ${balance.toLocaleString()} due at pickup.`, L+18, y+6.5);
-      pdf.setTextColor(100,100,100);
-      pdf.text('Present this document when collecting your vehicle.', L+4, y+13);
-      y += 22;
+      // NOTE BOX
+      const noteH = isPaid ? 14 : 20;
+      pdf.setFillColor(255,252,235); pdf.setDrawColor(255,193,7); pdf.setLineWidth(0.4);
+      pdf.roundedRect(L,y,CW,noteH,3,3,'FD');
+      pdf.setFillColor(255,193,7); pdf.roundedRect(L,y,5,noteH,2,2,'F');
+      pdf.setTextColor(100,70,0); pdf.setFontSize(7.5); pdf.setFont('helvetica','bold');
+      if (isPaid) {
+        pdf.text('Your booking is confirmed! Present this document when collecting your vehicle.', L+9, y+9);
+      } else {
+        pdf.text('ACTION REQUIRED:', L+9, y+7);
+        pdf.setFont('helvetica','normal'); pdf.setFontSize(7);
+        pdf.text('Pay deposit of Ksh ' + deposit.toLocaleString() + ' to confirm your booking.', L+9, y+13);
+        pdf.text('Balance of Ksh ' + balance.toLocaleString() + ' is payable at vehicle pickup.', L+9, y+19);
+      }
+      y += noteH + 10;
 
-      pdf.setDrawColor(180,180,180); pdf.setLineWidth(0.3);
-      pdf.line(L,y+10,L+80,y+10); pdf.line(L+100,y+10,R,y+10);
-      pdf.setTextColor(150,150,150); pdf.setFontSize(7);
-      pdf.text('Customer Signature', L, y+14);
-      pdf.text('Authorized by Waliko', L+100, y+14);
+      // SIGNATURES
+      pdf.setDrawColor(200,200,215); pdf.setLineWidth(0.3);
+      pdf.line(L,y+12,L+78,y+12); pdf.line(L+104,y+12,R,y+12);
+      pdf.setTextColor(170,170,180); pdf.setFontSize(6.5); pdf.setFont('helvetica','normal');
+      pdf.text('Customer Signature', L, y+16);
+      pdf.text('Authorized by Waliko Car Hire', L+104, y+16);
 
-      pdf.setFillColor(20,100,221); pdf.rect(0,H-14,W,14,'F');
-      pdf.setTextColor(255,255,255); pdf.setFontSize(7.5); pdf.setFont('helvetica','normal');
-      pdf.text('Thank you for choosing Waliko Car Hire!', W/2, H-7.5, { align:'center' });
-      pdf.text('walik@gmail.com  |  0790 337 687  |  235 Fashion Street, Nairobi, Kenya', W/2, H-3, { align:'center' });
+      // FOOTER
+      pdf.setFillColor(13,71,161); pdf.rect(0,H-20,W,3,'F');
+      pdf.setFillColor(20,100,221); pdf.rect(0,H-17,W,17,'F');
+      pdf.setTextColor(255,255,255); pdf.setFontSize(10); pdf.setFont('helvetica','bold');
+      pdf.text('Thank you for choosing Waliko Car Hire!', W/2, H-9, { align:'center' });
+      pdf.setFontSize(6.5); pdf.setFont('helvetica','normal'); pdf.setTextColor(180,210,255);
+      pdf.text('walik@gmail.com  •  0790 337 687  •  235 Fashion Street, Nairobi, Kenya', W/2, H-3.5, { align:'center' });
 
-      pdf.save(`Waliko_Booking_${bookingId}.pdf`);
+      pdf.save('Waliko_Booking_' + bookingId + '.pdf');
     }
 
     document.getElementById('logoutBtn').addEventListener('click', e => {
