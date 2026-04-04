@@ -276,7 +276,7 @@
               <button class="btn btn-delete" data-idx="${idx}">🗑 Delete</button>
             </div>
             <div class="card-footer-right">
-              <button class="btn btn-pdf" data-id="${b.bookingId}">⬇ Download PDF</button>
+              <button class="btn btn-pdf" data-idx="${idx}">⬇ Download PDF</button>
             </div>
           </div>
         `;
@@ -312,18 +312,18 @@
         });
       });
 
-      // PDF buttons
+      // PDF buttons — pass index directly so no ID type mismatch ever happens
       list.querySelectorAll('.btn-pdf').forEach(btn => {
-        btn.addEventListener('click', () => downloadPDF(btn.dataset.id));
+        btn.addEventListener('click', () => downloadPDF(Number(btn.dataset.idx)));
       });
     }
 
     // ── PDF GENERATION ──
-    function downloadPDF(bookingId) {
+    function downloadPDF(idx) {
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
-      // FIX: String() cast on both sides so type mismatch never fails
-      const b = bookings.find(x => String(x.bookingId) === String(bookingId));
+      // Use index directly — zero type mismatch risk
+      const b = bookings[idx];
       if (!b) { alert('Booking not found.'); return; }
 
       const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
