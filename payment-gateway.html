@@ -523,7 +523,6 @@
         btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
         btn.disabled = true;
 
-        // ── REAL STK PUSH — uses FormData matching your stkpush.php $_POST ──
         const formData = new FormData();
         formData.append('phone', phone);
         formData.append('amount', amount || 1);
@@ -537,7 +536,6 @@
         .then(res => res.json())
         .then(data => {
           if (data.success === true) {
-            // STK push sent — now show waiting message and poll status
             closeModal('mpesaModal');
             showStatus('success', '✅ Payment request sent! Check your phone and enter your M-Pesa PIN.');
             pollPaymentStatus(data.CheckoutRequestID, btn);
@@ -573,7 +571,6 @@
 
       if (!valid) return;
 
-      // PayPal & Visa — still show error (not implemented yet)
       btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
       btn.disabled = true;
 
@@ -604,7 +601,7 @@
       }
     }
 
-    // ── Poll payment status every 3 seconds ──
+    // ── Poll payment status every 2 seconds ──
     function pollPaymentStatus(checkoutRequestID, btn) {
       let attempts = 0;
       const maxAttempts = 30; // 60 seconds total
@@ -627,24 +624,34 @@
             btn.textContent = 'Pay';
             btn.disabled = false;
 
-            // ── Update booking status in localStorage ──
-            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-            const bookingId = localStorage.getItem('paymentBookingId');
+            // ── FIX: use String() on both sides so type mismatch never fails ──
+            const bookings   = JSON.parse(localStorage.getItem('bookings')) || [];
+            const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmount = localStorage.getItem('paymentAmount');
+
             const updatedBookings = bookings.map(b => {
-              if (b.bookingId === bookingId) {
-                return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt, paidAmount: paidAmount, paidAt: new Date().toLocaleString() };
+              if (String(b.bookingId) === String(payBookingId)) {
+                return {
+                  ...b,
+                  paymentStatus: 'paid',
+                  mpesaReceipt:  data.receipt || '',
+                  paidAmount:    paidAmount,
+                  paidAt:        new Date().toLocaleString()
+                };
               }
               return b;
             });
+
             localStorage.setItem('bookings', JSON.stringify(updatedBookings));
 
             showStatus('success', '🎉 Woohoo! Payment received successfully. Receipt: ' + (data.receipt || '') + '. Your booking is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
+
           } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
             clearInterval(interval);
             btn.textContent = 'Pay';
             btn.disabled = false;
             showStatus('error', 'error');
+
           } else if (attempts >= maxAttempts) {
             clearInterval(interval);
             btn.textContent = 'Pay';
@@ -662,7 +669,7 @@
           }
         });
 
-      }, 2000); // poll every 2 seconds
+      }, 2000);
     }
 
     // Logout
