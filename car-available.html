@@ -8,6 +8,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html, body {
+      overflow-x: hidden;
+    }
+
     body {
       font-family: 'Poppins', sans-serif;
       background: #f0f4ff;
@@ -64,13 +68,6 @@
       padding: 0 16px;
     }
 
-    .notice-box { background: #fff; border-radius: 14px; padding: 24px 26px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); }
-    .notice-box h2 { margin-bottom: 16px; color: #1464dd; font-size: 1.1em; font-weight: 700; padding-bottom: 12px; border-bottom: 2px solid #f0f4ff; }
-    .notice-box p { margin-bottom: 10px; font-size: 0.9em; line-height: 1.8; color: #555; }
-    .notice-box p strong { color: #1464dd; font-weight: 600; }
-    .notice-box .notice-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 8px; background: #f0f4ff; margin-bottom: 8px; font-size: 0.88em; color: #444; line-height: 1.6; }
-    .notice-box .notice-item .icon { font-size: 1.1em; flex-shrink: 0; margin-top: 1px; }
-
     .page-title {
       font-size: 1.2em;
       font-weight: 700;
@@ -105,7 +102,10 @@
       width: 100%;
       height: 180px;
       object-fit: cover;
+      object-position: center;
+      display: block;
       background: #e8eef8;
+      max-width: 100%;
     }
 
     .car-card img[src=""],
@@ -272,28 +272,20 @@
       transform: translateY(-1px);
     }
 
-
-
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
       nav { margin-top: 4px; width: 100%; }
       header h1 { font-size: 1em; }
       nav a { font-size: 0.7em; padding: 6px 10px; }
       main { margin: 12px auto; }
-
-      /* Fix car grid — 1 column on mobile */
       .car-grid { grid-template-columns: 1fr; gap: 12px; }
-
-      /* Fix card content overflow */
-      .car-card { width: 100%; min-width: 0; }
+      .car-card { width: 100%; min-width: 0; max-width: 100%; overflow: hidden; }
+      .car-card img { width: 100%; height: 180px; object-fit: cover; }
       .car-info { padding: 12px; }
       .car-info h3 { font-size: 0.95em; }
       .car-info p { font-size: 0.78em; }
       .car-info .price { font-size: 0.95em; }
       .book-btn { margin: 0 12px 12px; font-size: 0.82em; padding: 8px; }
-      .car-card img { height: 160px; }
-
-      /* Modal full screen on mobile */
       .modal { padding: 8px; align-items: flex-end; }
       .modal-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
     }
@@ -301,14 +293,11 @@
 </head>
 <body>
 
-
-
   <header>
-    <h1>Waliko Car Hire(Dashboard)</h1>
+    <h1>Waliko Car Hire (Dashboard)</h1>
     <nav>
-      
-      <a href="#" id="homeLink">Home</a>
-      <a href="#" id="carsLink" class="active">Cars</a>
+      <a href="dashboard.html">Home</a>
+      <a href="car_available.html" class="active">Cars</a>
       <a href="bookings.html">My Bookings</a>
       <a href="payments.html">Payments</a>
       <a href="help.html">Help</a>
@@ -317,7 +306,6 @@
       <a href="index.html" class="logout" id="logoutBtn">Logout</a>
     </nav>
   </header>
-
 
   <main>
     <div class="page-title">Available Cars</div>
@@ -362,7 +350,6 @@
 
   <script>
     const cars = [
-           { name: "for testing only",     price: 2, description: "Luxury SUV with 4WD.",                                         image: "car1.jpg" },
       { name: "Toyota Prado TX",     price: 10000, description: "Luxury SUV with 4WD.",                                         image: "car1.jpg" },
       { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                 image: "car2.jpg" },
       { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                           image: "car3.jpg" },
@@ -386,74 +373,30 @@
 
     let currentCar = null;
 
-    function setActive(id) {
-      document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
-
-    // ── Show Home instructions ──
-    function renderHome() {
-      setActive('homeLink');
-      document.querySelector('.page-title').style.display = 'none';
-      document.getElementById('carGrid').innerHTML = `
-        <div style="grid-column:1/-1">
-          <div class="notice-box">
-            <p>• This system allows you to view and book available cars.</p>
-            <p>• Click <strong>"Cars"</strong> to explore our fleet and press <strong>"Book Now"</strong> on any available vehicle.</p>
-            <p>• After booking, open <strong>"My Bookings"</strong> to see your pending reservations. You can delete a booking or proceed to make payment.</p>
-            <p>• Once payment is made, your status will be updated in the <strong>Payments</strong> section.</p>
-            <p>• To get a receipt, click the <strong>"Get Receipt"</strong> button inside the Payments section.</p>
-            <p>• If you experience a problem, press the <strong>"Help"</strong> button.</p>
-            <p>• By clicking <strong>"Settings"</strong>, you can update your personal information, change your password, access Emergency Services, or manage account deletion/deactivation.</p>
-            <p><strong>✨ Thank you for choosing Waliko Car Hire!</strong></p>
-          </div>
+    // ── Render car grid ──
+    const grid = document.getElementById('carGrid');
+    cars.forEach((car, i) => {
+      const card = document.createElement('div');
+      card.className = 'car-card';
+      card.innerHTML = `
+        <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
+        <div class="car-info">
+          <h3>${car.name}</h3>
+          <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
+          <p>${car.description}</p>
+          <span class="badge">✅ Available</span>
         </div>
+        <button class="book-btn" data-index="${i}">Book Now</button>
       `;
-    }
-
-    // ── Show Cars grid ──
-    function renderCars() {
-      setActive('carsLink');
-      document.querySelector('.page-title').style.display = 'block';
-      document.querySelector('.page-title').textContent = 'Available Cars';
-      const grid = document.getElementById('carGrid');
-      grid.innerHTML = '';
-      cars.forEach((car, i) => {
-        const card = document.createElement('div');
-        card.className = 'car-card';
-        card.innerHTML = `
-          <img src="${car.image}" alt="${car.name}" onerror="this.style.background='linear-gradient(135deg,#e8eef8,#d0dcf5)';this.removeAttribute('src')">
-          <div class="car-info">
-            <h3>${car.name}</h3>
-            <div class="price">Ksh ${car.price.toLocaleString()} <span style="font-size:0.75em;font-weight:400;color:#888">/ day</span></div>
-            <p>${car.description}</p>
-            <span class="badge">✅ Available</span>
-          </div>
-          <button class="book-btn" data-index="${i}">Book Now</button>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // ── Load: show Home instructions by default ──
-    renderHome();
-
-    // ── Nav clicks ──
-    document.getElementById('homeLink').addEventListener('click', e => {
-      e.preventDefault();
-      renderHome();
-    });
-
-    document.getElementById('carsLink').addEventListener('click', e => {
-      e.preventDefault();
-      renderCars();
+      grid.appendChild(card);
     });
 
     // ── Book button click ──
-    document.getElementById('carGrid').addEventListener('click', e => {
+    grid.addEventListener('click', e => {
       if (e.target.classList.contains('book-btn')) {
         currentCar = cars[e.target.dataset.index];
-        document.getElementById('modalCarName').textContent = `Booking: ${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
+        document.getElementById('modalCarName').textContent =
+          `Booking: ${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
         document.getElementById('bookingForm').reset();
         document.getElementById('bookingModal').classList.add('open');
       }
@@ -517,5 +460,6 @@
       window.location.href = 'index.html';
     });
   </script>
+
 </body>
 </html>
