@@ -365,7 +365,7 @@
     <nav>
       <a href="car-available.html">Home</a>
       <a href="car-available.html">Cars</a>
-      <a href="bookings.html" class="active">My Bookings</a>
+      <a href="Bookings.html" class="active">My Bookings</a>
       <a href="payments.html">Payments</a>
       <a href="help.html">Help</a>
       <a href="account.html">Settings</a>
@@ -396,17 +396,17 @@
       <div class="admin-contact">
         📞 <strong>Contact us to cancel:</strong><br>
         Phone: <a href="tel:0790337687">0790 337 687</a><br>
-        Email: <a href="/cdn-cgi/l/email-protection#d9aeb8b5b0b299beb4b8b0b5f7bab6b4"><span class="__cf_email__" data-cfemail="b9ced8d5d0d2f9ded4d8d0d597dad6d4">[email&#160;protected]</span></a>
+        Email: <a href="mailto:walik@gmail.com">walik@gmail.com</a>
       </div>
 
       <div class="admin-btn-row">
         <button class="btn-help" id="adminHelpBtn">🛟 Visit Help &amp; Support</button>
-        <button class="btn-ok"   id="adminOkBtn">OK, Got It</button>
+        <button class="btn-ok" id="adminOkBtn">OK, Got It</button>
       </div>
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
     const cars = [
       { name: "Toyota Prado TX",     price: 10000, image: "car1.jpg" },
       { name: "Subaru Forester",      price: 5000,  image: "car2.jpg" },
@@ -438,7 +438,7 @@
 
     function closeAdminPopup() {
       document.getElementById('adminOverlay').classList.remove('open');
-      window.location.href = 'bookings.html';
+      window.location.href = 'Bookings.html';
     }
 
     document.getElementById('adminCloseX').addEventListener('click', closeAdminPopup);
@@ -704,4 +704,14 @@
       pdf.save(`Waliko_Booking_${bookingId}.pdf`);
     }
 
-    document.getElementById('logoutBtn').addEventListener(
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    });
+
+    renderBookings();
+  </script>
+</body>
+</html>
