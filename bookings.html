@@ -8,20 +8,33 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; min-height: 100vh; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4ff;
+      color: #333;
+    }
 
     /* ── HEADER ── */
     header {
       background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff; padding: 10px 20px;
-      display: flex; flex-wrap: wrap; align-items: center;
-      justify-content: space-between; position: sticky; top: 0;
-      z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
+
     header h1 { font-size: 1.2em; font-weight: 700; }
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
     nav a {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
       color: #fff; padding: 7px 13px; border-radius: 25px;
       font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s;
     }
@@ -30,81 +43,75 @@
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
     /* ── MAIN ── */
-    main { max-width: 860px; margin: 28px auto; padding: 0 16px 60px; }
+    main { max-width: 900px; margin: 24px auto; padding: 0 16px 40px; }
 
-    .page-title {
-      font-size: 1.3em; font-weight: 700; color: #1464dd;
-      margin-bottom: 6px; display: flex; align-items: center; gap: 8px;
-    }
-    .page-subtitle { font-size: 0.82em; color: #888; margin-bottom: 20px; }
+    .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; margin-bottom: 16px; }
 
-    /* ── EMPTY ── */
     .empty-msg {
-      background: #fff; border-radius: 16px; padding: 48px 24px; text-align: center;
-      box-shadow: 0 4px 20px rgba(20,100,221,0.08); border: 1px solid rgba(20,100,221,0.07);
-      color: #666; font-size: 0.92em; line-height: 1.8;
+      background: #fff; border-radius: 14px; padding: 32px 24px; text-align: center;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07);
+      color: #666; font-size: 0.92em; line-height: 1.7;
     }
-    .empty-msg .empty-icon { font-size: 3em; margin-bottom: 12px; }
     .empty-msg a { color: #1464dd; font-weight: 600; text-decoration: none; }
 
     /* ── BOOKING CARD ── */
     .booking-card {
-      background: #fff; border-radius: 16px; margin-bottom: 20px;
-      box-shadow: 0 4px 20px rgba(20,100,221,0.08);
-      border: 1px solid rgba(20,100,221,0.09);
-      overflow: hidden; animation: fadeIn 0.35s ease;
+      background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07);
+      animation: fadeIn 0.3s ease;
     }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-    .card-topbar {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      padding: 14px 20px;
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    .card-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
     }
-    .card-topbar-left h3 { font-size: 1em; font-weight: 700; color: #fff; }
-    .card-topbar-left .booking-id { font-size: 0.72em; color: rgba(255,255,255,0.65); margin-top: 2px; }
-    .card-topbar-right { display: flex; gap: 8px; flex-wrap: wrap; }
+    .card-header h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
+    .card-header .booking-id { font-size: 0.75em; color: #888; margin-top: 2px; }
+    .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-    .badge {
-      padding: 4px 10px; border-radius: 20px; font-size: 0.7em; font-weight: 700; letter-spacing: 0.3px;
+    .btn {
+      padding: 7px 14px; border: none; border-radius: 8px;
+      font-family: 'Poppins', sans-serif; font-size: 0.78em; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
     }
-    .badge-paid { background: #27ae60; color: #fff; }
-    .badge-pending { background: #f39c12; color: #fff; }
+    .btn-pay { background: #1464dd; color: #fff; }
+    .btn-pay:hover { background: #0d47a1; }
+    .btn-delete { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; }
+    .btn-delete:hover { background: #ffe0e0; }
+    .btn-pdf { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
+    .btn-pdf:hover { background: #e0eaff; }
 
-    .card-body { padding: 20px; }
+    /* ── TABLE ── */
+    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+    .info-table tr { border-bottom: 1px solid #f0f4ff; }
+    .info-table tr:last-child { border-bottom: none; }
+    .info-table th {
+      text-align: left; font-size: 0.78em; font-weight: 600; color: #888;
+      padding: 6px 8px 6px 0; width: 140px; white-space: nowrap;
+    }
+    .info-table td { font-size: 0.85em; color: #333; padding: 6px 8px 6px 0; }
 
-    .info-table {
-      width: 100%; border-collapse: collapse; margin-bottom: 16px;
-      border-radius: 10px; overflow: hidden; border: 1px solid #e8edf8;
+    .pending-notice {
+      background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px;
+      padding: 10px 14px; font-size: 0.8em; color: #b35c00;
+      margin-bottom: 12px; line-height: 1.6;
     }
-    .info-table thead tr { background: #f0f4ff; }
-    .info-table thead th {
-      text-align: left; font-size: 0.72em; font-weight: 700;
-      color: #1464dd; padding: 10px 14px; text-transform: uppercase; letter-spacing: 0.4px;
+    .paid-notice {
+      background: #f0fff6; border: 1px solid #a8f0c6; border-radius: 8px;
+      padding: 10px 14px; font-size: 0.8em; color: #1a6e3a;
+      margin-bottom: 12px; line-height: 1.6;
     }
-    .info-table tbody tr { border-bottom: 1px solid #f0f4ff; transition: background 0.15s; }
-    .info-table tbody tr:last-child { border-bottom: none; }
-    .info-table tbody tr:hover { background: #f8faff; }
-    .info-table tbody td { padding: 9px 14px; font-size: 0.85em; color: #333; }
-    .info-table tbody td:first-child { font-weight: 600; color: #555; width: 160px; white-space: nowrap; }
-    .info-table tbody td.highlight { font-weight: 700; color: #1464dd; }
-    .info-table tbody td.total-row { font-weight: 700; color: #1a1a2e; font-size: 0.9em; }
 
-    .section-label {
-      font-size: 0.72em; font-weight: 700; color: #1464dd;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      margin-bottom: 8px; margin-top: 4px;
-      display: flex; align-items: center; gap: 6px;
-    }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: #e0eaff; }
+    .card-footer { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
-    .status-box {
-      border-radius: 10px; padding: 12px 16px; font-size: 0.82em;
-      margin-bottom: 16px; line-height: 1.7; display: flex; align-items: flex-start; gap: 10px;
+    .show-more-btn {
+      display: block; width: 100%; padding: 11px; background: #fff;
+      border: 1.5px solid #c5d5f5; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 600;
+      color: #1464dd; cursor: pointer; transition: all 0.2s; margin-top: 4px;
     }
-    .status-box .status-icon { font-size: 1.3em; flex-shrink: 0; margin-top: 1px; }
-    .status-pending { background:#fff8ee; border:1px solid #ffd78a; border-left:4px solid #f39c12; color:#905000; }
-    .status-success { background:#f0fff6; border:1px solid #a8f0c6; border-left:4px solid #27ae60; color:#1a6e3a; }
+    .show-more-btn:hover { background: #f0f4ff; }
 
     /* ── ADMIN POPUP ── */
     .admin-modal {
@@ -116,20 +123,23 @@
     .admin-modal-box {
       background: #fff; border-radius: 18px; padding: 28px 24px;
       width: 100%; max-width: 380px; position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease;
-      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25); text-align: center;
     }
+    .admin-modal-close {
+      position: absolute; top: 12px; right: 14px;
+      background: #f0f4ff; border: none; width: 28px; height: 28px;
+      border-radius: 50%; font-size: 1em; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #555; transition: background 0.2s; text-decoration: none;
+    }
+    .admin-modal-close:hover { background: #dde3f0; color: #1464dd; }
     .admin-modal-icon { font-size: 3em; margin-bottom: 10px; }
-    .admin-modal-box h3 {
-      font-size: 1.05em; font-weight: 700; color: #c0392b; margin-bottom: 10px;
-    }
-    .admin-modal-box p {
-      font-size: 0.85em; color: #555; line-height: 1.7; margin-bottom: 6px;
-    }
+    .admin-modal-box h3 { font-size: 1.05em; font-weight: 700; color: #c0392b; margin-bottom: 10px; }
+    .admin-modal-box p { font-size: 0.85em; color: #555; line-height: 1.7; margin-bottom: 6px; }
     .admin-info-box {
-      background: #f0f4ff; border-left: 4px solid #1464dd;
-      border-radius: 8px; padding: 10px 14px; margin: 14px 0;
-      text-align: left; font-size: 0.82em; color: #1a1a2e; line-height: 1.8;
+      background: #f0f4ff; border-left: 4px solid #1464dd; border-radius: 8px;
+      padding: 10px 14px; margin: 14px 0; text-align: left;
+      font-size: 0.82em; color: #1a1a2e; line-height: 1.8;
     }
     .admin-info-box strong { color: #1464dd; }
     .admin-contact {
@@ -146,51 +156,27 @@
     }
     .btn-admin-close:hover { background: linear-gradient(135deg,#0d47a1,#083080); }
 
-    .card-footer {
-      padding: 14px 20px; background: #f8faff;
-      border-top: 1px solid #eef2fc;
-      display: flex; gap: 8px; justify-content: space-between; align-items: center; flex-wrap: wrap;
-    }
-    .card-footer-left { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .card-footer-right { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .btn {
-      padding: 8px 16px; border: none; border-radius: 8px;
-      font-family: 'Poppins', sans-serif; font-size: 0.78em; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;
-    }
-    .btn-pay { background: linear-gradient(135deg,#1464dd,#0d47a1); color: #fff; box-shadow: 0 2px 8px rgba(20,100,221,0.25); }
-    .btn-pay:hover { background: linear-gradient(135deg,#0d47a1,#083080); transform: translateY(-1px); }
-    .btn-delete { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; }
-    .btn-delete:hover { background: #ffe0e0; }
-    .btn-delete-locked { background: #f0f0f0; color: #aaa; border: 1px solid #ddd; cursor: not-allowed; }
-    .btn-pdf { background: #fff; color: #1464dd; border: 1.5px solid #c5d5f5; }
-    .btn-pdf:hover { background: #f0f4ff; }
-
-    .show-more-btn {
-      display: block; width: 100%; padding: 13px; background: #fff;
-      border: 1.5px dashed #c5d5f5; border-radius: 12px;
-      font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 600;
-      color: #1464dd; cursor: pointer; transition: all 0.2s; margin-top: 4px; text-align: center;
-    }
-    .show-more-btn:hover { background: #f0f4ff; border-color: #1464dd; }
-
+    /* ── RESPONSIVE ── */
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
       nav { margin-top: 4px; width: 100%; }
       header h1 { font-size: 1em; }
       nav a { font-size: 0.7em; padding: 6px 10px; }
-      .card-topbar { flex-direction: column; align-items: flex-start; }
-      .info-table tbody td:first-child { width: 110px; font-size: 0.78em; }
-      .info-table tbody td { font-size: 0.8em; word-break: break-word; }
-      .card-footer { flex-direction: column; align-items: stretch; }
-      .card-footer-left, .card-footer-right { width: 100%; }
-      .btn { flex: 1; justify-content: center; }
+      .card-header { flex-direction: column; gap: 10px; }
+      .card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+      .card-actions .btn { flex: 1; text-align: center; min-width: 80px; }
+      .info-table th { width: 100px; font-size: 0.75em; white-space: nowrap; }
+      .info-table td { font-size: 0.82em; word-break: break-word; }
+      .booking-card { padding: 14px; }
       main { padding: 0 10px 40px; }
+      .page-title { font-size: 1em; }
+      .card-footer .btn { flex: 1; text-align: center; }
+      .pending-notice { font-size: 0.76em; }
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
@@ -206,110 +192,93 @@
   </header>
 
   <main>
-    <div class="page-title">📋 My Bookings</div>
-    <div class="page-subtitle">View and manage all your car hire bookings below.</div>
+    <div class="page-title">My Bookings</div>
     <div id="bookingsList"></div>
   </main>
 
+  <!-- Admin Only Popup for Paid Bookings -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-box">
+      <a class="admin-modal-close" href="bookings.html">✕</a>
+      <div class="admin-modal-icon">🔒</div>
+      <h3>Cannot Delete Paid Booking</h3>
+      <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
+      <div class="admin-info-box">
+        🚘 <strong>Car:</strong> <span id="adminPopupCar"></span><br>
+        🔖 <strong>Booking ID:</strong> <span id="adminPopupId"></span>
+      </div>
+      <div class="admin-contact">
+        📞 To cancel this booking, please contact us:<br>
+        <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
+        <strong>Email:</strong> <a href="mailto:walik@gmail.com">walik@gmail.com</a><br>
+        <strong>Or visit:</strong> <a href="help.html">Help &amp; Support →</a>
+      </div>
+      <button class="btn-admin-close" onclick="document.getElementById('adminModal').classList.remove('open')">OK, Got It</button>
+    </div>
+  </div>
+
   <script>
     let displayCount = 3;
-    let allBookings = [];
 
     function renderBookings() {
       const list = document.getElementById('bookingsList');
       list.innerHTML = '';
-      allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      const bookings = allBookings;
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
       if (bookings.length === 0) {
         list.innerHTML = `
           <div class="empty-msg">
-            <div class="empty-icon">🚗</div>
-            <p><strong>No bookings yet!</strong></p>
-            <p style="margin-top:6px">Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p>
+            <p>You haven't made any bookings yet.</p>
+            <p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p>
           </div>`;
         return;
       }
 
-      bookings.slice(0, displayCount).forEach((b) => {
-        const realIdx = bookings.indexOf(b);
+      bookings.slice(0, displayCount).forEach((b, idx) => {
+        // normalize paid status
         if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
+        const isPaid  = b.paymentStatus === 'paid';
 
         const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
         const total   = b.price * days;
         const deposit = Math.floor(total / 2);
         const balance = total - deposit;
-        const isPaid  = b.paymentStatus === 'paid';
-
-        const statusHTML = isPaid
-          ? `<div class="status-box status-success">
-              <span class="status-icon">✅</span>
-              <div><strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>${b.mpesaReceipt || 'N/A'}</strong><br>
-              Your booking is confirmed. Balance of <strong>Ksh ${balance.toLocaleString()}</strong> is due at pickup. 🚗</div>
-             </div>`
-          : `<div class="status-box status-pending">
-              <span class="status-icon">⏳</span>
-              <div><strong>Pending Payment</strong><br>
-              Pay a deposit of <strong>Ksh ${deposit.toLocaleString()}</strong> to confirm your booking.
-              Remaining <strong>Ksh ${balance.toLocaleString()}</strong> is paid at pickup.</div>
-             </div>`;
-
-        // Delete button: shows admin popup if paid
-        const deleteBtn = isPaid
-          ? `<button class="btn btn-delete-locked" data-car="${b.carName}" data-id="${b.bookingId}">🗑 Delete</button>`
-          : `<button class="btn btn-delete" data-idx="${realIdx}">🗑 Delete</button>`;
-
-        const lockedNote = '';
 
         const card = document.createElement('div');
         card.className = 'booking-card';
         card.innerHTML = `
-          <div class="card-topbar">
-            <div class="card-topbar-left">
-              <h3>🚘 ${b.carName}</h3>
-              <div class="booking-id">Booking ID: ${b.bookingId} &nbsp;·&nbsp; ${b.timestamp}</div>
+          <div class="card-header">
+            <div>
+              <h3>${b.carName}</h3>
+              <div class="booking-id">ID: ${b.bookingId} &nbsp;·&nbsp; ${b.timestamp}</div>
             </div>
-            <div class="card-topbar-right">
-              <span class="badge ${isPaid ? 'badge-paid' : 'badge-pending'}">${isPaid ? '✓ Paid' : '⏳ Pending'}</span>
+            <div class="card-actions">
+              ${!isPaid ? `<button class="btn btn-pay" data-amount="${deposit}" data-id="${b.bookingId}">Pay Deposit</button>` : ''}
+              <button class="btn btn-delete ${isPaid ? 'btn-delete-paid' : ''}" data-idx="${idx}" data-car="${b.carName}" data-id="${b.bookingId}">Delete</button>
             </div>
           </div>
 
-          <div class="card-body">
-            <div class="section-label">Customer Details</div>
-            <table class="info-table">
-              <tbody>
-                <tr><td>Full Name</td><td>${b.fullName}</td></tr>
-                <tr><td>Phone No.</td><td>${b.phone}</td></tr>
-                <tr><td>National ID</td><td>${b.nationalId}</td></tr>
-                <tr><td>Licence No.</td><td>${b.license}</td></tr>
-              </tbody>
-            </table>
+          <table class="info-table">
+            <tr><th>Full Name</th><td>${b.fullName}</td></tr>
+            <tr><th>Phone No.</th><td>${b.phone}</td></tr>
+            <tr><th>National ID</th><td>${b.nationalId}</td></tr>
+            <tr><th>Licence No.</th><td>${b.license}</td></tr>
+            <tr><th>Start Date</th><td>${b.pickup}</td></tr>
+            <tr><th>End Date</th><td>${b.endDate}</td></tr>
+            <tr><th>Days Booked</th><td>${days} day${days !== 1 ? 's' : ''}</td></tr>
+            <tr><th>Price/Day</th><td>Ksh ${b.price.toLocaleString()}</td></tr>
+            <tr><th>Total Fee</th><td>Ksh ${total.toLocaleString()}</td></tr>
+          </table>
 
-            <div class="section-label">Booking Details</div>
-            <table class="info-table">
-              <tbody>
-                <tr><td>Start Date</td><td>${b.pickup}</td></tr>
-                <tr><td>End Date</td><td>${b.endDate}</td></tr>
-                <tr><td>Days Booked</td><td class="highlight">${days} day${days !== 1 ? 's' : ''}</td></tr>
-                <tr><td>Price / Day</td><td>Ksh ${b.price.toLocaleString()}</td></tr>
-                <tr><td>Deposit (50%)</td><td>Ksh ${deposit.toLocaleString()}</td></tr>
-                <tr><td>Balance at Pickup</td><td>Ksh ${balance.toLocaleString()}</td></tr>
-                <tr><td>Total Fee</td><td class="total-row">Ksh ${total.toLocaleString()}</td></tr>
-              </tbody>
-            </table>
-
-            ${statusHTML}
-          </div>
+          ${isPaid
+            ? `<div class="paid-notice">✅ <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>${b.mpesaReceipt || 'N/A'}</strong><br>
+               Balance of <strong>Ksh ${balance.toLocaleString()}</strong> is due at pickup. 🚗</div>`
+            : `<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh ${deposit.toLocaleString()}</strong> to confirm your booking.
+               The remaining <strong>Ksh ${balance.toLocaleString()}</strong> is paid when picking up the car.</div>`
+          }
 
           <div class="card-footer">
-            <div class="card-footer-left">
-              ${!isPaid ? `<button class="btn btn-pay" data-amount="${deposit}" data-id="${b.bookingId}">💳 Pay Deposit</button>` : ''}
-              ${deleteBtn}
-              ${lockedNote}
-            </div>
-            <div class="card-footer-right">
-              <button class="btn btn-pdf" data-idx="${realIdx}">⬇ Download PDF</button>
-            </div>
+            <button class="btn btn-pdf" data-id="${b.bookingId}">⬇ Download PDF</button>
           </div>
         `;
         list.appendChild(card);
@@ -318,7 +287,7 @@
       if (bookings.length > displayCount) {
         const btn = document.createElement('button');
         btn.className = 'show-more-btn';
-        btn.textContent = `↓ Show More (${bookings.length - displayCount} remaining)`;
+        btn.textContent = `Show More (${bookings.length - displayCount} remaining)`;
         btn.addEventListener('click', () => { displayCount += 5; renderBookings(); });
         list.appendChild(btn);
       }
@@ -332,43 +301,36 @@
         });
       });
 
-      // Delete buttons — only unpaid bookings (exclude locked)
-      list.querySelectorAll('.btn-delete:not(.btn-delete-locked)').forEach(btn => {
+      // Delete buttons
+      list.querySelectorAll('.btn-delete').forEach(btn => {
         btn.addEventListener('click', () => {
-          if (confirm('Are you sure you want to delete this booking?')) {
-            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-            bookings.splice(Number(btn.dataset.idx), 1);
-            localStorage.setItem('bookings', JSON.stringify(bookings));
-            renderBookings();
+          if (btn.classList.contains('btn-delete-paid')) {
+            // paid → show admin popup
+            document.getElementById('adminPopupCar').textContent = btn.dataset.car;
+            document.getElementById('adminPopupId').textContent  = btn.dataset.id;
+            document.getElementById('adminModal').classList.add('open');
+          } else {
+            // unpaid → confirm and delete
+            if (confirm('Delete this booking?')) {
+              const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+              bookings.splice(btn.dataset.idx, 1);
+              localStorage.setItem('bookings', JSON.stringify(bookings));
+              renderBookings();
+            }
           }
-        });
-      });
-
-      // Paid delete buttons — show admin popup
-      list.querySelectorAll('.btn-delete-locked').forEach(btn => {
-        btn.addEventListener('click', () => {
-          document.getElementById('adminPopupCar').textContent = btn.dataset.car;
-          document.getElementById('adminPopupId').textContent  = btn.dataset.id;
-          document.getElementById('adminModal').classList.add('open');
         });
       });
 
       // PDF buttons
       list.querySelectorAll('.btn-pdf').forEach(btn => {
-        btn.addEventListener('click', () => downloadPDF(Number(btn.dataset.idx)));
+        btn.addEventListener('click', () => downloadPDF(btn.dataset.id));
       });
     }
 
-    // ── PDF GENERATION ──
-    function downloadPDF(idx) {
-      const b = allBookings[idx];
+    function downloadPDF(bookingId) {
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const b = bookings.find(x => x.bookingId === bookingId);
       if (!b) { alert('Booking not found.'); return; }
-
-      if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
-
-      const isPaid  = b.paymentStatus === 'paid';
-      const receipt = b.mpesaReceipt || 'N/A';
-      const paidAt  = b.paidAt || 'N/A';
 
       const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
       const total   = b.price * days;
@@ -377,130 +339,127 @@
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
-      const W = 210, H = 297, L = 14, R = 196, CW = 182;
+      const W = 210, H = 297;
+      const L = 14, R = 196, CW = 182;
 
       pdf.setFillColor(20, 100, 221);
-      pdf.rect(0, 0, W, 34, 'F');
+      pdf.rect(0, 0, W, 30, 'F');
       pdf.setTextColor(255, 255, 255);
-      pdf.setFontSize(20); pdf.setFont('helvetica', 'bold');
-      pdf.text('WALIKO CAR HIRE', L, 15);
-      pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
-      pdf.setTextColor(200, 220, 255);
-      pdf.text('235 Fashion Street, Nairobi  |  0790 337 687  |  walik@gmail.com', L, 22);
-      pdf.setFontSize(8); pdf.setTextColor(255, 255, 255); pdf.setFont('helvetica', 'bold');
-      pdf.text('BOOKING CONFIRMATION', L, 30);
+      pdf.setFontSize(16); pdf.setFont('helvetica', 'bold');
+      pdf.text('WALIKO CAR HIRE', L, 12);
+      pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
+      pdf.text('235 Fashion Street, Nairobi  |  0790 337 687  |  walik@gmail.com', L, 19);
+      pdf.setFillColor(255, 200, 50);
+      pdf.roundedRect(148, 7, 48, 10, 2, 2, 'F');
+      pdf.setTextColor(20, 60, 130);
+      pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
+      pdf.text('BOOKING CONFIRMATION', 172, 13.5, { align: 'center' });
 
-      if (isPaid) { pdf.setFillColor(39, 174, 96); } else { pdf.setFillColor(243, 156, 18); }
-      pdf.roundedRect(146, 9, 50, 14, 3, 3, 'F');
-      pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
-      pdf.setTextColor(255, 255, 255);
-      pdf.text(isPaid ? 'DEPOSIT PAID' : 'PENDING PAYMENT', 171, 18, { align: 'center' });
-
-      let y = 42;
-
-      pdf.setFillColor(240, 245, 255);
-      pdf.roundedRect(L, y, CW, 14, 2, 2, 'F');
+      let y = 36;
+      pdf.setFillColor(242, 246, 255);
+      pdf.roundedRect(L, y, CW, 22, 2, 2, 'F');
       pdf.setDrawColor(20, 100, 221); pdf.setLineWidth(0.3);
-      pdf.roundedRect(L, y, CW, 14, 2, 2, 'S');
-      pdf.setTextColor(80, 100, 160); pdf.setFontSize(6.5); pdf.setFont('helvetica', 'bold');
-      pdf.text('BOOKING ID', L + 5, y + 5.5);
-      pdf.setTextColor(10, 30, 100); pdf.setFontSize(12); pdf.setFont('helvetica', 'bold');
-      pdf.text(String(b.bookingId), L + 5, y + 11.5);
-      pdf.setTextColor(140, 140, 150); pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
-      pdf.text('Date: ' + b.timestamp, R - 2, y + 11.5, { align: 'right' });
-      y += 20;
+      pdf.roundedRect(L, y, CW, 22, 2, 2, 'S');
+      pdf.setTextColor(20, 100, 221); pdf.setFontSize(7); pdf.setFont('helvetica', 'bold');
+      pdf.text('BOOKING ID', L + 4, y + 7);
+      pdf.setFontSize(11); pdf.setTextColor(10, 30, 80);
+      pdf.text(b.bookingId, L + 4, y + 15);
+      pdf.setFillColor(255, 235, 180);
+      pdf.roundedRect(148, y + 6, 44, 8, 2, 2, 'F');
+      pdf.setTextColor(160, 90, 0); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
+      pdf.text('PENDING PAYMENT', 170, y + 11.5, { align: 'center' });
+      pdf.setTextColor(100, 100, 100); pdf.setFontSize(7); pdf.setFont('helvetica', 'normal');
+      pdf.text('Issued: ' + b.timestamp, L + 4, y + 21);
+      y += 28;
 
-      function row(label, value, opts) {
-        opts = opts || {};
-        const bg   = opts.bg   || [255, 255, 255];
-        const lc   = opts.lc   || [90, 90, 115];
-        const vc   = opts.vc   || [20, 20, 40];
-        const bold = opts.bold || false;
-        pdf.setFillColor(bg[0], bg[1], bg[2]);
-        pdf.rect(L, y, CW, 9, 'F');
-        pdf.setDrawColor(228, 234, 248); pdf.setLineWidth(0.18);
-        pdf.rect(L, y, CW, 9, 'S');
+      pdf.setFillColor(20, 100, 221);
+      pdf.rect(L, y, CW, 7, 'F');
+      pdf.setTextColor(255, 255, 255); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+      pdf.text('CUSTOMER & BOOKING DETAILS', L + 3, y + 5);
+      y += 7;
+
+      const details = [
+        ['Full Name',   b.fullName],
+        ['Phone',       b.phone],
+        ['National ID', b.nationalId],
+        ['Licence No.', b.license],
+        ['Car',         b.carName],
+        ['Start Date',  b.pickup],
+        ['End Date',    b.endDate],
+        ['Days Booked', `${days} day${days !== 1 ? 's' : ''}`],
+      ];
+
+      details.forEach((row, i) => {
+        const ry = y + i * 8;
+        pdf.setFillColor(i % 2 === 0 ? 248 : 255, i % 2 === 0 ? 250 : 255, i % 2 === 0 ? 255 : 255);
+        pdf.rect(L, ry, CW, 8, 'F');
         pdf.setFillColor(20, 100, 221);
-        pdf.rect(L, y, 3, 9, 'F');
-        pdf.setTextColor(lc[0], lc[1], lc[2]); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
-        pdf.text(label, L + 7, y + 6);
-        pdf.setTextColor(vc[0], vc[1], vc[2]); pdf.setFont('helvetica', bold ? 'bold' : 'normal');
-        pdf.text(String(value), R - 2, y + 6, { align: 'right' });
-        y += 9;
-      }
+        pdf.rect(L, ry, 2, 8, 'F');
+        pdf.setTextColor(100, 100, 100); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+        pdf.text(row[0], L + 5, ry + 5.5);
+        pdf.setTextColor(20, 20, 20); pdf.setFont('helvetica', 'normal');
+        pdf.text(String(row[1]), L + 75, ry + 5.5);
+      });
 
-      function sectionHeader(title) {
-        y += 2;
-        pdf.setFillColor(20, 100, 221);
-        pdf.rect(L, y, CW, 9, 'F');
-        pdf.setTextColor(255, 255, 255); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
-        pdf.text(title, L + 5, y + 6);
-        y += 9;
-      }
+      y += details.length * 8 + 6;
 
-      sectionHeader('CUSTOMER DETAILS');
-      row('Full Name',   b.fullName,   { bg: [250, 252, 255] });
-      row('Phone',       b.phone,      { bg: [255, 255, 255] });
-      row('National ID', b.nationalId, { bg: [250, 252, 255] });
-      row('Licence No.', b.license,    { bg: [255, 255, 255] });
+      pdf.setFillColor(20, 100, 221);
+      pdf.rect(L, y, CW, 7, 'F');
+      pdf.setTextColor(255, 255, 255); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+      pdf.text('PAYMENT SUMMARY', L + 3, y + 5);
+      y += 7;
 
-      sectionHeader('VEHICLE & BOOKING');
-      row('Vehicle',     b.carName,                               { bg: [250, 252, 255] });
-      row('Pickup Date', b.pickup,                                { bg: [255, 255, 255] });
-      row('Return Date', b.endDate,                               { bg: [250, 252, 255] });
-      row('Duration',    days + ' day' + (days !== 1 ? 's' : ''), { bg: [255, 255, 255] });
-      row('Daily Rate',  'Ksh ' + b.price.toLocaleString(),       { bg: [250, 252, 255] });
+      const payments = [
+        { label: 'Price Per Day',     val: `Ksh ${b.price.toLocaleString()}`,   hi: false, gold: false },
+        { label: 'Number of Days',    val: `${days}`,                            hi: false, gold: false },
+        { label: 'Total Rental Fee',  val: `Ksh ${total.toLocaleString()}`,      hi: true,  gold: false },
+        { label: 'Deposit Due (50%)', val: `Ksh ${deposit.toLocaleString()}`,    hi: false, gold: true  },
+        { label: 'Balance on Pickup', val: `Ksh ${balance.toLocaleString()}`,    hi: false, gold: false },
+      ];
 
-      if (isPaid) {
-        sectionHeader('M-PESA PAYMENT DETAILS');
-        row('Receipt No.',       receipt,                            { bg: [220, 255, 235], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Amount Paid',       'Ksh ' + deposit.toLocaleString(), { bg: [240, 255, 248], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-        row('Balance at Pickup', 'Ksh ' + balance.toLocaleString(), { bg: [220, 255, 235], lc: [15, 110, 55], vc: [20, 20, 40] });
-        row('Payment Date',      paidAt,                            { bg: [240, 255, 248], lc: [15, 110, 55], vc: [20, 20, 40] });
-        row('Payment Status',    'CONFIRMED',                       { bg: [200, 255, 225], lc: [15, 110, 55], vc: [15, 110, 55], bold: true });
-      } else {
-        sectionHeader('PAYMENT SUMMARY');
-        row('Total Rental Cost', 'Ksh ' + total.toLocaleString(),   { bg: [228, 240, 255], lc: [20, 60, 160], vc: [20, 60, 160], bold: true });
-        row('Deposit Due (50%)', 'Ksh ' + deposit.toLocaleString(), { bg: [255, 248, 220], lc: [130, 75, 0],  vc: [130, 75, 0],  bold: true });
-        row('Balance at Pickup', 'Ksh ' + balance.toLocaleString(), { bg: [255, 255, 255], lc: [100, 100, 120], vc: [20, 20, 40] });
-      }
+      payments.forEach((row, i) => {
+        const ry = y + i * 8;
+        if (row.hi)        pdf.setFillColor(224, 238, 255);
+        else if (row.gold) pdf.setFillColor(255, 246, 218);
+        else               pdf.setFillColor(i % 2 === 0 ? 248 : 255, i % 2 === 0 ? 250 : 255, i % 2 === 0 ? 255 : 255);
+        pdf.rect(L, ry, CW, 8, 'F');
+        pdf.setFillColor(row.hi ? 20 : row.gold ? 255 : 20, row.hi ? 100 : row.gold ? 180 : 100, row.hi ? 221 : row.gold ? 0 : 221);
+        pdf.rect(L, ry, 2, 8, 'F');
+        const lc = row.gold ? [150, 85, 0] : [100, 100, 100];
+        const vc = row.hi ? [20, 100, 221] : row.gold ? [170, 95, 0] : [20, 20, 20];
+        pdf.setTextColor(...lc); pdf.setFontSize(8); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
+        pdf.text(row.label, L + 5, ry + 5.5);
+        pdf.setTextColor(...vc); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
+        pdf.text(row.val, L + 75, ry + 5.5);
+      });
 
-      y += 6;
-      const noteText = isPaid
-        ? 'You have paid Ksh ' + deposit.toLocaleString() + ' deposit. Present this document when collecting your vehicle. Remaining balance of Ksh ' + balance.toLocaleString() + ' is due at pickup.'
-        : 'Pay a deposit of Ksh ' + deposit.toLocaleString() + ' to confirm this booking. Remaining Ksh ' + balance.toLocaleString() + ' is paid at pickup.';
+      y += payments.length * 8 + 6;
 
-      const noteBg     = isPaid ? [235, 255, 244] : [255, 249, 230];
-      const noteBorder = isPaid ? [39, 174, 96]   : [243, 156, 18];
-      const noteTextC  = isPaid ? [15, 90, 45]    : [100, 65, 0];
+      pdf.setFillColor(255, 248, 228);
+      pdf.setDrawColor(255, 180, 60); pdf.setLineWidth(0.4);
+      pdf.roundedRect(L, y, CW, 16, 2, 2, 'FD');
+      pdf.setTextColor(140, 80, 0); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
+      pdf.text('NOTE:', L + 4, y + 6.5);
+      pdf.setFont('helvetica', 'normal'); pdf.setFontSize(7.5);
+      pdf.text(`Pay Ksh ${deposit.toLocaleString()} deposit to confirm. Balance Ksh ${balance.toLocaleString()} due at pickup.`, L + 18, y + 6.5);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text('Present this document when collecting your vehicle.', L + 4, y + 13);
+      y += 22;
 
-      pdf.setFillColor(noteBg[0], noteBg[1], noteBg[2]);
-      pdf.setDrawColor(noteBorder[0], noteBorder[1], noteBorder[2]);
-      pdf.setLineWidth(0.4);
-      pdf.roundedRect(L, y, CW, 18, 3, 3, 'FD');
-      pdf.setFillColor(noteBorder[0], noteBorder[1], noteBorder[2]);
-      pdf.roundedRect(L, y, 4, 18, 2, 2, 'F');
-      pdf.setTextColor(noteTextC[0], noteTextC[1], noteTextC[2]);
-      pdf.setFontSize(7.2); pdf.setFont('helvetica', 'normal');
-      const lines = pdf.splitTextToSize(noteText, CW - 16);
-      pdf.text(lines, L + 9, y + 7);
-      y += 26;
+      pdf.setDrawColor(180, 180, 180); pdf.setLineWidth(0.3);
+      pdf.line(L, y + 10, L + 80, y + 10);
+      pdf.line(L + 100, y + 10, R, y + 10);
+      pdf.setTextColor(150, 150, 150); pdf.setFontSize(7);
+      pdf.text('Customer Signature', L, y + 14);
+      pdf.text('Authorized by Waliko', L + 100, y + 14);
 
-      pdf.setDrawColor(200, 200, 215); pdf.setLineWidth(0.3);
-      pdf.line(L, y + 14, L + 78, y + 14);
-      pdf.line(L + 104, y + 14, R, y + 14);
-      pdf.setTextColor(170, 170, 185); pdf.setFontSize(6.5); pdf.setFont('helvetica', 'normal');
-      pdf.text('Customer Signature', L, y + 19);
-      pdf.text('Authorized by Waliko Car Hire', L + 104, y + 19);
+      pdf.setFillColor(20, 100, 221);
+      pdf.rect(0, H - 14, W, 14, 'F');
+      pdf.setTextColor(255, 255, 255); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
+      pdf.text('Thank you for choosing Waliko Car Hire!', W / 2, H - 7.5, { align: 'center' });
+      pdf.text('walik@gmail.com  |  0790 337 687  |  235 Fashion Street, Nairobi, Kenya', W / 2, H - 3, { align: 'center' });
 
-      pdf.setFillColor(20, 100, 221); pdf.rect(0, H - 18, W, 18, 'F');
-      pdf.setFillColor(13, 71, 161); pdf.rect(0, H - 18, W, 3, 'F');
-      pdf.setTextColor(255, 255, 255); pdf.setFontSize(9.5); pdf.setFont('helvetica', 'bold');
-      pdf.text('Thank you for choosing Waliko Car Hire!', W / 2, H - 9, { align: 'center' });
-      pdf.setFontSize(6.5); pdf.setFont('helvetica', 'normal'); pdf.setTextColor(180, 210, 255);
-      pdf.text('walik@gmail.com  •  0790 337 687  •  235 Fashion Street, Nairobi, Kenya', W / 2, H - 3.5, { align: 'center' });
-
-      pdf.save('Waliko_Booking_' + b.bookingId + '.pdf');
+      pdf.save(`Waliko_Booking_${bookingId}.pdf`);
     }
 
     document.getElementById('logoutBtn').addEventListener('click', e => {
@@ -512,23 +471,5 @@
 
     renderBookings();
   </script>
-  <!-- Admin Only Popup for Paid Bookings -->
-  <div class="admin-modal" id="adminModal">
-    <div class="admin-modal-box">
-      <div class="admin-modal-icon">🔒</div>
-      <h3>Cannot Delete Paid Booking</h3>
-      <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
-
-      <div class="admin-info-box">
-        🚘 <strong>Car:</strong> <span id="adminPopupCar"></span><br>
-        🔖 <strong>Booking ID:</strong> <span id="adminPopupId"></span>
-      </div>
-
-      <div class="admin-contact">
-        📞 To cancel this booking, please contact us:<br>
-        <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
-        <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#780f19141113381f15191114561b1715"><span class="__cf_email__" data-cfemail="ef988e838684af88828e8683c18c8082">[email&#160;protected]</span></a><br>
-        <strong>Or visit:</strong> <a href="help.html">Help & Support →</a>
-      </div>
-
-      <button class="btn-admin-close" onclick="document.g
+</body>
+</html>
