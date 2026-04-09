@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Request a Call</title>
+  <style>
+    :root{
+      --bg: #ffffff;
+      --card: #f9f9f9;
+      --accent: #0b84ff;
+      --accent-2: #0066cc;
+      --muted: #555;
+      --danger: #ff4d4f;
+      --success: #1db954;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:#111}
+    .container{max-width:420px;margin:36px auto;padding:18px}
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(0,0,0,0.08);border:1px solid #eee}
+    h1{font-size:18px;margin:0 0 8px 0;color:#222}
+    p.small{color:var(--muted);font-size:13px;margin:0 0 10px 0}
+    .support-msg{color:var(--accent-2);font-size:14px;font-weight:500;margin:0 0 14px 0}
+    label{display:block;font-size:13px;margin-bottom:6px;color:#333}
+    input[type="tel"]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#111;font-size:14px;box-sizing:border-box}
+    .row{display:flex;gap:10px;align-items:center}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;font-size:14px}
+    .btn.ghost{background:#f1f1f1;border:1px solid #ddd;color:#333;font-weight:500}
+    .error{color:var(--danger);font-size:13px;margin-top:8px}
+    .success{color:var(--success);font-size:13px;margin-top:8px}
+    .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9999;background:rgba(0,0,0,0.6);padding:18px}
+    .overlay.show{display:flex}
+    .overlay-card{width:100%;max-width:420px;background:#fff;padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);border:1px solid #eee;text-align:center}
+    .countdown{font-weight:700;font-size:32px;margin-top:6px;color:#111}
+    .small-note{color:#666;font-size:13px;margin-top:8px}
+    .history{margin-top:12px;padding:0}
+    .history li{font-size:13px;color:var(--muted);margin-bottom:8px;list-style:none;display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px;border-radius:8px;background:#fff;border:1px solid #f0f0f0}
+    .history .meta{font-size:12px;color:#888;margin-top:4px}
+    .history .status{font-weight:600;font-size:12px}
+    .cancel-btn{background:transparent;border:1px solid #ddd;padding:6px 8px;border-radius:8px;color:#333;cursor:pointer;font-size:13px}
+    .delete-btn{background:none;border:none;color:#ff4d4f;cursor:pointer;font-size:16px;margin-left:6px}
+    @media (max-width:460px){.container{margin:18px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" role="region" aria-labelledby="rc-title">
+      <h1 id="rc-title">Request a Call</h1>
+      <p class="small">Don’t have airtime? We’ll call you. Enter your number and we’ll ring you within a minutes.</p>
+      <p class="support-msg">We will guide or support you for any issue.</p>
+
+      <form id="callForm" onsubmit="return false;" novalidate>
+        <label for="phone">Phone number</label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" placeholder=" 07XXXXXXXX" autocomplete="tel" required />
+        <div id="feedback" role="status" aria-live="polite"></div>
+
+        <div style="height:12px"></div>
+        <div class="row">
+          <button id="requestBtn" class="btn" type="submit">Request Call</button>
+          <button id="viewHistoryBtn" class="btn ghost" type="button">History</button>
+        </div>
+
+        <p class="small" style="margin-top:12px">By requesting a call you agree to be contacted by our support team.</p>
+      </form>
+
+      <ul id="historyList" class="history" aria-label="Past requests" style="display:none"></ul>
+    </div>
+  </div>
+
+  <!-- Overlay with countdown and cancel -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="overlay-card" role="dialog" aria-modal="true" aria-labelledby="overlayTitle">
+      <h2 id="overlayTitle">We'll call you soon</h2>
+      <div class="countdown" id="countdown">05:00</div>
+      <p class="small-note">Please keep your phone available. We'll call you within 5 minutes.</p>
+      <div style="height:12px"></div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button id="closeOverlay" class="btn ghost">Close</button>
+        <button id="cancelRequest" class="cancel-btn" title="Cancel request">Cancel Request</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Config
+    const REQUEST_DURATION_MS = 1 * 60 * 1000; 
+    const ACTIVE_KEY = 'activeCallRequest'; 
+    const HISTORY_KEY = 'callRequestHistory'; 
+
+    const phoneInput = document.getElementById('phone');
+    const requestBtn = document.getElementById('requestBtn');
+    const feedback = document.getElementById('feedback');
+    const overlay = document.getElementById('overlay');
+    const countdownEl = document.getElementById('countdown');
+    const closeOverlay = document.getElementById('closeOverlay');
+    const cancelRequestBtn = document.getElementById('cancelRequest');
+    const historyList = document.getElementById('historyList');
+    const viewHistoryBtn = document.getElementById('viewHistoryBtn');
+
+    let countdownTimer = null;
+    let historyVisible = false;
+
+    function isValidKenyanNumber(input) {
+      if (!input) return false;
+      const s = input.trim();
+      const re1 = /^0?7\d{8}$/;
+      const re2 = /^(\+254|254)7\d{8}$/;
+      return re1.test(s) || re2.test(s);
+    }
+    function normalizeNumber(input) {
+      let s = input.trim();
+      if (/^(\+?254)7\d{8}$/.test(s)) {
+        s = s.replace(/^(\+?254)/, '0');
+      } else if (/^7\d{8}$/.test(s)) {
+        s = '0' + s;
+      }
+      return s;
+    }
+
+    function saveActiveRequest(obj) { localStorage.setItem(ACTIVE_KEY, JSON.stringify(obj)); }
+    function loadActiveRequest() { try { return JSON.parse(localStorage.getItem(ACTIVE_KEY)); } catch { return null; } }
+    function clearActiveRequest() { localStorage.removeItem(ACTIVE_KEY); }
+
+    function loadHistory() { try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch { return []; } }
+    function saveHistory(arr) { localStorage.setItem(HISTORY_KEY, JSON.stringify(arr)); }
+    function pushHistoryItem(item) { const arr = loadHistory(); arr.unshift(item); saveHistory(arr); }
+
+    function updateHistoryById(id, update) {
+      const arr = loadHistory();
+      const idx = arr.findIndex(i => String(i.id) === String(id));
+      if (idx === -1) return false;
+      arr[idx] = { ...arr[idx], ...update };
+      saveHistory(arr);
+      return true;
+    }
+
+    function deleteHistoryById(id) {
+      let arr = loadHistory();
+      arr = arr.filter(i => String(i.id) !== String(id));
+      saveHistory(arr);
+      populateHistory();
+    }
+
+    function populateHistory() {
+      const arr = loadHistory();
+      historyList.innerHTML = arr.map(item => {
+        const created = new Date(item.createdAt).toLocaleString();
+        const status = item.status === 'pending' ? 'Pending' : (item.status === 'completed' ? 'Completed' : 'Cancelled');
+        const cancelBtn = item.status === 'pending' ? `<button class="cancel-btn history-cancel" data-id="${item.id}">Cancel</button>` : '';
+        return `<li>
+            <div style="flex:1">
+              <div><strong>${item.phone}</strong></div>
+              <div class="meta">${created}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="status" style="color:${item.status==='completed' ? '#1db954' : item.status==='cancelled' ? '#ff4d4f' : '#0b84ff'}">${status}</div>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                ${cancelBtn}
+                <button class="delete-btn" title="Delete" data-id="${item.id}">🗑️</button>
+              </div>
+            </div>
+          </li>`;
+      }).join('');
+    }
+
+    function startCountdown(endTime) {
+      stopCountdown();
+      updateCountdownDisplay(endTime);
+      countdownTimer = setInterval(() => { updateCountdownDisplay(endTime); }, 250);
+    }
+    function stopCountdown() { if (countdownTimer) clearInterval(countdownTimer); }
+    function updateCountdownDisplay(endTime) {
+      const now = Date.now();
+      const remaining = Math.max(0, endTime - now);
+      const minutes = Math.floor(remaining / 60000);
+      const seconds = Math.floor((remaining % 60000) / 1000);
+      countdownEl.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+      if (remaining <= 0) { stopCountdown(); onRequestCompleted(); }
+    }
+
+    function onRequestCompleted() {
+      const active = loadActiveRequest();
+      if (active) updateHistoryById(active.id, { status: 'completed' });
+      clearActiveRequest();
+      overlay.classList.remove('show');
+      showFeedback('Request completed — our agent tried to call you.', 'success');
+      populateHistory();
+    }
+    function cancelActiveRequest() {
+      const active = loadActiveRequest();
+      if (!active) return;
+      updateHistoryById(active.id, { status: 'cancelled' });
+      clearActiveRequest();
+      stopCountdown();
+      overlay.classList.remove('show');
+      showFeedback('Your request has been cancelled.', 'success');
+      populateHistory();
+    }
+
+    function showFeedback(msg, type='error') {
+      feedback.className = type;
+      feedback.textContent = msg;
+    }
+    function clearFeedback() { feedback.textContent = ''; feedback.className = ''; }
+
+    function init() {
+      const active = loadActiveRequest();
+      if (active && active.endTime && Date.now() < active.endTime) {
+        overlay.classList.add('show');
+        startCountdown(active.endTime);
+      }
+      populateHistory();
+    }
+
+    requestBtn.addEventListener('click', () => {
+      clearFeedback();
+      if (!isValidKenyanNumber(phoneInput.value)) {
+        showFeedback('Enter a valid Kenyan number', 'error'); return;
+      }
+      const normalized = normalizeNumber(phoneInput.value);
+      const id = Date.now();
+      const endTime = Date.now() + REQUEST_DURATION_MS;
+      saveActiveRequest({ id, phone: normalized, endTime });
+      pushHistoryItem({ id, phone: normalized, createdAt: Date.now(), endTime, status:'pending' });
+      overlay.classList.add('show');
+      startCountdown(endTime);
+      showFeedback('Request sent. We will call you within 5 minutes.', 'success');
+      populateHistory();
+    });
+
+    closeOverlay.addEventListener('click', () => overlay.classList.remove('show'));
+    cancelRequestBtn.addEventListener('click', () => { if (confirm('Cancel your call request?')) cancelActiveRequest(); });
+
+    viewHistoryBtn.addEventListener('click', () => {
+      historyVisible = !historyVisible;
+      historyList.style.display = historyVisible ? 'block' : 'none';
+      viewHistoryBtn.textContent = historyVisible ? 'Hide' : 'History';
+      if (historyVisible) populateHistory();
+    });
+
+    historyList.addEventListener('click', (e) => {
+      const btn = e.target.closest('.history-cancel');
+      if (btn) cancelActiveRequest();
+      const del = e.target.closest('.delete-btn');
+      if (del) { if (confirm('Delete this request from history?')) deleteHistoryById(del.dataset.id); }
+    });
+
+    init();
+  </script>
+</body>
+</html>
