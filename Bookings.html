@@ -163,7 +163,7 @@
     .btn-pay:hover { background: linear-gradient(135deg,#0d47a1,#083080); transform: translateY(-1px); }
     .btn-delete { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; }
     .btn-delete:hover { background: #ffe0e0; }
-    .btn-delete-locked { background: #f0f0f0; color: #aaa; border: 1px solid #ddd; cursor: not-allowed; }
+    .btn-delete-locked { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; cursor: pointer; }
     .btn-pdf { background: #fff; color: #1464dd; border: 1.5px solid #c5d5f5; }
     .btn-pdf:hover { background: #f0f4ff; }
 
@@ -332,8 +332,8 @@
         });
       });
 
-      // Delete buttons — only unpaid bookings have this class
-      list.querySelectorAll('.btn-delete').forEach(btn => {
+      // Delete buttons — only unpaid bookings (exclude locked)
+      list.querySelectorAll('.btn-delete:not(.btn-delete-locked)').forEach(btn => {
         btn.addEventListener('click', () => {
           if (confirm('Are you sure you want to delete this booking?')) {
             const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
@@ -527,15 +527,8 @@
       <div class="admin-contact">
         📞 To cancel this booking, please contact us:<br>
         <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
-        <strong>Email:</strong> <a href="mailto:walik@gmail.com">walik@gmail.com</a><br>
+        <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#780f19141113381f15191114561b1715"><span class="__cf_email__" data-cfemail="ef988e838684af88828e8683c18c8082">[email&#160;protected]</span></a><br>
         <strong>Or visit:</strong> <a href="help.html">Help & Support →</a>
       </div>
 
-      <button class="btn-admin-close" onclick="document.getElementById('adminModal').classList.remove('open')">
-        OK, Got It
-      </button>
-    </div>
-  </div>
-
-</body>
-</html>
+      <button class="btn-admin-close" onclick="document.g
