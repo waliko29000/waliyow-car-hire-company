@@ -7,217 +7,96 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-      color: #333;
-    }
-
-    /* ── HEADER ── */
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; }
     header {
       background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
+      color: #fff; padding: 10px 20px;
+      display: flex; flex-wrap: wrap; align-items: center;
+      justify-content: space-between; position: sticky; top: 0;
+      z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
-
     header h1 { font-size: 1.2em; font-weight: 700; }
-
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
-
     nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      padding: 7px 13px;
-      border-radius: 25px;
-      font-size: 0.78em;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; padding: 7px 13px; border-radius: 25px;
+      font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s;
     }
-
-    nav a:hover, nav a.active {
-      background: rgba(255,255,255,0.3);
-      border-color: rgba(255,255,255,0.6);
-    }
-
+    nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
+    main { max-width: 900px; margin: 24px auto; padding: 0 16px 40px; }
+    .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; margin-bottom: 16px; }
 
-    /* ── MAIN ── */
-    main {
-      max-width: 900px;
-      margin: 24px auto;
-      padding: 0 16px 40px;
+    .empty-card {
+      background: #fff; border-radius: 14px; padding: 28px 24px;
+      box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); margin-bottom: 16px;
     }
-
-    .page-title {
-      font-size: 1.2em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 16px;
+    .alert-box {
+      background: #fff5e6; border: 1px solid #ffc87a; border-radius: 10px;
+      padding: 14px 16px; font-size: 0.88em; color: #b35c00; line-height: 1.7; margin-bottom: 16px;
     }
-
-    /* ── NO PAYMENT ── */
-    .no-payment {
-      background: #fff;
-      border-radius: 14px;
-      padding: 28px 24px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      margin-bottom: 16px;
+    .pending-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid #f0f4ff; flex-wrap: wrap; gap: 8px;
     }
+    .pending-row:last-child { border-bottom: none; }
 
-    .no-payment .alert {
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.88em;
-      color: #b35c00;
-      line-height: 1.7;
-      margin-bottom: 16px;
-    }
-
-    /* ── PAYMENT RECORD CARD ── */
     .payment-card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 16px;
+      background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px;
       box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      animation: fadeIn 0.3s ease;
+      border: 1px solid rgba(20,100,221,0.07); animation: fadeIn 0.3s ease;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .payment-card .p-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .payment-card h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
-    .payment-card .p-id { font-size: 0.75em; color: #888; margin-top: 2px; }
-
-    .status-badge {
-      padding: 5px 14px;
-      border-radius: 20px;
-      font-size: 0.75em;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-    }
-
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+    .p-header h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
+    .p-id { font-size: 0.75em; color: #888; margin-top: 2px; }
+    .status-badge { padding: 5px 14px; border-radius: 20px; font-size: 0.75em; font-weight: 700; }
     .status-paid { background: #e6f9ee; color: #1e8449; border: 1px solid #a8ddb9; }
-    .status-pending { background: #fff5e6; color: #b35c00; border: 1px solid #ffc87a; }
 
     .info-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
     .info-table tr { border-bottom: 1px solid #f0f4ff; }
     .info-table tr:last-child { border-bottom: none; }
-    .info-table th {
-      text-align: left; font-size: 0.78em; font-weight: 600;
-      color: #888; padding: 6px 8px 6px 0; width: 150px;
-    }
+    .info-table th { text-align: left; font-size: 0.78em; font-weight: 600; color: #888; padding: 6px 8px 6px 0; width: 150px; }
     .info-table td { font-size: 0.85em; color: #333; padding: 6px 8px 6px 0; }
-
     .card-footer { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+    .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.8em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-blue { background: #1464dd; color: #fff; }
+    .btn-blue:hover { background: #0d47a1; }
+    .btn-light { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
+    .btn-light:hover { background: #e0eaff; }
 
-    .btn {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.8em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-receipt { background: #1464dd; color: #fff; }
-    .btn-receipt:hover { background: #0d47a1; }
-
-    .btn-go { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
-    .btn-go:hover { background: #e0eaff; }
-
-    /* ── RECEIPT MODAL ── */
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px;
     }
-
     .modal.open { display: flex; }
-
     .modal-box {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 400px;
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-      animation: slideUp 0.25s ease;
+      background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 400px;
+      position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease;
     }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
+    @keyframes slideUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
     .modal-box h2 { font-size: 1.1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; }
-
     .modal-close {
-      position: absolute;
-      top: 14px; right: 16px;
-      background: #f0f4ff;
-      border: none;
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      font-size: 1em;
-      cursor: pointer;
-      color: #555;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s;
+      position: absolute; top: 14px; right: 16px; background: #f0f4ff; border: none;
+      width: 28px; height: 28px; border-radius: 50%; font-size: 1em; cursor: pointer;
+      color: #555; display: flex; align-items: center; justify-content: center; transition: background 0.2s;
     }
-
     .modal-close:hover { background: #dde3f0; color: #1464dd; }
-
-    .receipt-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 7px 0;
-      border-bottom: 1px solid #f0f4ff;
-      font-size: 0.85em;
-    }
-
+    .receipt-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #f0f4ff; font-size: 0.85em; }
     .receipt-row:last-child { border-bottom: none; }
     .receipt-row .label { color: #888; }
     .receipt-row .value { font-weight: 600; color: #1a1a2e; }
     .receipt-row.total .value { color: #1464dd; font-size: 1em; }
 
+    /* debug box */
+    .debug-box {
+      background: #f0fff4; border: 1px solid #a8f0c6; border-radius: 10px;
+      padding: 12px 16px; font-size: 0.8em; color: #1a6e3a; margin-bottom: 16px; display: none;
+    }
+
     @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; }
       header h1 { font-size: 1em; }
       nav a { font-size: 0.72em; padding: 6px 10px; }
       .info-table th { width: 110px; font-size: 0.73em; }
@@ -225,11 +104,10 @@
   </style>
 </head>
 <body>
-
   <header>
-    <h1>🚗 Waliko Car Hire</h1>
+    <h1>Waliko Car Hire</h1>
     <nav>
-      <a href="index.html">Home</a>
+      <a href="dashboard.html">Home</a>
       <a href="car-available.html">Cars</a>
       <a href="bookings.html">My Bookings</a>
       <a href="payments.html" class="active">Payments</a>
@@ -242,6 +120,7 @@
 
   <main>
     <div class="page-title">Payment History</div>
+    <div id="debugBox" class="debug-box"></div>
     <div id="paymentsList"></div>
   </main>
 
@@ -249,99 +128,129 @@
   <div class="modal" id="receiptModal">
     <div class="modal-box">
       <button class="modal-close" id="closeReceipt">✕</button>
-      <h2>🧾 Receipt</h2>
+      <h2>🧾 Payment Receipt</h2>
       <div id="receiptContent"></div>
     </div>
   </div>
 
   <script>
+    function isPaidBooking(b) {
+      // Check both paymentStatus AND mpesaReceipt — same logic as bookings.html
+      return b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
+    }
+
     function renderPayments() {
-      const list = document.getElementById('paymentsList');
+      const list     = document.getElementById('paymentsList');
       list.innerHTML = '';
 
-      const payments = JSON.parse(localStorage.getItem('payments')) || [];
+      // Always read fresh from localStorage
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
-      if (payments.length === 0) {
-        // Show pending bookings that need payment
-        const card = document.createElement('div');
-        card.className = 'no-payment';
-        card.innerHTML = `
-          <div class="alert">
-            💳 No payments received yet. Please complete your booking by making a deposit payment.
-          </div>
-        `;
-
-        if (bookings.length > 0) {
-          bookings.slice(0, 3).forEach(b => {
-            const days = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
-            const deposit = Math.floor(b.price * days / 2);
-            const row = document.createElement('div');
-            row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f4ff;flex-wrap:wrap;gap:8px;';
-            row.innerHTML = `
-              <div>
-                <div style="font-size:0.88em;font-weight:600;color:#1a1a2e">${b.carName}</div>
-                <div style="font-size:0.75em;color:#888">${b.bookingId}</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                <span style="font-size:0.82em;color:#b35c00;font-weight:600">Deposit: Ksh ${deposit.toLocaleString()}</span>
-                <button class="btn btn-receipt" style="font-size:0.75em;padding:6px 12px" 
-                  onclick="localStorage.setItem('paymentAmount','${deposit}');localStorage.setItem('paymentBookingId','${b.bookingId}');window.location.href='payment-gateway.html'">
-                  Pay Now
-                </button>
-              </div>
-            `;
-            card.appendChild(row);
-          });
-        }
-        list.appendChild(card);
-        return;
-      }
-
-      // Show paid records
-      payments.forEach(p => {
-        const card = document.createElement('div');
-        card.className = 'payment-card';
-        card.innerHTML = `
-          <div class="p-header">
-            <div>
-              <h3>${p.carName}</h3>
-              <div class="p-id">Booking: ${p.bookingId} &nbsp;·&nbsp; Paid: ${p.paidAt}</div>
-            </div>
-            <span class="status-badge status-paid">✅ Paid</span>
-          </div>
-          <table class="info-table">
-            <tr><th>Full Name</th><td>${p.fullName}</td></tr>
-            <tr><th>Amount Paid</th><td style="font-weight:700;color:#1464dd">Ksh ${Number(p.amount).toLocaleString()}</td></tr>
-            <tr><th>Mpesa No.</th><td>${p.mpesaNo}</td></tr>
-            <tr><th>Balance Due</th><td>Ksh ${Number(p.balance).toLocaleString()} (on pickup)</td></tr>
-          </table>
-          <div class="card-footer">
-            <button class="btn btn-receipt" data-id="${p.bookingId}">🧾 View Receipt</button>
-          </div>
-        `;
-        list.appendChild(card);
+      // Normalize — same as bookings.html
+      bookings.forEach(b => {
+        if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
       });
 
+      const paidBookings    = bookings.filter(b => isPaidBooking(b));
+      const pendingBookings = bookings.filter(b => !isPaidBooking(b));
+
+      // ── Show paid payments ──
+      if (paidBookings.length > 0) {
+        paidBookings.forEach(b => {
+          const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+          const total   = b.price * days;
+          const deposit = Math.floor(total / 2);
+          const balance = total - deposit;
+
+          const card = document.createElement('div');
+          card.className = 'payment-card';
+          card.innerHTML = `
+            <div class="p-header">
+              <div>
+                <h3>${b.carName}</h3>
+                <div class="p-id">Booking: ${b.bookingId} &nbsp;·&nbsp; Paid: ${b.paidAt || 'N/A'}</div>
+              </div>
+              <span class="status-badge status-paid">✅ Paid</span>
+            </div>
+            <table class="info-table">
+              <tr><th>Full Name</th><td>${b.fullName}</td></tr>
+              <tr><th>M-Pesa Receipt</th><td style="font-weight:700;color:#27ae60">${b.mpesaReceipt || 'N/A'}</td></tr>
+              <tr><th>Deposit Paid</th><td style="font-weight:700;color:#1464dd">Ksh ${deposit.toLocaleString()}</td></tr>
+              <tr><th>Balance Due</th><td>Ksh ${balance.toLocaleString()} (on pickup)</td></tr>
+              <tr><th>Start Date</th><td>${b.pickup}</td></tr>
+              <tr><th>End Date</th><td>${b.endDate}</td></tr>
+            </table>
+            <div class="card-footer">
+              <button class="btn btn-light" onclick="window.location.href='bookings.html'">📋 View Booking</button>
+              <button class="btn btn-blue receipt-btn" data-id="${b.bookingId}">🧾 View Receipt</button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      }
+
+      // ── Show pending bookings ──
+      if (pendingBookings.length > 0) {
+        const card = document.createElement('div');
+        card.className = 'empty-card';
+        card.innerHTML = `<div class="alert-box">💳 You have <strong>${pendingBookings.length}</strong> booking(s) with pending deposit payment.</div>`;
+
+        pendingBookings.forEach(b => {
+          const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+          const deposit = Math.floor(b.price * days / 2);
+          const row = document.createElement('div');
+          row.className = 'pending-row';
+          row.innerHTML = `
+            <div>
+              <div style="font-size:0.88em;font-weight:600;color:#1a1a2e">${b.carName}</div>
+              <div style="font-size:0.75em;color:#888">${b.bookingId}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:0.82em;color:#b35c00;font-weight:600">Deposit: Ksh ${deposit.toLocaleString()}</span>
+              <button class="btn btn-blue" style="font-size:0.75em;padding:6px 12px"
+                onclick="localStorage.setItem('paymentAmount','${deposit}');localStorage.setItem('paymentBookingId','${b.bookingId}');window.location.href='payment-gateway.html'">
+                Pay Now
+              </button>
+            </div>
+          `;
+          card.appendChild(row);
+        });
+        list.appendChild(card);
+      }
+
+      // ── Nothing at all ──
+      if (bookings.length === 0) {
+        list.innerHTML = `<div class="empty-card">
+          <div class="alert-box">💳 No bookings or payments yet. <a href="car-available.html" style="color:#1464dd;font-weight:600">Browse cars</a> to get started.</div>
+        </div>`;
+      }
+
       // Receipt buttons
-      list.querySelectorAll('.btn-receipt').forEach(btn => {
+      list.querySelectorAll('.receipt-btn').forEach(btn => {
         btn.addEventListener('click', () => showReceipt(btn.dataset.id));
       });
     }
 
     function showReceipt(bookingId) {
-      const payments = JSON.parse(localStorage.getItem('payments')) || [];
-      const p = payments.find(x => x.bookingId === bookingId);
-      if (!p) { alert('Receipt not found.'); return; }
+      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      const b = bookings.find(x => String(x.bookingId) === String(bookingId));
+      if (!b) { alert('Receipt not found.'); return; }
+
+      const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+      const total   = b.price * days;
+      const deposit = Math.floor(total / 2);
+      const balance = total - deposit;
 
       document.getElementById('receiptContent').innerHTML = `
-        <div class="receipt-row"><span class="label">Car</span><span class="value">${p.carName}</span></div>
-        <div class="receipt-row"><span class="label">Booking ID</span><span class="value">${p.bookingId}</span></div>
-        <div class="receipt-row"><span class="label">Full Name</span><span class="value">${p.fullName}</span></div>
-        <div class="receipt-row"><span class="label">Mpesa No.</span><span class="value">${p.mpesaNo}</span></div>
-        <div class="receipt-row"><span class="label">Date Paid</span><span class="value">${p.paidAt}</span></div>
-        <div class="receipt-row total"><span class="label">Amount Paid</span><span class="value">Ksh ${Number(p.amount).toLocaleString()}</span></div>
-        <div class="receipt-row"><span class="label">Balance on Pickup</span><span class="value">Ksh ${Number(p.balance).toLocaleString()}</span></div>
+        <div class="receipt-row"><span class="label">Car</span><span class="value">${b.carName}</span></div>
+        <div class="receipt-row"><span class="label">Booking ID</span><span class="value">${b.bookingId}</span></div>
+        <div class="receipt-row"><span class="label">Full Name</span><span class="value">${b.fullName}</span></div>
+        <div class="receipt-row"><span class="label">M-Pesa Receipt</span><span class="value" style="color:#27ae60">${b.mpesaReceipt || 'N/A'}</span></div>
+        <div class="receipt-row"><span class="label">Date Paid</span><span class="value">${b.paidAt || 'N/A'}</span></div>
+        <div class="receipt-row"><span class="label">Start Date</span><span class="value">${b.pickup}</span></div>
+        <div class="receipt-row"><span class="label">End Date</span><span class="value">${b.endDate}</span></div>
+        <div class="receipt-row total"><span class="label">Deposit Paid</span><span class="value">Ksh ${deposit.toLocaleString()}</span></div>
+        <div class="receipt-row"><span class="label">Balance on Pickup</span><span class="value">Ksh ${balance.toLocaleString()}</span></div>
       `;
       document.getElementById('receiptModal').classList.add('open');
     }
@@ -349,12 +258,10 @@
     document.getElementById('closeReceipt').addEventListener('click', () => {
       document.getElementById('receiptModal').classList.remove('open');
     });
-
     document.getElementById('receiptModal').addEventListener('click', e => {
       if (e.target === document.getElementById('receiptModal'))
         document.getElementById('receiptModal').classList.remove('open');
     });
-
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
