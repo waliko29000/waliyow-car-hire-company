@@ -106,19 +106,45 @@
     .status-pending { background:#fff8ee; border:1px solid #ffd78a; border-left:4px solid #f39c12; color:#905000; }
     .status-success { background:#f0fff6; border:1px solid #a8f0c6; border-left:4px solid #27ae60; color:#1a6e3a; }
 
-    /* ── locked delete notice ── */
-    .delete-locked {
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-left: 4px solid #f39c12;
-      border-radius: 8px;
-      padding: 9px 13px;
-      font-size: 0.78em;
-      color: #905000;
-      font-weight: 500;
-      margin-top: 4px;
-      display: none;
+    /* ── ADMIN POPUP ── */
+    .admin-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+      z-index: 2000; justify-content: center; align-items: center; padding: 16px;
     }
+    .admin-modal.open { display: flex; }
+    .admin-modal-box {
+      background: #fff; border-radius: 18px; padding: 28px 24px;
+      width: 100%; max-width: 380px; position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease;
+      text-align: center;
+    }
+    .admin-modal-icon { font-size: 3em; margin-bottom: 10px; }
+    .admin-modal-box h3 {
+      font-size: 1.05em; font-weight: 700; color: #c0392b; margin-bottom: 10px;
+    }
+    .admin-modal-box p {
+      font-size: 0.85em; color: #555; line-height: 1.7; margin-bottom: 6px;
+    }
+    .admin-info-box {
+      background: #f0f4ff; border-left: 4px solid #1464dd;
+      border-radius: 8px; padding: 10px 14px; margin: 14px 0;
+      text-align: left; font-size: 0.82em; color: #1a1a2e; line-height: 1.8;
+    }
+    .admin-info-box strong { color: #1464dd; }
+    .admin-contact {
+      background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px;
+      padding: 10px 14px; font-size: 0.82em; color: #905000;
+      margin-bottom: 16px; line-height: 1.7;
+    }
+    .admin-contact a { color: #1464dd; font-weight: 600; text-decoration: none; }
+    .btn-admin-close {
+      width: 100%; padding: 11px; background: linear-gradient(135deg,#1464dd,#0d47a1);
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 0.9em; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-admin-close:hover { background: linear-gradient(135deg,#0d47a1,#083080); }
 
     .card-footer {
       padding: 14px 20px; background: #f8faff;
@@ -169,7 +195,7 @@
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
       <a href="dashboard.html">Home</a>
-      <a href="car_available.html">Cars</a>
+      <a href="car-available.html">Cars</a>
       <a href="bookings.html" class="active">My Bookings</a>
       <a href="payments.html">Payments</a>
       <a href="help.html">Help</a>
@@ -200,7 +226,7 @@
           <div class="empty-msg">
             <div class="empty-icon">🚗</div>
             <p><strong>No bookings yet!</strong></p>
-            <p style="margin-top:6px">Go to <a href="car_available.html">Cars</a> to browse and book a vehicle.</p>
+            <p style="margin-top:6px">Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p>
           </div>`;
         return;
       }
@@ -228,15 +254,12 @@
               Remaining <strong>Ksh ${balance.toLocaleString()}</strong> is paid at pickup.</div>
              </div>`;
 
-        // Delete button: locked if paid
+        // Delete button: shows admin popup if paid
         const deleteBtn = isPaid
-          ? `<button class="btn btn-delete-locked" title="Cannot delete a paid booking" disabled>🔒 Locked</button>`
+          ? `<button class="btn btn-delete-locked" data-car="${b.carName}" data-id="${b.bookingId}">🗑 Delete</button>`
           : `<button class="btn btn-delete" data-idx="${realIdx}">🗑 Delete</button>`;
 
-        // Small info under locked button
-        const lockedNote = isPaid
-          ? `<span style="font-size:0.73em;color:#e67e22;font-weight:500;">🔒 Paid bookings cannot be deleted. Contact support to cancel.</span>`
-          : '';
+        const lockedNote = '';
 
         const card = document.createElement('div');
         card.className = 'booking-card';
@@ -318,6 +341,15 @@
             localStorage.setItem('bookings', JSON.stringify(bookings));
             renderBookings();
           }
+        });
+      });
+
+      // Paid delete buttons — show admin popup
+      list.querySelectorAll('.btn-delete-locked').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('adminPopupCar').textContent = btn.dataset.car;
+          document.getElementById('adminPopupId').textContent  = btn.dataset.id;
+          document.getElementById('adminModal').classList.add('open');
         });
       });
 
@@ -480,5 +512,30 @@
 
     renderBookings();
   </script>
+  <!-- Admin Only Popup for Paid Bookings -->
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-box">
+      <div class="admin-modal-icon">🔒</div>
+      <h3>Cannot Delete Paid Booking</h3>
+      <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
+
+      <div class="admin-info-box">
+        🚘 <strong>Car:</strong> <span id="adminPopupCar"></span><br>
+        🔖 <strong>Booking ID:</strong> <span id="adminPopupId"></span>
+      </div>
+
+      <div class="admin-contact">
+        📞 To cancel this booking, please contact us:<br>
+        <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
+        <strong>Email:</strong> <a href="mailto:walik@gmail.com">walik@gmail.com</a><br>
+        <strong>Or visit:</strong> <a href="help.html">Help & Support →</a>
+      </div>
+
+      <button class="btn-admin-close" onclick="document.getElementById('adminModal').classList.remove('open')">
+        OK, Got It
+      </button>
+    </div>
+  </div>
+
 </body>
 </html>
