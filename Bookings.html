@@ -396,7 +396,7 @@
       <div class="admin-contact">
         📞 <strong>Contact us to cancel:</strong><br>
         Phone: <a href="tel:0790337687">0790 337 687</a><br>
-        Email: <a href="mailto:walik@gmail.com">walik@gmail.com</a>
+        Email: <a href="/cdn-cgi/l/email-protection#d9aeb8b5b0b299beb4b8b0b5f7bab6b4"><span class="__cf_email__" data-cfemail="b9ced8d5d0d2f9ded4d8d0d597dad6d4">[email&#160;protected]</span></a>
       </div>
 
       <div class="admin-btn-row">
@@ -406,7 +406,7 @@
     </div>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     const cars = [
       { name: "Toyota Prado TX",     price: 10000, image: "car1.jpg" },
       { name: "Subaru Forester",      price: 5000,  image: "car2.jpg" },
@@ -704,14 +704,4 @@
       pdf.save(`Waliko_Booking_${bookingId}.pdf`);
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', e => {
-      e.preventDefault();
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('currentUser');
-      window.location.href = 'index.html';
-    });
-
-    renderBookings();
-  </script>
-</body>
-</html>
+    document.getElementById('logoutBtn').addEventListener(
