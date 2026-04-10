@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Payments – Waliko Car Hire</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; }
@@ -63,16 +64,19 @@
     .btn { padding: 8px 16px; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.8em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-blue { background: #1464dd; color: #fff; }
     .btn-blue:hover { background: #0d47a1; }
+    .btn-green { background: #1e8449; color: #fff; }
+    .btn-green:hover { background: #196037; }
     .btn-light { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
     .btn-light:hover { background: #e0eaff; }
 
+    /* Receipt Modal */
     .modal {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55);
       backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px;
     }
     .modal.open { display: flex; }
     .modal-box {
-      background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 400px;
+      background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 420px;
       position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease;
     }
     @keyframes slideUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
@@ -88,12 +92,7 @@
     .receipt-row .label { color: #888; }
     .receipt-row .value { font-weight: 600; color: #1a1a2e; }
     .receipt-row.total .value { color: #1464dd; font-size: 1em; }
-
-    /* debug box */
-    .debug-box {
-      background: #f0fff4; border: 1px solid #a8f0c6; border-radius: 10px;
-      padding: 12px 16px; font-size: 0.8em; color: #1a6e3a; margin-bottom: 16px; display: none;
-    }
+    .modal-actions { display: flex; gap: 8px; margin-top: 18px; justify-content: flex-end; flex-wrap: wrap; }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -120,76 +119,79 @@
 
   <main>
     <div class="page-title">Payment History</div>
-    <div id="debugBox" class="debug-box"></div>
     <div id="paymentsList"></div>
   </main>
 
-  <!-- Receipt Modal -->
+  <!-- Receipt Preview Modal -->
   <div class="modal" id="receiptModal">
     <div class="modal-box">
       <button class="modal-close" id="closeReceipt">✕</button>
       <h2>🧾 Payment Receipt</h2>
       <div id="receiptContent"></div>
+      <div class="modal-actions">
+        <button class="btn btn-light" id="printReceiptBtn">🖨️ Print</button>
+        <button class="btn btn-green" id="downloadPdfBtn">⬇️ Download PDF</button>
+      </div>
     </div>
   </div>
 
   <script>
+    // ── Helpers ──────────────────────────────────────────────────────────────
     function isPaidBooking(b) {
-      // Check both paymentStatus AND mpesaReceipt — same logic as bookings.html
       return b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
     }
 
+    let currentReceiptBooking = null; // stores the booking being previewed
+
+    // ── Render list ──────────────────────────────────────────────────────────
     function renderPayments() {
-      const list     = document.getElementById('paymentsList');
+      const list = document.getElementById('paymentsList');
       list.innerHTML = '';
 
-      // Always read fresh from localStorage
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
 
-      // Normalize — same as bookings.html
+      // Normalise payment status
       bookings.forEach(b => {
         if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
       });
 
-      const paidBookings    = bookings.filter(b => isPaidBooking(b));
+      const paidBookings    = bookings.filter(b =>  isPaidBooking(b));
       const pendingBookings = bookings.filter(b => !isPaidBooking(b));
 
-      // ── Show paid payments ──
-      if (paidBookings.length > 0) {
-        paidBookings.forEach(b => {
-          const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
-          const total   = b.price * days;
-          const deposit = Math.floor(total / 2);
-          const balance = total - deposit;
+      // Paid cards
+      paidBookings.forEach(b => {
+        const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+        const total   = b.price * days;
+        const deposit = Math.floor(total / 2);
+        const balance = total - deposit;
 
-          const card = document.createElement('div');
-          card.className = 'payment-card';
-          card.innerHTML = `
-            <div class="p-header">
-              <div>
-                <h3>${b.carName}</h3>
-                <div class="p-id">Booking: ${b.bookingId} &nbsp;·&nbsp; Paid: ${b.paidAt || 'N/A'}</div>
-              </div>
-              <span class="status-badge status-paid">✅ Paid</span>
+        const card = document.createElement('div');
+        card.className = 'payment-card';
+        card.innerHTML = `
+          <div class="p-header">
+            <div>
+              <h3>${b.carName}</h3>
+              <div class="p-id">Booking: ${b.bookingId} &nbsp;·&nbsp; Paid: ${b.paidAt || 'N/A'}</div>
             </div>
-            <table class="info-table">
-              <tr><th>Full Name</th><td>${b.fullName}</td></tr>
-              <tr><th>M-Pesa Receipt</th><td style="font-weight:700;color:#27ae60">${b.mpesaReceipt || 'N/A'}</td></tr>
-              <tr><th>Deposit Paid</th><td style="font-weight:700;color:#1464dd">Ksh ${deposit.toLocaleString()}</td></tr>
-              <tr><th>Balance Due</th><td>Ksh ${balance.toLocaleString()} (on pickup)</td></tr>
-              <tr><th>Start Date</th><td>${b.pickup}</td></tr>
-              <tr><th>End Date</th><td>${b.endDate}</td></tr>
-            </table>
-            <div class="card-footer">
-              <button class="btn btn-light" onclick="window.location.href='bookings.html'">📋 View Booking</button>
-              <button class="btn btn-blue receipt-btn" data-id="${b.bookingId}">🧾 View Receipt</button>
-            </div>
-          `;
-          list.appendChild(card);
-        });
-      }
+            <span class="status-badge status-paid">✅ Paid</span>
+          </div>
+          <table class="info-table">
+            <tr><th>Full Name</th><td>${b.fullName}</td></tr>
+            <tr><th>M-Pesa Receipt</th><td style="font-weight:700;color:#27ae60">${b.mpesaReceipt || 'N/A'}</td></tr>
+            <tr><th>Deposit Paid</th><td style="font-weight:700;color:#1464dd">Ksh ${deposit.toLocaleString()}</td></tr>
+            <tr><th>Balance Due</th><td>Ksh ${balance.toLocaleString()} (on pickup)</td></tr>
+            <tr><th>Start Date</th><td>${b.pickup}</td></tr>
+            <tr><th>End Date</th><td>${b.endDate}</td></tr>
+          </table>
+          <div class="card-footer">
+            <button class="btn btn-light" onclick="window.location.href='bookings.html'">📋 View Booking</button>
+            <button class="btn btn-blue receipt-btn" data-id="${b.bookingId}">🧾 Receipt</button>
+          </div>
+        `;
+        list.appendChild(card);
+      });
 
-      // ── Show pending bookings ──
+      // Pending
       if (pendingBookings.length > 0) {
         const card = document.createElement('div');
         card.className = 'empty-card';
@@ -218,23 +220,24 @@
         list.appendChild(card);
       }
 
-      // ── Nothing at all ──
       if (bookings.length === 0) {
         list.innerHTML = `<div class="empty-card">
           <div class="alert-box">💳 No bookings or payments yet. <a href="car-available.html" style="color:#1464dd;font-weight:600">Browse cars</a> to get started.</div>
         </div>`;
       }
 
-      // Receipt buttons
       list.querySelectorAll('.receipt-btn').forEach(btn => {
-        btn.addEventListener('click', () => showReceipt(btn.dataset.id));
+        btn.addEventListener('click', () => openReceiptModal(btn.dataset.id));
       });
     }
 
-    function showReceipt(bookingId) {
+    // ── Open modal preview ───────────────────────────────────────────────────
+    function openReceiptModal(bookingId) {
       const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
       const b = bookings.find(x => String(x.bookingId) === String(bookingId));
       if (!b) { alert('Receipt not found.'); return; }
+
+      currentReceiptBooking = b;
 
       const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
       const total   = b.price * days;
@@ -255,13 +258,308 @@
       document.getElementById('receiptModal').classList.add('open');
     }
 
+    // ── PDF Generator ────────────────────────────────────────────────────────
+    function generatePDF(b, action = 'download') {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+
+      const PW = 210; // page width
+      const blue  = [20, 100, 221];
+      const dblue = [13,  71, 161];
+      const white = [255, 255, 255];
+      const green = [30, 132,  73];
+      const gray  = [130, 130, 130];
+      const light = [240, 244, 255];
+
+      const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+      const total   = b.price * days;
+      const deposit = Math.floor(total / 2);
+      const balance = total - deposit;
+
+      // ── Header band ──────────────────────────────────────────────────────
+      doc.setFillColor(...blue);
+      doc.rect(0, 0, PW, 42, 'F');
+
+      // Accent stripe
+      doc.setFillColor(...dblue);
+      doc.rect(0, 38, PW, 4, 'F');
+
+      // Car icon circle
+      doc.setFillColor(255, 255, 255, 0.15);
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.4);
+      doc.circle(20, 21, 10, 'D');
+
+      // Simple car silhouette (white lines)
+      doc.setDrawColor(...white);
+      doc.setLineWidth(0.7);
+      doc.line(13, 22, 27, 22); // body base
+      doc.line(13, 22, 13, 19); doc.line(27, 22, 27, 19);
+      doc.line(13, 19, 16, 16); doc.line(27, 19, 24, 16);
+      doc.line(16, 16, 24, 16);
+      doc.circle(15.5, 23.5, 1.8, 'D'); // wheel
+      doc.circle(24.5, 23.5, 1.8, 'D');
+
+      // Brand name
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.text('WALIKO CAR HIRE', 35, 18);
+
+      // Tagline
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(200, 220, 255);
+      doc.text('Premium Car Hire Services  |  Kenya', 35, 25);
+
+      // Receipt label pill
+      doc.setFillColor(255, 255, 255);
+      doc.roundedRect(PW - 60, 10, 50, 14, 3, 3, 'F');
+      doc.setTextColor(...blue);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.text('PAYMENT RECEIPT', PW - 55, 19);
+
+      // ── Receipt meta bar ─────────────────────────────────────────────────
+      doc.setFillColor(...light);
+      doc.rect(0, 42, PW, 18, 'F');
+      doc.setTextColor(...gray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      const now = new Date();
+      const issued = now.toLocaleDateString('en-KE', { day: '2-digit', month: 'long', year: 'numeric' })
+                   + ' ' + now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+      doc.text(`Receipt No: RCP-${b.bookingId}`, 14, 50);
+      doc.text(`Issued: ${issued}`, 14, 56);
+      doc.setTextColor(...green);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('✔ PAID', PW - 30, 50);
+      doc.setTextColor(...gray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.text('Deposit Confirmed', PW - 35, 56);
+
+      // ── Section: Customer Details ────────────────────────────────────────
+      let y = 72;
+      doc.setFillColor(...blue);
+      doc.rect(14, y - 5, 4, 14, 'F');
+      doc.setTextColor(...blue);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text('Customer & Booking Details', 22, y + 4);
+
+      y += 12;
+      const fields = [
+        ['Full Name',      b.fullName],
+        ['Car Booked',     b.carName],
+        ['Booking ID',     b.bookingId],
+        ['Pickup Date',    b.pickup],
+        ['Return Date',    b.endDate],
+        ['Duration',       `${days} day${days > 1 ? 's' : ''}`],
+      ];
+
+      fields.forEach(([label, val], i) => {
+        const rowY = y + i * 10;
+        if (i % 2 === 0) {
+          doc.setFillColor(248, 250, 255);
+          doc.rect(14, rowY - 4, PW - 28, 10, 'F');
+        }
+        doc.setTextColor(...gray);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.text(label, 18, rowY + 2);
+        doc.setTextColor(30, 30, 60);
+        doc.setFont('helvetica', 'bold');
+        doc.text(String(val), 80, rowY + 2);
+      });
+
+      // ── Section: Payment Summary ─────────────────────────────────────────
+      y += fields.length * 10 + 14;
+      doc.setFillColor(...blue);
+      doc.rect(14, y - 5, 4, 14, 'F');
+      doc.setTextColor(...blue);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text('Payment Summary', 22, y + 4);
+
+      y += 12;
+      const payments = [
+        ['M-Pesa Receipt No.',   b.mpesaReceipt || 'N/A',                  false],
+        ['Date Paid',            b.paidAt || 'N/A',                         false],
+        ['Total Rental Cost',    `Ksh ${total.toLocaleString()}`,            false],
+        ['Deposit Paid (50%)',   `Ksh ${deposit.toLocaleString()}`,          true],
+        ['Balance on Pickup',    `Ksh ${balance.toLocaleString()}`,          false],
+      ];
+
+      payments.forEach(([label, val, highlight], i) => {
+        const rowY = y + i * 11;
+        if (highlight) {
+          doc.setFillColor(230, 245, 255);
+          doc.rect(14, rowY - 4.5, PW - 28, 11, 'F');
+          doc.setDrawColor(...blue);
+          doc.setLineWidth(0.3);
+          doc.rect(14, rowY - 4.5, PW - 28, 11, 'D');
+        } else if (i % 2 === 0) {
+          doc.setFillColor(248, 250, 255);
+          doc.rect(14, rowY - 4.5, PW - 28, 11, 'F');
+        }
+        doc.setTextColor(...gray);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(8.5);
+        doc.text(label, 18, rowY + 2);
+
+        if (label === 'M-Pesa Receipt No.') {
+          doc.setTextColor(...green);
+          doc.setFont('helvetica', 'bold');
+        } else if (highlight) {
+          doc.setTextColor(...blue);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(10);
+        } else {
+          doc.setTextColor(30, 30, 60);
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8.5);
+        }
+        doc.text(String(val), 80, rowY + 2);
+      });
+
+      // ── Signature & Stamp Section ────────────────────────────────────────
+      y += payments.length * 11 + 20;
+
+      // Divider
+      doc.setDrawColor(...blue);
+      doc.setLineWidth(0.3);
+      doc.line(14, y - 6, PW - 14, y - 6);
+
+      // Left: Authorised signature
+      doc.setTextColor(...gray);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.text('Authorised by:', 14, y);
+
+      // Signature (hand-drawn style with bezier lines)
+      doc.setDrawColor(...blue);
+      doc.setLineWidth(0.8);
+      // Cursive "W" strokes
+      const sx = 14, sy = y + 14;
+      doc.lines([[6, -8],[4, 8],[4, -8],[6, 8]], sx, sy, [1, 1]);
+      // "aliko" continuation
+      doc.lines([[5, -4],[3, 4],[4, -3],[2, 3],[3, -1]], sx + 20, sy, [1, 1]);
+      // Underline flourish
+      doc.setLineWidth(0.5);
+      doc.line(sx, sy + 2, sx + 45, sy + 2);
+      doc.lines([[5, -3],[3, 0]], sx + 45, sy + 2, [1, 1]); // small curl
+
+      doc.setTextColor(50, 50, 80);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.text('Waliko Car Hire', 14, y + 24);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(...gray);
+      doc.text('Authorised Signatory', 14, y + 30);
+
+      // Right: Official Stamp
+      const cx = PW - 42, cy = y + 16;
+      const r = 20;
+
+      // Outer ring
+      doc.setDrawColor(...blue);
+      doc.setLineWidth(1.2);
+      doc.circle(cx, cy, r, 'D');
+
+      // Inner ring
+      doc.setLineWidth(0.4);
+      doc.circle(cx, cy, r - 2.5, 'D');
+
+      // Curved top text "WALIKO CAR HIRE" manually placed
+      doc.setFontSize(5.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...blue);
+      const topText = 'WALIKO  CAR  HIRE';
+      const topLetters = topText.split('');
+      const topAngleStart = -155;
+      const topAngleStep  = 310 / (topLetters.length - 1);
+      topLetters.forEach((ch, i) => {
+        const angleDeg = topAngleStart + i * topAngleStep;
+        const angleRad = (angleDeg * Math.PI) / 180;
+        const lx = cx + (r - 5) * Math.cos(angleRad);
+        const ly = cy + (r - 5) * Math.sin(angleRad);
+        const rot = angleDeg + 90;
+        doc.text(ch, lx, ly, { angle: -rot, align: 'center' });
+      });
+
+      // Curved bottom text "OFFICIAL RECEIPT"
+      const botText = 'OFFICIAL  RECEIPT';
+      const botLetters = botText.split('');
+      const botAngleStart = 25;
+      const botAngleStep  = 130 / (botLetters.length - 1);
+      botLetters.forEach((ch, i) => {
+        const angleDeg = botAngleStart + i * botAngleStep;
+        const angleRad = (angleDeg * Math.PI) / 180;
+        const lx = cx + (r - 5) * Math.cos(angleRad);
+        const ly = cy + (r - 5) * Math.sin(angleRad);
+        const rot = angleDeg - 90;
+        doc.text(ch, lx, ly, { angle: -rot, align: 'center' });
+      });
+
+      // Center star
+      doc.setFontSize(7);
+      doc.text('★', cx, cy - 3, { align: 'center' });
+
+      // Center "KENYA"
+      doc.setFontSize(5.5);
+      doc.setFont('helvetica', 'bold');
+      doc.text('KENYA', cx, cy + 4, { align: 'center' });
+
+      // ── Footer ───────────────────────────────────────────────────────────
+      const footY = 285;
+      doc.setFillColor(...blue);
+      doc.rect(0, footY - 2, PW, 14, 'F');
+      doc.setTextColor(...white);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.text('Waliko Car Hire  |  Kenya  |  info@waliko.co.ke  |  +254 700 000 000', PW / 2, footY + 4, { align: 'center' });
+      doc.setFontSize(6.5);
+      doc.setTextColor(180, 210, 255);
+      doc.text('This is a computer-generated receipt and is valid without a physical signature.', PW / 2, footY + 9, { align: 'center' });
+
+      return doc;
+    }
+
+    // ── Download PDF ─────────────────────────────────────────────────────────
+    document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+      if (!currentReceiptBooking) return;
+      const doc = generatePDF(currentReceiptBooking, 'download');
+      doc.save(`Waliko-Receipt-${currentReceiptBooking.bookingId}.pdf`);
+    });
+
+    // ── Print (open PDF in new tab) ──────────────────────────────────────────
+    document.getElementById('printReceiptBtn').addEventListener('click', () => {
+      if (!currentReceiptBooking) return;
+      const doc = generatePDF(currentReceiptBooking, 'print');
+      const blob = doc.output('blob');
+      const url  = URL.createObjectURL(blob);
+      const win  = window.open(url, '_blank');
+      if (win) {
+        win.onload = () => { win.focus(); win.print(); };
+      }
+    });
+
+    // ── Modal close ──────────────────────────────────────────────────────────
     document.getElementById('closeReceipt').addEventListener('click', () => {
       document.getElementById('receiptModal').classList.remove('open');
+      currentReceiptBooking = null;
     });
     document.getElementById('receiptModal').addEventListener('click', e => {
-      if (e.target === document.getElementById('receiptModal'))
+      if (e.target === document.getElementById('receiptModal')) {
         document.getElementById('receiptModal').classList.remove('open');
+        currentReceiptBooking = null;
+      }
     });
+
+    // ── Logout ───────────────────────────────────────────────────────────────
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
