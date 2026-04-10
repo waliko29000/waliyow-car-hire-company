@@ -170,9 +170,8 @@
       }
 
       if(bookings.length===0){
-        list.innerHTML='<div class="empty-card"><div class="alert-box">&#x1F4B3; No bookings yet. <a href="car-available.html" style="color:#1464dd;font-weight:600">Browse cars</a> to get started.</div></div>';
+        list.innerHTML = '<div class="empty-card"><div class="alert-box">&#x1F4B3; No payments made yet. <a href="car-available.html" style="color:#1464dd;font-weight:600">Browse cars</a> and pay to get started.</div></div>';
       }
-
       list.querySelectorAll('.receipt-btn').forEach(function(btn){
         btn.addEventListener('click',function(){openModal(btn.getAttribute('data-id'));});
       });
