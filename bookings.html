@@ -8,155 +8,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-      color: #333;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
-    }
-
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; }
+    header { background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35); }
     header h1 { font-size: 1.2em; font-weight: 700; }
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
-    nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff; padding: 7px 13px; border-radius: 25px;
-      font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s;
-    }
+    nav a { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 7px 13px; border-radius: 25px; font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s; }
     nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
-
-    /* ── MAIN ── */
     main { max-width: 900px; margin: 24px auto; padding: 0 16px 40px; }
-
     .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; margin-bottom: 16px; }
-
-    .empty-msg {
-      background: #fff; border-radius: 14px; padding: 32px 24px; text-align: center;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07);
-      color: #666; font-size: 0.92em; line-height: 1.7;
-    }
+    .empty-msg { background: #fff; border-radius: 14px; padding: 32px 24px; text-align: center; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); color: #666; font-size: 0.92em; line-height: 1.7; }
     .empty-msg a { color: #1464dd; font-weight: 600; text-decoration: none; }
-
-    /* ── BOOKING CARD ── */
-    .booking-card {
-      background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07);
-      animation: fadeIn 0.3s ease;
-    }
+    .booking-card { background: #fff; border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-
-    .card-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
-    }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
     .card-header h3 { font-size: 1em; font-weight: 700; color: #1a1a2e; }
     .card-header .booking-id { font-size: 0.75em; color: #888; margin-top: 2px; }
     .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
-
-    .btn {
-      padding: 7px 14px; border: none; border-radius: 8px;
-      font-family: 'Poppins', sans-serif; font-size: 0.78em; font-weight: 600;
-      cursor: pointer; transition: all 0.2s;
-    }
+    .btn { padding: 7px 14px; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.78em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-pay { background: #1464dd; color: #fff; }
     .btn-pay:hover { background: #0d47a1; }
     .btn-delete { background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; }
     .btn-delete:hover { background: #ffe0e0; }
     .btn-pdf { background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; }
     .btn-pdf:hover { background: #e0eaff; }
-
-    /* ── TABLE ── */
     .info-table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
     .info-table tr { border-bottom: 1px solid #f0f4ff; }
     .info-table tr:last-child { border-bottom: none; }
-    .info-table th {
-      text-align: left; font-size: 0.78em; font-weight: 600; color: #888;
-      padding: 6px 8px 6px 0; width: 140px; white-space: nowrap;
-    }
+    .info-table th { text-align: left; font-size: 0.78em; font-weight: 600; color: #888; padding: 6px 8px 6px 0; width: 140px; white-space: nowrap; }
     .info-table td { font-size: 0.85em; color: #333; padding: 6px 8px 6px 0; }
-
-    .pending-notice {
-      background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.8em; color: #b35c00;
-      margin-bottom: 12px; line-height: 1.6;
-    }
-    .paid-notice {
-      background: #f0fff6; border: 1px solid #a8f0c6; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.8em; color: #1a6e3a;
-      margin-bottom: 12px; line-height: 1.6;
-    }
-
+    .pending-notice { background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px; padding: 10px 14px; font-size: 0.8em; color: #b35c00; margin-bottom: 12px; line-height: 1.6; }
+    .paid-notice { background: #f0fff6; border: 1px solid #a8f0c6; border-radius: 8px; padding: 10px 14px; font-size: 0.8em; color: #1a6e3a; margin-bottom: 12px; line-height: 1.6; }
     .card-footer { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-
-    .show-more-btn {
-      display: block; width: 100%; padding: 11px; background: #fff;
-      border: 1.5px solid #c5d5f5; border-radius: 10px;
-      font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 600;
-      color: #1464dd; cursor: pointer; transition: all 0.2s; margin-top: 4px;
-    }
+    .show-more-btn { display: block; width: 100%; padding: 11px; background: #fff; border: 1.5px solid #c5d5f5; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 600; color: #1464dd; cursor: pointer; transition: all 0.2s; margin-top: 4px; }
     .show-more-btn:hover { background: #f0f4ff; }
-
-    /* ── ADMIN POPUP ── */
-    .admin-modal {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
-      z-index: 2000; justify-content: center; align-items: center; padding: 16px;
-    }
+    /* ADMIN MODAL */
+    .admin-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; padding: 16px; }
     .admin-modal.open { display: flex; }
-    .admin-modal-box {
-      background: #fff; border-radius: 18px; padding: 28px 24px;
-      width: 100%; max-width: 380px; position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.25); text-align: center;
-    }
-    .admin-modal-close {
-      position: absolute; top: 12px; right: 14px;
-      background: #f0f4ff; border: none; width: 28px; height: 28px;
-      border-radius: 50%; font-size: 1em; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      color: #555; transition: background 0.2s; text-decoration: none;
-    }
+    .admin-modal-box { background: #fff; border-radius: 18px; padding: 28px 24px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); text-align: center; }
+    .admin-modal-close { position: absolute; top: 12px; right: 14px; background: #f0f4ff; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1em; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; transition: background 0.2s; text-decoration: none; }
     .admin-modal-close:hover { background: #dde3f0; color: #1464dd; }
     .admin-modal-icon { font-size: 3em; margin-bottom: 10px; }
     .admin-modal-box h3 { font-size: 1.05em; font-weight: 700; color: #c0392b; margin-bottom: 10px; }
     .admin-modal-box p { font-size: 0.85em; color: #555; line-height: 1.7; margin-bottom: 6px; }
-    .admin-info-box {
-      background: #f0f4ff; border-left: 4px solid #1464dd; border-radius: 8px;
-      padding: 10px 14px; margin: 14px 0; text-align: left;
-      font-size: 0.82em; color: #1a1a2e; line-height: 1.8;
-    }
+    .admin-info-box { background: #f0f4ff; border-left: 4px solid #1464dd; border-radius: 8px; padding: 10px 14px; margin: 14px 0; text-align: left; font-size: 0.82em; color: #1a1a2e; line-height: 1.8; }
     .admin-info-box strong { color: #1464dd; }
-    .admin-contact {
-      background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px;
-      padding: 10px 14px; font-size: 0.82em; color: #905000;
-      margin-bottom: 16px; line-height: 1.7;
-    }
+    .admin-contact { background: #fff5e6; border: 1px solid #ffc87a; border-radius: 8px; padding: 10px 14px; font-size: 0.82em; color: #905000; margin-bottom: 16px; line-height: 1.7; }
     .admin-contact a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .btn-admin-close {
-      width: 100%; padding: 11px; background: linear-gradient(135deg,#1464dd,#0d47a1);
-      color: #fff; border: none; border-radius: 10px;
-      font-family: 'Poppins', sans-serif; font-size: 0.9em; font-weight: 700;
-      cursor: pointer; transition: all 0.2s;
-    }
+    .btn-admin-close { width: 100%; padding: 11px; background: linear-gradient(135deg,#1464dd,#0d47a1); color: #fff; border: none; border-radius: 10px; font-family: 'Poppins', sans-serif; font-size: 0.9em; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .btn-admin-close:hover { background: linear-gradient(135deg,#0d47a1,#083080); }
-
-    /* ── RESPONSIVE ── */
+    /* clickable booking ID hint */
+    #adminPopupId { cursor: pointer; user-select: none; border-bottom: 1px dashed #1464dd; color: #1464dd; font-weight: 700; }
+    /* password modal */
+    .pw-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 3000; justify-content: center; align-items: center; padding: 16px; }
+    .pw-modal.open { display: flex; }
+    .pw-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    .pw-box h3 { font-size: 1em; font-weight: 700; color: #0d47a1; margin-bottom: 6px; }
+    .pw-box p { font-size: 0.82em; color: #888; margin-bottom: 16px; }
+    .pw-box input { width: 100%; padding: 10px 14px; border: 1.5px solid #c5d5f5; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 1em; text-align: center; letter-spacing: 6px; outline: none; margin-bottom: 14px; }
+    .pw-box input:focus { border-color: #1464dd; }
+    .pw-row { display: flex; gap: 8px; }
+    .pw-cancel { flex: 1; padding: 10px; background: #f0f4ff; color: #1464dd; border: 1px solid #c5d5f5; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+    .pw-submit { flex: 1; padding: 10px; background: #c0392b; color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.85em; font-weight: 700; cursor: pointer; }
+    .pw-submit:hover { background: #a93226; }
+    .pw-error { color: #c0392b; font-size: 0.8em; margin-bottom: 10px; display: none; }
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
       nav { margin-top: 4px; width: 100%; }
@@ -165,20 +81,19 @@
       .card-header { flex-direction: column; gap: 10px; }
       .card-actions { display: flex; flex-wrap: wrap; gap: 6px; }
       .card-actions .btn { flex: 1; text-align: center; min-width: 80px; }
-      .info-table th { width: 100px; font-size: 0.75em; white-space: nowrap; }
+      .info-table th { width: 100px; font-size: 0.75em; }
       .info-table td { font-size: 0.82em; word-break: break-word; }
       .booking-card { padding: 14px; }
       main { padding: 0 10px 40px; }
       .page-title { font-size: 1em; }
       .card-footer .btn { flex: 1; text-align: center; }
-      .pending-notice { font-size: 0.76em; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <h1>🚗 Waliko Car Hire</h1>
+    <h1>&#x1F697; Waliko Car Hire</h1>
     <nav>
       <a href="dashboard.html">Home</a>
       <a href="car-available.html">Cars</a>
@@ -199,102 +114,174 @@
   <!-- Admin Only Popup for Paid Bookings -->
   <div class="admin-modal" id="adminModal">
     <div class="admin-modal-box">
-      <a class="admin-modal-close" href="bookings.html">✕</a>
-      <div class="admin-modal-icon">🔒</div>
+      <button class="admin-modal-close" onclick="closeAdminModal()">&#x2715;</button>
+      <div class="admin-modal-icon">&#x1F6E1;&#xFE0F;</div>
       <h3>Cannot Delete Paid Booking</h3>
       <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
       <div class="admin-info-box">
-        🚘 <strong>Car:</strong> <span id="adminPopupCar"></span><br>
-        🔖 <strong>Booking ID:</strong> <span id="adminPopupId"></span>
+        &#x1F698; <strong>Car:</strong> <span id="adminPopupCar"></span><br>
+        &#x1F516; <strong>Booking ID:</strong> <span id="adminPopupId"></span>
       </div>
       <div class="admin-contact">
-        📞 To cancel this booking, please contact us:<br>
+        &#x1F4DE; To cancel this booking, please contact us:<br>
         <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
         <strong>Email:</strong> <a href="mailto:walik@gmail.com">walik@gmail.com</a><br>
-        <strong>Or visit:</strong> <a href="help.html">Help &amp; Support →</a>
+        <strong>Or visit:</strong> <a href="help.html">Help &amp; Support &#x2192;</a>
       </div>
-      <button class="btn-admin-close" onclick="document.getElementById('adminModal').classList.remove('open')">OK, Got It</button>
+      <button class="btn-admin-close" onclick="closeAdminModal()">OK, Got It</button>
+    </div>
+  </div>
+
+  <!-- Admin Password Modal -->
+  <div class="pw-modal" id="pwModal">
+    <div class="pw-box">
+      <h3>&#x1F512; Admin Access</h3>
+      <p>Enter admin password to delete this paid booking</p>
+      <input type="password" id="pwInput" placeholder="&#9679;&#9679;&#9679;&#9679;" maxlength="10" />
+      <div class="pw-error" id="pwError">&#x274C; Wrong password. Try again.</div>
+      <div class="pw-row">
+        <button class="pw-cancel" id="pwCancelBtn">Cancel</button>
+        <button class="pw-submit" id="pwSubmitBtn">Delete Booking</button>
+      </div>
     </div>
   </div>
 
   <script>
-    let displayCount = 3;
+    var displayCount = 3;
+    var adminTargetId = null;  // bookingId to delete after password
+    var idClickCount  = 0;
+    var idClickTimer  = null;
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('open');
+      idClickCount = 0;
+    }
+
+    function openPasswordModal() {
+      document.getElementById('adminModal').classList.remove('open');
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwError').style.display = 'none';
+      document.getElementById('pwModal').classList.add('open');
+      setTimeout(function(){ document.getElementById('pwInput').focus(); }, 100);
+    }
+
+    function closePasswordModal() {
+      document.getElementById('pwModal').classList.remove('open');
+      adminTargetId = null;
+      idClickCount  = 0;
+    }
+
+    function deletePaidBooking() {
+      var bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      bookings = bookings.filter(function(b){ return String(b.bookingId) !== String(adminTargetId); });
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      closePasswordModal();
+      renderBookings();
+    }
+
+    // Password submit
+    document.getElementById('pwSubmitBtn').onclick = function() {
+      var val = document.getElementById('pwInput').value.trim();
+      if (val === '2080') {
+        deletePaidBooking();
+      } else {
+        document.getElementById('pwError').style.display = 'block';
+        document.getElementById('pwInput').value = '';
+        document.getElementById('pwInput').focus();
+      }
+    };
+
+    // Allow Enter key in password field
+    document.getElementById('pwInput').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') document.getElementById('pwSubmitBtn').click();
+    });
+
+    document.getElementById('pwCancelBtn').onclick = closePasswordModal;
+
+    // Click outside pw modal to close
+    document.getElementById('pwModal').addEventListener('click', function(e){
+      if (e.target === document.getElementById('pwModal')) closePasswordModal();
+    });
+
+    // Booking ID triple-click handler
+    document.getElementById('adminPopupId').addEventListener('click', function(){
+      idClickCount++;
+      clearTimeout(idClickTimer);
+      if (idClickCount >= 3) {
+        idClickCount = 0;
+        openPasswordModal();
+      } else {
+        idClickTimer = setTimeout(function(){ idClickCount = 0; }, 600);
+      }
+    });
 
     function renderBookings() {
-      const list = document.getElementById('bookingsList');
+      var list = document.getElementById('bookingsList');
       list.innerHTML = '';
-      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+      var bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
 
       if (bookings.length === 0) {
-        list.innerHTML = `
-          <div class="empty-msg">
-            <p>You haven't made any bookings yet.</p>
-            <p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p>
-          </div>`;
+        list.innerHTML =
+          '<div class="empty-msg">' +
+            '<p>You haven\'t made any bookings yet.</p>' +
+            '<p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p>' +
+          '</div>';
         return;
       }
 
-      bookings.slice(0, displayCount).forEach((b, idx) => {
-        // normalize paid status
+      bookings.slice(0, displayCount).forEach(function(b, idx) {
         if (b.mpesaReceipt && b.mpesaReceipt !== 'N/A') b.paymentStatus = 'paid';
-        const isPaid  = b.paymentStatus === 'paid';
+        var isPaid   = b.paymentStatus === 'paid';
+        var days     = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+        var total    = b.price * days;
+        var deposit  = Math.floor(total / 2);
+        var balance  = total - deposit;
 
-        const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
-        const total   = b.price * days;
-        const deposit = Math.floor(total / 2);
-        const balance = total - deposit;
-
-        const card = document.createElement('div');
+        var card = document.createElement('div');
         card.className = 'booking-card';
-        card.innerHTML = `
-          <div class="card-header">
-            <div>
-              <h3>${b.carName}</h3>
-              <div class="booking-id">ID: ${b.bookingId} &nbsp;·&nbsp; ${b.timestamp}</div>
-            </div>
-            <div class="card-actions">
-              ${!isPaid ? `<button class="btn btn-pay" data-amount="${deposit}" data-id="${b.bookingId}">Pay Deposit</button>` : ''}
-              <button class="btn btn-delete ${isPaid ? 'btn-delete-paid' : ''}" data-idx="${idx}" data-car="${b.carName}" data-id="${b.bookingId}">Delete</button>
-            </div>
-          </div>
-
-          <table class="info-table">
-            <tr><th>Full Name</th><td>${b.fullName}</td></tr>
-            <tr><th>Phone No.</th><td>${b.phone}</td></tr>
-            <tr><th>National ID</th><td>${b.nationalId}</td></tr>
-            <tr><th>Licence No.</th><td>${b.license}</td></tr>
-            <tr><th>Start Date</th><td>${b.pickup}</td></tr>
-            <tr><th>End Date</th><td>${b.endDate}</td></tr>
-            <tr><th>Days Booked</th><td>${days} day${days !== 1 ? 's' : ''}</td></tr>
-            <tr><th>Price/Day</th><td>Ksh ${b.price.toLocaleString()}</td></tr>
-            <tr><th>Total Fee</th><td>Ksh ${total.toLocaleString()}</td></tr>
-          </table>
-
-          ${isPaid
-            ? `<div class="paid-notice">✅ <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>${b.mpesaReceipt || 'N/A'}</strong><br>
-               Balance of <strong>Ksh ${balance.toLocaleString()}</strong> is due at pickup. 🚗</div>`
-            : `<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh ${deposit.toLocaleString()}</strong> to confirm your booking.
-               The remaining <strong>Ksh ${balance.toLocaleString()}</strong> is paid when picking up the car.</div>`
-          }
-
-          <div class="card-footer">
-            <button class="btn btn-pdf" data-id="${b.bookingId}">⬇ Download PDF</button>
-          </div>
-        `;
+        card.innerHTML =
+          '<div class="card-header">' +
+            '<div>' +
+              '<h3>' + b.carName + '</h3>' +
+              '<div class="booking-id">ID: ' + b.bookingId + ' &nbsp;&middot;&nbsp; ' + b.timestamp + '</div>' +
+            '</div>' +
+            '<div class="card-actions">' +
+              (!isPaid ? '<button class="btn btn-pay" data-amount="' + deposit + '" data-id="' + b.bookingId + '">Pay Deposit</button>' : '') +
+              '<button class="btn btn-delete ' + (isPaid ? 'btn-delete-paid' : '') + '" data-idx="' + idx + '" data-car="' + b.carName + '" data-id="' + b.bookingId + '">Delete</button>' +
+            '</div>' +
+          '</div>' +
+          '<table class="info-table">' +
+            '<tr><th>Full Name</th><td>' + b.fullName + '</td></tr>' +
+            '<tr><th>Phone No.</th><td>' + b.phone + '</td></tr>' +
+            '<tr><th>National ID</th><td>' + b.nationalId + '</td></tr>' +
+            '<tr><th>Licence No.</th><td>' + b.license + '</td></tr>' +
+            '<tr><th>Start Date</th><td>' + b.pickup + '</td></tr>' +
+            '<tr><th>End Date</th><td>' + b.endDate + '</td></tr>' +
+            '<tr><th>Days Booked</th><td>' + days + ' day' + (days !== 1 ? 's' : '') + '</td></tr>' +
+            '<tr><th>Price/Day</th><td>Ksh ' + b.price.toLocaleString() + '</td></tr>' +
+            '<tr><th>Total Fee</th><td>Ksh ' + total.toLocaleString() + '</td></tr>' +
+          '</table>' +
+          (isPaid
+            ? '<div class="paid-notice">&#x2705; <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>' + (b.mpesaReceipt || 'N/A') + '</strong><br>Balance of <strong>Ksh ' + balance.toLocaleString() + '</strong> is due at pickup. &#x1F697;</div>'
+            : '<div class="pending-notice">&#x23F3; <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh ' + deposit.toLocaleString() + '</strong> to confirm your booking. The remaining <strong>Ksh ' + balance.toLocaleString() + '</strong> is paid when picking up the car.</div>'
+          ) +
+          '<div class="card-footer">' +
+            '<button class="btn btn-pdf" data-id="' + b.bookingId + '">&#x2B07; Download PDF</button>' +
+          '</div>';
         list.appendChild(card);
       });
 
       if (bookings.length > displayCount) {
-        const btn = document.createElement('button');
+        var btn = document.createElement('button');
         btn.className = 'show-more-btn';
-        btn.textContent = `Show More (${bookings.length - displayCount} remaining)`;
-        btn.addEventListener('click', () => { displayCount += 5; renderBookings(); });
+        btn.textContent = 'Show More (' + (bookings.length - displayCount) + ' remaining)';
+        btn.addEventListener('click', function(){ displayCount += 5; renderBookings(); });
         list.appendChild(btn);
       }
 
       // Pay buttons
-      list.querySelectorAll('.btn-pay').forEach(btn => {
-        btn.addEventListener('click', () => {
+      list.querySelectorAll('.btn-pay').forEach(function(btn){
+        btn.addEventListener('click', function(){
           localStorage.setItem('paymentAmount', btn.dataset.amount);
           localStorage.setItem('paymentBookingId', btn.dataset.id);
           window.location.href = 'payment-gateway.html';
@@ -302,19 +289,20 @@
       });
 
       // Delete buttons
-      list.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', () => {
+      list.querySelectorAll('.btn-delete').forEach(function(btn){
+        btn.addEventListener('click', function(){
           if (btn.classList.contains('btn-delete-paid')) {
-            // paid → show admin popup
+            // Show admin popup — triple-click the ID to get password prompt
             document.getElementById('adminPopupCar').textContent = btn.dataset.car;
             document.getElementById('adminPopupId').textContent  = btn.dataset.id;
+            adminTargetId = btn.dataset.id;
+            idClickCount  = 0;
             document.getElementById('adminModal').classList.add('open');
           } else {
-            // unpaid → confirm and delete
             if (confirm('Delete this booking?')) {
-              const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-              bookings.splice(btn.dataset.idx, 1);
-              localStorage.setItem('bookings', JSON.stringify(bookings));
+              var bks = JSON.parse(localStorage.getItem('bookings') || '[]');
+              bks.splice(parseInt(btn.dataset.idx), 1);
+              localStorage.setItem('bookings', JSON.stringify(bks));
               renderBookings();
             }
           }
@@ -322,25 +310,27 @@
       });
 
       // PDF buttons
-      list.querySelectorAll('.btn-pdf').forEach(btn => {
-        btn.addEventListener('click', () => downloadPDF(btn.dataset.id));
+      list.querySelectorAll('.btn-pdf').forEach(function(btn){
+        btn.addEventListener('click', function(){ downloadPDF(btn.dataset.id); });
       });
     }
 
     function downloadPDF(bookingId) {
-      const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-      const b = bookings.find(x => x.bookingId === bookingId);
+      var bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var b = null;
+      for (var i = 0; i < bookings.length; i++) {
+        if (bookings[i].bookingId === bookingId) { b = bookings[i]; break; }
+      }
       if (!b) { alert('Booking not found.'); return; }
 
-      const days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
-      const total   = b.price * days;
-      const deposit = Math.floor(total / 2);
-      const balance = total - deposit;
+      var days    = Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 86400000));
+      var total   = b.price * days;
+      var deposit = Math.floor(total / 2);
+      var balance = total - deposit;
 
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ unit: 'mm', format: 'a4' });
-      const W = 210, H = 297;
-      const L = 14, R = 196, CW = 182;
+      var jsPDF = window.jspdf.jsPDF;
+      var pdf = new jsPDF({ unit: 'mm', format: 'a4' });
+      var W = 210, H = 297, L = 14, R = 196, CW = 182;
 
       pdf.setFillColor(20, 100, 221);
       pdf.rect(0, 0, W, 30, 'F');
@@ -355,7 +345,7 @@
       pdf.setFontSize(7.5); pdf.setFont('helvetica', 'bold');
       pdf.text('BOOKING CONFIRMATION', 172, 13.5, { align: 'center' });
 
-      let y = 36;
+      var y = 36;
       pdf.setFillColor(242, 246, 255);
       pdf.roundedRect(L, y, CW, 22, 2, 2, 'F');
       pdf.setDrawColor(20, 100, 221); pdf.setLineWidth(0.3);
@@ -378,7 +368,7 @@
       pdf.text('CUSTOMER & BOOKING DETAILS', L + 3, y + 5);
       y += 7;
 
-      const details = [
+      var details = [
         ['Full Name',   b.fullName],
         ['Phone',       b.phone],
         ['National ID', b.nationalId],
@@ -386,11 +376,11 @@
         ['Car',         b.carName],
         ['Start Date',  b.pickup],
         ['End Date',    b.endDate],
-        ['Days Booked', `${days} day${days !== 1 ? 's' : ''}`],
+        ['Days Booked', days + ' day' + (days !== 1 ? 's' : '')]
       ];
 
-      details.forEach((row, i) => {
-        const ry = y + i * 8;
+      details.forEach(function(row, i) {
+        var ry = y + i * 8;
         pdf.setFillColor(i % 2 === 0 ? 248 : 255, i % 2 === 0 ? 250 : 255, i % 2 === 0 ? 255 : 255);
         pdf.rect(L, ry, CW, 8, 'F');
         pdf.setFillColor(20, 100, 221);
@@ -409,27 +399,27 @@
       pdf.text('PAYMENT SUMMARY', L + 3, y + 5);
       y += 7;
 
-      const payments = [
-        { label: 'Price Per Day',     val: `Ksh ${b.price.toLocaleString()}`,   hi: false, gold: false },
-        { label: 'Number of Days',    val: `${days}`,                            hi: false, gold: false },
-        { label: 'Total Rental Fee',  val: `Ksh ${total.toLocaleString()}`,      hi: true,  gold: false },
-        { label: 'Deposit Due (50%)', val: `Ksh ${deposit.toLocaleString()}`,    hi: false, gold: true  },
-        { label: 'Balance on Pickup', val: `Ksh ${balance.toLocaleString()}`,    hi: false, gold: false },
+      var payments = [
+        { label: 'Price Per Day',     val: 'Ksh ' + b.price.toLocaleString(),   hi: false, gold: false },
+        { label: 'Number of Days',    val: String(days),                          hi: false, gold: false },
+        { label: 'Total Rental Fee',  val: 'Ksh ' + total.toLocaleString(),      hi: true,  gold: false },
+        { label: 'Deposit Due (50%)', val: 'Ksh ' + deposit.toLocaleString(),    hi: false, gold: true  },
+        { label: 'Balance on Pickup', val: 'Ksh ' + balance.toLocaleString(),    hi: false, gold: false }
       ];
 
-      payments.forEach((row, i) => {
-        const ry = y + i * 8;
+      payments.forEach(function(row, i) {
+        var ry = y + i * 8;
         if (row.hi)        pdf.setFillColor(224, 238, 255);
         else if (row.gold) pdf.setFillColor(255, 246, 218);
         else               pdf.setFillColor(i % 2 === 0 ? 248 : 255, i % 2 === 0 ? 250 : 255, i % 2 === 0 ? 255 : 255);
         pdf.rect(L, ry, CW, 8, 'F');
         pdf.setFillColor(row.hi ? 20 : row.gold ? 255 : 20, row.hi ? 100 : row.gold ? 180 : 100, row.hi ? 221 : row.gold ? 0 : 221);
         pdf.rect(L, ry, 2, 8, 'F');
-        const lc = row.gold ? [150, 85, 0] : [100, 100, 100];
-        const vc = row.hi ? [20, 100, 221] : row.gold ? [170, 95, 0] : [20, 20, 20];
-        pdf.setTextColor(...lc); pdf.setFontSize(8); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
+        var lc = row.gold ? [150, 85, 0] : [100, 100, 100];
+        var vc = row.hi ? [20, 100, 221] : row.gold ? [170, 95, 0] : [20, 20, 20];
+        pdf.setTextColor(lc[0], lc[1], lc[2]); pdf.setFontSize(8); pdf.setFont('helvetica', (row.hi || row.gold) ? 'bold' : 'normal');
         pdf.text(row.label, L + 5, ry + 5.5);
-        pdf.setTextColor(...vc); pdf.setFont('helvetica', row.hi || row.gold ? 'bold' : 'normal');
+        pdf.setTextColor(vc[0], vc[1], vc[2]); pdf.setFont('helvetica', (row.hi || row.gold) ? 'bold' : 'normal');
         pdf.text(row.val, L + 75, ry + 5.5);
       });
 
@@ -441,7 +431,7 @@
       pdf.setTextColor(140, 80, 0); pdf.setFontSize(8); pdf.setFont('helvetica', 'bold');
       pdf.text('NOTE:', L + 4, y + 6.5);
       pdf.setFont('helvetica', 'normal'); pdf.setFontSize(7.5);
-      pdf.text(`Pay Ksh ${deposit.toLocaleString()} deposit to confirm. Balance Ksh ${balance.toLocaleString()} due at pickup.`, L + 18, y + 6.5);
+      pdf.text('Pay Ksh ' + deposit.toLocaleString() + ' deposit to confirm. Balance Ksh ' + balance.toLocaleString() + ' due at pickup.', L + 18, y + 6.5);
       pdf.setTextColor(100, 100, 100);
       pdf.text('Present this document when collecting your vehicle.', L + 4, y + 13);
       y += 22;
@@ -457,12 +447,12 @@
       pdf.rect(0, H - 14, W, 14, 'F');
       pdf.setTextColor(255, 255, 255); pdf.setFontSize(7.5); pdf.setFont('helvetica', 'normal');
       pdf.text('Thank you for choosing Waliko Car Hire!', W / 2, H - 7.5, { align: 'center' });
-      pdf.text('walik@gmail.com  |  0790 337 687  |  235 Fashion Street, Nairobi, Kenya', W / 2, H - 3, { align: 'center' });
+      pdf.text('walik@gmail.com  |  0734 642 982  |  235 Fashion Street, Nairobi, Kenya', W / 2, H - 3, { align: 'center' });
 
-      pdf.save(`Waliko_Booking_${bookingId}.pdf`);
+      pdf.save('Waliko_Booking_' + bookingId + '.pdf');
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', e => {
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('currentUser');
