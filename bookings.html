@@ -198,7 +198,7 @@
       }
       bookings.slice(0,displayCount).forEach(function(b,idx){
         if(b.mpesaReceipt&&b.mpesaReceipt!=='N/A') b.paymentStatus='paid';
-        var isPaid=b.paymentStatus==='paid';
+        var isPaid=b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
         var days=Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));
         var total=b.price*days, deposit=Math.floor(total/2), balance=total-deposit;
         var card=document.createElement('div');
