@@ -387,7 +387,7 @@
       doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(180,210,255);
       doc.text('Premium Vehicle Rentals  \u00B7  Nairobi, Kenya',L,29);
       doc.setTextColor(140,175,240);doc.setFontSize(8);
-      doc.text('Booking ID: '+b.bookingId+'   \u00B7   Date: '+issued,L,39);
+      doc.text('Booking ID: '+String(b.bookingId).replace('#','')+'   \u00B7   Date: '+issued,L,39);
       doc.setFillColor(255,255,255);doc.roundedRect(PW-46,8,32,12,2,2,'F');
       doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(8.5);
       doc.text('BOOKING',PW-30,15.5,{align:'center'});
@@ -400,11 +400,11 @@
       if(isPaid){
         doc.setFillColor(230,249,238);doc.roundedRect(PW-38,53,24,10,2,2,'F');
         doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('\u2714  PAID',PW-26,59.5,{align:'center'});
+        doc.text('PAID',PW-26,59.5,{align:'center'});
       } else {
         doc.setFillColor(255,245,220);doc.roundedRect(PW-44,53,30,10,2,2,'F');
         doc.setTextColor(160,90,0);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('\u23F3  PENDING',PW-29,59.5,{align:'center'});
+        doc.text('PENDING',PW-29,59.5,{align:'center'});
       }
 
       function secHead(label,y){
@@ -439,7 +439,7 @@
         ['National ID',b.nationalId],
         ['Licence No.',b.license],
         ['Vehicle Hired',b.carName],
-        ['Booking ID',b.bookingId],
+        ['Booking ID',String(b.bookingId).replace('#','')],
         ['Pickup Date',b.pickup],
         ['Return Date',b.endDate],
         ['Duration',days+' day'+(days!==1?'s':'')]
@@ -458,18 +458,7 @@
       tRow('Deposit (50%)','Ksh '+deposit.toLocaleString(),y,false,false,false,RH);y+=RH;
       tRow('Balance on Pickup','Ksh '+balance.toLocaleString(),y,true,false,false,RH);y+=RH;
 
-      /* NOTE BOX */
       y+=4;
-      doc.setFillColor(255,248,228);
-      doc.setDrawColor(255,180,60);doc.setLineWidth(0.4);
-      doc.roundedRect(L,y,CW,13,2,2,'FD');
-      doc.setTextColor(140,80,0);doc.setFont('helvetica','bold');doc.setFontSize(7);
-      doc.text('NOTE:',L+4,y+5);
-      doc.setFont('helvetica','normal');doc.setFontSize(6.8);
-      doc.text('Pay Ksh '+deposit.toLocaleString()+' deposit to confirm. Balance Ksh '+balance.toLocaleString()+' due at pickup.',L+15,y+5);
-      doc.setTextColor(100,100,100);
-      doc.text('Present this document when collecting your vehicle.',L+4,y+10);
-      y+=17;
 
       /* DIVIDER */
       doc.setDrawColor(210,218,235);doc.setLineWidth(0.3);
