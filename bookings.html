@@ -196,9 +196,17 @@
         list.innerHTML='<div class="empty-msg"><p>You haven\'t made any bookings yet.</p><p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p></div>';
         return;
       }
+      /* Fix paymentStatus in localStorage for all bookings */
+      var changed=false;
+      bookings.forEach(function(bk){
+        if(bk.mpesaReceipt&&bk.mpesaReceipt!=='N/A'&&bk.paymentStatus!=='paid'){
+          bk.paymentStatus='paid';changed=true;
+        }
+      });
+      if(changed) localStorage.setItem('bookings',JSON.stringify(bookings));
+
       bookings.slice(0,displayCount).forEach(function(b,idx){
-        if(b.mpesaReceipt&&b.mpesaReceipt!=='N/A') b.paymentStatus='paid';
-        var isPaid=b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
+        var isPaid=b.paymentStatus==='paid';
         var days=Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));
         var total=b.price*days, deposit=Math.floor(total/2), balance=total-deposit;
         var card=document.createElement('div');
