@@ -340,7 +340,7 @@
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
-      <a href="car-available.html">Home</a>
+      <a href="car-available.html">How to Use</a>
       <a href="car-available.html">Cars</a>
       <a href="bookings.html">My Bookings</a>
       <a href="payments.html">Payments</a>
@@ -400,8 +400,8 @@
       <div class="modal-amount" id="mpesaAmount"></div>
       <div class="form-group">
         <label>M-Pesa Phone Number</label>
-        <input type="tel" id="mpesaInput" placeholder="0XXXXXXXXX" maxlength="10">
-        <div class="error-text" id="mpesaErr">❌ Invalid phone number — must be 10 digits starting with 0</div>
+        <input type="tel" id="mpesaInput" placeholder="07XXXXXXXX" maxlength="10">
+        <div class="error-text" id="mpesaErr">❌ Invalid phone number — must be 10 digits starting with 07</div>
       </div>
       <div class="modal-info">
         <strong>What happens next?</strong><br>
@@ -514,8 +514,7 @@
 
       if (type === 'mpesa') {
         const phone = document.getElementById('mpesaInput').value.trim();
-        // Accept any number starting with 0 — exactly 10 digits
-        valid = /^0\d{9}$/.test(phone);
+        valid = /^07\d{8}$/.test(phone);
         document.getElementById('mpesaErr').style.display = valid ? 'none' : 'block';
         btn = document.getElementById('mpesaPayBtn');
 
@@ -625,6 +624,7 @@
             btn.textContent = 'Pay';
             btn.disabled = false;
 
+            // ── FIX: use String() on both sides so type mismatch never fails ──
             const bookings   = JSON.parse(localStorage.getItem('bookings')) || [];
             const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmount = localStorage.getItem('paymentAmount');
