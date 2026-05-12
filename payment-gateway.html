@@ -457,8 +457,8 @@
   </div>
 
   <script>
-    // ── CHANGE THIS to your InfinityFree domain ──
-    const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
+    // ── Updated ngrok URL ──
+    const BACKEND_URL = 'https://jeniffer-homoeomorphous-advisably.ngrok-free.dev/mpesa';
 
     const amount     = localStorage.getItem('paymentAmount');
     const bookingId  = localStorage.getItem('paymentBookingId');
@@ -624,7 +624,6 @@
             btn.textContent = 'Pay';
             btn.disabled = false;
 
-            // ── FIX: use String() on both sides so type mismatch never fails ──
             const bookings   = JSON.parse(localStorage.getItem('bookings')) || [];
             const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmount = localStorage.getItem('paymentAmount');
