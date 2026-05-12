@@ -643,7 +643,7 @@
 
             localStorage.setItem('bookings', JSON.stringify(updatedBookings));
 
-            showStatus('success', '🎉 Woohoo! Payment received successfully. Receipt: ' + (data.receipt || '') + '. Your booking is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
+            showStatus('success', '✅ Payment received successfully! Receipt: ' + (data.receipt || '') + '. Your Booking ID: ' + payBookingId + ' is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
 
           } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
             clearInterval(interval);
