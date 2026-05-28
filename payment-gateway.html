@@ -7,332 +7,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-      color: #333;
-      min-height: 100vh;
-    }
-
-    header {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
-    }
-
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; min-height: 100vh; }
+    header { background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35); }
     header h1 { font-size: 1.2em; font-weight: 700; }
-
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      padding: 7px 13px;
-      border-radius: 25px;
-      font-size: 0.78em;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
+    nav a { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 7px 13px; border-radius: 25px; font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s; }
     nav a:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
-
-    main {
-      max-width: 520px;
-      margin: 24px auto;
-      padding: 0 16px 40px;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      margin-bottom: 16px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-title {
-      font-size: 1em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
-    }
-
-    .access-alert {
-      display: none;
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-left: 4px solid #f39c12;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      font-size: 0.88em;
-      color: #b35c00;
-      line-height: 1.6;
-    }
-
-    .access-alert .alert-title {
-      font-weight: 700;
-      font-size: 0.95em;
-      margin-bottom: 6px;
-      color: #a04000;
-    }
-
+    main { max-width: 520px; margin: 24px auto; padding: 0 16px 40px; }
+    .card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); margin-bottom: 16px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-title { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
+    .access-alert { display: none; background: #fff5e6; border: 1px solid #ffc87a; border-left: 4px solid #f39c12; border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; font-size: 0.88em; color: #b35c00; line-height: 1.6; }
+    .access-alert .alert-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; color: #a04000; }
     .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
     .access-alert a:hover { text-decoration: underline; }
-
-    .booking-info-box {
-      background: #f0f4ff;
-      border-left: 4px solid #1464dd;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-size: 0.85em;
-      color: #1a1a2e;
-      font-weight: 600;
-    }
-
-    .no-booking-box {
-      background: #fff5e6;
-      border-left: 4px solid #ffc107;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin-bottom: 16px;
-      font-size: 0.85em;
-      color: #b35c00;
-      font-weight: 500;
-    }
-
-    .payment-method {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      border: 1.5px solid #dde3f0;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-size: 0.9em;
-      font-weight: 600;
-      color: #1a1a2e;
-      background: #fff;
-    }
-
-    .payment-method:hover:not(.disabled) {
-      border-color: #1464dd;
-      background: #f5f8ff;
-      box-shadow: 0 2px 10px rgba(20,100,221,0.1);
-    }
-
+    .booking-info-box { background: #f0f4ff; border-left: 4px solid #1464dd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.85em; color: #1a1a2e; font-weight: 600; }
+    .no-booking-box { background: #fff5e6; border-left: 4px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.85em; color: #b35c00; font-weight: 500; }
+    .payment-method { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1.5px solid #dde3f0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600; color: #1a1a2e; background: #fff; }
+    .payment-method:hover:not(.disabled) { border-color: #1464dd; background: #f5f8ff; box-shadow: 0 2px 10px rgba(20,100,221,0.1); }
     .payment-method.disabled { opacity: 0.45; cursor: not-allowed; }
-
-    .payment-method img {
-      width: 38px;
-      height: 24px;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
+    .payment-method img { width: 38px; height: 24px; object-fit: contain; flex-shrink: 0; }
     .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
-
-    .final-error {
-      display: none;
-      background: #fff0f0;
-      border: 1px solid #ffcccc;
-      border-left: 4px solid #e74c3c;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.88em;
-      color: #c0392b;
-      margin-top: 4px;
-    }
-
+    .final-error { display: none; background: #fff0f0; border: 1px solid #ffcccc; border-left: 4px solid #e74c3c; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #c0392b; margin-top: 4px; }
     .final-error a { color: #1464dd; font-weight: 600; text-decoration: none; }
-
-    .success-box {
-      display: none;
-      background: #f0fff4;
-      border: 1px solid #b2f5c8;
-      border-left: 4px solid #27ae60;
-      border-radius: 10px;
-      padding: 14px 16px;
-      font-size: 0.88em;
-      color: #1a6e3a;
-      margin-top: 4px;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
+    .success-box { display: none; background: #f0fff4; border: 1px solid #b2f5c8; border-left: 4px solid #27ae60; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #1a6e3a; margin-top: 4px; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
     .modal.open { display: flex; }
-
-    .modal-box {
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px 24px;
-      width: 100%;
-      max-width: 380px;
-      position: relative;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-      animation: slideUp 0.25s ease;
-    }
-
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .modal-box h3 {
-      font-size: 1em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
-    }
-
-    .modal-amount {
-      background: #f0f4ff;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 0.9em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 14px;
-    }
-
-    .modal-info {
-      background: #f5f8ff;
-      border-left: 3px solid #1464dd;
-      border-radius: 6px;
-      padding: 10px 12px;
-      font-size: 0.78em;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
-
+    .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-box h3 { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
+    .modal-amount { background: #f0f4ff; border-radius: 8px; padding: 10px 14px; font-size: 0.9em; font-weight: 700; color: #1464dd; margin-bottom: 14px; }
+    .modal-info { background: #f5f8ff; border-left: 3px solid #1464dd; border-radius: 6px; padding: 10px 12px; font-size: 0.78em; color: #555; line-height: 1.6; margin-bottom: 14px; }
     .modal-info strong { color: #1a1a2e; }
-
     .form-group { margin-bottom: 12px; }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8em;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 4px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 9px 12px;
-      border: 1.5px solid #dde3f0;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .form-group input:focus {
-      border-color: #1464dd;
-      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
-    }
-
-    .error-text {
-      display: none;
-      font-size: 0.75em;
-      color: #e74c3c;
-      margin-top: 4px;
-    }
-
+    .form-group label { display: block; font-size: 0.8em; font-weight: 600; color: #444; margin-bottom: 4px; }
+    .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; transition: border-color 0.2s; }
+    .form-group input:focus { border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1); }
+    .error-text { display: none; font-size: 0.75em; color: #e74c3c; margin-top: 4px; }
     .modal-btns { display: flex; gap: 10px; margin-top: 4px; }
-
-    .btn-pay {
-      flex: 1;
-      padding: 10px;
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
+    .btn-pay { flex: 1; padding: 10px; background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .btn-pay:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); }
     .btn-pay:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    .btn-cancel {
-      flex: 1;
-      padding: 10px;
-      background: #fff0f0;
-      color: #c0392b;
-      border: 1px solid #ffcccc;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
+    .btn-cancel { flex: 1; padding: 10px; background: #fff0f0; color: #c0392b; border: 1px solid #ffcccc; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; font-weight: 700; cursor: pointer; transition: all 0.2s; }
     .btn-cancel:hover { background: #ffe0e0; }
-
-    .dot {
-      display: inline-block;
-      width: 6px; height: 6px;
-      background: #fff;
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: pulse 0.6s infinite alternate;
-    }
-
+    .dot { display: inline-block; width: 6px; height: 6px; background: #fff; border-radius: 50%; margin: 0 2px; animation: pulse 0.6s infinite alternate; }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
-
     @keyframes pulse { from { opacity: 0.2; } to { opacity: 1; } }
-
-    @media (max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; gap: 8px; }
-      header h1 { font-size: 1em; }
-      nav a { font-size: 0.7em; padding: 6px 10px; }
-      main { margin: 12px auto; }
-    }
+    @media (max-width: 600px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; } }
   </style>
 </head>
 <body>
@@ -351,7 +75,6 @@
   </header>
 
   <main>
-
     <div class="access-alert" id="accessAlert">
       <div class="alert-title">🔒 Access Restricted</div>
       You must be logged in to make a payment. Please
@@ -381,16 +104,9 @@
         <span class="method-arrow">›</span>
       </div>
 
-      <div class="success-box" id="successBox">
-        ✅ <strong>STK Push Sent!</strong> Check your phone and enter your M-Pesa PIN to complete payment.
-      </div>
-
-      <div class="final-error" id="finalError">
-        ❌ <strong>Payment failed.</strong> Please try again or contact support.
-        <a href="help.html"> Need help?</a>
-      </div>
+      <div class="success-box" id="successBox"></div>
+      <div class="final-error" id="finalError"></div>
     </div>
-
   </main>
 
   <!-- M-PESA Modal -->
@@ -457,12 +173,29 @@
   </div>
 
   <script>
-    // ── Updated ngrok URL ──
     const BACKEND_URL = 'https://jeniffer-homoeomorphous-advisably.ngrok-free.dev/mpesa';
 
     const amount     = localStorage.getItem('paymentAmount');
     const bookingId  = localStorage.getItem('paymentBookingId');
     const isLoggedIn = localStorage.getItem('isLoggedIn');
+
+    // ── Get logged in user email and name ──
+    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    const userEmail   = currentUser.email    || '';
+    const userName    = currentUser.username || currentUser.name || '';
+
+    // ── Get booking details for email ──
+    const allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    const booking     = allBookings.find(b => String(b.bookingId) === String(bookingId)) || {};
+    const carName     = booking.carName  || '';
+    const pickupDate  = booking.pickup   || '';
+    const endDate     = booking.endDate  || '';
+    const priceDay    = booking.price    || 0;
+    const days        = pickupDate && endDate
+                        ? Math.max(1, Math.ceil((new Date(endDate) - new Date(pickupDate)) / 86400000))
+                        : 1;
+    const totalFee    = priceDay * days;
+    const balanceDue  = totalFee - parseInt(amount || 0);
 
     // Check login
     if (!isLoggedIn) {
@@ -486,29 +219,21 @@
       document.getElementById('noBookingBox').style.display = 'block';
     }
 
-    // Modal open/close
     function openModal(type) {
-      if (!isLoggedIn) {
-        document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
+      if (!isLoggedIn) { document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' }); return; }
       document.getElementById(type + 'Modal').classList.add('open');
     }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-    }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
     document.querySelectorAll('.modal').forEach(m => {
       m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });
 
-    // Process payment
     function processPayment(type) {
       let valid = false;
       let btn;
 
-      // Hide previous messages
       document.getElementById('successBox').style.display = 'none';
       document.getElementById('finalError').style.display = 'none';
 
@@ -524,9 +249,16 @@
         btn.disabled = true;
 
         const formData = new FormData();
-        formData.append('phone', phone);
-        formData.append('amount', amount || 1);
-        formData.append('booking_id', bookingId || '');
+        formData.append('phone',       phone);
+        formData.append('amount',      amount || 1);
+        formData.append('booking_id',  bookingId || '');
+        formData.append('email',       userEmail);
+        formData.append('name',        userName);
+        formData.append('car_name',    carName);
+        formData.append('pickup_date', pickupDate);
+        formData.append('end_date',    endDate);
+        formData.append('total_fee',   totalFee);
+        formData.append('balance_due', balanceDue);
 
         fetch(`${BACKEND_URL}/Stk_push.php`, {
           method: 'POST',
@@ -582,11 +314,9 @@
       }, 3000);
     }
 
-    // ── Show status message ──
     function showStatus(type, message) {
       const successBox = document.getElementById('successBox');
       const errorBox   = document.getElementById('finalError');
-
       successBox.style.display = 'none';
       errorBox.style.display   = 'none';
 
@@ -601,10 +331,9 @@
       }
     }
 
-    // ── Poll payment status every 2 seconds ──
     function pollPaymentStatus(checkoutRequestID, btn) {
       let attempts = 0;
-      const maxAttempts = 30; // 60 seconds total
+      const maxAttempts = 30;
 
       const interval = setInterval(() => {
         attempts++;
@@ -624,25 +353,18 @@
             btn.textContent = 'Pay';
             btn.disabled = false;
 
-            const bookings   = JSON.parse(localStorage.getItem('bookings')) || [];
+            const bookings     = JSON.parse(localStorage.getItem('bookings')) || [];
             const payBookingId = localStorage.getItem('paymentBookingId');
-            const paidAmount = localStorage.getItem('paymentAmount');
+            const paidAmount   = localStorage.getItem('paymentAmount');
 
             const updatedBookings = bookings.map(b => {
               if (String(b.bookingId) === String(payBookingId)) {
-                return {
-                  ...b,
-                  paymentStatus: 'paid',
-                  mpesaReceipt:  data.receipt || '',
-                  paidAmount:    paidAmount,
-                  paidAt:        new Date().toLocaleString()
-                };
+                return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt || '', paidAmount, paidAt: new Date().toLocaleString() };
               }
               return b;
             });
 
             localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-
             showStatus('success', '✅ Payment received successfully! Receipt: ' + (data.receipt || '') + '. Your Booking ID: ' + payBookingId + ' is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
 
           } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
@@ -657,7 +379,6 @@
             btn.disabled = false;
             showStatus('error', '❌ <strong>⏰ Request expired. You took too long to enter PIN. Try again.</strong>');
           }
-          // still pending → keep polling
         })
         .catch(() => {
           if (attempts >= maxAttempts) {
@@ -671,7 +392,6 @@
       }, 2000);
     }
 
-    // Logout
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
