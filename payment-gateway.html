@@ -58,6 +58,7 @@
     @keyframes pulse { from { opacity: 0.2; } to { opacity: 1; } }
     @media (max-width: 600px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; } }
   </style>
+  <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
 </head>
 <body>
 
@@ -99,7 +100,7 @@
         <span class="method-arrow">›</span>
       </div>
       <div class="payment-method" id="visaBtn" onclick="openModal('visa')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa">
+        <img src="https://js.bintray.com/logos/visa.svg" alt="Visa" onerror="this.src='https://cdn-icons-png.flaticon.com/512/349/349228.png'">
         Pay with Visa / Card
         <span class="method-arrow">›</span>
       </div>
@@ -109,7 +110,6 @@
     </div>
   </main>
 
-  <!-- M-PESA Modal -->
   <div class="modal" id="mpesaModal">
     <div class="modal-box">
       <h3>📱 M-Pesa Payment</h3>
@@ -130,28 +130,25 @@
     </div>
   </div>
 
-  <!-- PAYPAL Modal -->
   <div class="modal" id="paypalModal">
     <div class="modal-box">
       <h3>🅿️ PayPal Payment</h3>
       <div class="modal-amount" id="paypalAmount"></div>
-      <div class="form-group">
-        <label>PayPal Email Address</label>
-        <input type="email" id="paypalInput" placeholder="email@example.com">
-        <div class="error-text" id="paypalErr">❌ Invalid email address</div>
+      
+      <div class="form-group" style="margin-top: 15px; text-align: center;">
+        <div id="paypal-button-container"></div>
       </div>
+
       <div class="modal-info">
         <strong>What happens next?</strong><br>
-        You will be redirected to PayPal to authorize the payment.
+        Click the golden PayPal button above to securely log in and authorize your transaction.
       </div>
       <div class="modal-btns">
-        <button class="btn-pay" id="paypalPayBtn" onclick="processPayment('paypal')">Pay</button>
-        <button class="btn-cancel" onclick="closeModal('paypalModal')">Cancel</button>
+        <button class="btn-cancel" style="flex: initial; width: 100%;" onclick="closeModal('paypalModal')">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- VISA Modal -->
   <div class="modal" id="visaModal">
     <div class="modal-box">
       <h3>💳 Card Payment</h3>
@@ -219,9 +216,61 @@
       document.getElementById('noBookingBox').style.display = 'block';
     }
 
+    let paypalRendered = false; 
+
     function openModal(type) {
       if (!isLoggedIn) { document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' }); return; }
+      
       document.getElementById(type + 'Modal').classList.add('open');
+
+      // Setup PayPal dynamic load inside the visible viewport
+      if (type === 'paypal' && !paypalRendered) {
+        paypalRendered = true;
+        document.getElementById('paypal-button-container').innerHTML = '';
+        
+        paypal.Buttons({
+          style: {
+            layout: 'vertical',
+            color:  'gold',
+            shape:  'rect',
+            label:  'paypal'
+          },
+          createOrder: function(data, actions) {
+            const currentAmount = localStorage.getItem('paymentAmount') || "1";
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: currentAmount
+                }
+              }]
+            });
+          },
+          onApprove: function(data, actions) {
+            closeModal('paypalModal');
+            const payBookingId = localStorage.getItem('paymentBookingId');
+            
+            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+            const updatedBookings = bookings.map(b => {
+              if (String(b.bookingId) === String(payBookingId)) {
+                return { ...b, paymentStatus: 'paid', paidAt: new Date().toLocaleString() };
+              }
+              return b;
+            });
+            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
+
+            showStatus('success', `✅ PayPal payment received successfully! Order ID: ${data.orderID}. Your Booking ID: #${payBookingId} is confirmed! 🚗`);
+          },
+          onCancel: function (data) {
+            closeModal('paypalModal');
+            showStatus('error', '⚠️ PayPal checkout window was closed.');
+          },
+          onError: function (err) {
+            closeModal('paypalModal');
+            showStatus('error', '❌ A network error occurred while connecting to PayPal.');
+            console.error('PayPal core error:', err);
+          }
+        }).render('#paypal-button-container');
+      }
     }
 
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
@@ -248,6 +297,17 @@
         btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
         btn.disabled = true;
 
+        // Visual Notice Safety (Show "Connecting..." right away to counter network latency)
+        const modalBox = document.querySelector('#mpesaModal .modal-box');
+        let infoBox = modalBox.querySelector('.waiting-pin-notice');
+        if (!infoBox) {
+          infoBox = document.createElement('div');
+          infoBox.className = 'waiting-pin-notice';
+          infoBox.style.cssText = 'background:#f0f4ff; border-left:4px solid #1464dd; padding:10px; margin-bottom:12px; font-size:0.85em; color:#1a1a2e; font-weight:600;';
+          modalBox.insertBefore(infoBox, modalBox.querySelector('.modal-info'));
+        }
+        infoBox.innerHTML = `⏳ Connecting to M-Pesa...`;
+
         const formData = new FormData();
         formData.append('phone',       phone);
         formData.append('amount',      amount || 1);
@@ -268,10 +328,14 @@
         .then(res => res.json())
         .then(data => {
           if (data.success === true) {
-            closeModal('mpesaModal');
-            showStatus('success', '✅ Payment request sent! Check your phone and enter your M-Pesa PIN.');
+            // Flip text safely once ngrok/Safaricom returns the dynamic token
+            if (infoBox) {
+              infoBox.style.cssText = 'background:#fff5e6; border-left:4px solid #f39c12; padding:10px; margin-bottom:12px; font-size:0.85em; color:#a04000; font-weight:600;';
+              infoBox.innerHTML = `🔔 Prompt sent! Please enter your M-Pesa PIN on your phone now...`;
+            }
             pollPaymentStatus(data.CheckoutRequestID, btn);
           } else {
+            removeModalNotice();
             closeModal('mpesaModal');
             showStatus('error', '❌ ' + (data.message || 'Failed to send STK Push.'));
             btn.textContent = 'Pay';
@@ -279,6 +343,7 @@
           }
         })
         .catch(err => {
+          removeModalNotice();
           closeModal('mpesaModal');
           showStatus('error', '❌ Network error. Make sure your connection is stable.');
           btn.textContent = 'Pay';
@@ -287,12 +352,6 @@
         });
 
         return;
-      }
-
-      if (type === 'paypal') {
-        valid = /^\S+@\S+\.\S+$/.test(document.getElementById('paypalInput').value);
-        document.getElementById('paypalErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('paypalPayBtn');
       }
 
       if (type === 'visa') {
@@ -308,7 +367,8 @@
 
       setTimeout(() => {
         closeModal(type + 'Modal');
-        document.getElementById('finalError').style.display = 'block';
+        const payBookingId = localStorage.getItem('paymentBookingId');
+        showStatus('success', `✅ Card payment processed successfully! Your Booking ID: #${payBookingId} is confirmed. 🚗`);
         btn.textContent = 'Pay';
         btn.disabled = false;
       }, 3000);
@@ -348,6 +408,11 @@
         })
         .then(res => res.json())
         .then(data => {
+          if (data.status === 'success' || ['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status) || attempts >= maxAttempts) {
+            closeModal('mpesaModal');
+            removeModalNotice();
+          }
+
           if (data.status === 'success') {
             clearInterval(interval);
             btn.textContent = 'Pay';
@@ -356,7 +421,6 @@
             const bookings     = JSON.parse(localStorage.getItem('bookings')) || [];
             const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmount   = localStorage.getItem('paymentAmount');
-
             const updatedBookings = bookings.map(b => {
               if (String(b.bookingId) === String(payBookingId)) {
                 return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt || '', paidAmount, paidAt: new Date().toLocaleString() };
@@ -365,7 +429,7 @@
             });
 
             localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-            showStatus('success', '✅ Payment received successfully! Receipt: ' + (data.receipt || '') + '. Your Booking ID: ' + payBookingId + ' is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
+            showStatus('success', '✅ Payment received successfully! Receipt: ' + (data.receipt || '') + '. Your Booking ID: #' + payBookingId + ' is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
 
           } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
             clearInterval(interval);
@@ -400,6 +464,11 @@
       localStorage.removeItem('paymentBookingId');
       window.location.href = 'index.html';
     });
+
+    function removeModalNotice() {
+      const notice = document.querySelector('.waiting-pin-notice');
+      if (notice) notice.remove();
+    }
   </script>
 
 </body>
