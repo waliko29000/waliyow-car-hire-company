@@ -141,7 +141,14 @@
       <button class="modal-close" id="closeModal">✕</button>
       <h2>Book Car</h2>
       <div class="car-tag" id="modalCarName"></div>
-     
+      <div class="booked-notice" id="bookedNotice">
+        <div class="booked-notice-top">
+          <div class="booked-notice-left">
+            <div class="booked-notice-icon">📅</div>
+            <div class="booked-notice-text">
+              <strong>Some dates are already taken.</strong><br>
+              <span>Greyed-out days in the calendar are unavailable — pick any free date!</span>
+            </div>
           </div>
           <a class="view-dates-link" id="viewDatesLink" onclick="toggleDatesPanel()">View dates ▾</a>
         </div>
@@ -180,8 +187,8 @@
       { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                 image: "car9.jpg" },
       { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                             image: "car10.jpg" },
       { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
-      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                       image: "car12.jpg" },
-      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                       image: "car13.jpg" },
+      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                        image: "car12.jpg" },
+      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                        image: "car13.jpg" },
       { name: "Toyota Axio",          price: 4000,  description: "Reliable compact sedan ideal for city and highway driving.", image: "car17.jpg" },
       { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",     image: "car18.jpg" },
       { name: "Toyota Prado TXG",     price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg" },
@@ -221,15 +228,11 @@
 
       let indexed = cars.map((car, i) => ({ car, i }));
 
-      // Filter by search
       if (query) indexed = indexed.filter(({ car }) => car.name.toLowerCase().includes(query));
 
-
-      // Sort by price
       if (sort === 'asc')  indexed.sort((a, b) => a.car.price - b.car.price);
       if (sort === 'desc') indexed.sort((a, b) => b.car.price - a.car.price);
 
-      // Update count
       document.getElementById('resultsCount').textContent = indexed.length + ' car' + (indexed.length !== 1 ? 's' : '');
       document.getElementById('noResults').style.display = indexed.length === 0 ? 'block' : 'none';
 
@@ -304,18 +307,10 @@
       document.getElementById('bookingForm').reset();
       const disabledRanges = getPaidRanges(currentCarIndex);
       const notice = document.getElementById('bookedNotice');
-      const panel  = document.getElementById('bookedDatesPanel');
-      const link   = document.getElementById('viewDatesLink');
-      if (disabledRanges.length > 0) {
-        notice.style.display = 'block';
-        panel.classList.remove('open');
-        link.textContent = 'View dates ▾';
-        document.getElementById('bookedDatesList').innerHTML = disabledRanges.map(r =>
-          `<div class="booked-range-item"><span class="booked-range-dot"></span><strong>${fmtDate(r.from)}</strong>&nbsp;→&nbsp;<strong>${fmtDate(r.to)}</strong></div>`
-        ).join('');
-      } else {
-        notice.style.display = 'none';
-      }
+      
+      // FIXED HERE: Dynamic notice visibility turned completely off
+      notice.style.display = 'none'; 
+      
       document.getElementById('bookingModal').classList.add('open');
       setTimeout(() => initDatePickers(disabledRanges), 50);
     });
