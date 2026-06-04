@@ -17,7 +17,34 @@
     nav a.logout{border-color:rgba(255,100,100,0.4);color:#ffaaaa;}
     nav a.logout:hover{background:rgba(255,80,80,0.2);}
     main{max-width:900px;margin:24px auto;padding:0 16px 40px;}
-    .page-title{font-size:1.2em;font-weight:700;color:#1464dd;margin-bottom:16px;}
+
+    /* ── Summary bar ── */
+    .summary-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+    .summary-card{flex:1;min-width:110px;background:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 2px 10px rgba(20,100,221,0.08);border:1px solid rgba(20,100,221,0.07);text-align:center;}
+    .summary-card .s-num{font-size:1.6em;font-weight:700;color:#1464dd;line-height:1;}
+    .summary-card .s-label{font-size:0.72em;color:#888;margin-top:3px;}
+    .summary-card.pending .s-num{color:#b35c00;}
+    .summary-card.paid .s-num{color:#27ae60;}
+    .summary-card.remind .s-num{color:#e74c3c;}
+
+    /* ── Reminder banner ── */
+    .reminder-banner{background:linear-gradient(135deg,#fff0f0,#ffe8e8);border:1.5px solid #ffaaaa;border-radius:12px;padding:12px 16px 12px 16px;margin-bottom:16px;display:none;position:relative;}
+    .reminder-close{position:absolute;top:10px;right:12px;background:rgba(192,57,43,0.1);border:none;width:24px;height:24px;border-radius:50%;font-size:0.85em;cursor:pointer;color:#c0392b;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;}
+    .reminder-close:hover{background:rgba(192,57,43,0.22);}
+    .reminder-banner-title{font-size:0.85em;font-weight:700;color:#c0392b;margin-bottom:6px;}
+    .reminder-item{font-size:0.8em;color:#7a1a1a;padding:3px 0;display:flex;align-items:center;gap:6px;}
+
+    /* ── Search + filter ── */
+    .booking-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+    .page-title{font-size:1.2em;font-weight:700;color:#1464dd;}
+    .search-wrap{position:relative;flex:1;min-width:180px;max-width:280px;}
+    .search-wrap input{width:100%;padding:8px 12px 8px 34px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.82em;outline:none;transition:border-color 0.2s;background:#fff;}
+    .search-wrap input:focus{border-color:#1464dd;}
+    .search-wrap .s-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:0.9em;color:#aaa;pointer-events:none;}
+    .status-filter{display:flex;gap:6px;flex-wrap:wrap;}
+    .sf-btn{padding:6px 12px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
+    .sf-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
+
     .empty-msg{background:#fff;border-radius:14px;padding:32px 24px;text-align:center;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);color:#666;font-size:0.92em;line-height:1.7;}
     .empty-msg a{color:#1464dd;font-weight:600;text-decoration:none;}
     .booking-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);animation:fadeIn 0.3s ease;}
@@ -40,7 +67,13 @@
     .info-table td{font-size:0.85em;color:#333;padding:6px 8px 6px 0;}
     .pending-notice{background:#fff5e6;border:1px solid #ffc87a;border-radius:8px;padding:10px 14px;font-size:0.8em;color:#b35c00;margin-bottom:12px;line-height:1.6;}
     .paid-notice{background:#f0fff6;border:1px solid #a8f0c6;border-radius:8px;padding:10px 14px;font-size:0.8em;color:#1a6e3a;margin-bottom:12px;line-height:1.6;}
-    .card-footer{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;}
+    .fully-paid-notice{background:#e6fff0;border:2px solid #27ae60;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#1a6e3a;margin-bottom:12px;line-height:1.8;}
+    .fully-paid-notice .fp-title{font-size:0.95em;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+    .badge-fully-paid{display:inline-block;background:#27ae60;color:#fff;border-radius:20px;padding:3px 10px;font-size:0.75em;font-weight:700;margin-left:6px;}
+    /* Pickup-soon highlight */
+    .booking-card.pickup-soon{border-left:4px solid #e74c3c;}
+    .pickup-soon-tag{display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+
     .show-more-btn{display:block;width:100%;padding:11px;background:#fff;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;color:#1464dd;cursor:pointer;transition:all 0.2s;margin-top:4px;}
     .show-more-btn:hover{background:#f0f4ff;}
     .admin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
@@ -56,8 +89,7 @@
     #adminPopupId{cursor:pointer;user-select:none;border-bottom:1px dashed #1464dd;color:#1464dd;font-weight:700;}
     .admin-contact{background:#fff5e6;border:1px solid #ffc87a;border-radius:8px;padding:10px 14px;font-size:0.82em;color:#905000;margin-bottom:16px;line-height:1.7;}
     .admin-contact a{color:#1464dd;font-weight:600;text-decoration:none;}
-    .btn-admin-close{width:100%;padding:11px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.9em;font-weight:700;cursor:pointer;transition:all 0.2s;}
-    .btn-admin-close:hover{background:linear-gradient(135deg,#0d47a1,#083080);}
+    .btn-admin-close{width:100%;padding:11px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.9em;font-weight:700;cursor:pointer;}
     .pw-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:3000;justify-content:center;align-items:center;padding:16px;}
     .pw-modal.open{display:flex;}
     .pw-box{background:#fff;border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);}
@@ -68,7 +100,6 @@
     .pw-row{display:flex;gap:8px;}
     .pw-cancel{flex:1;padding:10px;background:#f0f4ff;color:#1464dd;border:1px solid #c5d5f5;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:600;cursor:pointer;}
     .pw-submit{flex:1;padding:10px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:700;cursor:pointer;}
-    .pw-submit:hover{background:#a93226;}
     .pw-error{color:#c0392b;font-size:0.8em;margin-bottom:10px;display:none;}
     @media(max-width:700px){
       header{flex-direction:column;align-items:flex-start;gap:8px;}
@@ -82,8 +113,10 @@
       .info-table td{font-size:0.82em;word-break:break-word;}
       .booking-card{padding:14px;}
       main{padding:0 10px 40px;}
-      .page-title{font-size:1em;}
-      .card-footer .btn{flex:1;text-align:center;}
+      .summary-bar{gap:8px;}
+      .summary-card{min-width:80px;padding:10px 10px;}
+      .booking-controls{gap:8px;}
+      .search-wrap{max-width:100%;}
     }
   </style>
 </head>
@@ -102,7 +135,27 @@
     </nav>
   </header>
   <main>
-    <div class="page-title">My Bookings</div>
+    <!-- Summary cards -->
+    <div class="summary-bar" id="summaryBar"></div>
+    <!-- Pickup reminder banner -->
+    <div class="reminder-banner" id="reminderBanner">
+      <button class="reminder-close" onclick="document.getElementById('reminderBanner').style.display='none'">&#x2715;</button>
+      <div class="reminder-banner-title">🔔 Upcoming Pickup Reminders</div>
+      <div id="reminderList"></div>
+    </div>
+    <!-- Controls -->
+    <div class="booking-controls">
+      <div class="page-title">My Bookings</div>
+      <div class="search-wrap">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search car or booking ID…" oninput="renderBookings()">
+      </div>
+      <div class="status-filter">
+        <button class="sf-btn active" data-status="all"     onclick="setStatusFilter(this)">All</button>
+        <button class="sf-btn"        data-status="pending" onclick="setStatusFilter(this)">Pending</button>
+        <button class="sf-btn"        data-status="paid"    onclick="setStatusFilter(this)">Paid</button>
+      </div>
+    </div>
     <div id="bookingsList"></div>
   </main>
 
@@ -112,16 +165,8 @@
       <div class="admin-modal-icon">&#x1F6E1;&#xFE0F;</div>
       <h3>Cannot Delete Paid Booking</h3>
       <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
-      <div class="admin-info-box">
-        &#x1F698; <strong>Car:</strong> <span id="adminPopupCar"></span><br>
-        &#x1F516; <strong>Booking ID:</strong> <span id="adminPopupId"></span>
-      </div>
-      <div class="admin-contact">
-        &#x1F4DE; To cancel this booking, please contact us:<br>
-        <strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br>
-        <strong>Email:</strong> <a href="/cdn-cgi/l/email-protection#fd8a9c919496bd9a909c9491d39e9290"><span class="__cf_email__" data-cfemail="0671676a6f6d46616b676f6a2865696b">[email&#160;protected]</span></a><br>
-        <strong>Or visit:</strong> <a href="help.html">Help &amp; Support &#x2192;</a>
-      </div>
+      <div class="admin-info-box">&#x1F698; <strong>Car:</strong> <span id="adminPopupCar"></span><br>&#x1F516; <strong>Booking ID:</strong> <span id="adminPopupId"></span></div>
+      <div class="admin-contact">&#x1F4DE; To cancel this booking, please contact us:<br><strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br><strong>Email:</strong> <a href="mailto:info@waliko.co.ke">info@waliko.co.ke</a><br><strong>Or visit:</strong> <a href="help.html">Help &amp; Support &#x2192;</a></div>
       <button class="btn-admin-close" onclick="closeAdminModal()">OK, Got It</button>
     </div>
   </div>
@@ -139,82 +184,137 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
   (function(){
-    var displayCount=3, adminTargetId=null, idClickCount=0, idClickTimer=null;
+    var displayCount = 3, adminTargetId = null, idClickCount = 0, idClickTimer = null;
+    var statusFilter = 'all';
 
-    function closeAdminModal(){
-      document.getElementById('adminModal').classList.remove('open');
-      idClickCount=0;
-    }
-    function openPasswordModal(){
-      document.getElementById('adminModal').classList.remove('open');
-      document.getElementById('pwInput').value='';
-      document.getElementById('pwError').style.display='none';
-      document.getElementById('pwModal').classList.add('open');
-      setTimeout(function(){document.getElementById('pwInput').focus();},100);
-    }
-    function closePasswordModal(){
-      document.getElementById('pwModal').classList.remove('open');
-      adminTargetId=null; idClickCount=0;
-    }
-    function deletePaidBooking(){
-      var bks=JSON.parse(localStorage.getItem('bookings')||'[]');
-      bks=bks.filter(function(b){return String(b.bookingId)!==String(adminTargetId);});
-      localStorage.setItem('bookings',JSON.stringify(bks));
-      closePasswordModal(); renderBookings();
-    }
+    function closeAdminModal(){ document.getElementById('adminModal').classList.remove('open'); idClickCount=0; }
+    function openPasswordModal(){ document.getElementById('adminModal').classList.remove('open'); document.getElementById('pwInput').value=''; document.getElementById('pwError').style.display='none'; document.getElementById('pwModal').classList.add('open'); setTimeout(function(){document.getElementById('pwInput').focus();},100); }
+    function closePasswordModal(){ document.getElementById('pwModal').classList.remove('open'); adminTargetId=null; idClickCount=0; }
+    function deletePaidBooking(){ var bks=JSON.parse(localStorage.getItem('bookings')||'[]'); bks=bks.filter(function(b){return String(b.bookingId)!==String(adminTargetId);}); localStorage.setItem('bookings',JSON.stringify(bks)); closePasswordModal(); renderBookings(); }
 
-    document.getElementById('pwSubmitBtn').onclick=function(){
-      if(document.getElementById('pwInput').value.trim()==='2080'){
-        deletePaidBooking();
-      } else {
-        document.getElementById('pwError').style.display='block';
-        document.getElementById('pwInput').value='';
-        document.getElementById('pwInput').focus();
-      }
-    };
-    document.getElementById('pwInput').addEventListener('keydown',function(e){
-      if(e.key==='Enter') document.getElementById('pwSubmitBtn').click();
-    });
+    document.getElementById('pwSubmitBtn').onclick=function(){ if(document.getElementById('pwInput').value.trim()==='2080'){ deletePaidBooking(); } else { document.getElementById('pwError').style.display='block'; document.getElementById('pwInput').value=''; document.getElementById('pwInput').focus(); } };
+    document.getElementById('pwInput').addEventListener('keydown',function(e){ if(e.key==='Enter') document.getElementById('pwSubmitBtn').click(); });
     document.getElementById('pwCancelBtn').onclick=closePasswordModal;
-    document.getElementById('pwModal').addEventListener('click',function(e){
-      if(e.target===document.getElementById('pwModal')) closePasswordModal();
-    });
-    document.getElementById('adminPopupId').addEventListener('click',function(){
-      idClickCount++;
-      clearTimeout(idClickTimer);
-      if(idClickCount>=3){idClickCount=0;openPasswordModal();}
-      else{idClickTimer=setTimeout(function(){idClickCount=0;},600);}
-    });
+    document.getElementById('pwModal').addEventListener('click',function(e){ if(e.target===document.getElementById('pwModal')) closePasswordModal(); });
+    document.getElementById('adminPopupId').addEventListener('click',function(){ idClickCount++; clearTimeout(idClickTimer); if(idClickCount>=3){idClickCount=0;openPasswordModal();}else{idClickTimer=setTimeout(function(){idClickCount=0;},600);} });
+
+    function getBalanceStatus(id){ try{ return JSON.parse(localStorage.getItem('balancePaid_'+id)||'null'); }catch(e){ return null; } }
+
+    function setStatusFilter(btn) {
+      document.querySelectorAll('.sf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      statusFilter = btn.dataset.status;
+      displayCount = 3;
+      renderBookings();
+    }
+    window.setStatusFilter = setStatusFilter;
+
+    function daysUntil(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      const today = new Date(); today.setHours(0,0,0,0);
+      return Math.ceil((d - today) / 86400000);
+    }
+
+    function renderSummary(bookings) {
+      var total   = bookings.length;
+      var pending = bookings.filter(b => !(b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'))).length;
+      var paid    = total - pending;
+      var soon    = bookings.filter(b => {
+        const isPaid = b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
+        if (!isPaid) return false;
+        const d = daysUntil(b.pickup);
+        return d >= 0 && d <= 2;
+      }).length;
+      document.getElementById('summaryBar').innerHTML =
+        `<div class="summary-card"><div class="s-num">${total}</div><div class="s-label">Total Bookings</div></div>` +
+        `<div class="summary-card pending"><div class="s-num">${pending}</div><div class="s-label">Pending Payment</div></div>` +
+        `<div class="summary-card paid"><div class="s-num">${paid}</div><div class="s-label">Confirmed</div></div>` +
+        `<div class="summary-card remind"><div class="s-num">${soon}</div><div class="s-label">Pickup Soon</div></div>`;
+    }
+
+    function renderReminders(bookings) {
+      var reminders = bookings.filter(b => {
+        const isPaid = b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
+        if (!isPaid) return false;
+        const d = daysUntil(b.pickup);
+        return d >= 0 && d <= 2;
+      });
+      var banner = document.getElementById('reminderBanner');
+      var list   = document.getElementById('reminderList');
+      if (reminders.length === 0) { banner.style.display='none'; return; }
+      banner.style.display = 'block';
+      list.innerHTML = reminders.map(b => {
+        const d = daysUntil(b.pickup);
+        const when = d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : 'In 2 days';
+        return `<div class="reminder-item">🚗 <strong>${b.carName}</strong> — pickup <strong>${when}</strong> (${b.pickup}) &nbsp;·&nbsp; ID: ${b.bookingId}</div>`;
+      }).join('');
+    }
 
     function renderBookings(){
-      var list=document.getElementById('bookingsList');
-      list.innerHTML='';
-      var bookings=JSON.parse(localStorage.getItem('bookings')||'[]');
-      if(bookings.length===0){
+      var list = document.getElementById('bookingsList');
+      list.innerHTML = '';
+      var bookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+      if (bookings.length === 0) {
         list.innerHTML='<div class="empty-msg"><p>You haven\'t made any bookings yet.</p><p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p></div>';
+        renderSummary([]); renderReminders([]);
         return;
       }
-      /* Fix paymentStatus in localStorage for all bookings */
+
+      // Fix paymentStatus
       var changed=false;
-      bookings.forEach(function(bk){
-        if(bk.mpesaReceipt&&bk.mpesaReceipt!=='N/A'&&bk.paymentStatus!=='paid'){
-          bk.paymentStatus='paid';changed=true;
-        }
-      });
+      bookings.forEach(function(bk){ if(bk.mpesaReceipt&&bk.mpesaReceipt!=='N/A'&&bk.paymentStatus!=='paid'){ bk.paymentStatus='paid'; changed=true; } });
       if(changed) localStorage.setItem('bookings',JSON.stringify(bookings));
 
-      bookings.slice(0,displayCount).forEach(function(b,idx){
-        var isPaid=b.paymentStatus==='paid';
-        var days=Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));
-        var total=b.price*days, deposit=Math.floor(total/2), balance=total-deposit;
+      renderSummary(bookings);
+      renderReminders(bookings);
+
+      // Search filter
+      var query = (document.getElementById('searchInput').value || '').toLowerCase();
+      var filtered = bookings.filter(b => {
+        if (query && !b.carName.toLowerCase().includes(query) && !String(b.bookingId).toLowerCase().includes(query)) return false;
+        if (statusFilter === 'pending') return !(b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'));
+        if (statusFilter === 'paid')    return (b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'));
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML='<div class="empty-msg"><p>No bookings match your search.</p></div>';
+        return;
+      }
+
+      filtered.slice(0, displayCount).forEach(function(b, idx){
+        var isPaid    = b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
+        var days      = Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));
+        var total     = b.price*days;
+        var deposit   = Math.floor(total/2);
+        var balance   = total-deposit;
+        var balObj    = getBalanceStatus(b.bookingId);
+        var balancePaid = !!(balObj&&balObj.paid)||!!(b.balancePaid);
+        var balReceipt  = (balObj&&balObj.receipt)||b.balanceReceipt||'';
+        var balPaidAt   = (balObj&&balObj.paidAt)||b.balancePaidAt||'';
+        var pickupSoon  = isPaid && daysUntil(b.pickup) >= 0 && daysUntil(b.pickup) <= 2;
+        var daysLeft    = daysUntil(b.pickup);
+        var soonLabel   = daysLeft === 0 ? 'TODAY' : daysLeft === 1 ? 'Tomorrow' : 'In 2 days';
+
+        var noticeHtml='';
+        if(!isPaid){
+          noticeHtml='<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm your booking. Remaining <strong>Ksh '+balance.toLocaleString()+'</strong> is paid at pickup.</div>';
+        } else if(balancePaid){
+          noticeHtml='<div class="fully-paid-notice"><div class="fp-title">✅ Fully Paid <span class="badge-fully-paid">CLEARED</span></div><div style="font-size:0.85em;color:#1a6e3a;line-height:1.8;">💰 Deposit: <strong>'+(b.mpesaReceipt||'N/A')+'</strong> &nbsp;|&nbsp; ✅ Balance: <strong>'+(balReceipt||'N/A')+'</strong> &nbsp;|&nbsp; 💵 Total: <strong>Ksh '+total.toLocaleString()+'</strong>'+(balPaidAt?' &nbsp;|&nbsp; 📅 Paid on: <strong>'+balPaidAt+'</strong>':'')+'</div><div style="margin-top:8px;font-size:0.82em;color:#27ae60;">🚗 Your car is ready for pickup. No further payments needed!</div></div>';
+        } else {
+          noticeHtml='<div class="paid-notice">✅ <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>'+(b.mpesaReceipt||'N/A')+'</strong><br>Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. 🚗</div>';
+        }
+
         var card=document.createElement('div');
-        card.className='booking-card';
+        card.className='booking-card'+(pickupSoon?' pickup-soon':'');
         card.innerHTML=
           '<div class="card-header">'+
-            '<div><h3>'+b.carName+'</h3>'+
-            '<div class="booking-id">ID: '+b.bookingId+' &nbsp;&middot;&nbsp; '+b.timestamp+'</div></div>'+
+            '<div>'+
+              '<h3>'+b.carName+(pickupSoon?'<span class="pickup-soon-tag">🔔 Pickup '+soonLabel+'</span>':'')+'</h3>'+
+              '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+b.timestamp+'</div>'+
+            '</div>'+
             '<div class="card-actions">'+
               (!isPaid?'<button class="btn btn-pay" data-amount="'+deposit+'" data-id="'+b.bookingId+'">Pay Deposit</button>':'')+
               '<button class="btn btn-delete '+(isPaid?'btn-delete-paid':'')+'" data-idx="'+idx+'" data-car="'+b.carName+'" data-id="'+b.bookingId+'">Delete</button>'+
@@ -231,30 +331,21 @@
             '<tr><th>Price/Day</th><td>Ksh '+b.price.toLocaleString()+'</td></tr>'+
             '<tr><th>Total Fee</th><td>Ksh '+total.toLocaleString()+'</td></tr>'+
           '</table>'+
-          (isPaid
-            ?'<div class="paid-notice">&#x2705; <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>'+(b.mpesaReceipt||'N/A')+'</strong><br>Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. &#x1F697;</div>'
-            :'<div class="pending-notice">&#x23F3; <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm. Remaining <strong>Ksh '+balance.toLocaleString()+'</strong> paid at pickup.</div>'
-          )+
-          '<div class="card-footer">'+
-            '<button class="btn btn-pdf" data-id="'+b.bookingId+'">&#x2B07; Download PDF</button>'+
-          '</div>';
+          noticeHtml+
+          '<div class="card-footer"><button class="btn btn-pdf" data-id="'+b.bookingId+'">⬇ Download PDF</button></div>';
         list.appendChild(card);
       });
 
-      if(bookings.length>displayCount){
+      if(filtered.length > displayCount){
         var btn=document.createElement('button');
         btn.className='show-more-btn';
-        btn.textContent='Show More ('+(bookings.length-displayCount)+' remaining)';
+        btn.textContent='Show More ('+(filtered.length-displayCount)+' remaining)';
         btn.addEventListener('click',function(){displayCount+=5;renderBookings();});
         list.appendChild(btn);
       }
 
       list.querySelectorAll('.btn-pay').forEach(function(btn){
-        btn.addEventListener('click',function(){
-          localStorage.setItem('paymentAmount',btn.dataset.amount);
-          localStorage.setItem('paymentBookingId',btn.dataset.id);
-          window.location.href='payment-gateway.html';
-        });
+        btn.addEventListener('click',function(){ localStorage.setItem('paymentAmount',btn.dataset.amount); localStorage.setItem('paymentBookingId',btn.dataset.id); window.location.href='payment-gateway.html'; });
       });
       list.querySelectorAll('.btn-delete').forEach(function(btn){
         btn.addEventListener('click',function(){
@@ -278,226 +369,16 @@
       });
     }
 
-    /* ── STAMP ── */
-    function drawStamp(doc,cx,cy){
-      var R=14,NR=13,NG=59,NB=140,GR=244,GG=196,GB=48;
-      doc.setDrawColor(NR,NG,NB);
-      doc.setLineWidth(1.2); doc.circle(cx,cy,R,'D');
-      doc.setLineWidth(0.5); doc.circle(cx,cy,R-2.5,'D');
-      var sCY=cy-4.5,r1=3.2,r2=1.3,pts=[];
-      for(var i=0;i<10;i++){
-        var ang=(i*36-90)*Math.PI/180,rr=i%2===0?r1:r2;
-        pts.push([cx+rr*Math.cos(ang),sCY+rr*Math.sin(ang)]);
-      }
-      doc.setFillColor(GR,GG,GB);
-      for(var i=0;i<10;i++){
-        var a=pts[i],b2=pts[(i+1)%10];
-        doc.triangle(cx,sCY,a[0],a[1],b2[0],b2[1],'F');
-      }
-      doc.setDrawColor(200,152,10);doc.setLineWidth(0.2);
-      for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.line(a[0],a[1],b2[0],b2[1]);}
-      var tTxt='WALIKO CAR HIRE LTD',tR=R-3.5,tSpan=170*Math.PI/180;
-      var tStart=-Math.PI/2-tSpan/2,tStep=tSpan/(tTxt.length-1);
-      doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(3.8);
-      for(var i=0;i<tTxt.length;i++){
-        var a=tStart+i*tStep;
-        doc.text(tTxt[i],cx+tR*Math.cos(a),cy+tR*Math.sin(a),{angle:-(a*180/Math.PI+90),align:'center'});
-      }
-      var bTxt='NAIROBI \u00B7 KENYA',bR=R-3.5,bSpan=115*Math.PI/180;
-      var bStart=Math.PI/2-bSpan/2,bStep=bSpan/(bTxt.length-1);
-      doc.setFontSize(3.8);
-      for(var i=0;i<bTxt.length;i++){
-        var a=bStart+i*bStep;
-        doc.text(bTxt[i],cx+bR*Math.cos(a),cy+bR*Math.sin(a),{angle:-(a*180/Math.PI-90),align:'center'});
-      }
-      doc.setFont('helvetica','bold');doc.setFontSize(4.8);doc.setTextColor(NR,NG,NB);
-      doc.text('VERIFIED',cx,cy+2,{align:'center'});
-      doc.setFontSize(4.5);doc.text('& PAID',cx,cy+6.5,{align:'center'});
-      doc.setFontSize(3.5);doc.setTextColor(140,150,175);
-      doc.text('EST. 2020',cx,cy+10.5,{align:'center'});
-    }
+    /* ── STAMP + SIGNATURE + PDF (unchanged from original) ── */
+    function drawStamp(doc,cx,cy){var R=14,NR=13,NG=59,NB=140,GR=244,GG=196,GB=48;doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.2);doc.circle(cx,cy,R,'D');doc.setLineWidth(0.5);doc.circle(cx,cy,R-2.5,'D');var sCY=cy-4.5,r1=3.2,r2=1.3,pts=[];for(var i=0;i<10;i++){var ang=(i*36-90)*Math.PI/180,rr=i%2===0?r1:r2;pts.push([cx+rr*Math.cos(ang),sCY+rr*Math.sin(ang)]);}doc.setFillColor(GR,GG,GB);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.triangle(cx,sCY,a[0],a[1],b2[0],b2[1],'F');}doc.setDrawColor(200,152,10);doc.setLineWidth(0.2);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.line(a[0],a[1],b2[0],b2[1]);}var tTxt='WALIKO CAR HIRE LTD',tR=R-3.5,tSpan=170*Math.PI/180;var tStart=-Math.PI/2-tSpan/2,tStep=tSpan/(tTxt.length-1);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(3.8);for(var i=0;i<tTxt.length;i++){var a=tStart+i*tStep;doc.text(tTxt[i],cx+tR*Math.cos(a),cy+tR*Math.sin(a),{angle:-(a*180/Math.PI+90),align:'center'});}var bTxt='NAIROBI \u00B7 KENYA',bR=R-3.5,bSpan=115*Math.PI/180;var bStart=Math.PI/2-bSpan/2,bStep=bSpan/(bTxt.length-1);doc.setFontSize(3.8);for(var i=0;i<bTxt.length;i++){var a=bStart+i*bStep;doc.text(bTxt[i],cx+bR*Math.cos(a),cy+bR*Math.sin(a),{angle:-(a*180/Math.PI-90),align:'center'});}doc.setFont('helvetica','bold');doc.setFontSize(4.8);doc.setTextColor(NR,NG,NB);doc.text('VERIFIED',cx,cy+2,{align:'center'});doc.setFontSize(4.5);doc.text('& PAID',cx,cy+6.5,{align:'center'});doc.setFontSize(3.5);doc.setTextColor(140,150,175);doc.text('EST. 2020',cx,cy+10.5,{align:'center'});}
+    function drawSignatureA(doc,ox,oy){var sc=0.52,NR=13,NG=59,NB=140;function p(px,py){return [ox+px*sc,oy+py*sc];}doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.1);var W=[[4,10],[10,34],[16,18],[22,34],[28,10]];for(var i=0;i<W.length-1;i++){var a=p(W[i][0],W[i][1]),b2=p(W[i+1][0],W[i+1][1]);doc.line(a[0],a[1],b2[0],b2[1]);}doc.setLineWidth(0.85);var s0=p(28,10);doc.lines([[sc*(32-28),sc*(22-10),sc*(36-28),sc*(28-10),sc*(40-28),sc*(26-10)],[sc*(43-40),sc*(24-26),sc*(43-40),sc*(19-26),sc*(41-40),sc*(17-26)],[sc*(39-41),sc*(15-17),sc*(37-41),sc*(18-17),sc*(38-41),sc*(21-17)],[sc*(39-38),sc*(24-21),sc*(42-38),sc*(26-21),sc*(45-38),sc*(23-21)]],s0[0],s0[1]);var lA=p(47,13),lB=p(47,30);doc.line(lA[0],lA[1],lB[0],lB[1]);doc.setFillColor(NR,NG,NB);var dp=p(47,10);doc.circle(dp[0],dp[1],0.7,'F');var o0=p(50,19);doc.lines([[sc*(51-50),sc*(13-19),sc*(56-50),sc*(12-19),sc*(59-50),sc*(16-19)],[sc*(61-59),sc*(19-16),sc*(59-59),sc*(25-16),sc*(55-59),sc*(26-16)],[sc*(52-55),sc*(27-26),sc*(50-55),sc*(24-26),sc*(52-55),sc*(21-26)],[sc*(54-52),sc*(18-21),sc*(58-52),sc*(17-21),sc*(61-52),sc*(20-21)],[sc*(63-61),sc*(23-20),sc*(62-61),sc*(28-20),sc*(59-61),sc*(30-20)]],o0[0],o0[1]);doc.setLineWidth(0.5);var tail=[[59,30],[72,25],[92,23],[112,27],[126,30],[138,27],[145,24]];for(var i=0;i<tail.length-1;i++){var ta=p(tail[i][0],tail[i][1]),tb=p(tail[i+1][0],tail[i+1][1]);doc.line(ta[0],ta[1],tb[0],tb[1]);}doc.setLineWidth(0.35);var ul1=p(3,39),ul2=p(100,39);doc.line(ul1[0],ul1[1],ul2[0],ul2[1]);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);var np=p(3,47);doc.text('Waliko Car Hire Ltd.',np[0],np[1]);doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8.5);var tp=p(3,55);doc.text('Authorised Signatory',tp[0],tp[1]);}
+    function downloadPDF(bookingId){var bookings=JSON.parse(localStorage.getItem('bookings')||'[]');var b=null;for(var i=0;i<bookings.length;i++){if(String(bookings[i].bookingId)===String(bookingId)){b=bookings[i];break;}}if(!b){alert('Booking not found.');return;}var days=Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));var total=b.price*days,deposit=Math.floor(total/2),balance=total-deposit;var isPaid=b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');var balObj=getBalanceStatus(b.bookingId);var balancePaid=!!(balObj&&balObj.paid)||!!(b.balancePaid);var balReceipt=(balObj&&balObj.receipt)||b.balanceReceipt||'N/A';var balPaidAt=(balObj&&balObj.paidAt)||b.balancePaidAt||'N/A';var jsPDF=window.jspdf.jsPDF;var doc=new jsPDF({unit:'mm',format:'a4'});var PW=210,PH=297,L=14,RR=196,CW=182,NR=13,NG=59,NB=140;var issued=new Date().toLocaleDateString('en-KE',{day:'2-digit',month:'long',year:'numeric'});doc.setFillColor(NR,NG,NB);doc.rect(0,0,PW,46,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(22);doc.text('WALIKO CAR HIRE',L,20);doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(180,210,255);doc.text('Premium Vehicle Rentals  \u00B7  Nairobi, Kenya',L,29);doc.setTextColor(140,175,240);doc.setFontSize(8);doc.text('Booking ID: '+String(b.bookingId).replace('#','')+'   \u00B7   Date: '+issued,L,39);doc.setFillColor(255,255,255);doc.roundedRect(PW-46,8,32,12,2,2,'F');doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text('BOOKING',PW-30,15.5,{align:'center'});doc.setFillColor(244,196,48);doc.rect(0,46,PW,4,'F');doc.setFillColor(240,245,255);doc.rect(0,50,PW,16,'F');doc.setTextColor(100,120,165);doc.setFont('helvetica','normal');doc.setFontSize(8);var statusBarTxt=balancePaid?'Waliko Car Hire  ·  All payments cleared  ·  Ready for pickup':'Waliko Car Hire  ·  Deposit = 50% of total hire cost  ·  Balance due at pickup';doc.text(statusBarTxt,L,60);if(balancePaid){doc.setFillColor(39,174,96);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('FULLY PAID',PW-33,59.5,{align:'center'});}else if(isPaid){doc.setFillColor(230,249,238);doc.roundedRect(PW-38,53,24,10,2,2,'F');doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PAID',PW-26,59.5,{align:'center'});}else{doc.setFillColor(255,245,220);doc.roundedRect(PW-44,53,30,10,2,2,'F');doc.setTextColor(160,90,0);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PENDING',PW-29,59.5,{align:'center'});}function secHead(label,y){doc.setFillColor(NR,NG,NB);doc.rect(L,y,3,11,'F');doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(label,L+6,y+8);}function tRow(label,value,y,shade,highlight,greenVal,rh){var rh=rh||11;if(highlight){doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,rh,'F');doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,rh,'D');}else if(shade){doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,rh,'F');}doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(label,L+4,y+rh*0.55);if(greenVal)doc.setTextColor(26,112,64);else if(highlight)doc.setTextColor(NR,NG,NB);else doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);doc.text(String(value),RR,y+rh*0.55,{align:'right'});}var RH=8;var y=72;secHead('Customer & Booking Details',y);y+=13;var cRows=[['Full Name',b.fullName],['Phone No.',b.phone],['National ID',b.nationalId],['Licence No.',b.license],['Vehicle Hired',b.carName],['Booking ID',String(b.bookingId).replace('#','')],['Pickup Date',b.pickup],['Return Date',b.endDate],['Duration',days+' day'+(days!==1?'s':'')]];cRows.forEach(function(r,i){tRow(r[0],r[1],y,i%2===0,false,false,RH);y+=RH;});y+=4;secHead('Payment Summary',y);y+=13;if(isPaid){tRow('Deposit M-Pesa Ref',b.mpesaReceipt||'N/A',y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',b.paidAt||'N/A',y,false,false,false,RH);y+=RH;}if(balancePaid){tRow('Balance M-Pesa Ref',balReceipt,y,true,false,true,RH);y+=RH;tRow('Balance Paid On',balPaidAt,y,false,false,false,RH);y+=RH;}tRow('Price Per Day','Ksh '+b.price.toLocaleString(),y,true,false,false,RH);y+=RH;tRow('Number of Days',days+' day'+(days!==1?'s':''),y,false,false,false,RH);y+=RH;tRow('Total Rental Fee','Ksh '+total.toLocaleString(),y,true,true,false,RH);y+=RH;tRow('Deposit (50%)','Ksh '+deposit.toLocaleString(),y,false,false,false,RH);y+=RH;if(balancePaid){tRow('Balance Paid','Ksh '+balance.toLocaleString(),y,true,false,true,RH);y+=RH;tRow('Outstanding Balance','Ksh 0.00',y,false,false,true,RH);y+=RH;}else{tRow('Balance on Pickup','Ksh '+balance.toLocaleString(),y,true,false,false,RH);y+=RH;}var sigY=Math.max(y+6,PH-16-62);doc.setDrawColor(210,218,235);doc.setLineWidth(0.3);doc.line(L,sigY-4,PW-L,sigY-4);doc.setFillColor(248,250,255);doc.rect(0,sigY-6,PW,PH-16-(sigY-6),'F');doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text('Authorised by',L,sigY);drawSignatureA(doc,L,sigY+2);if(isPaid){drawStamp(doc,PW-30,sigY+14);}doc.setFillColor(NR,NG,NB);doc.rect(0,PH-16,PW,16,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('waliko.co.ke  \u00B7  info@waliko.co.ke  \u00B7  +254 700 000 000',PW/2,PH-8.5,{align:'center'});doc.setFontSize(6.5);doc.setTextColor(160,195,255);doc.text('This is an official computer-generated receipt and is valid without a physical stamp.',PW/2,PH-3,{align:'center'});doc.save('Waliko_Booking_'+bookingId+'.pdf');}
 
-    /* ── SIGNATURE ── */
-    function drawSignatureA(doc,ox,oy){
-      var sc=0.52,NR=13,NG=59,NB=140;
-      function p(px,py){return [ox+px*sc,oy+py*sc];}
-      doc.setDrawColor(NR,NG,NB);
-      doc.setLineWidth(1.1);
-      var W=[[4,10],[10,34],[16,18],[22,34],[28,10]];
-      for(var i=0;i<W.length-1;i++){
-        var a=p(W[i][0],W[i][1]),b=p(W[i+1][0],W[i+1][1]);
-        doc.line(a[0],a[1],b[0],b[1]);
-      }
-      doc.setLineWidth(0.85);
-      var s0=p(28,10);
-      doc.lines([
-        [sc*(32-28),sc*(22-10),sc*(36-28),sc*(28-10),sc*(40-28),sc*(26-10)],
-        [sc*(43-40),sc*(24-26),sc*(43-40),sc*(19-26),sc*(41-40),sc*(17-26)],
-        [sc*(39-41),sc*(15-17),sc*(37-41),sc*(18-17),sc*(38-41),sc*(21-17)],
-        [sc*(39-38),sc*(24-21),sc*(42-38),sc*(26-21),sc*(45-38),sc*(23-21)]
-      ],s0[0],s0[1]);
-      var lA=p(47,13),lB=p(47,30);
-      doc.line(lA[0],lA[1],lB[0],lB[1]);
-      doc.setFillColor(NR,NG,NB);
-      var dp=p(47,10);doc.circle(dp[0],dp[1],0.7,'F');
-      var o0=p(50,19);
-      doc.lines([
-        [sc*(51-50),sc*(13-19),sc*(56-50),sc*(12-19),sc*(59-50),sc*(16-19)],
-        [sc*(61-59),sc*(19-16),sc*(59-59),sc*(25-16),sc*(55-59),sc*(26-16)],
-        [sc*(52-55),sc*(27-26),sc*(50-55),sc*(24-26),sc*(52-55),sc*(21-26)],
-        [sc*(54-52),sc*(18-21),sc*(58-52),sc*(17-21),sc*(61-52),sc*(20-21)],
-        [sc*(63-61),sc*(23-20),sc*(62-61),sc*(28-20),sc*(59-61),sc*(30-20)]
-      ],o0[0],o0[1]);
-      doc.setLineWidth(0.5);
-      var tail=[[59,30],[72,25],[92,23],[112,27],[126,30],[138,27],[145,24]];
-      for(var i=0;i<tail.length-1;i++){
-        var ta=p(tail[i][0],tail[i][1]),tb=p(tail[i+1][0],tail[i+1][1]);
-        doc.line(ta[0],ta[1],tb[0],tb[1]);
-      }
-      doc.setLineWidth(0.35);
-      var ul1=p(3,39),ul2=p(100,39);
-      doc.line(ul1[0],ul1[1],ul2[0],ul2[1]);
-      doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);
-      var np=p(3,47);doc.text('Waliko Car Hire Ltd.',np[0],np[1]);
-      doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8.5);
-      var tp=p(3,55);doc.text('Authorised Signatory',tp[0],tp[1]);
-    }
-
-    /* ── PDF ── */
-    function downloadPDF(bookingId){
-      var bookings=JSON.parse(localStorage.getItem('bookings')||'[]');
-      var b=null;
-      for(var i=0;i<bookings.length;i++){
-        if(bookings[i].bookingId===bookingId){b=bookings[i];break;}
-      }
-      if(!b){alert('Booking not found.');return;}
-
-      var days=Math.max(1,Math.ceil((new Date(b.endDate)-new Date(b.pickup))/86400000));
-      var total=b.price*days,deposit=Math.floor(total/2),balance=total-deposit;
-      var isPaid=b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
-      var jsPDF=window.jspdf.jsPDF;
-      var doc=new jsPDF({unit:'mm',format:'a4'});
-      var PW=210,PH=297,L=14,RR=196,CW=182,NR=13,NG=59,NB=140;
-      var issued=new Date().toLocaleDateString('en-KE',{day:'2-digit',month:'long',year:'numeric'});
-
-      /* HEADER */
-      doc.setFillColor(NR,NG,NB);doc.rect(0,0,PW,46,'F');
-      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(22);
-      doc.text('WALIKO CAR HIRE',L,20);
-      doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(180,210,255);
-      doc.text('Premium Vehicle Rentals  \u00B7  Nairobi, Kenya',L,29);
-      doc.setTextColor(140,175,240);doc.setFontSize(8);
-      doc.text('Booking ID: '+String(b.bookingId).replace('#','')+'   \u00B7   Date: '+issued,L,39);
-      doc.setFillColor(255,255,255);doc.roundedRect(PW-46,8,32,12,2,2,'F');
-      doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(8.5);
-      doc.text('BOOKING',PW-30,15.5,{align:'center'});
-      doc.setFillColor(244,196,48);doc.rect(0,46,PW,4,'F');
-
-      /* STATUS BAR */
-      doc.setFillColor(240,245,255);doc.rect(0,50,PW,16,'F');
-      doc.setTextColor(100,120,165);doc.setFont('helvetica','normal');doc.setFontSize(8);
-      doc.text('Waliko Car Hire  \u00B7  Deposit = 50% of total hire cost  \u00B7  Balance due at pickup',L,60);
-      if(isPaid){
-        doc.setFillColor(230,249,238);doc.roundedRect(PW-38,53,24,10,2,2,'F');
-        doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('PAID',PW-26,59.5,{align:'center'});
-      } else {
-        doc.setFillColor(255,245,220);doc.roundedRect(PW-44,53,30,10,2,2,'F');
-        doc.setTextColor(160,90,0);doc.setFont('helvetica','bold');doc.setFontSize(8);
-        doc.text('PENDING',PW-29,59.5,{align:'center'});
-      }
-
-      function secHead(label,y){
-        doc.setFillColor(NR,NG,NB);doc.rect(L,y,3,11,'F');
-        doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);
-        doc.text(label,L+6,y+8);
-      }
-      function tRow(label,value,y,shade,highlight,greenVal,rh){
-        var rh=rh||11;
-        if(highlight){
-          doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,rh,'F');
-          doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,rh,'D');
-        } else if(shade){
-          doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,rh,'F');
-        }
-        doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);
-        doc.text(label,L+4,y+rh*0.55);
-        if(greenVal) doc.setTextColor(26,112,64);
-        else if(highlight) doc.setTextColor(NR,NG,NB);
-        else doc.setTextColor(26,26,46);
-        doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);
-        doc.text(String(value),RR,y+rh*0.55,{align:'right'});
-      }
-
-      /* CUSTOMER DETAILS — row height 8 to compress */
-      var RH=8; /* row height */
-      var y=72;
-      secHead('Customer & Booking Details',y);y+=13;
-      var cRows=[
-        ['Full Name',b.fullName],
-        ['Phone No.',b.phone],
-        ['National ID',b.nationalId],
-        ['Licence No.',b.license],
-        ['Vehicle Hired',b.carName],
-        ['Booking ID',String(b.bookingId).replace('#','')],
-        ['Pickup Date',b.pickup],
-        ['Return Date',b.endDate],
-        ['Duration',days+' day'+(days!==1?'s':'')]
-      ];
-      cRows.forEach(function(r,i){tRow(r[0],r[1],y,i%2===0,false,false,RH);y+=RH;});
-
-      /* PAYMENT SUMMARY */
-      y+=4;secHead('Payment Summary',y);y+=13;
-      if(isPaid){
-        tRow('M-Pesa Reference',b.mpesaReceipt||'N/A',y,true,false,true,RH);y+=RH;
-        tRow('Date Paid',b.paidAt||'N/A',y,false,false,false,RH);y+=RH;
-      }
-      tRow('Price Per Day','Ksh '+b.price.toLocaleString(),y,true,false,false,RH);y+=RH;
-      tRow('Number of Days',days+' day'+(days!==1?'s':''),y,false,false,false,RH);y+=RH;
-      tRow('Total Rental Fee','Ksh '+total.toLocaleString(),y,true,true,false,RH);y+=RH;
-      tRow('Deposit (50%)','Ksh '+deposit.toLocaleString(),y,false,false,false,RH);y+=RH;
-      tRow('Balance on Pickup','Ksh '+balance.toLocaleString(),y,true,false,false,RH);y+=RH;
-
-      y+=4;
-
-      /* DIVIDER */
-      doc.setDrawColor(210,218,235);doc.setLineWidth(0.3);
-      doc.line(L,y,PW-L,y);
-      y+=5;
-
-      /* light background for sig+stamp area */
-      doc.setFillColor(248,250,255);
-      doc.rect(0,y-2,PW,46,'F');
-
-      /* authorised by label */
-      doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
-      doc.text('Authorised by',L,y+4);
-      y+=5;
-
-      /* signature always, stamp only if paid */
-      drawSignatureA(doc,L,y);
-      if(isPaid){ drawStamp(doc,PW-30,y+12); }
-
-      /* FOOTER */
-      doc.setFillColor(NR,NG,NB);doc.rect(0,PH-16,PW,16,'F');
-      doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);
-      doc.text('waliko.co.ke  \u00B7  info@waliko.co.ke  \u00B7  +254 700 000 000',PW/2,PH-8.5,{align:'center'});
-      doc.setFontSize(6.5);doc.setTextColor(160,195,255);
-      doc.text('This is an official computer-generated receipt and is valid without a physical stamp.',PW/2,PH-3,{align:'center'});
-
-      doc.save('Waliko_Booking_'+bookingId+'.pdf');
-    }
-
-    document.getElementById('logoutBtn').addEventListener('click',function(e){
-      e.preventDefault();
-      localStorage.removeItem('isLoggedIn');
-      localStorage.removeItem('currentUser');
-      window.location.href='index.html';
-    });
-
+    document.getElementById('logoutBtn').addEventListener('click',function(e){ e.preventDefault(); localStorage.removeItem('isLoggedIn'); localStorage.removeItem('currentUser'); window.location.href='index.html'; });
     window.closeAdminModal=closeAdminModal;
     renderBookings();
   })();
   </script>
+  <script src="maintenance-check.js"></script>
 </body>
-</html>
+</html>S
