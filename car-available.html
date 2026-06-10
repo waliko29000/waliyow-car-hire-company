@@ -19,7 +19,6 @@
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
     main { max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; flex: 1; overflow-y: auto; width: 100%; }
 
-    /* ── Search & filter bar ── */
     .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0 12px; }
     .filter-bar .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; flex: 0 0 auto; margin-right: 8px; }
     .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
@@ -29,7 +28,6 @@
     .price-filter { display: flex; align-items: center; gap: 6px; font-size: 0.8em; color: #555; }
     .price-filter select { padding: 7px 10px; border: 1.5px solid #dde3f0; border-radius: 25px; font-family: 'Poppins', sans-serif; font-size: 0.82em; outline: none; background: #fff; cursor: pointer; color: #333; }
     .price-filter select:focus { border-color: #1464dd; }
-
     .results-count { font-size: 0.78em; color: #999; flex: 0 0 auto; }
     .no-results { text-align: center; padding: 48px 24px; color: #aaa; font-size: 0.92em; }
 
@@ -49,7 +47,6 @@
     .book-btn.disabled-btn { background: #bbb; cursor: not-allowed; opacity: 0.7; }
     .book-btn.disabled-btn:hover { background: #bbb; transform: none; }
 
-    /* Modal */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
     .modal.open { display: flex; }
     .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 420px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease; max-height: 90vh; overflow-y: auto; }
@@ -82,6 +79,8 @@
 
     .flatpickr-day.flatpickr-disabled,
     .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
+    .flatpickr-day.prevMonthDay,
+    .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
 
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -129,7 +128,6 @@
           <option value="desc">Price: High → Low</option>
         </select>
       </div>
-
       <span class="results-count" id="resultsCount"></span>
     </div>
     <div class="car-grid" id="carGrid"></div>
@@ -207,6 +205,7 @@
       link.textContent = panel.classList.toggle('open') ? 'Hide dates ▴' : 'View dates ▾';
     }
 
+    // Returns all paid ranges for a car
     function getPaidRanges(carIndex) {
       const all = JSON.parse(localStorage.getItem('bookings') || '[]');
       return all.filter(b => {
@@ -214,11 +213,20 @@
         return paid && (b.carIndex === carIndex || b.carIndex === String(carIndex));
       }).map(b => ({ from: b.pickup, to: b.endDate }));
     }
+
+    // FIX: only return ranges whose end date is today or in the future
+    function getActiveRanges(carIndex) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return getPaidRanges(carIndex).filter(function(r) {
+        // keep the range if the booking end date hasn't passed yet
+        return new Date(r.to + 'T00:00:00') >= today;
+      });
+    }
+
     function getAdminOverrides() {
       return JSON.parse(localStorage.getItem('adminCarOverrides') || '{}');
     }
-
-    function buildGrid() { filterGrid(); }
 
     function filterGrid() {
       const query     = (document.getElementById('searchInput').value || '').toLowerCase();
@@ -227,9 +235,7 @@
       grid.innerHTML  = '';
 
       let indexed = cars.map((car, i) => ({ car, i }));
-
       if (query) indexed = indexed.filter(({ car }) => car.name.toLowerCase().includes(query));
-
       if (sort === 'asc')  indexed.sort((a, b) => a.car.price - b.car.price);
       if (sort === 'desc') indexed.sort((a, b) => b.car.price - a.car.price);
 
@@ -237,13 +243,15 @@
       document.getElementById('noResults').style.display = indexed.length === 0 ? 'block' : 'none';
 
       indexed.forEach(({ car, i }) => {
-        const adminUnavail = overrides[i] === 'unavailable';
-        const ranges       = getPaidRanges(i);
-        const hasBookings  = ranges.length > 0;
+        const adminUnavail  = overrides[i] === 'unavailable';
+        // FIX: badge uses active (current/upcoming) ranges only, not past ones
+        const activeRanges  = getActiveRanges(i);
+        const hasActive     = activeRanges.length > 0;
+
         let badgeHtml = adminUnavail
           ? '<span class="badge-booked">🔴 Not Available</span>'
-          : hasBookings
-            ? '<span class="badge-partial">⚠️ Some dates are  booked</span>'
+          : hasActive
+            ? '<span class="badge-partial">⚠️ Some dates are booked</span>'
             : '<span class="badge">✅ Available</span>';
 
         const card = document.createElement('div');
@@ -265,34 +273,50 @@
 
     filterGrid();
 
-    function initDatePickers(disabledRanges) {
+    function initDatePickers(bookedRanges) {
       if (pickupFP) pickupFP.destroy();
       if (endFP)    endFP.destroy();
       const today = new Date(); today.setHours(0,0,0,0);
+      const disableRules = bookedRanges.map(r => ({ from: r.from, to: r.to }));
+
       function injectTip(instance) {
-        if (disabledRanges.length > 0 && !instance.calendarContainer.querySelector('.fp-tip')) {
+        if (!instance.calendarContainer.querySelector('.fp-tip')) {
           const tip = document.createElement('div');
           tip.className = 'fp-tip';
-          tip.style.cssText = 'background:#fff8ee;border-top:1.5px solid #ffd98a;padding:10px 13px;font-size:0.76em;color:#7a3e00;line-height:1.6;font-family:Poppins,sans-serif;';
-          tip.innerHTML = '⚠️ <strong>Dear customer,</strong> the greyed-out dates have already been booked and are not available for selection.';
+          tip.style.cssText = 'background:#fff8ee;border-top:1.5px solid #ffd98a;padding:7px 13px;font-size:0.74em;color:#7a3e00;font-family:Poppins,sans-serif;text-align:center;';
+          tip.innerHTML = '📅 Greyed dates are past or already booked.';
           instance.calendarContainer.appendChild(tip);
         }
       }
+
       pickupFP = flatpickr('#pickup', {
-        dateFormat: 'Y-m-d', minDate: today, disable: disabledRanges, disableMobile: true,
+        dateFormat: 'Y-m-d',
+        minDate: today,
+        disable: disableRules,
+        disableMobile: true,
+        showMonths: 1,
+        nextArrow: '>',
+        prevArrow: '<',
         onReady: (_, __, inst) => injectTip(inst),
         onOpen:  (_, __, inst) => injectTip(inst),
         onChange(selectedDates) {
           if (selectedDates.length > 0) {
-            const next = new Date(selectedDates[0]); next.setDate(next.getDate() + 1);
+            const next = new Date(selectedDates[0]);
+            next.setDate(next.getDate() + 1);
             endFP.set('minDate', next);
             if (endFP.selectedDates[0] && endFP.selectedDates[0] <= selectedDates[0]) endFP.clear();
           }
         }
       });
+
       endFP = flatpickr('#endDate', {
-        dateFormat: 'Y-m-d', minDate: new Date(today.getTime() + 86400000),
-        disable: disabledRanges, disableMobile: true,
+        dateFormat: 'Y-m-d',
+        minDate: new Date(today.getTime() + 86400000),
+        disable: disableRules,
+        disableMobile: true,
+        showMonths: 1,
+        nextArrow: '>',
+        prevArrow: '<',
         onReady: (_, __, inst) => injectTip(inst),
         onOpen:  (_, __, inst) => injectTip(inst),
       });
@@ -305,14 +329,17 @@
       currentCar = cars[currentCarIndex];
       document.getElementById('modalCarName').textContent = `${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
       document.getElementById('bookingForm').reset();
-      const disabledRanges = getPaidRanges(currentCarIndex);
-      const notice = document.getElementById('bookedNotice');
-      
-      // FIXED HERE: Dynamic notice visibility turned completely off
-      notice.style.display = 'none'; 
-      
+
+      // FIX: only use active (current/upcoming) ranges for the notice and calendar
+      const activeRanges = getActiveRanges(currentCarIndex);
+      const notice       = document.getElementById('bookedNotice');
+
+      // Notice always hidden — blocked dates shown only via greyed-out calendar days
+      notice.style.display = 'none';
+
       document.getElementById('bookingModal').classList.add('open');
-      setTimeout(() => initDatePickers(disabledRanges), 50);
+      // Pass only active ranges to flatpickr so past booked dates aren't greyed out
+      setTimeout(() => initDatePickers(activeRanges), 50);
     });
 
     document.getElementById('closeModal').onclick = () => document.getElementById('bookingModal').classList.remove('open');
