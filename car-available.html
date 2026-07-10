@@ -18,7 +18,6 @@
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
     main { max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; flex: 1; overflow-y: auto; width: 100%; }
-
     .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0 12px; }
     .filter-bar .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; flex: 0 0 auto; margin-right: 8px; }
     .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
@@ -30,7 +29,6 @@
     .price-filter select:focus { border-color: #1464dd; }
     .results-count { font-size: 0.78em; color: #999; flex: 0 0 auto; }
     .no-results { text-align: center; padding: 48px 24px; color: #aaa; font-size: 0.92em; }
-
     .car-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
     .car-card { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
     .car-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(20,100,221,0.15); }
@@ -46,7 +44,6 @@
     .book-btn:hover { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
     .book-btn.disabled-btn { background: #bbb; cursor: not-allowed; opacity: 0.7; }
     .book-btn.disabled-btn:hover { background: #bbb; transform: none; }
-
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
     .modal.open { display: flex; }
     .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 420px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease; max-height: 90vh; overflow-y: auto; }
@@ -55,33 +52,14 @@
     .modal-box .car-tag { font-size: 0.8em; color: #888; margin-bottom: 4px; }
     .modal-close { position: absolute; top: 14px; right: 16px; background: #f0f4ff; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 1em; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; transition: background 0.2s; }
     .modal-close:hover { background: #dde3f0; color: #1464dd; }
-    .booked-notice { background: linear-gradient(135deg,#fff8ee,#fff3e0); border: 1.5px solid #ffca6e; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; display: none; }
-    .booked-notice-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .booked-notice-left { display: flex; align-items: center; gap: 8px; }
-    .booked-notice-icon { font-size: 1.3em; flex-shrink: 0; }
-    .booked-notice-text { font-size: 0.8em; color: #7a3e00; line-height: 1.5; }
-    .booked-notice-text strong { color: #c0521a; }
-    .booked-notice-text span { color: #a05000; font-size: 0.88em; }
-    .view-dates-link { font-size: 0.75em; font-weight: 700; color: #1464dd; background: #e8f0ff; border: 1px solid #c5d8ff; border-radius: 20px; padding: 4px 11px; white-space: nowrap; cursor: pointer; text-decoration: none; transition: all 0.2s; flex-shrink: 0; }
-    .view-dates-link:hover { background: #1464dd; color: #fff; border-color: #1464dd; }
-    .booked-dates-panel { display: none; margin-top: 10px; border-top: 1px solid #ffd98a; padding-top: 10px; }
-    .booked-dates-panel.open { display: block; }
-    .booked-dates-panel-title { font-size: 0.74em; font-weight: 700; color: #b35c00; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .booked-range-item { display: flex; align-items: center; gap: 6px; font-size: 0.78em; color: #7a3e00; padding: 4px 0; border-bottom: 1px dashed #ffd98a; }
-    .booked-range-item:last-child { border-bottom: none; }
-    .booked-range-dot { width: 7px; height: 7px; background: #e74c3c; border-radius: 50%; flex-shrink: 0; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8em; font-weight: 600; color: #444; margin-bottom: 4px; }
     .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; transition: border-color 0.2s; background: #fff; }
     .form-group input:focus { border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1); }
     .submit-btn { width: 100%; padding: 11px; background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.92em; font-weight: 600; cursor: pointer; margin-top: 4px; transition: all 0.2s; }
     .submit-btn:hover { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
-
-    .flatpickr-day.flatpickr-disabled,
-    .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
-    .flatpickr-day.prevMonthDay,
-    .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
-
+    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
+    .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
       nav { margin-top: 4px; width: 100%; }
@@ -139,22 +117,6 @@
       <button class="modal-close" id="closeModal">✕</button>
       <h2>Book Car</h2>
       <div class="car-tag" id="modalCarName"></div>
-      <div class="booked-notice" id="bookedNotice">
-        <div class="booked-notice-top">
-          <div class="booked-notice-left">
-            <div class="booked-notice-icon">📅</div>
-            <div class="booked-notice-text">
-              <strong>Some dates are already taken.</strong><br>
-              <span>Greyed-out days in the calendar are unavailable — pick any free date!</span>
-            </div>
-          </div>
-          <a class="view-dates-link" id="viewDatesLink" onclick="toggleDatesPanel()">View dates ▾</a>
-        </div>
-        <div class="booked-dates-panel" id="bookedDatesPanel">
-          <div class="booked-dates-panel-title">🔴 Unavailable periods</div>
-          <div id="bookedDatesList"></div>
-        </div>
-      </div>
       <form id="bookingForm">
         <div class="form-group"><label>Full Name</label><input type="text" id="fullName" placeholder="Enter full name" required /></div>
         <div class="form-group"><label>National ID</label><input type="text" id="nationalId" placeholder="Enter national ID" required /></div>
@@ -171,57 +133,43 @@
   <script>
     const cars = [
       { name: "Toyota Vitz",          price: 2,     description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
-      { name: "Toyota Prado TX",      price: 10000, description: "Luxury SUV with 4WD.",                                         image: "car1.jpg" },
-      { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                 image: "car2.jpg" },
-      { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                           image: "car3.jpg" },
-      { name: "Suzuki Alto",          price: 2000,  description: "Compact and fuel-efficient.",                                  image: "alto.jpg" },
-      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                          image: "premio.jpg" },
-      { name: "Toyota Sienta",        price: 3500,  description: "Versatile family minivan.",                                   image: "sienta.jpg" },
-      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                 image: "succeed.jpg" },
-      { name: "Mercedes Benz C200",   price: 10000, description: "Luxury executive car.",                                       image: "car5.jpg" },
-      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                   image: "car6.jpg" },
-      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                 image: "car7.jpg" },
-      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                             image: "car8.jpg" },
-      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                 image: "car9.jpg" },
-      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                             image: "car10.jpg" },
-      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
-      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                        image: "car12.jpg" },
-      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                        image: "car13.jpg" },
+      { name: "Toyota Prado TX",      price: 10000, description: "Luxury SUV with 4WD.",                                        image: "car1.jpg" },
+      { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                image: "car2.jpg" },
+      { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                          image: "car3.jpg" },
+      { name: "Suzuki Alto",          price: 2000,  description: "Compact and fuel-efficient.",                                 image: "alto.jpg" },
+      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                         image: "premio.jpg" },
+      { name: "Toyota Sienta",        price: 3500,  description: "Versatile family minivan.",                                  image: "sienta.jpg" },
+      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                image: "succeed.jpg" },
+      { name: "Mercedes Benz C200",   price: 10000, description: "Luxury executive car.",                                      image: "car5.jpg" },
+      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                  image: "car6.jpg" },
+      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                image: "car7.jpg" },
+      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                            image: "car8.jpg" },
+      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                image: "car9.jpg" },
+      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                            image: "car10.jpg" },
+      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                       image: "car11.jpg" },
+      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                       image: "car12.jpg" },
+      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                       image: "car13.jpg" },
       { name: "Toyota Axio",          price: 4000,  description: "Reliable compact sedan ideal for city and highway driving.", image: "car17.jpg" },
-      { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",     image: "car18.jpg" },
+      { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",    image: "car18.jpg" },
       { name: "Toyota Prado TXG",     price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg" },
     ];
 
     let currentCar = null, currentCarIndex = null, pickupFP = null, endFP = null;
     const grid = document.getElementById('carGrid');
 
-    function fmtDate(d) {
-      if (!d) return '';
-      return new Date(d + 'T00:00:00').toLocaleDateString('en-KE', { day: '2-digit', month: 'short', year: 'numeric' });
-    }
-    function toggleDatesPanel() {
-      const panel = document.getElementById('bookedDatesPanel');
-      const link  = document.getElementById('viewDatesLink');
-      link.textContent = panel.classList.toggle('open') ? 'Hide dates ▴' : 'View dates ▾';
+    function getCurrentUser() {
+      try { return JSON.parse(localStorage.getItem('currentUser') || '{}'); } catch(e) { return {}; }
     }
 
-    // Returns all paid ranges for a car
-    function getPaidRanges(carIndex) {
-      const all = JSON.parse(localStorage.getItem('bookings') || '[]');
-      return all.filter(b => {
-        const paid = b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
-        return paid && (b.carIndex === carIndex || b.carIndex === String(carIndex));
-      }).map(b => ({ from: b.pickup, to: b.endDate }));
-    }
-
-    // FIX: only return ranges whose end date is today or in the future
     function getActiveRanges(carIndex) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return getPaidRanges(carIndex).filter(function(r) {
-        // keep the range if the booking end date hasn't passed yet
-        return new Date(r.to + 'T00:00:00') >= today;
-      });
+      const today = new Date(); today.setHours(0,0,0,0);
+      const all = JSON.parse(localStorage.getItem('bookings') || '[]');
+      return all.filter(function(b) {
+        const paid = b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
+        return paid &&
+          (b.carIndex === carIndex || b.carIndex === String(carIndex)) &&
+          new Date(b.endDate + 'T00:00:00') >= today;
+      }).map(function(b){ return { from: b.pickup, to: b.endDate }; });
     }
 
     function getAdminOverrides() {
@@ -243,10 +191,9 @@
       document.getElementById('noResults').style.display = indexed.length === 0 ? 'block' : 'none';
 
       indexed.forEach(({ car, i }) => {
-        const adminUnavail  = overrides[i] === 'unavailable';
-        // FIX: badge uses active (current/upcoming) ranges only, not past ones
-        const activeRanges  = getActiveRanges(i);
-        const hasActive     = activeRanges.length > 0;
+        const adminUnavail = overrides[i] === 'unavailable';
+        const activeRanges = getActiveRanges(i);
+        const hasActive    = activeRanges.length > 0;
 
         let badgeHtml = adminUnavail
           ? '<span class="badge-booked">🔴 Not Available</span>'
@@ -290,13 +237,7 @@
       }
 
       pickupFP = flatpickr('#pickup', {
-        dateFormat: 'Y-m-d',
-        minDate: today,
-        disable: disableRules,
-        disableMobile: true,
-        showMonths: 1,
-        nextArrow: '>',
-        prevArrow: '<',
+        dateFormat: 'Y-m-d', minDate: today, disable: disableRules, disableMobile: true,
         onReady: (_, __, inst) => injectTip(inst),
         onOpen:  (_, __, inst) => injectTip(inst),
         onChange(selectedDates) {
@@ -310,13 +251,8 @@
       });
 
       endFP = flatpickr('#endDate', {
-        dateFormat: 'Y-m-d',
-        minDate: new Date(today.getTime() + 86400000),
-        disable: disableRules,
+        dateFormat: 'Y-m-d', minDate: new Date(today.getTime() + 86400000), disable: disableRules,
         disableMobile: true,
-        showMonths: 1,
-        nextArrow: '>',
-        prevArrow: '<',
         onReady: (_, __, inst) => injectTip(inst),
         onOpen:  (_, __, inst) => injectTip(inst),
       });
@@ -330,15 +266,12 @@
       document.getElementById('modalCarName').textContent = `${currentCar.name} — Ksh ${currentCar.price.toLocaleString()}/day`;
       document.getElementById('bookingForm').reset();
 
-      // FIX: only use active (current/upcoming) ranges for the notice and calendar
+      // Pre-fill phone from current user if available
+      const user = getCurrentUser();
+      if (user.phone) document.getElementById('phone').value = user.phone;
+
       const activeRanges = getActiveRanges(currentCarIndex);
-      const notice       = document.getElementById('bookedNotice');
-
-      // Notice always hidden — blocked dates shown only via greyed-out calendar days
-      notice.style.display = 'none';
-
       document.getElementById('bookingModal').classList.add('open');
-      // Pass only active ranges to flatpickr so past booked dates aren't greyed out
       setTimeout(() => initDatePickers(activeRanges), 50);
     });
 
@@ -355,15 +288,36 @@
       const license    = document.getElementById('license').value.trim();
       const pickup     = document.getElementById('pickup').value;
       const endDate    = document.getElementById('endDate').value;
+
       if (!pickup)  { alert('Please select a start date.'); return; }
       if (!endDate) { alert('Please select an end date.'); return; }
       if (phone.length !== 10 || !phone.startsWith('07')) { alert("Phone must be 10 digits starting with '07'."); return; }
       if (!/^\d{7,}$/.test(nationalId))       { alert("National ID must be at least 7 digits."); return; }
       if (!/^[a-zA-Z0-9]{7,}$/.test(license)) { alert("Licence No. must be at least 7 characters."); return; }
       if (new Date(endDate) <= new Date(pickup)) { alert("End date must be after start date."); return; }
+
+      // ── GET LOGGED IN USER EMAIL ──
+      const user      = getCurrentUser();
+      const userEmail = user.email || '';
+
       const bookingId = '#' + String(Math.floor(Math.random() * 1_000_000_000)).padStart(9, '0');
       const bookings  = JSON.parse(localStorage.getItem('bookings') || '[]');
-      bookings.unshift({ bookingId, fullName, nationalId, phone, license, pickup, endDate, carName: currentCar.name, carIndex: currentCarIndex, price: currentCar.price, timestamp: new Date().toLocaleString() });
+
+      bookings.unshift({
+        bookingId,
+        email: userEmail,        // ← THIS is what was missing
+        fullName,
+        nationalId,
+        phone,
+        license,
+        pickup,
+        endDate,
+        carName:    currentCar.name,
+        carIndex:   currentCarIndex,
+        price:      currentCar.price,
+        timestamp:  new Date().toLocaleString()
+      });
+
       localStorage.setItem('bookings', JSON.stringify(bookings));
       alert(`✅ Booking created!\n\nBooking ID: ${bookingId}\nGo to "My Bookings" to pay and confirm.`);
       document.getElementById('bookingModal').classList.remove('open');
@@ -372,6 +326,7 @@
 
     window.addEventListener('storage', e => { if (e.key === 'adminCarOverrides' || e.key === 'bookings') filterGrid(); });
     setInterval(filterGrid, 3000);
+
     document.getElementById('logoutBtn').addEventListener('click', e => {
       e.preventDefault();
       ['isLoggedIn','currentUser','userEmail','userPassword'].forEach(k => localStorage.removeItem(k));
