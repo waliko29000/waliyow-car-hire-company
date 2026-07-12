@@ -51,8 +51,8 @@
     .card-header .booking-id{font-size:0.75em;color:#888;margin-top:2px;}
     .card-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;}
     .btn{padding:7px 14px;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.78em;font-weight:600;cursor:pointer;transition:all 0.2s;}
-    .btn-pay{background:#1464dd;color:#fff;}
-    .btn-pay:hover{background:#0d47a1;}
+    .btn-pay-now{background:#1464dd;color:#fff;}
+    .btn-pay-now:hover{background:#0d47a1;}
     .btn-balance{background:#27ae60;color:#fff;}
     .btn-balance:hover{background:#1e8449;}
     .btn-reschedule{background:#f0f4ff;color:#1464dd;border:1px solid #c5d5f5;}
@@ -107,6 +107,25 @@
     .rform-group input{width:100%;padding:9px 12px;border:1.5px solid #dde3f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.88em;outline:none;}
     .rform-group input:focus{border-color:#1464dd;}
     .btn-reschedule-save{width:100%;padding:11px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.9em;font-weight:700;cursor:pointer;margin-top:4px;}
+
+    .pay-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .pay-modal.open{display:flex;}
+    .pay-box{background:#fff;border-radius:18px;padding:26px 22px;width:100%;max-width:400px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.25);}
+    .pay-box h3{font-size:1.05em;font-weight:700;color:#1464dd;margin-bottom:4px;}
+    .pay-close-x{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
+    .pay-close-x:hover{background:#dde3f0;color:#1464dd;}
+    .pay-option{position:relative;border:1.5px solid #dde3f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:all 0.15s;text-align:left;background:#fff;-webkit-tap-highlight-color:transparent;}
+    .pay-option:last-child{margin-bottom:0;}
+    .pay-option:hover{border-color:#1464dd;background:#f5f8ff;}
+    .pay-option:active{transform:scale(0.98);background:#eaf1ff;}
+    .pay-option-title{font-size:0.92em;font-weight:700;color:#1a1a2e;margin-bottom:3px;}
+    .pay-option-amount{font-size:1.15em;font-weight:700;color:#1464dd;margin-bottom:6px;}
+    .pay-option-full:hover{border-color:#27ae60;background:#f3fbf6;}
+    .pay-option-full:active{background:#e4f7ec;}
+    .pay-option-full .pay-option-amount{color:#27ae60;}
+    .pay-option-desc{font-size:0.76em;color:#888;line-height:1.55;margin-bottom:12px;}
+    .pay-option-cta{display:inline-flex;align-items:center;gap:5px;background:#1464dd;color:#fff;font-size:0.78em;font-weight:700;padding:8px 16px;border-radius:25px;pointer-events:none;}
+    .pay-option-full .pay-option-cta{background:#27ae60;}
 
     .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:12px 24px;border-radius:30px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,0.2);z-index:3000;opacity:0;transition:opacity 0.3s;pointer-events:none;}
     .toast.show{opacity:1;}
@@ -236,6 +255,26 @@
       <div class="admin-info-box">&#x1F698; <strong>Car:</strong> <span id="adminPopupCar"></span><br>&#x1F516; <strong>Booking ID:</strong> <span id="adminPopupId"></span></div>
       <div class="admin-contact">&#x1F4DE; To cancel this booking, please contact us:<br><strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br><strong>Email:</strong> <a href="mailto:info@waliko.co.ke">info@waliko.co.ke</a><br><strong>Or visit:</strong> <a href="help.html">Help &amp; Support &#x2192;</a></div>
       <button class="btn-admin-close" onclick="closeAdminModal()">OK, Got It</button>
+    </div>
+  </div>
+
+  <div class="pay-modal" id="payModal">
+    <div class="pay-box">
+      <button class="pay-close-x" onclick="closePayModal()">&#x2715;</button>
+      <h3>&#x1F4B3; Choose Payment Option</h3>
+      <div style="font-size:0.8em;color:#888;margin-bottom:16px;" id="payModalCarName"></div>
+      <div class="pay-option pay-option-deposit" id="payOptionDeposit">
+        <div class="pay-option-title">Pay Deposit</div>
+        <div class="pay-option-amount" id="payDepositAmount"></div>
+        <div class="pay-option-desc">Dear customer, you can pay a deposit — just half of the full amount — to confirm your booking today. The rest is settled at pickup.</div>
+        <span class="pay-option-cta">Choose Deposit &rarr;</span>
+      </div>
+      <div class="pay-option pay-option-full" id="payOptionFull">
+        <div class="pay-option-title">Pay Full Amount</div>
+        <div class="pay-option-amount" id="payFullAmount"></div>
+        <div class="pay-option-desc">Prefer it done and dusted? Pay the full amount now and there'll be nothing left to pay at pickup.</div>
+        <span class="pay-option-cta">Choose Full Payment &rarr;</span>
+      </div>
     </div>
   </div>
 
@@ -423,6 +462,78 @@
       catch(e){ return null; }
     }
 
+    function closePayModal(){ document.getElementById('payModal').classList.remove('open'); }
+    window.closePayModal = closePayModal;
+
+    function openPayModal(bookingId, deposit, total){
+      var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var myBooking = null;
+      for (var i = 0; i < allBookings.length; i++) {
+        if (String(allBookings[i].bookingId) === String(bookingId)) { myBooking = allBookings[i]; break; }
+      }
+      document.getElementById('payModalCarName').textContent = myBooking ? myBooking.carName : '';
+      document.getElementById('payDepositAmount').textContent = 'Ksh ' + Number(deposit).toLocaleString();
+      document.getElementById('payFullAmount').textContent    = 'Ksh ' + Number(total).toLocaleString();
+
+      document.getElementById('payOptionDeposit').onclick = function(){
+        closePayModal();
+        proceedToPayment(bookingId, deposit, false);
+      };
+      document.getElementById('payOptionFull').onclick = function(){
+        closePayModal();
+        proceedToPayment(bookingId, total, true);
+      };
+
+      document.getElementById('payModal').classList.add('open');
+    }
+
+    function proceedToPayment(bookingId, amount, isFull){
+      var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+
+      var myIdx = -1;
+      var myBooking = null;
+      for (var i = 0; i < allBookings.length; i++) {
+        if (String(allBookings[i].bookingId) === String(bookingId)) {
+          myIdx = i; myBooking = allBookings[i]; break;
+        }
+      }
+      if (!myBooking) return;
+
+      if (daysUntil(myBooking.pickup) < 0) {
+        openExpiredModal(myBooking);
+        return;
+      }
+
+      var myStart = new Date(myBooking.pickup  + 'T00:00:00');
+      var myEnd   = new Date(myBooking.endDate + 'T00:00:00');
+
+      var blocker = null;
+      for (var j = 0; j < allBookings.length; j++) {
+        var b = allBookings[j];
+        if (String(b.bookingId) === String(bookingId)) continue;
+        if (b.carName !== myBooking.carName) continue;
+        var alreadyPaid = b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
+        if (!alreadyPaid) continue;
+        var bStart = new Date(b.pickup  + 'T00:00:00');
+        var bEnd   = new Date(b.endDate + 'T00:00:00');
+        if (myStart < bEnd && myEnd > bStart) { blocker = b; break; }
+      }
+
+      if (blocker) {
+        openTakenModal(myBooking, myIdx, blocker);
+      } else {
+        localStorage.setItem('paymentAmount', amount);
+        localStorage.setItem('paymentBookingId', bookingId);
+        if (isFull) {
+          localStorage.setItem('paymentType', 'full');
+          localStorage.setItem('fullPaymentIntent_' + bookingId, '1');
+        } else {
+          localStorage.removeItem('paymentType');
+        }
+        window.location.href = 'payment-gateway.html';
+      }
+    }
+
     function setStatusFilter(btn) {
       document.querySelectorAll('.sf-btn').forEach(function(b){ b.classList.remove('active'); });
       btn.classList.add('active');
@@ -506,6 +617,34 @@
         localStorage.setItem('bookings', JSON.stringify(all));
       }
 
+      var fullSynced = false;
+      bookings.forEach(function(bk){
+        var intentKey = 'fullPaymentIntent_' + bk.bookingId;
+        if (localStorage.getItem(intentKey) !== '1') return;
+        var isPaidNow = bk.paymentStatus === 'paid' || (bk.mpesaReceipt && bk.mpesaReceipt !== 'N/A');
+        if (!isPaidNow) return;
+        var balStatus = getBalanceStatus(bk.bookingId);
+        var alreadyBalancePaid = !!(balStatus && balStatus.paid) || !!bk.balancePaid;
+        if (!alreadyBalancePaid) {
+          var receipt = bk.mpesaReceipt || 'N/A';
+          var paidAt  = bk.paidAt || new Date().toLocaleString();
+          localStorage.setItem('balancePaid_' + bk.bookingId, JSON.stringify({ paid: true, receipt: receipt, paidAt: paidAt }));
+          bk.balancePaid     = true;
+          bk.balanceReceipt  = receipt;
+          bk.balancePaidAt   = paidAt;
+          fullSynced = true;
+        }
+        localStorage.removeItem(intentKey);
+      });
+      if (fullSynced) {
+        var all2 = JSON.parse(localStorage.getItem('bookings') || '[]');
+        bookings.forEach(function(bk){
+          var idx = all2.findIndex(function(a){ return String(a.bookingId)===String(bk.bookingId); });
+          if(idx>-1) all2[idx] = bk;
+        });
+        localStorage.setItem('bookings', JSON.stringify(all2));
+      }
+
       renderSummary(bookings);
       renderReminders(bookings);
 
@@ -558,7 +697,7 @@
         } else if (!isPaid && isConflicted) {
           noticeHtml = '<div style="background:#fff0f0;border:2px solid #e74c3c;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a1a1a;margin-bottom:12px;line-height:1.8;">🚫 <strong>Car No Longer Available!</strong> Another customer paid for <strong>'+b.carName+'</strong> on overlapping dates before you. Your deposit payment will be blocked.<br><span style="color:#c0392b;font-weight:600;">➡ Please reschedule to different dates or delete this booking and choose another car.</span></div>';
         } else if (!isPaid) {
-          noticeHtml = '<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm your booking. Remaining <strong>Ksh '+balance.toLocaleString()+'</strong> is paid at pickup.</div>';
+          noticeHtml = '<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm your booking, or pay <strong>Ksh '+total.toLocaleString()+'</strong> now to clear the full amount. Remaining balance (if any) is paid at pickup.</div>';
         } else if (balancePaid) {
           noticeHtml = '<div class="fully-paid-notice"><div class="fp-title">✅ Fully Paid <span class="badge-fully-paid">CLEARED</span></div><div style="font-size:0.85em;color:#27ae60;margin-top:4px;">🚗 Your car is ready for pickup. No further payments needed!</div></div>';
         } else {
@@ -573,7 +712,7 @@
         } else if (!isPaid) {
           var payBtnDisabled = isConflicted ? ' disabled style="opacity:0.45;cursor:not-allowed;"' : '';
           actionsHtml +=
-            '<button class="btn btn-pay" data-amount="'+deposit+'" data-id="'+b.bookingId+'"'+payBtnDisabled+'>Pay Deposit</button>' +
+            '<button class="btn btn-pay-now" data-deposit="'+deposit+'" data-full="'+total+'" data-id="'+b.bookingId+'"'+payBtnDisabled+'>Pay Now</button>' +
             '<button class="btn btn-reschedule" data-id="'+String(b.bookingId)+'" data-car="'+b.carName+'" data-pickup="'+b.pickup+'" data-end="'+b.endDate+'">📅 Reschedule</button>' +
             '<button class="btn btn-delete" data-idx="'+realIdx+'" data-id="'+b.bookingId+'">Delete</button>';
         } else if (!balancePaid) {
@@ -618,48 +757,10 @@
         list.appendChild(btn);
       }
 
-      list.querySelectorAll('.btn-pay').forEach(function(btn){
+      list.querySelectorAll('.btn-pay-now').forEach(function(btn){
         btn.addEventListener('click', function(){
-          var bookingId = btn.dataset.id;
-          var amount    = btn.dataset.amount;
-          var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-
-          var myIdx = -1;
-          var myBooking = null;
-          for (var i = 0; i < allBookings.length; i++) {
-            if (String(allBookings[i].bookingId) === String(bookingId)) {
-              myIdx = i; myBooking = allBookings[i]; break;
-            }
-          }
-          if (!myBooking) return;
-
-          if (daysUntil(myBooking.pickup) < 0) {
-            openExpiredModal(myBooking);
-            return;
-          }
-
-          var myStart = new Date(myBooking.pickup  + 'T00:00:00');
-          var myEnd   = new Date(myBooking.endDate + 'T00:00:00');
-
-          var blocker = null;
-          for (var j = 0; j < allBookings.length; j++) {
-            var b = allBookings[j];
-            if (String(b.bookingId) === String(bookingId)) continue;
-            if (b.carName !== myBooking.carName) continue;
-            var alreadyPaid = b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
-            if (!alreadyPaid) continue;
-            var bStart = new Date(b.pickup  + 'T00:00:00');
-            var bEnd   = new Date(b.endDate + 'T00:00:00');
-            if (myStart < bEnd && myEnd > bStart) { blocker = b; break; }
-          }
-
-          if (blocker) {
-            openTakenModal(myBooking, myIdx, blocker);
-          } else {
-            localStorage.setItem('paymentAmount', amount);
-            localStorage.setItem('paymentBookingId', bookingId);
-            window.location.href = 'payment-gateway.html';
-          }
+          if (btn.disabled) return;
+          openPayModal(btn.dataset.id, btn.dataset.deposit, btn.dataset.full);
         });
       });
 
