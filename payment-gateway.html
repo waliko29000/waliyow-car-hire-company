@@ -19,28 +19,53 @@
     .card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); margin-bottom: 16px; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .card-title { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
+
+    /* ── Access alert ── */
     .access-alert { display: none; background: #fff5e6; border: 1px solid #ffc87a; border-left: 4px solid #f39c12; border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; font-size: 0.88em; color: #b35c00; line-height: 1.6; }
     .access-alert .alert-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; color: #a04000; }
     .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .access-alert a:hover { text-decoration: underline; }
-    .booking-info-box { background: #f0f4ff; border-left: 4px solid #1464dd; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.85em; color: #1a1a2e; font-weight: 600; }
+
+    /* ── Booking info boxes ── */
+    .booking-info-box { border-radius: 10px; padding: 13px 16px; margin-bottom: 14px; font-size: 0.85em; font-weight: 600; line-height: 1.7; }
+    .booking-info-box.deposit-mode { background: #e3f2fd; border: 1.5px solid #64b5f6; border-left: 5px solid #1464dd; color: #0d3a7a; }
+    .booking-info-box.balance-mode { background: #fffbea; border: 1.5px solid #f6c94e; border-left: 5px solid #f0b429; color: #7a5200; }
+    .booking-info-box.full-mode { background: #e3f2fd; border: 1.5px solid #64b5f6; border-left: 5px solid #1464dd; color: #0d3a7a; }
     .no-booking-box { background: #fff5e6; border-left: 4px solid #ffc107; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.85em; color: #b35c00; font-weight: 500; }
+
+    /* ── Payment type badge ── */
+    .payment-type-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 0.8em; font-weight: 700; margin-bottom: 14px; }
+    .payment-type-badge.deposit { background: #e3f2fd; color: #0d47a1; border: 1.5px solid #64b5f6; }
+    .payment-type-badge.balance { background: #fff3cd; color: #856404; border: 1.5px solid #ffc107; }
+    .payment-type-badge.full { background: #e3f2fd; color: #0d47a1; border: 1.5px solid #64b5f6; }
+
+    /* ── Payment methods ── */
     .payment-method { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1.5px solid #dde3f0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600; color: #1a1a2e; background: #fff; }
     .payment-method:hover:not(.disabled) { border-color: #1464dd; background: #f5f8ff; box-shadow: 0 2px 10px rgba(20,100,221,0.1); }
     .payment-method.disabled { opacity: 0.45; cursor: not-allowed; }
     .payment-method img { width: 38px; height: 24px; object-fit: contain; flex-shrink: 0; }
     .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
-    .final-error { display: none; background: #fff0f0; border: 1px solid #ffcccc; border-left: 4px solid #e74c3c; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #c0392b; margin-top: 4px; }
-    .final-error a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .success-box { display: none; background: #f0fff4; border: 1px solid #b2f5c8; border-left: 4px solid #27ae60; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #1a6e3a; margin-top: 4px; }
+
+    /* ── Status boxes (error / success) ── */
+    .final-error { display: none; background: #fff0f0; border: 1.5px solid #f5a3a3; border-left: 5px solid #e74c3c; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #7b1a1a; margin-top: 8px; line-height: 1.7; }
+    .success-box-deposit { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
+    .success-box-balance { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
+    .success-box-full { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
+    .success-title { font-size: 0.88em; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
+    .success-tick { width: 15px; height: 15px; background: #2e7d32; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .success-back-btn { display: inline-block; margin-top: 8px; font-size: 0.8em; font-weight: 600; color: #1464dd; text-decoration: none; }
+    .success-back-btn:hover { text-decoration: underline; }
+
+    /* ── Modals ── */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
     .modal.open { display: flex; }
     .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: slideUp 0.25s ease; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
     .modal-box h3 { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
-    .modal-amount { background: #f0f4ff; border-radius: 8px; padding: 10px 14px; font-size: 0.9em; font-weight: 700; color: #1464dd; margin-bottom: 14px; }
+    .modal-amount { border-radius: 8px; padding: 10px 14px; font-size: 0.9em; font-weight: 700; margin-bottom: 14px; }
+    .modal-amount.deposit { background: #e3f2fd; color: #0d3a7a; border: 1px solid #64b5f6; }
+    .modal-amount.balance { background: #e8f5e9; color: #1b3a1f; border: 1px solid #81c784; }
+    .modal-amount.full { background: #e3f2fd; color: #0d3a7a; border: 1px solid #64b5f6; }
     .modal-info { background: #f5f8ff; border-left: 3px solid #1464dd; border-radius: 6px; padding: 10px 12px; font-size: 0.78em; color: #555; line-height: 1.6; margin-bottom: 14px; }
-    .modal-info strong { color: #1a1a2e; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8em; font-weight: 600; color: #444; margin-bottom: 4px; }
     .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; transition: border-color 0.2s; }
@@ -56,6 +81,9 @@
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes pulse { from { opacity: 0.2; } to { opacity: 1; } }
+    .waiting-pin-notice { border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.85em; font-weight: 600; }
+    .back-link { display: inline-block; margin-bottom: 14px; font-size: 0.82em; color: #1464dd; font-weight: 600; text-decoration: none; }
+    .back-link:hover { text-decoration: underline; }
     @media (max-width: 600px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; } }
   </style>
   <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
@@ -76,6 +104,8 @@
   </header>
 
   <main>
+    <a href="bookings.html" class="back-link">← Back to My Bookings</a>
+
     <div class="access-alert" id="accessAlert">
       <div class="alert-title">🔒 Access Restricted</div>
       You must be logged in to make a payment. Please
@@ -84,6 +114,7 @@
 
     <div class="card">
       <div class="card-title">💳 Payment Gateway</div>
+      <div id="paymentTypeBadge"></div>
       <div class="booking-info-box" id="bookingBox" style="display:none"></div>
       <div class="no-booking-box" id="noBookingBox" style="display:none">
         ⚠️ No booking found. Please go to <a href="bookings.html" style="color:#1464dd;font-weight:600">My Bookings</a> first.
@@ -100,16 +131,20 @@
         <span class="method-arrow">›</span>
       </div>
       <div class="payment-method" id="visaBtn" onclick="openModal('visa')">
-        <img src="https://js.bintray.com/logos/visa.svg" alt="Visa" onerror="this.src='https://cdn-icons-png.flaticon.com/512/349/349228.png'">
+        <img src="https://cdn-icons-png.flaticon.com/512/349/349228.png" alt="Visa">
         Pay with Visa / Card
         <span class="method-arrow">›</span>
       </div>
 
-      <div class="success-box" id="successBox"></div>
+      <!-- Separate success boxes: deposit = amber/yellow, balance = green, full = blue -->
+      <div class="success-box-deposit" id="successBoxDeposit"></div>
+      <div class="success-box-balance" id="successBoxBalance"></div>
+      <div class="success-box-full" id="successBoxFull"></div>
       <div class="final-error" id="finalError"></div>
     </div>
   </main>
 
+  <!-- M-Pesa Modal -->
   <div class="modal" id="mpesaModal">
     <div class="modal-box">
       <h3>📱 M-Pesa Payment</h3>
@@ -130,15 +165,14 @@
     </div>
   </div>
 
+  <!-- PayPal Modal -->
   <div class="modal" id="paypalModal">
     <div class="modal-box">
       <h3>🅿️ PayPal Payment</h3>
       <div class="modal-amount" id="paypalAmount"></div>
-      
       <div class="form-group" style="margin-top: 15px; text-align: center;">
         <div id="paypal-button-container"></div>
       </div>
-
       <div class="modal-info">
         <strong>What happens next?</strong><br>
         Click the golden PayPal button above to securely log in and authorize your transaction.
@@ -149,6 +183,7 @@
     </div>
   </div>
 
+  <!-- Visa Modal -->
   <div class="modal" id="visaModal">
     <div class="modal-box">
       <h3>💳 Card Payment</h3>
@@ -170,31 +205,32 @@
   </div>
 
   <script>
-    const BACKEND_URL = 'https://jeniffer-homoeomorphous-advisably.ngrok-free.dev/mpesa';
+    const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
 
-    const amount     = localStorage.getItem('paymentAmount');
-    const bookingId  = localStorage.getItem('paymentBookingId');
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const amount      = localStorage.getItem('paymentAmount');
+    const bookingId   = localStorage.getItem('paymentBookingId');
+    const paymentType = localStorage.getItem('paymentType'); // 'balance', 'full', or null (deposit)
+    const isLoggedIn  = localStorage.getItem('isLoggedIn');
+    const isBalance   = paymentType === 'balance';
+    const isFull      = paymentType === 'full';
 
-    // ── Get logged in user email and name ──
-    const currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
     const userEmail   = currentUser.email    || '';
     const userName    = currentUser.username || currentUser.name || '';
 
-    // ── Get booking details for email ──
-    const allBookings = JSON.parse(localStorage.getItem('bookings')) || [];
+    const allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
     const booking     = allBookings.find(b => String(b.bookingId) === String(bookingId)) || {};
     const carName     = booking.carName  || '';
     const pickupDate  = booking.pickup   || '';
     const endDate     = booking.endDate  || '';
     const priceDay    = booking.price    || 0;
-    const days        = pickupDate && endDate
+    const days        = (pickupDate && endDate)
                         ? Math.max(1, Math.ceil((new Date(endDate) - new Date(pickupDate)) / 86400000))
                         : 1;
     const totalFee    = priceDay * days;
     const balanceDue  = totalFee - parseInt(amount || 0);
 
-    // Check login
+    // ── Auth check ──
     if (!isLoggedIn) {
       document.getElementById('accessAlert').style.display = 'block';
       ['mpesaBtn','paypalBtn','visaBtn'].forEach(id => {
@@ -204,123 +240,216 @@
       });
     }
 
-    // Show booking info
+    // ── Payment type badge ──
+    const badgeEl = document.getElementById('paymentTypeBadge');
+    if (isFull) {
+      badgeEl.innerHTML = '<div class="payment-type-badge full">Full Payment</div>';
+    } else if (isBalance) {
+      badgeEl.innerHTML = '<div class="payment-type-badge balance">Balance Payment</div>';
+    } else if (amount && bookingId) {
+      badgeEl.innerHTML = '<div class="payment-type-badge deposit">Deposit Payment</div>';
+    }
+
+    // ── Booking info box ──
     if (amount && bookingId) {
       const box = document.getElementById('bookingBox');
       box.style.display = 'block';
-      box.innerHTML = `📋 Booking ID: <strong>${bookingId}</strong> &nbsp;|&nbsp; 💰 Amount Due: <strong>Ksh ${Number(amount).toLocaleString()}</strong>`;
-      document.getElementById('mpesaAmount').textContent  = `Amount: Ksh ${Number(amount).toLocaleString()}`;
-      document.getElementById('paypalAmount').textContent = `Amount: Ksh ${Number(amount).toLocaleString()}`;
-      document.getElementById('visaAmount').textContent   = `Amount: Ksh ${Number(amount).toLocaleString()}`;
+      if (isFull) {
+        box.classList.add('full-mode');
+        box.innerHTML =
+          '<strong>Full Payment</strong><br>' +
+          'Booking ID: <strong>' + bookingId + '</strong> &nbsp;·&nbsp; <strong>' + (carName || 'N/A') + '</strong><br>' +
+          'Amount Due: <strong>Ksh ' + Number(amount).toLocaleString() + '</strong> — clears everything, nothing due at pickup';
+      } else if (isBalance) {
+        box.classList.add('balance-mode');
+        box.innerHTML =
+          '<strong>Balance Payment</strong><br>' +
+          'Booking ID: <strong>' + bookingId + '</strong> &nbsp;·&nbsp; <strong>' + (carName || 'N/A') + '</strong><br>' +
+          'Amount Due: <strong>Ksh ' + Number(amount).toLocaleString() + '</strong> — this clears your booking fully';
+      } else {
+        box.classList.add('deposit-mode');
+        box.innerHTML =
+          '<strong>Deposit Payment</strong><br>' +
+          'Booking ID: <strong>' + bookingId + '</strong> &nbsp;·&nbsp; <strong>' + (carName || 'N/A') + '</strong><br>' +
+          'Deposit Due: <strong>Ksh ' + Number(amount).toLocaleString() + '</strong> — balance paid at pickup';
+      }
+
+      // Modal amount labels
+      const amountClass = isFull ? 'full' : (isBalance ? 'balance' : 'deposit');
+      const amountLabel = isFull
+        ? 'Full Payment: Ksh ' + Number(amount).toLocaleString()
+        : isBalance
+          ? 'Balance: Ksh ' + Number(amount).toLocaleString()
+          : 'Deposit: Ksh ' + Number(amount).toLocaleString();
+      ['mpesaAmount','paypalAmount','visaAmount'].forEach(id => {
+        const el = document.getElementById(id);
+        el.textContent = amountLabel;
+        el.classList.add(amountClass);
+      });
     } else {
       document.getElementById('noBookingBox').style.display = 'block';
     }
 
-    let paypalRendered = false; 
+    let paypalRendered = false;
 
     function openModal(type) {
       if (!isLoggedIn) { document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' }); return; }
-      
       document.getElementById(type + 'Modal').classList.add('open');
 
-      // Setup PayPal dynamic load inside the visible viewport
       if (type === 'paypal' && !paypalRendered) {
         paypalRendered = true;
         document.getElementById('paypal-button-container').innerHTML = '';
-        
+
         paypal.Buttons({
-          style: {
-            layout: 'vertical',
-            color:  'gold',
-            shape:  'rect',
-            label:  'paypal'
-          },
+          style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
           createOrder: function(data, actions) {
-            const currentAmount = localStorage.getItem('paymentAmount') || "1";
             return actions.order.create({
-              purchase_units: [{
-                amount: {
-                  value: currentAmount
-                }
-              }]
+              purchase_units: [{ amount: { value: localStorage.getItem('paymentAmount') || '1' } }]
             });
           },
           onApprove: function(data, actions) {
             closeModal('paypalModal');
             const payBookingId = localStorage.getItem('paymentBookingId');
-            
-            const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
-            const updatedBookings = bookings.map(b => {
-              if (String(b.bookingId) === String(payBookingId)) {
-                return { ...b, paymentStatus: 'paid', paidAt: new Date().toLocaleString() };
-              }
-              return b;
-            });
-            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-
-            showStatus('success', `✅ PayPal payment received successfully! Order ID: ${data.orderID}. Your Booking ID: #${payBookingId} is confirmed! 🚗`);
+            const paidAmt      = localStorage.getItem('paymentAmount');
+            markBookingPaid(payBookingId, 'PAYPAL-' + data.orderID, paidAmt);
+            announceSuccess('PAYPAL-' + data.orderID);
           },
-          onCancel: function (data) {
+          onCancel: function() {
             closeModal('paypalModal');
-            showStatus('error', '⚠️ PayPal checkout window was closed.');
+            showError('⚠️ PayPal checkout was cancelled.');
           },
-          onError: function (err) {
+          onError: function(err) {
             closeModal('paypalModal');
-            showStatus('error', '❌ A network error occurred while connecting to PayPal.');
-            console.error('PayPal core error:', err);
+            showError('❌ A PayPal error occurred. Please try again.');
+            console.error('PayPal error:', err);
           }
         }).render('#paypal-button-container');
       }
     }
 
-    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
 
     document.querySelectorAll('.modal').forEach(m => {
       m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
     });
 
-    function processPayment(type) {
-      let valid = false;
-      let btn;
+    function resetBtn(btn) {
+      btn.textContent = 'Pay';
+      btn.disabled = false;
+    }
 
-      document.getElementById('successBox').style.display = 'none';
+    function removeModalNotice() {
+      const notice = document.querySelector('.waiting-pin-notice');
+      if (notice) notice.remove();
+    }
+
+    // ── Fires the right success message based on payment type ──
+    function announceSuccess(receiptCode) {
+      if (isFull) {
+        showSuccess('full', 'Fully Paid! 🎉', 'Your booking is settled in full — nothing left to pay at pickup. Just show up and enjoy the ride!', receiptCode);
+      } else if (isBalance) {
+        showSuccess('balance', 'You\'re All Set! 🎉', 'Your booking is now fully paid up — your ride is locked in and ready for pickup.', receiptCode);
+      } else {
+        showSuccess('deposit', 'Booking Secured! ✓', 'Your spot is confirmed. The remaining balance is settled at pickup — see you soon!', receiptCode);
+      }
+    }
+
+    // ── markBookingPaid: writes to correct fields based on paymentType ──
+    function markBookingPaid(payBookingId, receipt, paidAmount) {
+      const pType    = localStorage.getItem('paymentType');
+      const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      const now      = new Date().toLocaleString();
+
+      const updated = bookings.map(b => {
+        if (String(b.bookingId) === String(payBookingId)) {
+          if (pType === 'balance') {
+            // ── BALANCE: write to balancePaid_<id> + booking object ──
+            localStorage.setItem('balancePaid_' + payBookingId, JSON.stringify({
+              paid:    true,
+              receipt: receipt || 'N/A',
+              paidAt:  now
+            }));
+            return { ...b, balancePaid: true, balanceReceipt: receipt || 'N/A', balancePaidAt: now };
+          } else if (pType === 'full') {
+            // ── FULL: clears deposit AND balance in the same transaction ──
+            localStorage.setItem('balancePaid_' + payBookingId, JSON.stringify({
+              paid:    true,
+              receipt: receipt || 'N/A',
+              paidAt:  now
+            }));
+            localStorage.removeItem('fullPaymentIntent_' + payBookingId);
+            return {
+              ...b,
+              paymentStatus:  'paid',
+              mpesaReceipt:   receipt || 'N/A',
+              paidAmount:     paidAmount || '',
+              paidAt:         now,
+              balancePaid:    true,
+              balanceReceipt: receipt || 'N/A',
+              balancePaidAt:  now
+            };
+          } else {
+            // ── DEPOSIT: write to paymentStatus + mpesaReceipt ──
+            return { ...b, paymentStatus: 'paid', mpesaReceipt: receipt || 'N/A', paidAmount: paidAmount || '', paidAt: now };
+          }
+        }
+        return b;
+      });
+
+      // ── Sort: paid bookings float to top ──
+      updated.sort(function(a, b) {
+        var aPaid = (a.paymentStatus === 'paid' || (a.mpesaReceipt && a.mpesaReceipt !== 'N/A')) ? 0 : 1;
+        var bPaid = (b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A')) ? 0 : 1;
+        return aPaid - bPaid;
+      });
+
+      localStorage.setItem('bookings', JSON.stringify(updated));
+      localStorage.removeItem('paymentType');
+    }
+
+    function processPayment(type) {
+      document.getElementById('successBoxDeposit').style.display = 'none';
+      document.getElementById('successBoxBalance').style.display = 'none';
+      document.getElementById('successBoxFull').style.display = 'none';
       document.getElementById('finalError').style.display = 'none';
 
+      // ── M-Pesa ──
       if (type === 'mpesa') {
         const phone = document.getElementById('mpesaInput').value.trim();
-        valid = /^07\d{8}$/.test(phone);
+        const valid = /^07\d{8}$/.test(phone);
         document.getElementById('mpesaErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('mpesaPayBtn');
-
         if (!valid) return;
 
-        btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-        btn.disabled = true;
+        const btn = document.getElementById('mpesaPayBtn');
+        btn.innerHTML = 'Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+        btn.disabled  = true;
 
-        // Visual Notice Safety (Show "Connecting..." right away to counter network latency)
         const modalBox = document.querySelector('#mpesaModal .modal-box');
         let infoBox = modalBox.querySelector('.waiting-pin-notice');
         if (!infoBox) {
           infoBox = document.createElement('div');
           infoBox.className = 'waiting-pin-notice';
-          infoBox.style.cssText = 'background:#f0f4ff; border-left:4px solid #1464dd; padding:10px; margin-bottom:12px; font-size:0.85em; color:#1a1a2e; font-weight:600;';
+          infoBox.style.cssText = 'background:#f0f4ff;border-left:4px solid #1464dd;padding:10px;margin-bottom:12px;font-size:0.85em;color:#1a1a2e;font-weight:600;border-radius:6px;';
           modalBox.insertBefore(infoBox, modalBox.querySelector('.modal-info'));
         }
-        infoBox.innerHTML = `⏳ Connecting to M-Pesa...`;
+        infoBox.innerHTML = '⏳ Connecting to M-Pesa...';
 
         const formData = new FormData();
-        formData.append('phone',       phone);
-        formData.append('amount',      amount || 1);
-        formData.append('booking_id',  bookingId || '');
-        formData.append('email',       userEmail);
-        formData.append('name',        userName);
-        formData.append('car_name',    carName);
-        formData.append('pickup_date', pickupDate);
-        formData.append('end_date',    endDate);
-        formData.append('total_fee',   totalFee);
-        formData.append('balance_due', balanceDue);
+        formData.append('phone',        phone);
+        formData.append('amount',       amount || 1);
+        formData.append('booking_id',   bookingId || '');
+        formData.append('email',        userEmail);
+        formData.append('name',         userName);
+        formData.append('car_name',     carName);
+        formData.append('pickup_date',  pickupDate);
+        formData.append('end_date',     endDate);
+        formData.append('total_fee',    totalFee);
+        formData.append('balance_due',  balanceDue);
+        formData.append('payment_type', isFull ? 'full' : (isBalance ? 'balance' : 'deposit'));
 
-        fetch(`${BACKEND_URL}/Stk_push.php`, {
+        fetch(BACKEND_URL + '/Stk_push.php', {
           method: 'POST',
           headers: { 'ngrok-skip-browser-warning': 'true' },
           body: formData
@@ -328,132 +457,160 @@
         .then(res => res.json())
         .then(data => {
           if (data.success === true) {
-            // Flip text safely once ngrok/Safaricom returns the dynamic token
             if (infoBox) {
-              infoBox.style.cssText = 'background:#fff5e6; border-left:4px solid #f39c12; padding:10px; margin-bottom:12px; font-size:0.85em; color:#a04000; font-weight:600;';
-              infoBox.innerHTML = `🔔 Prompt sent! Please enter your M-Pesa PIN on your phone now...`;
+              infoBox.style.cssText = 'background:#fff5e6;border-left:4px solid #f39c12;padding:10px;margin-bottom:12px;font-size:0.85em;color:#a04000;font-weight:600;border-radius:6px;';
+              infoBox.innerHTML = '🔔 Prompt sent! Please enter your M-Pesa PIN on your phone now...';
             }
             pollPaymentStatus(data.CheckoutRequestID, btn);
           } else {
             removeModalNotice();
             closeModal('mpesaModal');
-            showStatus('error', '❌ ' + (data.message || 'Failed to send STK Push.'));
-            btn.textContent = 'Pay';
-            btn.disabled = false;
+            resetBtn(btn);
+            showError('❌ ' + (data.message || 'Failed to send M-Pesa prompt. Please try again.'));
           }
         })
         .catch(err => {
           removeModalNotice();
           closeModal('mpesaModal');
-          showStatus('error', '❌ Network error. Make sure your connection is stable.');
-          btn.textContent = 'Pay';
-          btn.disabled = false;
-          console.error('Network error:', err);
+          resetBtn(btn);
+          showError('❌ Network error. Check your connection and try again.');
+          console.error('STK push fetch error:', err);
         });
 
         return;
       }
 
+      // ── Visa / Card ──
       if (type === 'visa') {
-        valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value.replace(/\s/g,''));
+        const valid = /^\d{12,19}$/.test(document.getElementById('visaInput').value.replace(/\s/g, ''));
         document.getElementById('visaErr').style.display = valid ? 'none' : 'block';
-        btn = document.getElementById('visaPayBtn');
-      }
+        if (!valid) return;
 
-      if (!valid) return;
+        const btn = document.getElementById('visaPayBtn');
+        btn.innerHTML = 'Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+        btn.disabled  = true;
 
-      btn.innerHTML = `Processing <span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
-      btn.disabled = true;
-
-      setTimeout(() => {
-        closeModal(type + 'Modal');
-        const payBookingId = localStorage.getItem('paymentBookingId');
-        showStatus('success', `✅ Card payment processed successfully! Your Booking ID: #${payBookingId} is confirmed. 🚗`);
-        btn.textContent = 'Pay';
-        btn.disabled = false;
-      }, 3000);
-    }
-
-    function showStatus(type, message) {
-      const successBox = document.getElementById('successBox');
-      const errorBox   = document.getElementById('finalError');
-      successBox.style.display = 'none';
-      errorBox.style.display   = 'none';
-
-      if (type === 'success') {
-        successBox.innerHTML = message;
-        successBox.style.cssText = 'display:block;background:#f0fff4;border:1px solid #b2f5c8;border-left:4px solid #27ae60;border-radius:10px;padding:14px 16px;font-size:0.88em;color:#1a6e3a;margin-top:4px;';
-        successBox.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        errorBox.innerHTML = "⚠️ Your deposit wasn't approved. It's possible that the PIN was entered incorrectly, too late, not at all or the transaction was rejected. Please try again.";
-        errorBox.style.display = 'block';
-        errorBox.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          closeModal('visaModal');
+          const payBookingId = localStorage.getItem('paymentBookingId');
+          markBookingPaid(payBookingId, 'VISA-CARD', localStorage.getItem('paymentAmount'));
+          announceSuccess('');
+          resetBtn(btn);
+        }, 3000);
       }
     }
 
+    // ── Poll check_status.php ──
     function pollPaymentStatus(checkoutRequestID, btn) {
-      let attempts = 0;
+      let attempts      = 0;
       const maxAttempts = 30;
+      const failStatuses = ['failed', 'cancelled', 'insufficient', 'timeout', 'wrong_pin'];
 
       const interval = setInterval(() => {
         attempts++;
+        console.log('[Poll] Attempt ' + attempts + ' / ' + maxAttempts + ' — ID: ' + checkoutRequestID);
 
         const fd = new FormData();
         fd.append('checkout_request_id', checkoutRequestID);
 
-        fetch(`${BACKEND_URL}/check_status.php`, {
+        fetch(BACKEND_URL + '/check_status.php', {
           method: 'POST',
           headers: { 'ngrok-skip-browser-warning': 'true' },
           body: fd
         })
         .then(res => res.json())
         .then(data => {
-          if (data.status === 'success' || ['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status) || attempts >= maxAttempts) {
-            closeModal('mpesaModal');
-            removeModalNotice();
-          }
+          console.log('[Poll] Response:', data);
 
           if (data.status === 'success') {
             clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-
-            const bookings     = JSON.parse(localStorage.getItem('bookings')) || [];
+            closeModal('mpesaModal');
+            removeModalNotice();
+            resetBtn(btn);
             const payBookingId = localStorage.getItem('paymentBookingId');
-            const paidAmount   = localStorage.getItem('paymentAmount');
-            const updatedBookings = bookings.map(b => {
-              if (String(b.bookingId) === String(payBookingId)) {
-                return { ...b, paymentStatus: 'paid', mpesaReceipt: data.receipt || '', paidAmount, paidAt: new Date().toLocaleString() };
-              }
-              return b;
-            });
-
-            localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-            showStatus('success', '✅ Payment received successfully! Receipt: ' + (data.receipt || '') + '. Your Booking ID: #' + payBookingId + ' is confirmed — enjoy your ride with Waliko Car Hire! 🚗');
-
-          } else if (['failed','cancelled','insufficient','timeout','wrong_pin'].includes(data.status)) {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', 'error');
-
-          } else if (attempts >= maxAttempts) {
-            clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', '❌ <strong>⏰ Request expired. You took too long to enter PIN. Try again.</strong>');
+            const paidAmt      = localStorage.getItem('paymentAmount');
+            markBookingPaid(payBookingId, data.receipt || 'N/A', paidAmt);
+            announceSuccess(data.receipt || '');
+            return;
           }
-        })
-        .catch(() => {
+
+          if (failStatuses.includes(data.status)) {
+            clearInterval(interval);
+            closeModal('mpesaModal');
+            removeModalNotice();
+            resetBtn(btn);
+            showError('⚠️ Payment was not completed. The PIN may have been entered incorrectly, the request was rejected, or the session timed out. Please try again.');
+            return;
+          }
+
           if (attempts >= maxAttempts) {
             clearInterval(interval);
-            btn.textContent = 'Pay';
-            btn.disabled = false;
-            showStatus('error', '❌ <strong>Could not verify payment. Please check your M-Pesa messages.</strong>');
+            closeModal('mpesaModal');
+            removeModalNotice();
+            resetBtn(btn);
+            showError('❌ Payment verification timed out. If money was deducted, please contact us with your M-Pesa message. Otherwise, please try again.');
+            return;
+          }
+        })
+        .catch(err => {
+          console.error('[Poll] Fetch error on attempt ' + attempts + ':', err);
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            closeModal('mpesaModal');
+            removeModalNotice();
+            resetBtn(btn);
+            showError('❌ Could not verify payment. Please check your M-Pesa messages and contact support if money was deducted.');
           }
         });
 
       }, 2000);
+    }
+
+    // ── Show success with distinct styles per type ──
+    function showSuccess(type, title, message, receiptCode) {
+      document.getElementById('successBoxDeposit').style.display = 'none';
+      document.getElementById('successBoxBalance').style.display = 'none';
+      document.getElementById('successBoxFull').style.display = 'none';
+      document.getElementById('finalError').style.display = 'none';
+
+      // Fade out the yellow/info booking box and payment-type badge — payment is done now
+      const infoBox = document.getElementById('bookingBox');
+      const badge   = document.getElementById('paymentTypeBadge');
+      [infoBox, badge].forEach(el => {
+        if (el) {
+          el.style.transition = 'opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease';
+          el.style.opacity = '0';
+          el.style.maxHeight = '0px';
+          el.style.overflow = 'hidden';
+          el.style.marginBottom = '0';
+        }
+      });
+
+      const boxId = type === 'full' ? 'successBoxFull' : (type === 'balance' ? 'successBoxBalance' : 'successBoxDeposit');
+      const box   = document.getElementById(boxId);
+      const tick  = '<span class="success-tick"><svg width="9" height="7" viewBox="0 0 9 7" fill="none"><polyline points="1,3.5 3.5,6 8,1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+
+      const receiptLine = receiptCode
+        ? '<div style="font-size:0.74em;color:#5a8a63;margin-top:6px;letter-spacing:0.3px;">Ref: ' + receiptCode + '</div>'
+        : '';
+
+      box.innerHTML =
+        '<div class="success-title">' + tick + title + '</div>' +
+        '<div style="font-size:0.85em;color:#2e5c35;margin-top:4px;line-height:1.6;">' + message + '</div>' +
+        receiptLine +
+        '<a href="bookings.html" class="success-back-btn">View My Bookings →</a>';
+      box.style.display = 'block';
+      box.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function showError(message) {
+      document.getElementById('successBoxDeposit').style.display = 'none';
+      document.getElementById('successBoxBalance').style.display = 'none';
+      document.getElementById('successBoxFull').style.display = 'none';
+      const box = document.getElementById('finalError');
+      box.innerHTML = message;
+      box.style.display = 'block';
+      box.scrollIntoView({ behavior: 'smooth' });
     }
 
     document.getElementById('logoutBtn').addEventListener('click', e => {
@@ -462,13 +619,9 @@
       localStorage.removeItem('currentUser');
       localStorage.removeItem('paymentAmount');
       localStorage.removeItem('paymentBookingId');
+      localStorage.removeItem('paymentType');
       window.location.href = 'index.html';
     });
-
-    function removeModalNotice() {
-      const notice = document.querySelector('.waiting-pin-notice');
-      if (notice) notice.remove();
-    }
   </script>
 
 </body>
