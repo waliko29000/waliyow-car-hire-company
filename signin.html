@@ -9,25 +9,38 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; overflow: hidden; font-family: 'Poppins', sans-serif; background: #f0f4ff; }
 
-    .container { height: 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 30px; position: relative; }
+    /* ── Page-edge LED glow ── */
+    .page-frame {
+      position: fixed; inset: 10px; border-radius: 20px;
+      overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .page-frame::before {
+      content: ""; position: absolute; inset: -60%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 260deg, #90caf9 300deg, #1464dd 330deg, transparent 360deg);
+      animation: spinBorder 5s linear infinite;
+    }
+    .page-frame::after {
+      content: ""; position: absolute; inset: 2px;
+      background: #f0f4ff; border-radius: 18px;
+    }
+    @keyframes spinBorder { to { transform: rotate(360deg); } }
+
+    .container { height: 100%; display: flex; justify-content: center; align-items: flex-start; padding-top: 30px; position: relative; z-index: 1; }
+
+    .card-frame {
+      position: relative; width: 90%; max-width: 370px;
+      border-radius: 16px; overflow: hidden; padding: 2px;
+    }
+    .card-frame::before {
+      content: ""; position: absolute; inset: -60%;
+      background: conic-gradient(from 0deg, transparent 0deg, transparent 260deg, #90caf9 300deg, #1464dd 330deg, transparent 360deg);
+      animation: spinBorder 4s linear infinite;
+    }
 
     .wrapper {
-      position: relative; background: #fff; padding: 28px 24px; border-radius: 14px;
+      position: relative; z-index: 1; background: #fff; padding: 28px 24px; border-radius: 14px;
       box-shadow: 0 3px 16px rgba(20,100,221,0.12); border: 1px solid rgba(20,100,221,0.08);
-      width: 90%; max-width: 370px; overflow: hidden;
-    }
-
-    .wrapper::before {
-      content: ""; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
-      background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
-      background-size: 400%; z-index: -1; filter: blur(3px);
-      animation: moveLights 5s linear infinite; border-radius: 16px;
-    }
-
-    @keyframes moveLights {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      width: 100%;
     }
 
     h1 { text-align: center; color: #1464dd; margin-bottom: 6px; font-size: 1.2em; font-weight: 700; }
@@ -131,6 +144,8 @@
   </style>
 </head>
 <body>
+
+  <div class="page-frame"></div>
 
   <!-- CINEMATIC OVERLAY -->
   <div id="redirectOverlay">
@@ -236,6 +251,7 @@
   <!-- END OVERLAY -->
 
   <div class="container">
+    <div class="card-frame">
     <div class="wrapper">
       <form onsubmit="handleLogin(event)">
         <h1>Welcome Back🤝</h1>
@@ -249,6 +265,7 @@
         <div class="register-link"><p>Don't have an account? <a href="signup.html">Register</a></p></div>
       </form>
   <div id="padlock">🔒</div>
+    </div>
     </div>
   </div>
 
@@ -291,7 +308,44 @@
       setTimeout(() => p.remove(), 750);
     }
 
-    function launchAnimation(userName) {
+    // ── Destination after login ──
+    // If the person arrived here from a pending payment (payment-gateway.html
+    // stored paymentBookingId before redirecting to the Access Restricted
+    // screen), send them back to the payment gateway instead of the default
+    // car listing page, so they land exactly where they left off.
+    function getPostLoginDestination() {
+      const pendingBookingId = localStorage.getItem('paymentBookingId');
+      return pendingBookingId ? 'payment-gateway.html' : 'car-available.html';
+    }
+
+    // ── Claim a guest (no-account) booking on login ──
+    // Guest bookings are created without an email attached (no one was
+    // logged in at booking time). If this login was triggered by trying to
+    // pay for such a booking, attach the now-authenticated user's email to
+    // it so it becomes visible in "My Bookings" and payable going forward.
+    // We only ever fill in a MISSING email — never overwrite one that's
+    // already set, so we never reassign a booking away from its real owner.
+    function claimPendingBookingIfGuest(userEmail) {
+      const pendingBookingId = localStorage.getItem('paymentBookingId');
+      if (!pendingBookingId || !userEmail) return;
+
+      const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      let changed = false;
+
+      const updated = bookings.map(function(b) {
+        if (String(b.bookingId) === String(pendingBookingId) && !b.email) {
+          changed = true;
+          return Object.assign({}, b, { email: userEmail });
+        }
+        return b;
+      });
+
+      if (changed) {
+        localStorage.setItem('bookings', JSON.stringify(updated));
+      }
+    }
+
+    function launchAnimation(userName, destination) {
       // Update title with user's name
       const firstName = userName ? userName.split(' ')[0] : '';
       if (firstName) document.getElementById('ovTitle').textContent = 'Welcome, ' + firstName + '!';
@@ -312,7 +366,7 @@
         clearInterval(puffTimer);
         clearInterval(ctrTimer);
         document.getElementById('flashEl').classList.add('go');
-        setTimeout(() => { window.location.href = 'car-available.html'; }, 380);
+        setTimeout(() => { window.location.href = destination; }, 380);
       }, 2500);
     }
 
@@ -369,10 +423,16 @@
         localStorage.setItem("userPassword", password);
         localStorage.setItem("isLoggedIn", "true");
 
+        // Claim a guest booking (if any) before deciding where to go next,
+        // so the booking already has the email attached by the time the
+        // payment gateway page reloads and re-checks isLoggedIn.
+        claimPendingBookingIfGuest(matchingUser.email);
+        const destination = getPostLoginDestination();
+
         padlock.textContent = "🔓";
 
         // 🔥 Launch cinematic animation!
-        setTimeout(() => launchAnimation(matchingUser.username || matchingUser.name || ''), 300);
+        setTimeout(() => launchAnimation(matchingUser.username || matchingUser.name || '', destination), 300);
 
       } else {
         alert("❌ Invalid email or password. Please try again.");
