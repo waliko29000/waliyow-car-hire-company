@@ -60,6 +60,30 @@
     .submit-btn:hover { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
     .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
     .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
+
+    /* ── Success Modal ── */
+    .success-modal { display: none; position: fixed; inset: 0; background: rgba(10,20,50,0.6); backdrop-filter: blur(5px); z-index: 1100; justify-content: center; align-items: center; padding: 16px; }
+    .success-modal.open { display: flex; }
+    .success-box { background: #fff; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; padding: 34px 26px 28px; position: relative; box-shadow: 0 25px 60px rgba(13,71,161,0.35); animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1); overflow: hidden; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.85) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .success-box::before { content: ""; position: absolute; top: -60px; left: -60px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(20,100,221,0.12), transparent 70%); border-radius: 50%; }
+    .success-box::after { content: ""; position: absolute; bottom: -70px; right: -70px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(20,100,221,0.1), transparent 70%); border-radius: 50%; }
+    .success-icon-wrap { width: 72px; height: 72px; margin: 0 auto 16px; border-radius: 50%; background: linear-gradient(135deg, #1464dd, #0d47a1); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 24px rgba(20,100,221,0.4); position: relative; z-index: 1; animation: iconPop 0.5s cubic-bezier(.34,1.56,.64,1) 0.1s both; }
+    @keyframes iconPop { from { transform: scale(0); } to { transform: scale(1); } }
+    .success-icon-wrap svg { width: 34px; height: 34px; }
+    .success-icon-wrap path { stroke-dasharray: 30; stroke-dashoffset: 30; animation: drawCheck 0.4s ease 0.35s forwards; }
+    @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+    .success-box h2 { font-size: 1.25em; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; position: relative; z-index: 1; }
+    .success-box p.sub { font-size: 0.86em; color: #777; margin-bottom: 20px; position: relative; z-index: 1; }
+    .success-id-card { background: #f0f4ff; border: 1.5px dashed #b9caf5; border-radius: 12px; padding: 14px 16px; margin-bottom: 22px; position: relative; z-index: 1; }
+    .success-id-card .id-label { font-size: 0.7em; text-transform: uppercase; letter-spacing: 0.06em; color: #8a97b8; font-weight: 600; margin-bottom: 4px; }
+    .success-id-card .id-value { font-size: 1.15em; font-weight: 700; color: #1464dd; letter-spacing: 0.03em; }
+    .success-actions { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
+    .success-actions .primary-link { display: block; text-decoration: none; padding: 12px; background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.92em; transition: all 0.2s; box-shadow: 0 6px 16px rgba(20,100,221,0.3); }
+    .success-actions .primary-link:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(20,100,221,0.4); }
+    .success-actions .secondary-btn { padding: 11px; background: #fff; color: #666; border: 1.5px solid #e2e7f3; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.88em; cursor: pointer; transition: all 0.2s; }
+    .success-actions .secondary-btn:hover { background: #f6f8fd; border-color: #cfd8ee; color: #1464dd; }
+
     @media (max-width: 700px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
       nav { margin-top: 4px; width: 100%; }
@@ -73,6 +97,8 @@
       .book-btn { margin: 0 12px 12px; font-size: 0.82em; padding: 8px; }
       .modal { padding: 8px; align-items: flex-end; }
       .modal-box { border-radius: 16px 16px 0 0; max-height: 92vh; }
+      .success-modal { padding: 8px; align-items: flex-end; }
+      .success-box { border-radius: 20px 20px 0 0; }
     }
   </style>
 </head>
@@ -126,6 +152,27 @@
         <div class="form-group"><label>Renting End Date</label><input type="text" id="endDate" placeholder="Select end date" readonly required /></div>
         <button type="submit" class="submit-btn">Submit Booking</button>
       </form>
+    </div>
+  </div>
+
+  <!-- ── Success Modal ── -->
+  <div class="success-modal" id="successModal">
+    <div class="success-box">
+      <div class="success-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M4 12.5l5 5L20 6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Booking Created!</h2>
+      <p class="sub">Your car has been reserved. Head to My Bookings to complete payment and confirm.</p>
+      <div class="success-id-card">
+        <div class="id-label">Booking ID</div>
+        <div class="id-value" id="successBookingId">#000000000</div>
+      </div>
+      <div class="success-actions">
+        <a href="bookings.html" class="primary-link">Go to My Bookings →</a>
+        <button type="button" class="secondary-btn" id="successCloseBtn">Keep Browsing Cars</button>
+      </div>
     </div>
   </div>
 
@@ -280,6 +327,16 @@
       if (e.target === document.getElementById('bookingModal')) document.getElementById('bookingModal').classList.remove('open');
     });
 
+    // ── Success modal controls ──
+    function openSuccessModal(bookingId) {
+      document.getElementById('successBookingId').textContent = bookingId;
+      document.getElementById('successModal').classList.add('open');
+    }
+    document.getElementById('successCloseBtn').onclick = () => document.getElementById('successModal').classList.remove('open');
+    document.getElementById('successModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('successModal')) document.getElementById('successModal').classList.remove('open');
+    });
+
     document.getElementById('bookingForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const fullName   = document.getElementById('fullName').value.trim();
@@ -319,8 +376,8 @@
       });
 
       localStorage.setItem('bookings', JSON.stringify(bookings));
-      alert(`✅ Booking created!\n\nBooking ID: ${bookingId}\nGo to "My Bookings" to pay and confirm.`);
       document.getElementById('bookingModal').classList.remove('open');
+      openSuccessModal(bookingId);
       filterGrid();
     });
 
