@@ -45,15 +45,8 @@
     .payment-method img { width: 38px; height: 24px; object-fit: contain; flex-shrink: 0; }
     .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
 
-    /* ── Status boxes (error / success) ── */
-    .final-error { display: none; background: #fff0f0; border: 1.5px solid #f5a3a3; border-left: 5px solid #e74c3c; border-radius: 10px; padding: 14px 16px; font-size: 0.88em; color: #7b1a1a; margin-top: 8px; line-height: 1.7; }
-    .success-box-deposit { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
-    .success-box-balance { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
-    .success-box-full { display: none; background: #e8f5e9; border: 1.5px solid #81c784; border-left: 4px solid #2e7d32; border-radius: 10px; padding: 12px 16px; font-size: 0.84em; color: #1b3a1f; margin-top: 8px; line-height: 1.6; }
-    .success-title { font-size: 0.88em; font-weight: 700; margin-bottom: 3px; display: flex; align-items: center; gap: 6px; }
-    .success-tick { width: 15px; height: 15px; background: #2e7d32; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .success-back-btn { display: inline-block; margin-top: 8px; font-size: 0.8em; font-weight: 600; color: #1464dd; text-decoration: none; }
-    .success-back-btn:hover { text-decoration: underline; }
+    /* ── Status boxes (error) ── */
+    .final-error { display: none; background: #fff0f0; border: 1.5px solid #f5a3a3; border-left: 5px solid #e74c3c; border-radius: 10px; padding: 14px 16px; font-size: 0.85em; color: #7b1a1a; margin-top: 8px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; font-family: 'Courier New', monospace; }
 
     /* ── Modals ── */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
@@ -84,7 +77,46 @@
     .waiting-pin-notice { border-radius: 6px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.85em; font-weight: 600; }
     .back-link { display: inline-block; margin-bottom: 14px; font-size: 0.82em; color: #1464dd; font-weight: 600; text-decoration: none; }
     .back-link:hover { text-decoration: underline; }
-    @media (max-width: 600px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; } }
+
+    /* ══════════════════ Payment Success Popup ══════════════════ */
+    /* Distinct from the blue "Booking Created" popup on the Cars page:
+       emerald/gold theme, receipt-ticket shape, radial burst icon —
+       different color language and layout so the two never read as the
+       same component. */
+    .pay-success-modal { display: none; position: fixed; inset: 0; background: rgba(6,20,14,0.6); backdrop-filter: blur(5px); z-index: 1100; justify-content: center; align-items: center; padding: 16px; }
+    .pay-success-modal.open { display: flex; }
+    .pay-success-box { background: #fff; border-radius: 18px; width: 100%; max-width: 400px; position: relative; box-shadow: 0 25px 60px rgba(27,94,32,0.35); animation: paySlideUp 0.35s cubic-bezier(.34,1.56,.64,1); overflow: hidden; }
+    @keyframes paySlideUp { from { opacity: 0; transform: translateY(24px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .pay-success-top { background: linear-gradient(135deg, #1b8a3d, #0d5c22); padding: 30px 26px 22px; text-align: center; position: relative; }
+    .pay-success-top::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 16px;
+      background-image: radial-gradient(circle at 10px 0, transparent 9px, #1b8a3d 9.5px);
+      background-size: 20px 16px; background-repeat: repeat-x;
+    }
+    .pay-burst { width: 62px; height: 62px; margin: 0 auto 12px; position: relative; }
+    .pay-burst svg { width: 100%; height: 100%; }
+    .pay-burst circle { transform-origin: center; animation: burstRing 0.6s ease-out; }
+    @keyframes burstRing { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .pay-burst path { stroke-dasharray: 28; stroke-dashoffset: 28; animation: payCheck 0.4s ease 0.25s forwards; }
+    @keyframes payCheck { to { stroke-dashoffset: 0; } }
+    .pay-success-top h2 { color: #fff; font-size: 1.15em; font-weight: 700; margin-bottom: 4px; }
+    .pay-success-top p { color: rgba(255,255,255,0.85); font-size: 0.82em; line-height: 1.5; max-width: 300px; margin: 0 auto; }
+    .pay-success-bottom { padding: 22px 26px 26px; }
+    .pay-receipt-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 0.84em; border-bottom: 1px dashed #e2e7f3; }
+    .pay-receipt-row:last-of-type { border-bottom: none; }
+    .pay-receipt-row .rlabel { color: #8a97b8; font-weight: 500; }
+    .pay-receipt-row .rvalue { color: #1a1a2e; font-weight: 700; text-align: right; }
+    .pay-success-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+    .pay-success-actions .primary-link { display: block; text-align: center; text-decoration: none; padding: 12px; background: linear-gradient(135deg, #1b8a3d, #0d5c22); color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.92em; transition: all 0.2s; box-shadow: 0 6px 16px rgba(27,138,61,0.3); }
+    .pay-success-actions .primary-link:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(27,138,61,0.4); }
+    .pay-success-actions .secondary-btn { padding: 11px; background: #fff; color: #666; border: 1.5px solid #e2e7f3; border-radius: 10px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.88em; cursor: pointer; transition: all 0.2s; }
+    .pay-success-actions .secondary-btn:hover { background: #f6f8fd; border-color: #cfd8ee; color: #1b8a3d; }
+
+    @media (max-width: 600px) {
+      header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; }
+      .pay-success-modal { padding: 8px; align-items: flex-end; }
+      .pay-success-box { border-radius: 18px 18px 0 0; }
+    }
   </style>
   <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
 </head>
@@ -136,10 +168,6 @@
         <span class="method-arrow">›</span>
       </div>
 
-      <!-- Separate success boxes: deposit = amber/yellow, balance = green, full = blue -->
-      <div class="success-box-deposit" id="successBoxDeposit"></div>
-      <div class="success-box-balance" id="successBoxBalance"></div>
-      <div class="success-box-full" id="successBoxFull"></div>
       <div class="final-error" id="finalError"></div>
     </div>
   </main>
@@ -148,6 +176,7 @@
   <div class="modal" id="mpesaModal">
     <div class="modal-box">
       <h3>📱 M-Pesa Payment</h3>
+              <div style="background-color: yellow; text-align: center;">we are updating <strong>pay</strong> section please check back  later sorry for any incovenience this may cause🙏</div><br>
       <div class="modal-amount" id="mpesaAmount"></div>
       <div class="form-group">
         <label>M-Pesa Phone Number</label>
@@ -161,14 +190,17 @@
       <div class="modal-btns">
         <button class="btn-pay" id="mpesaPayBtn" onclick="processPayment('mpesa')">Pay</button>
         <button class="btn-cancel" onclick="closeModal('mpesaModal')">Cancel</button>
+
       </div>
     </div>
   </div>
 
   <!-- PayPal Modal -->
   <div class="modal" id="paypalModal">
+
     <div class="modal-box">
       <h3>🅿️ PayPal Payment</h3>
+
       <div class="modal-amount" id="paypalAmount"></div>
       <div class="form-group" style="margin-top: 15px; text-align: center;">
         <div id="paypal-button-container"></div>
@@ -187,6 +219,7 @@
   <div class="modal" id="visaModal">
     <div class="modal-box">
       <h3>💳 Card Payment</h3>
+                <div style="background-color: yellow; text-align: center;">we are updating payment section check back later</div><br>
       <div class="modal-amount" id="visaAmount"></div>
       <div class="form-group">
         <label>Card Number</label>
@@ -198,14 +231,87 @@
         Your card will be charged securely to complete the payment.
       </div>
       <div class="modal-btns">
-        <button class="btn-pay" id="visaPayBtn" onclick="processPayment('visa')">Pay</button>
+        <button class="btn-pay" id="visaPayBtn" onclick="processPayment('visa')" disabled>Pay</button>
         <button class="btn-cancel" onclick="closeModal('visaModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════ Payment Success Popup ══════════════════ -->
+  <div class="pay-success-modal" id="paySuccessModal">
+    <div class="pay-success-box">
+      <div class="pay-success-top">
+        <div class="pay-burst">
+          <svg viewBox="0 0 62 62" fill="none">
+            <circle cx="31" cy="31" r="29" fill="rgba(255,255,255,0.15)"/>
+            <circle cx="31" cy="31" r="22" fill="rgba(255,255,255,0.25)"/>
+            <path d="M19 32l8 8 16-17" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 id="paySuccessTitle">Booking Secured! ✓</h2>
+        <p id="paySuccessMessage">Your spot is confirmed.</p>
+      </div>
+      <div class="pay-success-bottom">
+        <div class="pay-receipt-row">
+          <span class="rlabel">Booking ID</span>
+          <span class="rvalue" id="paySuccessBookingId">—</span>
+        </div>
+        <div class="pay-receipt-row" id="paySuccessRefRow" style="display:none">
+          <span class="rlabel">Reference</span>
+          <span class="rvalue" id="paySuccessRef">—</span>
+        </div>
+        <div class="pay-success-actions">
+          <a href="bookings.html" class="primary-link">View My Bookings →</a>
+          <button type="button" class="secondary-btn" id="paySuccessCloseBtn">Close</button>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     const BACKEND_URL = 'https://unhonied-belle-openly.ngrok-free.dev/mpesa';
+
+    // ── Resilient fetch helper ──────────────────────────────────────────
+    // Wraps fetch() with:
+    //   1. A hard timeout (so a dead/slow backend fails fast instead of
+    //      hanging forever on "Connecting..." with no feedback).
+    //   2. One automatic retry if the FIRST attempt fails at the network
+    //      level (TypeError / "Failed to fetch") — this is what happens
+    //      when a single request drops due to a transient connection
+    //      blip, as opposed to the server being genuinely down. If the
+    //      retry also fails, we give up and let the caller show a real
+    //      error instead of silently retrying forever.
+    async function resilientFetch(url, options, timeoutMs) {
+      timeoutMs = timeoutMs || 15000;
+
+      async function attempt() {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const res = await fetch(url, Object.assign({}, options, { signal: controller.signal }));
+          clearTimeout(timer);
+          return res;
+        } catch (err) {
+          clearTimeout(timer);
+          throw err;
+        }
+      }
+
+      try {
+        return await attempt();
+      } catch (firstErr) {
+        const isAbort   = firstErr && firstErr.name === 'AbortError';
+        console.warn('[resilientFetch] First attempt failed:', isAbort ? 'timed out' : firstErr.message, '— retrying once...');
+        try {
+          return await attempt();
+        } catch (secondErr) {
+          const isAbort2 = secondErr && secondErr.name === 'AbortError';
+          throw new Error(isAbort2
+            ? 'Request timed out after retrying. The payment server may be unreachable right now.'
+            : 'Could not reach the payment server after retrying: ' + secondErr.message);
+        }
+      }
+    }
 
     const amount      = localStorage.getItem('paymentAmount');
     const bookingId   = localStorage.getItem('paymentBookingId');
@@ -311,7 +417,8 @@
             closeModal('paypalModal');
             const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmt      = localStorage.getItem('paymentAmount');
-            markBookingPaid(payBookingId, 'PAYPAL-' + data.orderID, paidAmt);
+            // PayPal has no "phone" — pass null so we don't record a fake one
+            markBookingPaid(payBookingId, 'PAYPAL-' + data.orderID, paidAmt, null);
             announceSuccess('PAYPAL-' + data.orderID);
           },
           onCancel: function() {
@@ -320,7 +427,7 @@
           },
           onError: function(err) {
             closeModal('paypalModal');
-            showError('❌ A PayPal error occurred. Please try again.');
+            showError('❌ A PayPal error occurred: ' + (err && err.message ? err.message : String(err)));
             console.error('PayPal error:', err);
           }
         }).render('#paypal-button-container');
@@ -350,14 +457,18 @@
       if (isFull) {
         showSuccess('full', 'Fully Paid! 🎉', 'Your booking is settled in full — nothing left to pay at pickup. Just show up and enjoy the ride!', receiptCode);
       } else if (isBalance) {
-        showSuccess('balance', 'You\'re All Set! 🎉', 'Your booking is now fully paid up — your ride is locked in and ready for pickup.', receiptCode);
+        showSuccess('balance', "You're All Set! 🎉", 'Your booking is now fully paid up — your ride is locked in and ready for pickup.', receiptCode);
       } else {
         showSuccess('deposit', 'Booking Secured! ✓', 'Your spot is confirmed. The remaining balance is settled at pickup — see you soon!', receiptCode);
       }
     }
 
     // ── markBookingPaid: writes to correct fields based on paymentType ──
-    function markBookingPaid(payBookingId, receipt, paidAmount) {
+    // `payerPhone` is the actual phone number the customer paid WITH
+    // (only meaningful for M-Pesa; null for PayPal/card). We save it
+    // alongside the receipt so admin can see who really sent the money,
+    // separate from whatever phone was typed on the original booking form.
+    function markBookingPaid(payBookingId, receipt, paidAmount, payerPhone) {
       const pType    = localStorage.getItem('paymentType');
       const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
       const now      = new Date().toLocaleString();
@@ -369,15 +480,23 @@
             localStorage.setItem('balancePaid_' + payBookingId, JSON.stringify({
               paid:    true,
               receipt: receipt || 'N/A',
-              paidAt:  now
+              paidAt:  now,
+              phone:   payerPhone || ''
             }));
-            return { ...b, balancePaid: true, balanceReceipt: receipt || 'N/A', balancePaidAt: now };
+            return {
+              ...b,
+              balancePaid:    true,
+              balanceReceipt: receipt || 'N/A',
+              balancePaidAt:  now,
+              balancePhone:   payerPhone || b.balancePhone || ''
+            };
           } else if (pType === 'full') {
             // ── FULL: clears deposit AND balance in the same transaction ──
             localStorage.setItem('balancePaid_' + payBookingId, JSON.stringify({
               paid:    true,
               receipt: receipt || 'N/A',
-              paidAt:  now
+              paidAt:  now,
+              phone:   payerPhone || ''
             }));
             localStorage.removeItem('fullPaymentIntent_' + payBookingId);
             return {
@@ -386,13 +505,22 @@
               mpesaReceipt:   receipt || 'N/A',
               paidAmount:     paidAmount || '',
               paidAt:         now,
+              depositPhone:   payerPhone || b.depositPhone || '',
               balancePaid:    true,
               balanceReceipt: receipt || 'N/A',
-              balancePaidAt:  now
+              balancePaidAt:  now,
+              balancePhone:   payerPhone || b.balancePhone || ''
             };
           } else {
             // ── DEPOSIT: write to paymentStatus + mpesaReceipt ──
-            return { ...b, paymentStatus: 'paid', mpesaReceipt: receipt || 'N/A', paidAmount: paidAmount || '', paidAt: now };
+            return {
+              ...b,
+              paymentStatus: 'paid',
+              mpesaReceipt:  receipt || 'N/A',
+              paidAmount:    paidAmount || '',
+              paidAt:        now,
+              depositPhone:  payerPhone || b.depositPhone || ''
+            };
           }
         }
         return b;
@@ -410,9 +538,6 @@
     }
 
     function processPayment(type) {
-      document.getElementById('successBoxDeposit').style.display = 'none';
-      document.getElementById('successBoxBalance').style.display = 'none';
-      document.getElementById('successBoxFull').style.display = 'none';
       document.getElementById('finalError').style.display = 'none';
 
       // ── M-Pesa ──
@@ -449,19 +574,41 @@
         formData.append('balance_due',  balanceDue);
         formData.append('payment_type', isFull ? 'full' : (isBalance ? 'balance' : 'deposit'));
 
-        fetch(BACKEND_URL + '/Stk_push.php', {
+        // ── DEBUG-FRIENDLY FETCH ──
+        // We read the raw response text first (instead of calling res.json()
+        // directly) so that if the server returns invalid JSON (PHP warnings,
+        // HTML error pages, etc.) we can show the ACTUAL response body instead
+        // of a generic "Network error" message.
+        resilientFetch(BACKEND_URL + '/Stk_push.php', {
           method: 'POST',
           headers: { 'ngrok-skip-browser-warning': 'true' },
           body: formData
         })
-        .then(res => res.json())
-        .then(data => {
+        .then(res => res.text().then(text => ({ status: res.status, ok: res.ok, text })))
+        .then(({ status, ok, text }) => {
+          console.log('[STK] HTTP status:', status, 'Raw response:', text);
+
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (parseErr) {
+            // The server responded, but not with valid JSON — show exactly why.
+            throw new Error(
+              'Server returned invalid JSON (HTTP ' + status + '). Raw response:\n' +
+              text.slice(0, 500)
+            );
+          }
+
+          if (!ok) {
+            throw new Error('Server error (HTTP ' + status + '): ' + (data.message || text.slice(0, 300)));
+          }
+
           if (data.success === true) {
             if (infoBox) {
               infoBox.style.cssText = 'background:#fff5e6;border-left:4px solid #f39c12;padding:10px;margin-bottom:12px;font-size:0.85em;color:#a04000;font-weight:600;border-radius:6px;';
               infoBox.innerHTML = '🔔 Prompt sent! Please enter your M-Pesa PIN on your phone now...';
             }
-            pollPaymentStatus(data.CheckoutRequestID, btn);
+            pollPaymentStatus(data.CheckoutRequestID, btn, phone);
           } else {
             removeModalNotice();
             closeModal('mpesaModal');
@@ -473,7 +620,9 @@
           removeModalNotice();
           closeModal('mpesaModal');
           resetBtn(btn);
-          showError('❌ Network error. Check your connection and try again.');
+          // Show the REAL error instead of a generic message.
+          const msg = (err && err.message) ? err.message : String(err);
+          showError('❌ ' + msg);
           console.error('STK push fetch error:', err);
         });
 
@@ -493,7 +642,8 @@
         setTimeout(() => {
           closeModal('visaModal');
           const payBookingId = localStorage.getItem('paymentBookingId');
-          markBookingPaid(payBookingId, 'VISA-CARD', localStorage.getItem('paymentAmount'));
+          // Card payment has no "phone" either
+          markBookingPaid(payBookingId, 'VISA-CARD', localStorage.getItem('paymentAmount'), null);
           announceSuccess('');
           resetBtn(btn);
         }, 3000);
@@ -501,7 +651,10 @@
     }
 
     // ── Poll check_status.php ──
-    function pollPaymentStatus(checkoutRequestID, btn) {
+    // `payerPhone` is threaded through from processPayment() so that once
+    // the payment is confirmed, markBookingPaid() can save the actual
+    // number the customer paid with.
+    function pollPaymentStatus(checkoutRequestID, btn, payerPhone) {
       let attempts      = 0;
       const maxAttempts = 30;
       const failStatuses = ['failed', 'cancelled', 'insufficient', 'timeout', 'wrong_pin'];
@@ -513,14 +666,24 @@
         const fd = new FormData();
         fd.append('checkout_request_id', checkoutRequestID);
 
-        fetch(BACKEND_URL + '/check_status.php', {
+        resilientFetch(BACKEND_URL + '/check_status.php', {
           method: 'POST',
           headers: { 'ngrok-skip-browser-warning': 'true' },
           body: fd
         })
-        .then(res => res.json())
-        .then(data => {
-          console.log('[Poll] Response:', data);
+        .then(res => res.text().then(text => ({ status: res.status, ok: res.ok, text })))
+        .then(({ status, ok, text }) => {
+          console.log('[Poll] HTTP status:', status, 'Raw response:', text);
+
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (parseErr) {
+            throw new Error(
+              'Status check returned invalid JSON (HTTP ' + status + '). Raw response:\n' +
+              text.slice(0, 500)
+            );
+          }
 
           if (data.status === 'success') {
             clearInterval(interval);
@@ -529,7 +692,7 @@
             resetBtn(btn);
             const payBookingId = localStorage.getItem('paymentBookingId');
             const paidAmt      = localStorage.getItem('paymentAmount');
-            markBookingPaid(payBookingId, data.receipt || 'N/A', paidAmt);
+            markBookingPaid(payBookingId, data.receipt || 'N/A', paidAmt, payerPhone);
             announceSuccess(data.receipt || '');
             return;
           }
@@ -559,56 +722,47 @@
             closeModal('mpesaModal');
             removeModalNotice();
             resetBtn(btn);
-            showError('❌ Could not verify payment. Please check your M-Pesa messages and contact support if money was deducted.');
+            const msg = (err && err.message) ? err.message : String(err);
+            showError('❌ Could not verify payment: ' + msg);
           }
         });
 
       }, 2000);
     }
 
-    // ── Show success with distinct styles per type ──
+    // ── Show payment success as a centered popup (distinct from the
+    //    "Booking Created" popup on the Cars page — emerald theme,
+    //    receipt-style layout, different icon treatment). ──
     function showSuccess(type, title, message, receiptCode) {
-      document.getElementById('successBoxDeposit').style.display = 'none';
-      document.getElementById('successBoxBalance').style.display = 'none';
-      document.getElementById('successBoxFull').style.display = 'none';
       document.getElementById('finalError').style.display = 'none';
 
-      // Fade out the yellow/info booking box and payment-type badge — payment is done now
-      const infoBox = document.getElementById('bookingBox');
-      const badge   = document.getElementById('paymentTypeBadge');
-      [infoBox, badge].forEach(el => {
-        if (el) {
-          el.style.transition = 'opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease';
-          el.style.opacity = '0';
-          el.style.maxHeight = '0px';
-          el.style.overflow = 'hidden';
-          el.style.marginBottom = '0';
-        }
-      });
+      document.getElementById('paySuccessTitle').textContent   = title;
+      document.getElementById('paySuccessMessage').textContent = message;
+      document.getElementById('paySuccessBookingId').textContent = bookingId || '—';
 
-      const boxId = type === 'full' ? 'successBoxFull' : (type === 'balance' ? 'successBoxBalance' : 'successBoxDeposit');
-      const box   = document.getElementById(boxId);
-      const tick  = '<span class="success-tick"><svg width="9" height="7" viewBox="0 0 9 7" fill="none"><polyline points="1,3.5 3.5,6 8,1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+      const refRow = document.getElementById('paySuccessRefRow');
+      if (receiptCode) {
+        document.getElementById('paySuccessRef').textContent = receiptCode;
+        refRow.style.display = 'flex';
+      } else {
+        refRow.style.display = 'none';
+      }
 
-      const receiptLine = receiptCode
-        ? '<div style="font-size:0.74em;color:#5a8a63;margin-top:6px;letter-spacing:0.3px;">Ref: ' + receiptCode + '</div>'
-        : '';
-
-      box.innerHTML =
-        '<div class="success-title">' + tick + title + '</div>' +
-        '<div style="font-size:0.85em;color:#2e5c35;margin-top:4px;line-height:1.6;">' + message + '</div>' +
-        receiptLine +
-        '<a href="bookings.html" class="success-back-btn">View My Bookings →</a>';
-      box.style.display = 'block';
-      box.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('paySuccessModal').classList.add('open');
     }
 
+    document.getElementById('paySuccessCloseBtn').onclick = () => {
+      document.getElementById('paySuccessModal').classList.remove('open');
+    };
+    document.getElementById('paySuccessModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('paySuccessModal')) {
+        document.getElementById('paySuccessModal').classList.remove('open');
+      }
+    });
+
     function showError(message) {
-      document.getElementById('successBoxDeposit').style.display = 'none';
-      document.getElementById('successBoxBalance').style.display = 'none';
-      document.getElementById('successBoxFull').style.display = 'none';
       const box = document.getElementById('finalError');
-      box.innerHTML = message;
+      box.textContent = message;
       box.style.display = 'block';
       box.scrollIntoView({ behavior: 'smooth' });
     }
