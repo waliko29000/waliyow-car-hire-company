@@ -282,6 +282,21 @@
   </div>
 
   <script>
+    // ── Clean up stale payment redirect flag ──
+    // paymentBookingId is meant to mean "this login was triggered by a
+    // blocked payment attempt" (see payment-gateway.html). But nothing
+    // ever clears it once it's set, so it silently hijacks EVERY future
+    // login and sends the user to payment-gateway.html instead of
+    // car-available.html — even weeks later. Only trust the flag if the
+    // user actually arrived here from the payment gateway; otherwise
+    // treat it as stale leftover state and wipe it.
+    (function cleanupStalePaymentFlag() {
+      const cameFromPaymentGateway = document.referrer && document.referrer.indexOf('payment-gateway') !== -1;
+      if (!cameFromPaymentGateway) {
+        localStorage.removeItem('paymentBookingId');
+      }
+    })();
+
     // Stars
     (function() {
       const c = document.getElementById('starsEl');
