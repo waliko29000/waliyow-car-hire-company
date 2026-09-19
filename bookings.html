@@ -24,13 +24,16 @@
     .summary-card .s-label{font-size:0.72em;color:#888;margin-top:3px;}
     .summary-card.pending .s-num{color:#b35c00;}
     .summary-card.paid .s-num{color:#27ae60;}
-    .summary-card.remind .s-num{color:#e74c3c;}
+    .summary-card.remind .s-num{color:#1464dd;}
 
-    .reminder-banner{background:linear-gradient(135deg,#fff0f0,#ffe8e8);border:1.5px solid #ffaaaa;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:none;position:relative;}
-    .reminder-close{position:absolute;top:10px;right:12px;background:rgba(192,57,43,0.1);border:none;width:24px;height:24px;border-radius:50%;font-size:0.85em;cursor:pointer;color:#c0392b;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;}
-    .reminder-close:hover{background:rgba(192,57,43,0.22);}
-    .reminder-banner-title{font-size:0.85em;font-weight:700;color:#c0392b;margin-bottom:6px;}
-    .reminder-item{font-size:0.8em;color:#7a1a1a;padding:3px 0;display:flex;align-items:center;gap:6px;}
+    .reminder-banner{background:linear-gradient(135deg,#f2f8ff,#e6f1ff);border:1.5px solid #bcd6fa;border-left:5px solid #1464dd;border-radius:14px;padding:14px 46px 14px 16px;margin-bottom:16px;display:none;position:relative;box-shadow:0 2px 10px rgba(20,100,221,0.08);}
+    .reminder-close{position:absolute;top:10px;right:12px;background:rgba(20,100,221,0.1);border:none;width:26px;height:26px;border-radius:50%;font-size:0.85em;cursor:pointer;color:#1464dd;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;}
+    .reminder-close:hover{background:rgba(20,100,221,0.2);}
+    .reminder-banner-title{font-size:0.92em;font-weight:700;color:#0d47a1;margin-bottom:8px;}
+    .reminder-item{font-size:0.84em;color:#24406b;padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+    .reminder-icon{font-size:1.1em;line-height:1.5;}
+    .reminder-id{font-size:0.85em;color:#6b83a8;}
+    .reminder-tip{font-size:0.78em;color:#4a648a;margin-top:8px;padding-top:8px;border-top:1px dashed #bcd6fa;}
 
     .booking-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
     .page-title{font-size:1.2em;font-weight:700;color:#1464dd;}
@@ -73,11 +76,14 @@
     .badge-fully-paid{display:inline-block;background:#27ae60;color:#fff;border-radius:20px;padding:3px 10px;font-size:0.75em;font-weight:700;margin-left:6px;}
     .expired-notice{background:#fff0f0;border:2px solid #e74c3c;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a1a1a;margin-bottom:12px;line-height:1.8;}
     .expired-notice .ex-title{font-size:0.95em;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;color:#c0392b;}
-    .booking-card.pickup-soon{border-left:4px solid #e74c3c;}
+    .booking-card.pickup-soon{border-left:4px solid #1464dd;}
     .booking-card.booking-conflicted{border-left:4px solid #c0392b;background:#fffafa;}
     .booking-card.booking-expired{border-left:4px solid #c0392b;background:#fffafa;}
-    .pickup-soon-tag{display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .pickup-soon-tag{display:inline-block;background:#e3f0ff;color:#0d47a1;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
     .expired-tag{display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .status-tag{display:inline-block;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .tag-deposit{background:#e6f9ee;color:#1a7040;}
+    .tag-full{background:#27ae60;color:#fff;}
 
     .show-more-btn{display:block;width:100%;padding:11px;background:#fff;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;color:#1464dd;cursor:pointer;transition:all 0.2s;margin-top:4px;}
     .show-more-btn:hover{background:#f0f4ff;}
@@ -195,9 +201,10 @@
   <main>
     <div class="summary-bar" id="summaryBar"></div>
     <div class="reminder-banner" id="reminderBanner">
-      <button class="reminder-close" onclick="document.getElementById('reminderBanner').style.display='none'">&#x2715;</button>
-      <div class="reminder-banner-title">🔔 Upcoming Pickup Reminders</div>
+      <button class="reminder-close" title="Dismiss" onclick="dismissReminder()">&#x2715;</button>
+      <div class="reminder-banner-title">🚗 Your pickup is coming up</div>
       <div id="reminderList"></div>
+      <div class="reminder-tip">📋 Please remember to carry your National ID and driving licence.</div>
     </div>
     <div class="booking-controls">
       <div class="page-title">My Bookings</div>
@@ -301,6 +308,31 @@
     var displayCount = 3;
     var statusFilter = 'all';
     var rescheduleTargetId = null;
+    var currentReminderSig = '';
+
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    // "2026-10-09" -> "9 October 2026"
+    function fmtDate(str) {
+      if (!str) return '';
+      var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(str));
+      if (!m) return str;
+      return parseInt(m[3], 10) + ' ' + MONTHS[parseInt(m[2], 10) - 1] + ' ' + m[1];
+    }
+
+    // "9/19/2026, 1:35:05 PM" (or "19/09/2026, 13:35:05") -> "19 September 2026, 1:35 PM"
+    function fmtStamp(str) {
+      if (!str) return '';
+      var m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s+(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/.exec(String(str).trim());
+      if (!m) return str;
+      var first = parseInt(m[1], 10), second = parseInt(m[2], 10), hr = parseInt(m[4], 10), ap = m[6];
+      var day = ap ? second : first;   // AM/PM strings are month/day, 24h strings are day/month
+      var mon = ap ? first  : second;
+      if (mon < 1 || mon > 12) return str;
+      var time = ap ? (hr + ':' + m[5] + ' ' + ap.toUpperCase())
+                    : ((hr % 12 || 12) + ':' + m[5] + ' ' + (hr >= 12 ? 'PM' : 'AM'));
+      return day + ' ' + MONTHS[mon - 1] + ' ' + m[3] + ', ' + time;
+    }
 
     function showToast(msg) {
       var t = document.getElementById('toast');
@@ -318,7 +350,7 @@
       var myDays = Math.max(1, Math.round((new Date(myBooking.endDate+'T00:00:00') - new Date(myBooking.pickup+'T00:00:00')) / 86400000));
       document.getElementById('takenDetail').innerHTML =
         '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
-        '📅 <strong>Your dates:</strong> ' + myBooking.pickup + ' → ' + myBooking.endDate + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+        '📅 <strong>Your dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
         '🔒 <strong>Confirmed by another customer</strong> who paid before you.<br>' +
         '💡 <strong>Tip:</strong> Reschedule to different dates or pick another car.';
       document.getElementById('takenDeleteBtn').onclick = function() {
@@ -347,7 +379,7 @@
         if (introEl) introEl.textContent = 'Your deposit was paid, but the pickup date on this booking has already gone by. Please reschedule to new dates before paying the balance.';
         document.getElementById('expiredDetail').innerHTML =
           '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
-          '📅 <strong>Old dates:</strong> ' + myBooking.pickup + ' → ' + myBooking.endDate + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+          '📅 <strong>Old dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
           '✅ <strong>Deposit already paid</strong> — M-Pesa Receipt: ' + (myBooking.mpesaReceipt || 'N/A') + '<br>' +
           '⚠️ <strong>These dates have already passed.</strong> Reschedule to keep your deposit and confirm new dates.';
       } else {
@@ -355,7 +387,7 @@
         if (introEl) introEl.textContent = "This booking's pickup date is in the past and was never paid for, so it can no longer be confirmed for these dates.";
         document.getElementById('expiredDetail').innerHTML =
           '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
-          '📅 <strong>Old dates:</strong> ' + myBooking.pickup + ' → ' + myBooking.endDate + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+          '📅 <strong>Old dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
           '⚠️ <strong>These dates have already passed</strong> and were never paid for.';
       }
 
@@ -526,9 +558,9 @@
         localStorage.setItem('paymentBookingId', bookingId);
         if (isFull) {
           localStorage.setItem('paymentType', 'full');
-          localStorage.setItem('fullPaymentIntent_' + bookingId, '1');
         } else {
           localStorage.removeItem('paymentType');
+          localStorage.removeItem('fullPaymentIntent_' + bookingId);
         }
         window.location.href = 'payment-gateway.html';
       }
@@ -575,13 +607,25 @@
       });
       var banner = document.getElementById('reminderBanner');
       var list   = document.getElementById('reminderList');
-      if (reminders.length === 0) { banner.style.display='none'; return; }
+      if (reminders.length === 0) { banner.style.display='none'; currentReminderSig=''; return; }
+
+      // Signature = which bookings + how many days left. If the customer closed
+      // the banner for exactly this state, keep it closed (even after refresh).
+      // It comes back on its own when something changes (e.g. tomorrow -> today).
+      currentReminderSig = reminders.map(function(b){ return b.bookingId+'@'+daysUntil(b.pickup); }).join('|');
+      if (localStorage.getItem('reminderDismissed') === currentReminderSig) { banner.style.display='none'; return; }
+
       banner.style.display = 'block';
       list.innerHTML = reminders.map(function(b){
         var d = daysUntil(b.pickup);
-        var when = d === 0 ? 'TODAY' : d === 1 ? 'Tomorrow' : 'In 2 days';
-        return '<div class="reminder-item">🚗 <strong>'+b.carName+'</strong> — pickup <strong>'+when+'</strong> ('+b.pickup+') &nbsp;·&nbsp; ID: '+b.bookingId+'</div>';
+        var when = d === 0 ? 'today' : d === 1 ? 'tomorrow' : 'in 2 days';
+        return '<div class="reminder-item"><span class="reminder-icon">🚗</span><span><strong>'+b.carName+'</strong> pickup is <strong>'+when+'</strong> · '+fmtDate(b.pickup)+'<br><span class="reminder-id">Booking ID: '+b.bookingId+'</span></span></div>';
       }).join('');
+    }
+
+    function dismissReminder() {
+      localStorage.setItem('reminderDismissed', currentReminderSig);
+      document.getElementById('reminderBanner').style.display = 'none';
     }
 
     function renderBookings(){
@@ -615,34 +659,6 @@
           if(idx>-1) all[idx] = bk;
         });
         localStorage.setItem('bookings', JSON.stringify(all));
-      }
-
-      var fullSynced = false;
-      bookings.forEach(function(bk){
-        var intentKey = 'fullPaymentIntent_' + bk.bookingId;
-        if (localStorage.getItem(intentKey) !== '1') return;
-        var isPaidNow = bk.paymentStatus === 'paid' || (bk.mpesaReceipt && bk.mpesaReceipt !== 'N/A');
-        if (!isPaidNow) return;
-        var balStatus = getBalanceStatus(bk.bookingId);
-        var alreadyBalancePaid = !!(balStatus && balStatus.paid) || !!bk.balancePaid;
-        if (!alreadyBalancePaid) {
-          var receipt = bk.mpesaReceipt || 'N/A';
-          var paidAt  = bk.paidAt || new Date().toLocaleString();
-          localStorage.setItem('balancePaid_' + bk.bookingId, JSON.stringify({ paid: true, receipt: receipt, paidAt: paidAt }));
-          bk.balancePaid     = true;
-          bk.balanceReceipt  = receipt;
-          bk.balancePaidAt   = paidAt;
-          fullSynced = true;
-        }
-        localStorage.removeItem(intentKey);
-      });
-      if (fullSynced) {
-        var all2 = JSON.parse(localStorage.getItem('bookings') || '[]');
-        bookings.forEach(function(bk){
-          var idx = all2.findIndex(function(a){ return String(a.bookingId)===String(bk.bookingId); });
-          if(idx>-1) all2[idx] = bk;
-        });
-        localStorage.setItem('bookings', JSON.stringify(all2));
       }
 
       renderSummary(bookings);
@@ -699,7 +715,7 @@
         } else if (!isPaid) {
           noticeHtml = '<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm your booking, or pay <strong>Ksh '+total.toLocaleString()+'</strong> now to clear the full amount. Remaining balance (if any) is paid at pickup.</div>';
         } else if (balancePaid) {
-          noticeHtml = '<div class="fully-paid-notice"><div class="fp-title">✅ Fully Paid <span class="badge-fully-paid">CLEARED</span></div><div style="font-size:0.85em;color:#27ae60;margin-top:4px;">🚗 Your car is ready for pickup. No further payments needed!</div></div>';
+          noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">🚗 Your car is ready for pickup. No further payments needed!</div></div>';
         } else {
           noticeHtml = '<div class="paid-notice">✅ <strong>Deposit Paid!</strong> M-Pesa Receipt: <strong>'+(b.mpesaReceipt||'N/A')+'</strong><br>Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. You can also pay it now online. 🚗</div>';
         }
@@ -717,19 +733,33 @@
             '<button class="btn btn-delete" data-idx="'+realIdx+'" data-id="'+b.bookingId+'">Delete</button>';
         } else if (!balancePaid) {
           actionsHtml +=
-            '<button class="btn btn-balance" data-amount="'+balance+'" data-id="'+b.bookingId+'">Pay Balance</button>';
+            '<button class="btn btn-balance" data-amount="'+balance+'" data-id="'+b.bookingId+'">Pay Balance (Ksh '+balance.toLocaleString()+')</button>';
         }
-        actionsHtml += '<button class="btn btn-pdf" data-id="'+b.bookingId+'">⬇ PDF</button>';
+        // Paid bookings get a proper receipt; unpaid ones just get the booking PDF
+        actionsHtml += '<button class="btn btn-pdf" data-id="'+b.bookingId+'">⬇ '+(isPaid ? 'Receipt' : 'PDF')+'</button>';
+
+        // Money breakdown rows (paid bookings only)
+        var moneyRows = '';
+        if (isPaid) {
+          moneyRows += '<tr><th>Deposit Paid</th><td style="color:#1a6e3a;font-weight:600;">Ksh '+deposit.toLocaleString()+'</td></tr>';
+          if (balancePaid) {
+            moneyRows += '<tr><th>Balance Paid</th><td style="color:#1a6e3a;font-weight:600;">Ksh '+balance.toLocaleString()+'</td></tr>';
+          } else {
+            moneyRows += '<tr><th>Balance Due</th><td style="color:#b35c00;font-weight:600;">Ksh '+balance.toLocaleString()+' <span style="font-weight:400;color:#888;">(at pickup)</span></td></tr>';
+          }
+        }
 
         var card = document.createElement('div');
         card.className = 'booking-card' + (pickupSoon ? ' pickup-soon' : '') + (isConflicted ? ' booking-conflicted' : '') + (isExpired ? ' booking-expired' : '');
         var conflictTag = isConflicted ? '<span style="display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;">🚫 Car Taken</span>' : '';
         var expiredTag  = isExpired ? '<span class="expired-tag">⏰ Dates Expired</span>' : '';
+        var paidTag     = balancePaid ? '<span class="status-tag tag-full">✅ Fully Paid</span>'
+                                      : (isPaid ? '<span class="status-tag tag-deposit">✅ Deposit Paid</span>' : '');
         card.innerHTML =
           '<div class="card-header">'+
             '<div>'+
-              '<h3>'+b.carName+(pickupSoon?'<span class="pickup-soon-tag">🔔 Pickup '+soonLabel+'</span>':'')+conflictTag+expiredTag+'</h3>'+
-              '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+b.timestamp+'</div>'+
+              '<h3>'+b.carName+paidTag+(pickupSoon?'<span class="pickup-soon-tag">🚗 Pickup '+soonLabel+'</span>':'')+conflictTag+expiredTag+'</h3>'+
+              '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+fmtStamp(b.timestamp)+'</div>'+
             '</div>'+
             '<div class="card-actions">'+actionsHtml+'</div>'+
           '</div>'+
@@ -738,11 +768,12 @@
             '<tr><th>Phone No.</th><td>'+b.phone+'</td></tr>'+
             '<tr><th>National ID</th><td>'+b.nationalId+'</td></tr>'+
             '<tr><th>Licence No.</th><td>'+b.license+'</td></tr>'+
-            '<tr><th>Start Date</th><td>'+b.pickup+'</td></tr>'+
-            '<tr><th>End Date</th><td>'+b.endDate+'</td></tr>'+
+            '<tr><th>Start Date</th><td>'+fmtDate(b.pickup)+'</td></tr>'+
+            '<tr><th>End Date</th><td>'+fmtDate(b.endDate)+'</td></tr>'+
             '<tr><th>Days Booked</th><td>'+days+' day'+(days!==1?'s':'')+'</td></tr>'+
             '<tr><th>Price/Day</th><td>Ksh '+b.price.toLocaleString()+'</td></tr>'+
             '<tr><th>Total Fee</th><td>Ksh '+total.toLocaleString()+'</td></tr>'+
+            moneyRows+
           '</table>'+
           noticeHtml;
 
@@ -854,11 +885,11 @@
       function tRow(label,value,y,shade,highlight,greenVal,rh){rh=rh||11;if(highlight){doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,rh,'F');doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,rh,'D');}else if(shade){doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,rh,'F');}doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(label,L+4,y+rh*0.55);if(greenVal)doc.setTextColor(26,112,64);else if(highlight)doc.setTextColor(NR,NG,NB);else doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);doc.text(String(value),RR,y+rh*0.55,{align:'right'});}
       var RH=8;var y=72;
       secHead('Customer & Booking Details',y);y+=13;
-      var cRows=[['Full Name',b.fullName],['Phone No.',b.phone],['National ID',b.nationalId],['Licence No.',b.license],['Vehicle Hired',b.carName],['Booking ID',String(b.bookingId).replace('#','')],['Pickup Date',b.pickup],['Return Date',b.endDate],['Duration',days+' day'+(days!==1?'s':'')]];
+      var cRows=[['Full Name',b.fullName],['Phone No.',b.phone],['National ID',b.nationalId],['Licence No.',b.license],['Vehicle Hired',b.carName],['Booking ID',String(b.bookingId).replace('#','')],['Pickup Date',fmtDate(b.pickup)],['Return Date',fmtDate(b.endDate)],['Duration',days+' day'+(days!==1?'s':'')]];
       cRows.forEach(function(r,i){tRow(r[0],r[1],y,i%2===0,false,false,RH);y+=RH;});
       y+=4;secHead('Payment Summary',y);y+=13;
-      if(isPaid){tRow('Deposit M-Pesa Ref',b.mpesaReceipt||'N/A',y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',b.paidAt||'N/A',y,false,false,false,RH);y+=RH;}
-      if(balancePaid){tRow('Balance M-Pesa Ref',balReceipt,y,true,false,true,RH);y+=RH;tRow('Balance Paid On',balPaidAt,y,false,false,false,RH);y+=RH;}
+      if(isPaid){tRow('Deposit M-Pesa Ref',b.mpesaReceipt||'N/A',y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',fmtStamp(b.paidAt||'N/A'),y,false,false,false,RH);y+=RH;}
+      if(balancePaid){tRow('Balance M-Pesa Ref',balReceipt,y,true,false,true,RH);y+=RH;tRow('Balance Paid On',fmtStamp(balPaidAt),y,false,false,false,RH);y+=RH;}
       tRow('Price Per Day','Ksh '+b.price.toLocaleString(),y,true,false,false,RH);y+=RH;
       tRow('Number of Days',days+' day'+(days!==1?'s':''),y,false,false,false,RH);y+=RH;
       tRow('Total Rental Fee','Ksh '+total.toLocaleString(),y,true,true,false,RH);y+=RH;
@@ -888,6 +919,7 @@
     window.closeRescheduleModal = closeRescheduleModal;
     window.saveReschedule       = saveReschedule;
     window.closeTakenModal      = closeTakenModal;
+    window.dismissReminder      = dismissReminder;
 
     renderBookings();
   })();
