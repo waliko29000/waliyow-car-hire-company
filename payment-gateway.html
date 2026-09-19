@@ -25,6 +25,18 @@
     .access-alert .alert-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; color: #a04000; }
     .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
 
+    /* ── Pay-once disclaimer + paid lock notice ── */
+    .paid-lock-notice { display: none; background: #e6fff0; border: 1.5px solid #27ae60; border-left: 5px solid #1b8a3d; border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; font-size: 0.86em; color: #1a6e3a; line-height: 1.7; }
+    .paid-lock-notice .pl-title { font-weight: 700; font-size: 1.02em; margin-bottom: 4px; }
+    .paid-lock-notice a { color: #0d5c22; font-weight: 700; text-decoration: none; }
+    .paid-lock-notice a:hover { text-decoration: underline; }
+    .paid-lock-notice .pl-actions { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+    .paid-lock-notice .pl-btn { flex: 1; min-width: 140px; text-align: center; padding: 10px 14px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.85em; font-weight: 700; text-decoration: none; cursor: pointer; transition: all 0.2s; }
+    .paid-lock-notice .pl-btn.primary { background: linear-gradient(135deg, #1b8a3d, #0d5c22); color: #fff; border: none; }
+    .paid-lock-notice .pl-btn.primary:hover { text-decoration: none; transform: translateY(-1px); }
+    .paid-lock-notice .pl-btn.secondary { background: #fff; color: #1a6e3a; border: 1.5px solid #27ae60; }
+    .paid-lock-notice .pl-btn.secondary:hover { text-decoration: none; background: #f3fbf6; }
+
     /* ── Booking info boxes ── */
     .booking-info-box { border-radius: 10px; padding: 13px 16px; margin-bottom: 14px; font-size: 0.85em; font-weight: 600; line-height: 1.7; }
     .booking-info-box.deposit-mode { background: #e3f2fd; border: 1.5px solid #64b5f6; border-left: 5px solid #1464dd; color: #0d3a7a; }
@@ -42,6 +54,7 @@
     .payment-method { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1.5px solid #dde3f0; border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.9em; font-weight: 600; color: #1a1a2e; background: #fff; }
     .payment-method:hover:not(.disabled) { border-color: #1464dd; background: #f5f8ff; box-shadow: 0 2px 10px rgba(20,100,221,0.1); }
     .payment-method.disabled { opacity: 0.45; cursor: not-allowed; }
+    .payment-method.locked { pointer-events: none; filter: grayscale(1); }
     .payment-method img { width: 38px; height: 24px; object-fit: contain; flex-shrink: 0; }
     .payment-method .method-arrow { margin-left: auto; color: #ccc; font-size: 1em; }
 
@@ -146,6 +159,9 @@
 
     <div class="card">
       <div class="card-title">💳 Payment Gateway</div>
+
+      <div class="paid-lock-notice" id="paidNotice"></div>
+
       <div id="paymentTypeBadge"></div>
       <div class="booking-info-box" id="bookingBox" style="display:none"></div>
       <div class="no-booking-box" id="noBookingBox" style="display:none">
@@ -313,6 +329,11 @@
       }
     }
 
+    // True once this booking has been paid (or was already paid on load).
+    // While true, every payment option is disabled and processPayment() /
+    // openModal() refuse to run — this is what stops a second payment.
+    let paymentLocked = false;
+
     const amount      = localStorage.getItem('paymentAmount');
     const bookingId   = localStorage.getItem('paymentBookingId');
     const paymentType = localStorage.getItem('paymentType'); // 'balance', 'full', or null (deposit)
@@ -396,9 +417,98 @@
       document.getElementById('noBookingBox').style.display = 'block';
     }
 
+    // ── Lock the page once a payment is done ──────────────────────────
+    // kind: 'deposit' (deposit paid, balance still due) or
+    //       'full'    (everything paid — used for full AND balance payments)
+    // showNow: false right after paying (the notice is revealed when the
+    //          success popup is closed); true when the page loads already paid.
+    function lockPaymentPage(kind, showNow) {
+      paymentLocked = true;
+
+      ['mpesaBtn','paypalBtn','visaBtn'].forEach(function(id) {
+        const el = document.getElementById(id);
+        el.classList.add('disabled', 'locked');
+        el.onclick = null;
+        el.setAttribute('aria-disabled', 'true');
+      });
+
+      // Hide everything that only makes sense BEFORE paying
+      ['paymentTypeBadge','bookingBox','noBookingBox','finalError'].forEach(function(id) {
+        document.getElementById(id).style.display = 'none';
+      });
+
+      const notice = document.getElementById('paidNotice');
+      if (kind === 'deposit') {
+        const bal = totalFee ? (totalFee - Math.floor(totalFee / 2)) : 0;
+        notice.innerHTML =
+          '<div class="pl-title">✅ You already paid the deposit</div>' +
+          'Your booking is confirmed. ' +
+          (bal ? 'The balance of <strong>Ksh ' + bal.toLocaleString() + '</strong> is due at pickup, or you can pay it now.' : 'The balance is due at pickup, or you can pay it now.') +
+          (bookingId ? '<br>Booking ID: <strong>' + bookingId + '</strong>' : '') +
+          '<div class="pl-actions">' +
+            '<a href="#" class="pl-btn primary" onclick="goPayBalance(event)">Pay Balance</a>' +
+            '<a href="bookings.html" class="pl-btn secondary">Back to My Bookings</a>' +
+          '</div>';
+      } else {
+        notice.innerHTML =
+          '<div class="pl-title">✅ Fully paid</div>' +
+          'Everything for this booking has been paid. Your car is ready for pickup.' +
+          (bookingId ? '<br>Booking ID: <strong>' + bookingId + '</strong>' : '') +
+          '<div class="pl-actions">' +
+            '<a href="bookings.html" class="pl-btn primary">Back to My Bookings</a>' +
+          '</div>';
+      }
+      notice.style.display = showNow ? 'block' : 'none';
+    }
+
+    // Shown when the success popup is closed
+    function revealPaidNotice() {
+      if (!paymentLocked) return;
+      const notice = document.getElementById('paidNotice');
+      notice.style.display = 'block';
+      notice.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // "Pay Balance" from the notice — same setup My Bookings uses
+    function goPayBalance(e) {
+      if (e) e.preventDefault();
+      const today = new Date(); today.setHours(0,0,0,0);
+      // Pickup already passed: My Bookings handles that case (reschedule)
+      if (pickupDate && new Date(pickupDate + 'T00:00:00') < today) {
+        window.location.href = 'bookings.html';
+        return;
+      }
+      const bal = totalFee - Math.floor(totalFee / 2);
+      localStorage.setItem('paymentAmount', bal);
+      localStorage.setItem('paymentBookingId', bookingId);
+      localStorage.setItem('paymentType', 'balance');
+      window.location.href = 'payment-gateway.html';
+    }
+
+    // ── Already paid? Lock on page load too (refresh / back button) ──
+    (function checkAlreadyPaid() {
+      if (!booking.bookingId) return;
+
+      let balanceFlag = false;
+      try {
+        const o = JSON.parse(localStorage.getItem('balancePaid_' + booking.bookingId) || 'null');
+        balanceFlag = !!(o && o.paid);
+      } catch (e) {}
+
+      const depositPaid = booking.paymentStatus === 'paid' ||
+                          !!(booking.mpesaReceipt && booking.mpesaReceipt !== 'N/A');
+      const balancePaid = !!booking.balancePaid || balanceFlag;
+
+      // Balance page is only blocked once the balance is paid.
+      // Deposit / full pages are blocked as soon as the deposit is paid.
+      const blocked = isBalance ? balancePaid : depositPaid;
+      if (blocked) lockPaymentPage(balancePaid ? 'full' : 'deposit', true);
+    })();
+
     let paypalRendered = false;
 
     function openModal(type) {
+      if (paymentLocked) return;
       if (!isLoggedIn) { document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' }); return; }
       document.getElementById(type + 'Modal').classList.add('open');
 
@@ -453,7 +563,11 @@
     }
 
     // ── Fires the right success message based on payment type ──
+    // Locks the page FIRST so the payment options can't be used again,
+    // even if the customer closes the success popup.
     function announceSuccess(receiptCode) {
+      lockPaymentPage((isFull || isBalance) ? 'full' : 'deposit');
+
       if (isFull) {
         showSuccess('full', 'Fully Paid! 🎉', 'Your booking is settled in full — nothing left to pay at pickup. Just show up and enjoy the ride!', receiptCode);
       } else if (isBalance) {
@@ -538,6 +652,7 @@
     }
 
     function processPayment(type) {
+      if (paymentLocked) return;
       document.getElementById('finalError').style.display = 'none';
 
       // ── M-Pesa ──
@@ -753,10 +868,12 @@
 
     document.getElementById('paySuccessCloseBtn').onclick = () => {
       document.getElementById('paySuccessModal').classList.remove('open');
+      revealPaidNotice();
     };
     document.getElementById('paySuccessModal').addEventListener('click', e => {
       if (e.target === document.getElementById('paySuccessModal')) {
         document.getElementById('paySuccessModal').classList.remove('open');
+        revealPaidNotice();
       }
     });
 
