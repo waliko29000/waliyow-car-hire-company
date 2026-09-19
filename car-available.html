@@ -3,17 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Forces light mode on supporting mobile/desktop browsers -->
-  <meta name="color-scheme" content="light">
   <title>Cars – Waliko Car Hire</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
   <style>
-    /* Forces light color scheme globally across all components */
-    :root {
-      color-scheme: light;
-    }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; overflow: hidden; }
     body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; display: flex; flex-direction: column; }
@@ -28,7 +21,7 @@
     .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0 12px; }
     .filter-bar .page-title { font-size: 1.2em; font-weight: 700; color: #1464dd; flex: 0 0 auto; margin-right: 8px; }
     .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 300px; }
-    .search-wrap input { width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid #dde3f0; border-radius: 25px; font-family: 'Poppins', sans-serif; font-size: 0.82em; outline: none; transition: border-color 0.2s; background: #fff; color: #333; }
+    .search-wrap input { width: 100%; padding: 8px 12px 8px 34px; border: 1.5px solid #dde3f0; border-radius: 25px; font-family: 'Poppins', sans-serif; font-size: 0.82em; outline: none; transition: border-color 0.2s; background: #fff; }
     .search-wrap input:focus { border-color: #1464dd; }
     .search-wrap .s-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 0.9em; color: #aaa; pointer-events: none; }
     .price-filter { display: flex; align-items: center; gap: 6px; font-size: 0.8em; color: #555; }
@@ -53,7 +46,7 @@
     .book-btn.disabled-btn:hover { background: #bbb; transform: none; }
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 16px; }
     .modal.open { display: flex; }
-    .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 420px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease; max-height: 90vh; overflow-y: auto; color: #333; }
+    .modal-box { background: #fff; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 420px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.25); animation: slideUp 0.25s ease; max-height: 90vh; overflow-y: auto; }
     @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
     .modal-box h2 { font-size: 1.2em; font-weight: 700; color: #1464dd; margin-bottom: 4px; }
     .modal-box .car-tag { font-size: 0.8em; color: #888; margin-bottom: 4px; }
@@ -61,8 +54,9 @@
     .modal-close:hover { background: #dde3f0; color: #1464dd; }
     .form-group { margin-bottom: 12px; }
     .form-group label { display: block; font-size: 0.8em; font-weight: 600; color: #444; margin-bottom: 4px; }
-    .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; transition: border-color 0.2s; background: #fff; color: #333; }
+    .form-group input { width: 100%; padding: 9px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; transition: border-color 0.2s; background: #fff; }
     .form-group input:focus { border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1); }
+    .privacy-note { display: flex; align-items: flex-start; gap: 8px; background: #f0f4ff; border: 1px solid #c5d5f5; border-radius: 8px; padding: 9px 12px; font-size: 0.74em; color: #555; line-height: 1.5; margin: 4px 0 12px; font-family: 'Poppins', sans-serif; }
     .submit-btn { width: 100%; padding: 11px; background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.92em; font-weight: 600; cursor: pointer; margin-top: 4px; transition: all 0.2s; }
     .submit-btn:hover { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
     .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
@@ -71,7 +65,7 @@
     /* ── Success Modal ── */
     .success-modal { display: none; position: fixed; inset: 0; background: rgba(10,20,50,0.6); backdrop-filter: blur(5px); z-index: 1100; justify-content: center; align-items: center; padding: 16px; }
     .success-modal.open { display: flex; }
-    .success-box { background: #fff; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; padding: 34px 26px 28px; position: relative; box-shadow: 0 25px 60px rgba(13,71,161,0.35); animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1); overflow: hidden; color: #333; }
+    .success-box { background: #fff; border-radius: 20px; width: 100%; max-width: 380px; text-align: center; padding: 34px 26px 28px; position: relative; box-shadow: 0 25px 60px rgba(13,71,161,0.35); animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1); overflow: hidden; }
     @keyframes popIn { from { opacity: 0; transform: scale(0.85) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     .success-box::before { content: ""; position: absolute; top: -60px; left: -60px; width: 160px; height: 160px; background: radial-gradient(circle, rgba(20,100,221,0.12), transparent 70%); border-radius: 50%; }
     .success-box::after { content: ""; position: absolute; bottom: -70px; right: -70px; width: 180px; height: 180px; background: radial-gradient(circle, rgba(20,100,221,0.1), transparent 70%); border-radius: 50%; }
@@ -111,7 +105,7 @@
 </head>
 <body>
   <header>
-    <h1>Waliko Car Hire (Dashboard)</h1>
+   <h1>&#x1F697; Waliko Car Hire</h1>
     <nav>
       <a href="dashboard.html">How to Use</a>
       <a href="car-available.html" class="active">Cars</a>
@@ -157,6 +151,9 @@
         <div class="form-group"><label>Driver Licence No.</label><input type="text" id="license" placeholder="Enter licence number" required /></div>
         <div class="form-group"><label>Renting Start Date</label><input type="text" id="pickup" placeholder="Select start date" readonly required /></div>
         <div class="form-group"><label>Renting End Date</label><input type="text" id="endDate" placeholder="Select end date" readonly required /></div>
+        <div class="privacy-note">
+          🔒 <span>Your details are kept confidential and protected. We only use them to process your booking.</span>
+        </div>
         <button type="submit" class="submit-btn">Submit Booking</button>
       </form>
     </div>
@@ -186,23 +183,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
   <script>
     const cars = [
-      { name: "Toyota Vitz",          price: 2,     description: "Compact and fuel-efficient city car.",                         image: "car11.jpg" },
+      { name: "Toyota Vitz",          price: 2,     description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
       { name: "Toyota Prado TX",      price: 10000, description: "Luxury SUV with 4WD.",                                        image: "car1.jpg" },
       { name: "Subaru Forester",      price: 5000,  description: "Reliable and fuel-efficient.",                                image: "car2.jpg" },
       { name: "Toyota Harrier",       price: 6500,  description: "Comfortable sedan.",                                          image: "car3.jpg" },
       { name: "Suzuki Alto",          price: 2000,  description: "Compact and fuel-efficient.",                                 image: "alto.jpg" },
-      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                          image: "premio.jpg" },
+      { name: "Toyota Premio",        price: 3000,  description: "Spacious sedan with a smooth ride.",                         image: "premio.jpg" },
       { name: "Toyota Sienta",        price: 3500,  description: "Versatile family minivan.",                                  image: "sienta.jpg" },
-      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                 image: "succeed.jpg" },
+      { name: "Toyota Succeed",       price: 3500,  description: "Compact and fuel efficient.",                                image: "succeed.jpg" },
       { name: "Mercedes Benz C200",   price: 10000, description: "Luxury executive car.",                                      image: "car5.jpg" },
-      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                 image: "car6.jpg" },
-      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                 image: "car7.jpg" },
-      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                             image: "car8.jpg" },
-      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                 image: "car9.jpg" },
-      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                             image: "car10.jpg" },
-      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                        image: "car11.jpg" },
-      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                        image: "car12.jpg" },
-      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                        image: "car13.jpg" },
+      { name: "Range Rover Sport",    price: 25000, description: "Premium off-road vehicle.",                                  image: "car6.jpg" },
+      { name: "Mazda CX-5",           price: 4000,  description: "Stylish and fuel-efficient.",                                image: "car7.jpg" },
+      { name: "Honda CR-V",           price: 4500,  description: "Compact SUV with great mileage.",                            image: "car8.jpg" },
+      { name: "Hyundai Tucson",       price: 8000,  description: "Comfortable crossover with modern features.",                image: "car9.jpg" },
+      { name: "Subaru Impreza",       price: 4500,  description: "Sporty and efficient AWD sedan.",                            image: "car10.jpg" },
+      { name: "Toyota Vitz",          price: 3000,  description: "Compact and fuel-efficient city car.",                       image: "car11.jpg" },
+      { name: "Toyota Wish",          price: 3500,  description: "Spacious MPV with great reliability.",                       image: "car12.jpg" },
+      { name: "Toyota Prado TXL",     price: 11000, description: "Advanced SUV with a powerful engine.",                       image: "car13.jpg" },
       { name: "Toyota Axio",          price: 4000,  description: "Reliable compact sedan ideal for city and highway driving.", image: "car17.jpg" },
       { name: "Toyota Fielder",       price: 3500,  description: "Spacious station wagon perfect for families and cargo.",    image: "car18.jpg" },
       { name: "Toyota Prado TXG",     price: 11500, description: "High-performance version of the TXL with luxury features.", image: "car14.jpg" },
@@ -369,7 +366,7 @@
 
       bookings.unshift({
         bookingId,
-        email: userEmail,
+        email: userEmail,        // ← THIS is what was missing
         fullName,
         nationalId,
         phone,
