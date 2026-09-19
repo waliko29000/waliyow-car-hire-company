@@ -207,7 +207,7 @@
 <header>
   <h1>Waliko Car Hire</h1>
   <nav>
-    <a href="car_available.html" onclick="goToDashboard(event)">Dashboard</a>
+    <a href="#" onclick="goToDashboard(event)">Dashboard</a>
     <button onclick="location.href='signin.html'">Sign In</button>
     <button onclick="location.href='signup.html'">Sign Up</button>
     <button onclick="showSection('terms')">Terms of Service</button>
@@ -223,9 +223,10 @@
   <p>Looking for the perfect ride for your next adventure in Nairobi or beyond? At Waliko CarHire, we make renting a car easy, convenient, and tailored to your needs. We offer a diverse fleet, from luxurious sedans to economical options, ensuring you'll find exactly what you're looking for.</p>
   ---
   <h4>How to Get Started</h4>
-  <p>Ready to hit the road? Accessing our services is simple!</p>
-  <p>1. If you're new to Waliko CarHire, you'll need to <b>register</b> for an account. Already a member? Just <b>sign in</b> with your credentials.</p>
-  <p>2. Once logged in, you can effortlessly view our wide selection of available cars and book the vehicle that best fits your plans.</p>
+  <p>Ready to hit the road? Getting started is simple!</p>
+  <p>1. Open the <b>Dashboard</b> to explore. You can view our available cars and start a booking without logging in.</p>
+  <p>2. For your booking to be successful, you must <b>sign in</b> or <b>register</b> for an account. Your booking is only saved to your account, and can only be paid for and confirmed, when you're logged in.</p>
+
   ---
 </div>
 
@@ -527,14 +528,15 @@
 
   function goHome() {
     document.getElementById('mainContent').innerHTML = `
-      <h4>Welcome to Waliko CarHire: Your Journey Starts Here!</h4>
-      <p>Looking for the perfect ride for your next adventure in Nairobi or beyond? At Waliko CarHire, we make renting a car easy, convenient, and tailored to your needs. We offer a diverse fleet, from luxurious sedans to economical options, ensuring you'll find exactly what you're looking for.</p>
-      ---
-      <h4>How to Get Started</h4>
-      <p>Ready to hit the road? Accessing our services is simple!</p>
-      <p>1. If you're new to Waliko CarHire, you'll need to <b>register</b> for an account. Already a member? Just <b>sign in</b> with your credentials.</p>
-      <p>2. Once logged in, you can effortlessly view our wide selection of available cars and book the vehicle that best fits your plans.</p>
-      ---
+     <h4>Welcome to Waliko CarHire: Your Journey Starts Here!</h4>
+<p>Looking for the perfect ride for your next adventure in Nairobi or beyond? At Waliko CarHire, we make renting a car easy and convenient. Browse our wide range of vehicles, from luxury to budget-friendly options, and find what suits you best. You can view available cars and even place a booking without logging in.</p>
+---
+<h4>How to Get Started</h4>
+<p>Ready to hit the road? Getting started is simple!</p>
+<p>1. Open the <b>Dashboard</b> to explore. You can view our available cars and start a booking without logging in.</p>
+<p>2. For your booking to be successful, you must <b>sign in</b> or <b>register</b> for an account. Your booking is only saved to your account, and can only be paid for and confirmed, when you're logged in.</p>
+
+---
     `;
     document.getElementById('sectionContainer').innerHTML = '';
   }
