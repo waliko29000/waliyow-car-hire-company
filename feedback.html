@@ -7,234 +7,45 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f0f4ff;
-      color: #333;
-      min-height: 100vh;
-    }
-
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
-    }
-
+    body { font-family: 'Poppins', sans-serif; background: #f0f4ff; color: #333; min-height: 100vh; }
+    header { background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; padding: 10px 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 3px 15px rgba(20,100,221,0.35); }
     header h1 { font-size: 1.2em; font-weight: 700; }
-
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      padding: 7px 13px;
-      border-radius: 25px;
-      font-size: 0.78em;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
+    nav a { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; padding: 7px 13px; border-radius: 25px; font-size: 0.78em; font-weight: 500; text-decoration: none; transition: all 0.2s; }
     nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 560px;
-      margin: 24px auto;
-      padding: 0 16px 40px;
-    }
-
-    /* ── CARD ── */
-    .card {
-      background: #fff;
-      border-radius: 14px;
-      padding: 24px;
-      box-shadow: 0 3px 16px rgba(20,100,221,0.09);
-      border: 1px solid rgba(20,100,221,0.07);
-      margin-bottom: 16px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-title {
-      font-size: 1em;
-      font-weight: 700;
-      color: #1464dd;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #f0f4ff;
-    }
-
-    /* ── ACCESS ALERT ── */
-    .access-alert {
-      display: none;
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-left: 4px solid #f39c12;
-      border-radius: 10px;
-      padding: 16px 18px;
-      margin-bottom: 16px;
-      font-size: 0.88em;
-      color: #b35c00;
-      line-height: 1.6;
-    }
-
-    .access-alert .alert-title {
-      font-weight: 700;
-      font-size: 0.95em;
-      margin-bottom: 6px;
-      color: #a04000;
-    }
-
+    main { max-width: 560px; margin: 24px auto; padding: 0 16px 40px; }
+    .card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); margin-bottom: 16px; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .card-title { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
+    .access-alert { display: none; background: #fff5e6; border: 1px solid #ffc87a; border-left: 4px solid #f39c12; border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; font-size: 0.88em; color: #b35c00; line-height: 1.6; }
+    .access-alert .alert-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; color: #a04000; }
     .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .access-alert a:hover { text-decoration: underline; }
-
-    /* ── STARS ── */
-    .stars {
-      display: flex;
-      gap: 6px;
-      margin: 10px 0 16px;
-    }
-
-    .star {
-      font-size: 2rem;
-      cursor: pointer;
-      color: #ddd;
-      transition: color 0.15s, transform 0.1s;
-      line-height: 1;
-    }
-
+    .stars { display: flex; gap: 6px; margin: 10px 0 16px; }
+    .star { font-size: 2rem; cursor: pointer; color: #ddd; transition: color 0.15s, transform 0.1s; line-height: 1; }
     .star:hover, .star.selected { color: #f0c040; }
     .star:hover { transform: scale(1.15); }
-
-    /* ── FORM ── */
     .form-group { margin-bottom: 14px; }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8em;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 4px;
-    }
-
-    .form-group textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1.5px solid #dde3f0;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.88em;
-      outline: none;
-      resize: vertical;
-      min-height: 100px;
-      transition: border-color 0.2s;
-      color: #333;
-    }
-
-    .form-group textarea:focus {
-      border-color: #1464dd;
-      box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
-    }
-
-    .form-group textarea:disabled {
-      background: #f5f5f5;
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    /* ── BUTTONS ── */
-    .btn-submit {
-      width: 100%;
-      padding: 11px;
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.92em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
+    .form-group label { display: block; font-size: 0.8em; font-weight: 600; color: #444; margin-bottom: 4px; }
+    .form-group textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #dde3f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.88em; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s; color: #333; }
+    .form-group textarea:focus { border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1); }
+    .form-group textarea:disabled { background: #f5f5f5; cursor: not-allowed; opacity: 0.6; }
+    .btn-submit { width: 100%; padding: 11px; background: linear-gradient(135deg, #1464dd, #0d47a1); color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.92em; font-weight: 600; cursor: pointer; transition: all 0.2s; }
     .btn-submit:hover:not(:disabled) { background: linear-gradient(135deg, #0d47a1, #083080); transform: translateY(-1px); }
     .btn-submit:disabled { background: #ccc; cursor: not-allowed; transform: none; }
-
-    /* ── FEEDBACK DISPLAY ── */
     .feedback-display { display: none; }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 10px 0;
-      border-bottom: 1px solid #f0f4ff;
-      font-size: 0.88em;
-      gap: 12px;
-    }
-
+    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f0f4ff; font-size: 0.88em; gap: 12px; }
     .info-row:last-child { border-bottom: none; }
-
-    .info-row .label {
-      color: #888;
-      font-weight: 600;
-      font-size: 0.82em;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      flex-shrink: 0;
-      width: 80px;
-    }
-
+    .info-row .label { color: #888; font-weight: 600; font-size: 0.82em; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; width: 80px; }
     .info-row .value { color: #1a1a2e; font-weight: 500; text-align: right; word-break: break-word; }
-
     .stars-display { color: #f0c040; font-size: 1.1em; letter-spacing: 2px; }
-
-    .btn-back {
-      width: 100%;
-      padding: 11px;
-      background: linear-gradient(135deg, #27ae60, #1e8449);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.92em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 14px;
-    }
-
+    .btn-back { width: 100%; padding: 11px; background: linear-gradient(135deg, #27ae60, #1e8449); color: #fff; border: none; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.92em; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 14px; }
     .btn-back:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    @media (max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; gap: 8px; }
-      header h1 { font-size: 1em; }
-      nav a { font-size: 0.7em; padding: 6px 10px; }
-      main { margin: 12px auto; }
-      .star { font-size: 1.8rem; }
-    }
+    @media (max-width: 600px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } header h1 { font-size: 1em; } nav a { font-size: 0.7em; padding: 6px 10px; } main { margin: 12px auto; } .star { font-size: 1.8rem; } }
   </style>
 </head>
 <body>
-
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
@@ -250,18 +61,14 @@
   </header>
 
   <main>
-
-    <!-- Access Alert -->
     <div class="access-alert" id="accessAlert">
       <div class="alert-title">🔒 Access Restricted</div>
       You must be logged in to submit feedback. Please
       <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
     </div>
 
-    <!-- Feedback Form Card -->
     <div class="card" id="feedbackCard">
       <div class="card-title">💬 Rate Our Service</div>
-
       <div class="form-group">
         <label>Your Rating</label>
         <div class="stars" id="starsContainer">
@@ -272,133 +79,112 @@
           <span class="star" data-value="5">★</span>
         </div>
       </div>
-
       <div class="form-group">
         <label>Your Message</label>
         <textarea id="feedbackText" placeholder="Tell us about your experience..."></textarea>
       </div>
-
       <button class="btn-submit" id="submitBtn" onclick="submitFeedback()">Submit Feedback</button>
     </div>
 
-    <!-- Feedback Display Card -->
     <div class="card feedback-display" id="feedbackDisplay">
       <div class="card-title">✅ Feedback Submitted</div>
-      <div class="info-row">
-        <span class="label">Email</span>
-        <span class="value" id="feedbackEmail"></span>
-      </div>
-      <div class="info-row">
-        <span class="label">Rating</span>
-        <span class="value stars-display" id="feedbackStars"></span>
-      </div>
-      <div class="info-row">
-        <span class="label">Message</span>
-        <span class="value" id="feedbackMessage"></span>
-      </div>
-      <div class="info-row">
-        <span class="label">Time</span>
-        <span class="value" id="feedbackTime"></span>
-      </div>
+      <div class="info-row"><span class="label">Email</span><span class="value" id="feedbackEmail"></span></div>
+      <div class="info-row"><span class="label">Rating</span><span class="value stars-display" id="feedbackStars"></span></div>
+      <div class="info-row"><span class="label">Message</span><span class="value" id="feedbackMessage"></span></div>
+      <div class="info-row"><span class="label">Time</span><span class="value" id="feedbackTime"></span></div>
       <button class="btn-back" onclick="window.location.href='car-available.html'">← Back to Cars</button>
     </div>
-
   </main>
 
   <script>
-    let selectedRating = 0;
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    var selectedRating = 0;
+    var isLoggedIn  = localStorage.getItem('isLoggedIn');
+    var currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    var userEmail   = currentUser.email || '';
 
-    // ── Check login ──
-    if (!isLoggedIn) {
+    // Each user's feedback keyed by their email
+    function feedbackKey(){ return 'userFeedback_' + userEmail; }
+
+    if (!isLoggedIn || !userEmail) {
       document.getElementById('accessAlert').style.display = 'block';
       document.getElementById('feedbackText').disabled = true;
       document.getElementById('submitBtn').disabled = true;
-      document.querySelectorAll('.star').forEach(s => s.style.cursor = 'not-allowed');
+      document.querySelectorAll('.star').forEach(function(s){ s.style.cursor = 'not-allowed'; });
     }
 
-    // ── Stars ──
-    document.querySelectorAll('.star').forEach(star => {
-      star.addEventListener('click', function() {
+    document.querySelectorAll('.star').forEach(function(star){
+      star.addEventListener('click', function(){
         if (!isLoggedIn) return;
         selectedRating = parseInt(this.dataset.value);
         updateStars(selectedRating);
       });
     });
 
-    function updateStars(rating) {
-      document.querySelectorAll('.star').forEach(s => {
+    function updateStars(rating){
+      document.querySelectorAll('.star').forEach(function(s){
         s.classList.toggle('selected', parseInt(s.dataset.value) <= rating);
       });
     }
 
-    function getUserEmail() {
-      try {
-        const user = JSON.parse(localStorage.getItem('currentUser'));
-        return user ? user.email : 'Unknown';
-      } catch(e) { return 'Unknown'; }
-    }
-
-    // ── Submit ──
-    function submitFeedback() {
-      if (!isLoggedIn) {
+    function submitFeedback(){
+      if (!isLoggedIn || !userEmail){
         document.getElementById('accessAlert').scrollIntoView({ behavior: 'smooth' });
         return;
       }
 
-      const message = document.getElementById('feedbackText').value.trim();
-      const userEmail = getUserEmail();
+      var message = document.getElementById('feedbackText').value.trim();
 
-      if (!selectedRating || !message) {
-        alert('❌ Please provide a rating and message before submitting.'); return;
+      if (!selectedRating || !message){
+        alert('❌ Please provide a rating and message before submitting.');
+        return;
       }
 
-      if (localStorage.getItem('userFeedback')) {
-        alert('❌ You already submitted feedback.');
-        retrieveFeedback(); return;
+      var existing = localStorage.getItem(feedbackKey());
+      if (existing){
+        displayFeedback(JSON.parse(existing));
+        return;
       }
 
-      const feedbackData = {
-        email: userEmail,
+      var feedbackData = {
+        email:  userEmail,
         rating: selectedRating,
-        message,
-        time: new Date().toLocaleString()
+        message: message,
+        time:   new Date().toLocaleString()
       };
 
-      localStorage.setItem('userFeedback', JSON.stringify(feedbackData));
+      localStorage.setItem(feedbackKey(), JSON.stringify(feedbackData));
+
+      // Also save to shared feedbackMessages list for admin panel
+      var allFeedback = JSON.parse(localStorage.getItem('feedbackMessages') || '[]');
+      allFeedback.push(feedbackData);
+      localStorage.setItem('feedbackMessages', JSON.stringify(allFeedback));
+
       displayFeedback(feedbackData);
     }
 
-    // ── Display ──
-    function displayFeedback(data) {
-      document.getElementById('feedbackCard').style.display = 'none';
+    function displayFeedback(data){
+      document.getElementById('feedbackCard').style.display   = 'none';
       document.getElementById('feedbackDisplay').style.display = 'block';
-      document.getElementById('feedbackEmail').textContent   = data.email;
-      document.getElementById('feedbackStars').textContent   = '★'.repeat(data.rating);
-      document.getElementById('feedbackMessage').textContent = data.message;
-      document.getElementById('feedbackTime').textContent    = data.time;
+      document.getElementById('feedbackEmail').textContent    = data.email;
+      document.getElementById('feedbackStars').textContent    = '★'.repeat(data.rating);
+      document.getElementById('feedbackMessage').textContent  = data.message;
+      document.getElementById('feedbackTime').textContent     = data.time;
     }
 
-    // ── Retrieve on load ──
-    function retrieveFeedback() {
-      try {
-        const stored = JSON.parse(localStorage.getItem('userFeedback'));
-        if (stored) {
-          displayFeedback(stored);
-        }
-      } catch(e) { localStorage.removeItem('userFeedback'); }
-    }
+    // Load this user's own feedback on page load
+    (function(){
+      if (!userEmail) return;
+      var stored = localStorage.getItem(feedbackKey());
+      if (stored) { try { displayFeedback(JSON.parse(stored)); } catch(e){} }
+    })();
 
-    retrieveFeedback();
-
-    // ── Logout ──
-    document.getElementById('logoutBtn').addEventListener('click', e => {
+    document.getElementById('logoutBtn').addEventListener('click', function(e){
       e.preventDefault();
       localStorage.removeItem('isLoggedIn');
       localStorage.removeItem('currentUser');
       window.location.href = 'index.html';
     });
   </script>
-
+  <script src="maintenance-check.js"></script>
 </body>
 </html>
