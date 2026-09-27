@@ -166,7 +166,9 @@
       .booking-card{padding:14px;}
       main{padding:0 10px 40px;}
       .summary-bar{gap:8px;}
-      .summary-card{min-width:80px;padding:10px 10px;}
+      .summary-card{min-width:70px;padding:8px 6px;}
+      .summary-card .s-num{font-size:1.15em;}
+      .summary-card .s-label{font-size:0.62em;}
       .booking-controls{gap:8px;}
       .search-wrap{max-width:100%;}
     }
@@ -723,12 +725,12 @@
         } else if (balancePaid) {
           var pickupApproved = localStorage.getItem('pickupStatus_' + b.bookingId) === 'picked';
           if (pickupApproved) {
-            noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">🚗 Car picked up — enjoy your ride! Thank you for choosing Waliko Car Hire. 🎉</div></div>';
+            noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">✅ Car collected. Enjoy your ride! Thanks for choosing Waliko Car Hire.</div></div>';
           } else {
             noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">✅ Fully paid! Collect your car at our office — bring your physical National ID &amp; Driving Licence.</div></div>';
           }
         } else {
-          noticeHtml = '<div class="paid-notice">✅ <strong>Deposit Paid!</strong> Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. You can also pay it now online. 🚗<br>📋 Please bring your physical National ID &amp; Driving Licence at pickup.</div>';
+          noticeHtml = '<div class="paid-notice">✅ <strong>Deposit Paid!</strong> Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. You can also pay it now online.<br>Please bring your physical National ID &amp; Driving Licence at pickup.</div>';
         }
 
         var actionsHtml = '';
