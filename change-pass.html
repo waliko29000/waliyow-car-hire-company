@@ -27,7 +27,13 @@
       box-shadow: 0 3px 15px rgba(20,100,221,0.35);
     }
 
-    header h1 { font-size: 1.2em; font-weight: 700; }
+    header h1 { 
+      font-size: 1.2em; 
+      font-weight: 700; 
+      color: #fff; 
+      border: none; 
+      text-decoration: none; 
+    }
 
     nav { display: flex; flex-wrap: wrap; gap: 6px; }
 
@@ -43,7 +49,7 @@
       transition: all 0.2s;
     }
 
-    nav a:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
+    nav a:hover, nav a.active { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.6); }
     nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
     nav a.logout:hover { background: rgba(255,80,80,0.2); }
 
@@ -71,7 +77,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    h1 {
+    .container h1 {
       text-align: center;
       margin-bottom: 20px;
       color: #1464dd;
@@ -79,6 +85,45 @@
       font-weight: 700;
       padding-bottom: 12px;
       border-bottom: 2px solid #f0f4ff;
+    }
+
+    /* ── DISCLAIMER / NOT LOGGED IN WARNING ── */
+    .disclaimer-banner {
+      background: #fdf2f2;
+      border: 1px solid #f8b4b4;
+      border-left: 4px solid #e74c3c;
+      color: #981b1b;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.85em;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .disclaimer-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .disclaimer-banner a {
+      align-self: flex-start;
+      display: inline-block;
+      white-space: nowrap;
+      background: #1464dd;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .disclaimer-banner a:hover {
+      background: #0d47a1;
     }
 
     .form-group { margin-bottom: 14px; }
@@ -110,10 +155,10 @@
       box-shadow: 0 0 0 3px rgba(20,100,221,0.1);
     }
 
-    input[type="email"]::placeholder,
-    input[type="password"]::placeholder {
-      font-size: 0.85em;
-      color: #aaa;
+    input:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+      border-color: #e0e0e0;
     }
 
     button {
@@ -131,9 +176,15 @@
       margin-top: 4px;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
       background: linear-gradient(135deg, #0d47a1, #083080);
       transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #a5c2f0;
+      cursor: not-allowed;
+      opacity: 0.7;
     }
 
     .error-message {
@@ -165,10 +216,15 @@
 <body>
 
   <header>
-    <h1 style="color: white;">🚗 Waliko Car Hire</h1>
+    <h1>🚗 Waliko Car Hire</h1>
     <nav>
-      <a href="car-available.html">Home</a>
+      <a href="index.html">Home</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html">Help</a>
       <a href="account.html">Settings</a>
+      <a href="feedback.html">Feedback</a>
       <a href="index.html" class="logout" id="logoutBtn">Logout</a>
     </nav>
   </header>
@@ -176,6 +232,15 @@
   <main>
     <div class="container">
       <h1>Change Password</h1>
+
+      <!-- Cleaned disclaimer layout -->
+      <div id="login-disclaimer" class="disclaimer-banner" style="display: none;">
+        <div class="disclaimer-content">
+          <span>⚠️ You are not logged in. Please log in to change your password.</span>
+        </div>
+        <a href="index.html">Log In</a>
+      </div>
+
       <form id="changePasswordForm">
         <div class="form-group">
           <label for="email">Email</label>
@@ -197,7 +262,7 @@
           <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your new password" required>
           <div id="confirmPassword-error" class="error-message" style="display:none;"></div>
         </div>
-        <button type="submit">Change Password</button>
+        <button type="submit" id="submitBtn">Change Password</button>
         <div id="form-error" class="error-message" style="display:none; margin-top:10px;"></div>
         <div id="success-message" class="success-message" style="display:none;"></div>
       </form>
@@ -211,6 +276,9 @@
       const oldPasswordInput        = document.getElementById('oldPassword');
       const newPasswordInput        = document.getElementById('newPassword');
       const confirmPasswordInput    = document.getElementById('confirmPassword');
+      const submitBtn               = document.getElementById('submitBtn');
+      const loginDisclaimer         = document.getElementById('login-disclaimer');
+      
       const formError               = document.getElementById('form-error');
       const successMessageDiv       = document.getElementById('success-message');
       const emailErrorDiv           = document.getElementById('email-error');
@@ -218,8 +286,27 @@
       const newPasswordErrorDiv     = document.getElementById('newPassword-error');
       const confirmPasswordErrorDiv = document.getElementById('confirmPassword-error');
 
+      // Check login status on page load
+      const currentUser = localStorage.getItem('currentUser');
+      const isLoggedIn  = localStorage.getItem('isLoggedIn');
+
+      if (!currentUser || isLoggedIn !== 'true') {
+        // Show disclaimer banner
+        loginDisclaimer.style.display = 'flex';
+
+        // Disable input fields & submit button
+        emailInput.disabled = true;
+        oldPasswordInput.disabled = true;
+        newPasswordInput.disabled = true;
+        confirmPasswordInput.disabled = true;
+        submitBtn.disabled = true;
+      }
+
       changePasswordForm.addEventListener('submit', (event) => {
         event.preventDefault();
+
+        if (submitBtn.disabled) return;
+
         formError.style.display = 'none';
         successMessageDiv.style.display = 'none';
         emailErrorDiv.style.display = 'none';
@@ -256,14 +343,8 @@
         }
         if (hasErrors) return;
 
-        const storedUser = localStorage.getItem('currentUser');
-        if (!storedUser) {
-          formError.textContent = "You must be logged in to change your password.";
-          formError.style.display = 'block'; return;
-        }
-
         try {
-          const user = JSON.parse(storedUser);
+          const user = JSON.parse(currentUser);
 
           if (enteredEmail === user.email && enteredOldPassword === user.password) {
             if (enteredNewPassword === enteredOldPassword) {
