@@ -5,13 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Credit – Waliko Car Hire</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .cr-info p { line-height: 1.7; color: #555; margin: 0 0 8px; font-size: .85em; }
+    .cr-info .full { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e2e7f3; }
+    .cr-info.open .full { display: block; }
+    .cr-info .toggle { background: none; border: 0; padding: 0; cursor: pointer; color: #1464dd; font: 600 .85em Poppins, sans-serif; }
+  </style>
 </head>
 <body>
   <main class="cr-wrap">
     <a href="bookings.html">← Back to My Bookings</a>
     <h1>💰 My Store Credit</h1>
+
+    <div class="cr-card cr-info" id="crInfo">
+      <p>
+        Refunds are returned as <strong>store credit</strong> in your Waliko account, not to M-Pesa.
+        Only paid cars <strong>still waiting for pickup</strong> can be refunded.
+      </p>
+      <button type="button" class="toggle" id="crToggle">Read more ▾</button>
+      <div class="full">
+        <p>
+          <strong>1.</strong> Find your car under <em>Cars available for refund</em> and press <strong>Request refund</strong>.<br>
+          <strong>2.</strong> Our team reviews it: <span style="color:#b35c00;font-weight:700">Pending</span>,
+          <span style="color:#1b8a3d;font-weight:700">Approved</span> or <span style="color:#c0392b;font-weight:700">Rejected</span>.<br>
+          <strong>3.</strong> When approved, the amount is added to your credit balance.<br>
+          <strong>4.</strong> On your next booking, choose <strong>Pay with Store Credit</strong> at payment.
+        </p>
+        <p style="margin-bottom:0">
+          <strong>Good to know:</strong><br>
+          • Once a car has been picked up, it can no longer be refunded.<br>
+          • Each booking can be refunded once.<br>
+          • Your credit must cover the full amount of the booking you're paying for.
+        </p>
+      </div>
+    </div>
+
     <div id="creditApp"></div>
   </main>
   <script src="credit.js"></script>
+  <script>
+    document.getElementById('crToggle').onclick = function () {
+      var box = document.getElementById('crInfo');
+      box.classList.toggle('open');
+      this.textContent = box.classList.contains('open') ? 'Show less ▴' : 'Read more ▾';
+    };
+  </script>
 </body>
 </html>
