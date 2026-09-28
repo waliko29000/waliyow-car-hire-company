@@ -29,11 +29,16 @@ const CR = (() => {
   const days = b => b.pickup && b.endDate ? Math.max(1, Math.ceil((new Date(b.endDate) - new Date(b.pickup)) / 864e5)) : 1;
   const cap = b => { const total = (b.price || 0) * days(b), dep = Number(b.paidAmount) || 0; return b.balancePaid && dep < total ? total : dep; };
   const locked = b => ['requested', 'refunded'].includes(b.refundStatus);
+  // Refundable only while the car is still waiting for pickup (pickup date in the future, not marked picked up)
+  const notPicked = b => {
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    return !b.pickedUp && localStorage.getItem('pickupStatus_' + b.bookingId) !== 'picked' && !/picked|complete|return/i.test(b.status || '') && !!b.pickup && new Date(b.pickup + 'T00:00:00') > t;
+  };
 
   // ── Refund requests ──
   const requestRefund = (id, reason) => {
     const e = me(), b = bookings().find(x => String(x.bookingId) === String(id));
-    if (!e || !b || (b.email || '').toLowerCase() !== e || b.paymentStatus !== 'paid' || locked(b)) return 'This booking is not eligible for a refund.';
+    if (!e || !b || (b.email || '').toLowerCase() !== e || b.paymentStatus !== 'paid' || locked(b) || !notPicked(b)) return 'Only paid cars still waiting for pickup can be refunded.';
     const r = J('refundRequests', []);
     r.push({ id: 'R' + Date.now(), bookingId: id, email: e, carName: b.carName || '', amount: cap(b), reason, status: 'pending', at: new Date().toLocaleString() });
     S('refundRequests', r);
@@ -65,14 +70,14 @@ const CR = (() => {
     const el = document.getElementById('creditApp'); if (!el) return;
     const e = me();
     if (!e) { el.innerHTML = '<div class="cr-card">Please <a href="signin.html">sign in</a> first.</div>'; return; }
-    const bs = bookings().filter(b => (b.email || '').toLowerCase() === e && b.paymentStatus === 'paid');
+    const bs = bookings().filter(b => (b.email || '').toLowerCase() === e && b.paymentStatus === 'paid' && notPicked(b));
     const rq = J('refundRequests', []).filter(r => r.email === e).reverse();
     const lg = ledger(e).slice().reverse().slice(0, 15);
     el.innerHTML =
       `<div class="cr-card cr-bal"><small>Store credit balance</small><h2>${KES(balance(e))}</h2></div>` +
-      `<div class="cr-card"><h3>Paid bookings</h3>${bs.length ? bs.map(b =>
-        `<div class="cr-row"><span>${esc(b.carName)} · ${esc(bid(b.bookingId))}<br><small>Paid ${KES(cap(b))}${b.refundStatus ? ' · refund ' + esc(b.refundStatus) : ''}</small></span>` +
-        (locked(b) ? '' : `<button onclick="CR.ask('${esc(b.bookingId)}')">Request refund</button>`) + '</div>').join('') : '<p>No paid bookings yet.</p>'}</div>` +
+      `<div class="cr-card"><h3>Cars available for refund</h3><p style="margin:0 0 6px">Paid bookings still waiting for pickup.</p>${bs.length ? bs.map(b =>
+        `<div class="cr-row"><span>${esc(b.carName)} · ${esc(bid(b.bookingId))}<br><small>Paid ${KES(cap(b))} · Pickup ${esc(b.pickup)}${b.refundStatus ? ' · refund ' + esc(b.refundStatus) : ''}</small></span>` +
+        (locked(b) ? '' : `<button onclick="CR.ask('${esc(b.bookingId)}')">Request refund</button>`) + '</div>').join('') : '<p>No cars waiting for pickup right now. Once a car has been picked up, it can no longer be refunded.</p>'}</div>` +
       `<div class="cr-card"><h3>My refund requests</h3>${rq.length ? rq.map(r =>
         `<div class="cr-row"><span>${esc(r.carName)} · ${esc(bid(r.bookingId))}<br><small>${esc(r.at)}</small></span><span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span></div>`).join('') : '<p>None.</p>'}</div>` +
       `<div class="cr-card"><h3>Credit history</h3>${lg.length ? lg.map(t =>
@@ -126,13 +131,47 @@ const CR = (() => {
     m.parentNode.insertBefore(d, m);
   }
 
+  // ── My Bookings hook: adds "Request Refund" + refund tags to booking cards ──
+  function bookingsHook() {
+    const list = document.getElementById('bookingsList'); if (!list) return;
+    const st = document.createElement('style');
+    st.textContent = '.btn-refund{background:#fff5e6;color:#b35c00;border:1px solid #ffc87a}.btn-refund:hover{background:#ffe9c7}.rf-tag{display:inline-block;font-size:.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px}.rf-pending{background:#fff5e6;color:#b35c00}.rf-done{background:#e6fff0;color:#1b8a3d}';
+    document.head.appendChild(st);
+    const decorate = () => list.querySelectorAll('.booking-card').forEach(card => {
+      if (card.dataset.rf) return;
+      const m = /ID:\s*(\S+)/.exec((card.querySelector('.booking-id') || {}).textContent || '');
+      const b = m && bookings().find(x => String(x.bookingId) === m[1]);
+      if (!b) return;
+      card.dataset.rf = '1';
+      const h = card.querySelector('h3'), pending = '<span class="rf-tag rf-pending">⏳ Refund pending</span>';
+      if (locked(b)) {
+        h.insertAdjacentHTML('beforeend', b.refundStatus === 'refunded' ? '<span class="rf-tag rf-done">💰 Refunded to credit</span>' : pending);
+        card.querySelectorAll('.btn-balance').forEach(x => x.remove());
+        return;
+      }
+      if (!(b.paymentStatus === 'paid' && notPicked(b))) return;
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-refund'; btn.textContent = 'Request Refund';
+      btn.onclick = () => {
+        const reason = prompt('Reason for the refund request?'); if (reason === null) return;
+        const err = requestRefund(b.bookingId, reason.trim()); if (err) { alert(err); return; }
+        btn.remove(); h.insertAdjacentHTML('beforeend', pending);
+        card.querySelectorAll('.btn-balance').forEach(x => x.remove());
+        alert('Refund request sent. Track it under My Credit.');
+      };
+      card.querySelector('.card-actions').appendChild(btn);
+    });
+    new MutationObserver(decorate).observe(list, { childList: true });
+    decorate();
+  }
+
   // ── Init ──
   if (document.getElementById('creditApp') || document.getElementById('adminApp')) {
     const st = document.createElement('style');
     st.textContent = "body{margin:0;background:#f0f4ff;font-family:Poppins,sans-serif;color:#333}.cr-wrap{max-width:560px;margin:0 auto;padding:16px}.cr-wrap h1{color:#1464dd;font-size:1.2em}.cr-wrap a{color:#1464dd;font-weight:600;text-decoration:none;font-size:.85em}.cr-card{background:#fff;border-radius:14px;padding:16px 18px;margin:12px 0;box-shadow:0 3px 16px rgba(20,100,221,.09)}.cr-card h3{margin:0 0 8px;font-size:.95em;color:#1464dd}.cr-card p{font-size:.85em;color:#888}.cr-bal h2{margin:2px 0 0;color:#1b8a3d}.cr-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #e2e7f3;font-size:.85em}.cr-row:last-child{border:0}.cr-row button,.cr-act button{background:#1464dd;color:#fff;border:0;border-radius:8px;padding:7px 12px;font:600 .8em Poppins,sans-serif;cursor:pointer}.cr-row button.no,.cr-act button.no{background:#fff0f0;color:#c0392b;border:1px solid #ffcccc}.cr-req{padding:12px 0;border-bottom:1px dashed #e2e7f3}.cr-req:last-child{border:0}.cr-grid{display:grid;grid-template-columns:88px 1fr;gap:5px 10px;font-size:.85em}.cr-grid span{color:#8a97b8}.cr-grid b{font-weight:600;word-break:break-word}.cr-act{display:flex;gap:8px;margin-top:10px}.cr-tag.cr-approved{color:#1b8a3d;background:#e6fff0;border:1px solid #27ae60;padding:3px 10px;border-radius:20px}.cr-tag.cr-rejected{color:#c0392b;background:#fff0f0;border:1px solid #f5a3a3;padding:3px 10px;border-radius:20px}.cr-tag.cr-pending{color:#b35c00;background:#fff5e6;border:1px solid #ffc87a;padding:3px 10px;border-radius:20px}.cr-tag{font-size:.78em;font-weight:700;white-space:nowrap}";
     document.head.appendChild(st);
   }
-  customer(); admin(); payHook();
+  customer(); admin(); payHook(); bookingsHook();
 
   return { balance, requestRefund, decide, use, ask, act };
 })();
