@@ -19,9 +19,13 @@
     .card { background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 3px 16px rgba(20,100,221,0.09); border: 1px solid rgba(20,100,221,0.07); margin-bottom: 16px; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     .card-title { font-size: 1em; font-weight: 700; color: #1464dd; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid #f0f4ff; }
-    .access-alert { display: none; background: #fff5e6; border: 1px solid #ffc87a; border-left: 4px solid #f39c12; border-radius: 10px; padding: 16px 18px; margin-bottom: 16px; font-size: 0.88em; color: #b35c00; line-height: 1.6; }
-    .access-alert .alert-title { font-weight: 700; font-size: 0.95em; margin-bottom: 6px; color: #a04000; }
-    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
+
+    /* ── NOT LOGGED IN WARNING (same as change-pass) ── */
+    .disclaimer-banner { background: #fdf2f2; border: 1px solid #f8b4b4; border-left: 4px solid #e74c3c; color: #981b1b; padding: 14px 16px; border-radius: 8px; font-size: 0.85em; margin-bottom: 16px; display: none; flex-direction: column; gap: 10px; }
+    .disclaimer-content { display: flex; align-items: center; gap: 8px; }
+    .disclaimer-banner a { align-self: flex-start; display: inline-block; white-space: nowrap; background: #1464dd; color: #fff; padding: 6px 16px; border-radius: 6px; font-size: 0.85em; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .disclaimer-banner a:hover { background: #0d47a1; }
+
     .stars { display: flex; gap: 6px; margin: 10px 0 16px; }
     .star { font-size: 2rem; cursor: pointer; color: #ddd; transition: color 0.15s, transform 0.1s; line-height: 1; }
     .star:hover, .star.selected { color: #f0c040; }
@@ -46,6 +50,7 @@
   </style>
 </head>
 <body>
+  <script src="user-header.js"></script>
   <header>
     <h1>🚗 Waliko Car Hire</h1>
     <nav>
@@ -61,10 +66,11 @@
   </header>
 
   <main>
-    <div class="access-alert" id="accessAlert">
-      <div class="alert-title">🔒 Access Restricted</div>
-      You must be logged in to submit feedback. Please
-      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
+    <div class="disclaimer-banner" id="accessAlert">
+      <div class="disclaimer-content">
+        <span>⚠️ You are not logged in. Please log in to submit feedback.</span>
+      </div>
+      <a href="index.html">Log In</a>
     </div>
 
     <div class="card" id="feedbackCard">
@@ -106,7 +112,7 @@
     function feedbackKey(){ return 'userFeedback_' + userEmail; }
 
     if (!isLoggedIn || !userEmail) {
-      document.getElementById('accessAlert').style.display = 'block';
+      document.getElementById('accessAlert').style.display = 'flex';
       document.getElementById('feedbackText').disabled = true;
       document.getElementById('submitBtn').disabled = true;
       document.querySelectorAll('.star').forEach(function(s){ s.style.cursor = 'not-allowed'; });
