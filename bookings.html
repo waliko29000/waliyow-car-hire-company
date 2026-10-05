@@ -172,6 +172,14 @@
       .booking-controls{gap:8px;}
       .search-wrap{max-width:100%;}
     }
+    /* ── Phone-friendly controls row: title / search / filters each on their own row ── */
+    @media(max-width:700px){
+      .booking-controls{gap:10px;}
+      .booking-controls .page-title{flex:1 1 100%;}
+      .booking-controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
+      .booking-controls .status-filter{flex:1 1 100%;}
+      .booking-controls .sf-btn{flex:1;text-align:center;}
+    }
   </style>
 </head>
 <body>
