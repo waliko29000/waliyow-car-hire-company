@@ -52,7 +52,8 @@
     +'@media(max-width:600px){'
     +'#wk-header{flex-direction:column;align-items:flex-start;gap:8px;}'
     +'#wk-header h1{font-size:16px;}'
-    +'#wk-header nav a{font-size:11.2px;padding:6px 10px;}}';
+    +'#wk-header nav{width:100%;}'
+    +'#wk-header nav a{flex:1 1 auto;text-align:center;font-size:11.2px;padding:6px 10px;}}';
   document.head.appendChild(st);
 
   /* build the header */
