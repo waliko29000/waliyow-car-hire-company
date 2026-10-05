@@ -1,12 +1,4 @@
-/* ============================================
-   WALIKO - SHARED USER HEADER
-   Style copied exactly from account.html.
-   Put this line right after <body> on every
-   logged-in user page (replaces each page's own
-   <header> automatically):
 
-   <script src="user-header.js"></script>
-   ============================================ */
 (function(){
   var path = (window.location.pathname.split('/').pop() || '').toLowerCase();
 
