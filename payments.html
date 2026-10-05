@@ -79,9 +79,7 @@
       nav a{font-size:0.72em;padding:6px 10px;}
       .info-table th{width:100px;font-size:0.73em;}
       .summary-bar{gap:8px;}
-      .summary-card{min-width:70px;padding:8px 6px;}
-      .summary-card .s-num{font-size:1.15em;}
-      .summary-card .s-label{font-size:0.62em;}
+      .summary-card{min-width:80px;padding:10px;}
       .controls{gap:8px;}
       .search-wrap{max-width:100%;}
     }
@@ -138,6 +136,7 @@
 
     var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+    // "2026-10-09" -> "9 October 2026"
     function fmtDate(str){
       if(!str) return '';
       var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(str));
@@ -145,12 +144,13 @@
       return parseInt(m[3],10)+' '+MONTHS[parseInt(m[2],10)-1]+' '+m[1];
     }
 
+    // "9/19/2026, 1:35:05 PM" (or "19/09/2026, 13:35:05") -> "19 September 2026, 1:35 PM"
     function fmtStamp(str){
       if(!str) return '';
       var m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s+(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/.exec(String(str).trim());
       if(!m) return str;
       var first=parseInt(m[1],10), second=parseInt(m[2],10), hr=parseInt(m[4],10), ap=m[6];
-      var day = ap ? second : first;
+      var day = ap ? second : first;   // AM/PM strings are month/day, 24h strings are day/month
       var mon = ap ? first  : second;
       if(mon<1||mon>12) return str;
       var time = ap ? (hr+':'+m[5]+' '+ap.toUpperCase())
@@ -158,19 +158,8 @@
       return day+' '+MONTHS[mon-1]+' '+m[3]+', '+time;
     }
 
+    // Booking IDs are stored with a leading "#", so strip it before adding our own
     function shortId(id){ return String(id).replace(/^#/,''); }
-
-    // Same stable per-browser guest identifier used on bookings.html —
-    // must be the SAME key ('guestId') so a guest's payments page shows
-    // exactly the bookings they made, not every guest's data.
-    function getOrCreateGuestId() {
-      var gid = localStorage.getItem('guestId');
-      if (!gid) {
-        gid = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
-        localStorage.setItem('guestId', gid);
-      }
-      return gid;
-    }
 
     function setFilter(btn){
       document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
@@ -204,23 +193,10 @@
       var currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
       var userEmail   = (currentUser.email || '').toLowerCase();
       var allBookings = JSON.parse(localStorage.getItem('bookings')||'[]');
-
-      var bookings;
-      if (userEmail) {
-        // Logged in: only bookings tied to this account's email
-        bookings = allBookings.filter(function(b){
-          return (b.email || '').toLowerCase() === userEmail;
-        });
-      } else {
-        // Guest: only bookings THIS browser created — matched by guestId,
-        // never every booking that merely has a blank email (that would
-        // leak every other guest's payment history into this view).
-        var myGuestId = getOrCreateGuestId();
-        bookings = allBookings.filter(function(b){
-          return !b.email && b.guestId === myGuestId;
-        });
-      }
-
+      // Only show bookings for the logged-in user
+      var bookings = allBookings.filter(function(b){
+        return (b.email || '').toLowerCase() === userEmail;
+      });
       bookings.forEach(b => { if(b.mpesaReceipt&&b.mpesaReceipt!=='N/A') b.paymentStatus='paid'; });
 
       renderSummary(bookings);
@@ -330,6 +306,7 @@
         });
       });
     }
+    window.renderPayments = renderPayments;
 
     function openModal(bookingId){
       var bks = JSON.parse(localStorage.getItem('bookings')||'[]');
@@ -430,6 +407,7 @@
     renderPayments();
   })();
   </script>
+  <script src="user-header.js"></script>
   <script src="maintenance-check.js"></script>
 </body>
 </html>
