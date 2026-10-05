@@ -1,4 +1,12 @@
+/* ============================================
+   WALIKO - SHARED USER HEADER
+   Style copied exactly from account.html.
+   Put this line right after <body> on every
+   logged-in user page (replaces each page's own
+   <header> automatically):
 
+   <script src="user-header.js"></script>
+   ============================================ */
 (function(){
   var path = (window.location.pathname.split('/').pop() || '').toLowerCase();
 
@@ -44,8 +52,9 @@
     +'@media(max-width:600px){'
     +'#wk-header{flex-direction:column;align-items:flex-start;gap:8px;}'
     +'#wk-header h1{font-size:16px;}'
-    +'#wk-header nav{width:100%;}'
-    +'#wk-header nav a{flex:1 1 auto;text-align:center;font-size:11.2px;padding:6px 10px;}}';
+    +'#wk-header nav{width:100% !important;display:flex !important;flex-wrap:wrap !important;}'
+    +'#wk-header nav a{flex:1 1 auto !important;text-align:center !important;font-size:11.2px;padding:6px 10px;}'
+    +'#wk-header nav a.logout{flex:0 0 auto !important;margin-left:auto !important;padding:6px 18px;}}';
   document.head.appendChild(st);
 
   /* build the header */
