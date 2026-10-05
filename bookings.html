@@ -46,6 +46,8 @@
     .sf-btn.active .sf-count{background:rgba(255,255,255,0.25);color:#fff;}
     .empty-msg{background:#fff;border-radius:14px;padding:32px 24px;text-align:center;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);color:#666;font-size:0.92em;line-height:1.7;}
     .empty-msg a{color:#1464dd;font-weight:600;text-decoration:none;}
+    .empty-msg a.btn-browse{display:inline-block;margin-top:14px;padding:11px 26px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border-radius:25px;font-size:0.9em;font-weight:700;box-shadow:0 4px 14px rgba(20,100,221,0.3);transition:all 0.2s;}
+    .empty-msg a.btn-browse:hover{background:#0d47a1;transform:translateY(-1px);}
     .booking-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);animation:fadeIn 0.3s ease;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
     .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
@@ -160,7 +162,8 @@
       header{flex-direction:column;align-items:flex-start;gap:8px;}
       nav{margin-top:4px;width:100%;}
       header h1{font-size:1em;}
-      nav a{font-size:0.7em;padding:6px 10px;}
+      nav a{font-size:0.7em;padding:6px 10px;flex:1 1 auto;text-align:center;}
+      nav a.logout{flex:0 0 auto;margin-left:auto;padding:6px 18px;}
       .card-header{flex-direction:column;gap:10px;}
       .card-actions{display:flex;flex-wrap:wrap;gap:6px;}
       .card-actions .btn{flex:1;text-align:center;min-width:80px;}
@@ -673,7 +676,7 @@
       }
 
       if (bookings.length === 0) {
-        list.innerHTML='<div class="empty-msg"><p>You haven\'t made any bookings yet.</p><p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p></div>';
+        list.innerHTML='<div class="empty-msg"><p>You haven\'t made any bookings yet.</p><p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p><a href="car-available.html" class="btn-browse">🚗 Browse Cars</a></div>';
         renderSummary([]); renderReminders([]);
         return;
       }
