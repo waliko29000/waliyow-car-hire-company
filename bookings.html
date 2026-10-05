@@ -42,6 +42,7 @@
     .sf-btn{padding:6px 12px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
     .sf-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
     .sf-btn{white-space:nowrap;}
+    .sf-short{display:none;}
     .sf-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:3px;border-radius:99px;background:#eef2fb;color:#1464dd;font-size:0.9em;font-weight:700;text-align:center;}
     .sf-btn.active .sf-count{background:rgba(255,255,255,0.25);color:#fff;}
     .empty-msg{background:#fff;border-radius:14px;padding:32px 24px;text-align:center;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);color:#666;font-size:0.92em;line-height:1.7;}
@@ -180,8 +181,11 @@
       .booking-controls{gap:10px;}
       .booking-controls .page-title{flex:1 1 100%;}
       .booking-controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
-      .booking-controls .status-filter{flex:1 1 100%;}
-      .booking-controls .sf-btn{flex:1 1 auto;text-align:center;}
+      .booking-controls .status-filter{flex:1 1 100%;flex-wrap:nowrap;gap:4px;}
+      .booking-controls .sf-btn{flex:1 1 0;min-width:0;padding:6px 3px;font-size:0.7em;text-align:center;}
+      .sf-count{min-width:16px;padding:1px 5px;margin-left:2px;}
+      .sf-full{display:none;}
+      .sf-short{display:inline;}
     }
   </style>
 </head>
@@ -591,7 +595,7 @@
         return d >= 0 && d <= 2;
       }).length;
       var counts = { all: total, pending: pending, paid: paid, soon: soon };
-      var labels = { all: 'All', pending: 'Pending', paid: 'Paid', soon: 'Pickup soon' };
+      var labels = { all: 'All', pending: 'Pending', paid: 'Paid', soon: '<span class="sf-full">Pickup soon</span><span class="sf-short">Soon</span>' };
       document.querySelectorAll('.sf-btn').forEach(function(btn){
         var k = btn.dataset.status;
         btn.innerHTML = labels[k] + ' <span class="sf-count">' + counts[k] + '</span>';
