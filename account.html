@@ -15,45 +15,6 @@
       min-height: 100vh;
     }
 
-    /* ── HEADER ── */
-    header {
-      background: linear-gradient(135deg, #1464dd, #0d47a1);
-      color: #fff;
-      padding: 10px 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 3px 15px rgba(20,100,221,0.35);
-    }
-
-    header h1 { font-size: 1.2em; font-weight: 700; }
-
-    nav { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    nav a {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff;
-      padding: 7px 13px;
-      border-radius: 25px;
-      font-size: 0.78em;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    nav a:hover, nav a.active {
-      background: rgba(255,255,255,0.3);
-      border-color: rgba(255,255,255,0.6);
-    }
-
-    nav a.logout { border-color: rgba(255,100,100,0.4); color: #ffaaaa; }
-    nav a.logout:hover { background: rgba(255,80,80,0.2); }
-
     /* ── MAIN ── */
     main {
       max-width: 600px;
@@ -189,29 +150,12 @@
     .menu-item.danger:hover { background: #fff5f5; }
 
     @media (max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; gap: 8px; }
-      header h1 { font-size: 1em; }
-      nav a { font-size: 0.7em; padding: 6px 10px; }
       main { margin: 12px auto; }
       .profile-card { padding: 16px; }
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>🚗 Waliko Car Hire</h1>
-    <nav>
-      <a href="dashboard.html">How to use</a>
-      <a href="car-available.html">Cars</a>
-      <a href="bookings.html">My Bookings</a>
-      <a href="payments.html">Payments</a>
-      <a href="help.html">Help</a>
-      <a href="account.html" class="active">Settings</a>
-      <a href="feedback.html">Feedback</a>
-      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
-    </nav>
-  </header>
 
   <main>
 
@@ -304,16 +248,9 @@
           reader.readAsDataURL(file);
         }
       });
-
-      // Logout
-      document.getElementById('logoutBtn').addEventListener('click', e => {
-        e.preventDefault();
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('currentUser');
-        window.location.href = 'index.html';
-      });
     });
   </script>
+<script src="user-header.js"></script>
 <script src="maintenance-check.js"></script>
 </body>
 </html>
