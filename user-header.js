@@ -63,8 +63,15 @@
   var nav = links.map(function(l){
     return '<a href="'+l[0]+'"'+(current===l[0]?' class="active"':'')+'>'+l[1]+'</a>';
   }).join('');
+  var titles = {
+    'dashboard.html':'Dashboard', 'car-available.html':'Cars', 'bookings.html':'My Bookings',
+    'payments.html':'Payments', 'help.html':'Help', 'account.html':'Settings',
+    'feedback.html':'Feedback', 'user.html':'Profile', 'credit.html':'Store Credit',
+    'change-pass.html':'Change Password'
+  };
+  var pageTitle = titles[path] || '';
   h.innerHTML =
-    '<h1>🚗 Waliko Car Hire</h1>'
+    '<h1>Waliko Car Hire'+(pageTitle ? ' | '+pageTitle : '')+'</h1>'
     +'<nav>'+nav+'<a href="index.html" class="logout" id="logoutBtn">Logout</a></nav>';
 
   function mount(){
