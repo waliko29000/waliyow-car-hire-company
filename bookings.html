@@ -41,6 +41,9 @@
     .status-filter{display:flex;gap:6px;flex-wrap:wrap;}
     .sf-btn{padding:6px 12px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
     .sf-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
+    .sf-btn{white-space:nowrap;}
+    .sf-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:3px;border-radius:99px;background:#eef2fb;color:#1464dd;font-size:0.9em;font-weight:700;text-align:center;}
+    .sf-btn.active .sf-count{background:rgba(255,255,255,0.25);color:#fff;}
     .empty-msg{background:#fff;border-radius:14px;padding:32px 24px;text-align:center;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);color:#666;font-size:0.92em;line-height:1.7;}
     .empty-msg a{color:#1464dd;font-weight:600;text-decoration:none;}
     .booking-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);animation:fadeIn 0.3s ease;}
@@ -178,7 +181,7 @@
       .booking-controls .page-title{flex:1 1 100%;}
       .booking-controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
       .booking-controls .status-filter{flex:1 1 100%;}
-      .booking-controls .sf-btn{flex:1;text-align:center;}
+      .booking-controls .sf-btn{flex:1 1 auto;text-align:center;}
     }
   </style>
 </head>
@@ -197,7 +200,6 @@
     </nav>
   </header>
   <main>
-    <div class="summary-bar" id="summaryBar"></div>
     <div class="reminder-banner" id="reminderBanner">
       <button class="reminder-close" title="Dismiss" onclick="dismissReminder()">&#x2715;</button>
       <div class="reminder-banner-title">🚗 Your pickup is coming up</div>
@@ -214,6 +216,7 @@
         <button class="sf-btn active" data-status="all"     onclick="setStatusFilter(this)">All</button>
         <button class="sf-btn"        data-status="pending" onclick="setStatusFilter(this)">Pending</button>
         <button class="sf-btn"        data-status="paid"    onclick="setStatusFilter(this)">Paid</button>
+        <button class="sf-btn"        data-status="soon"    onclick="setStatusFilter(this)" title="Paid bookings with pickup in the next 2 days">Pickup soon</button>
       </div>
     </div>
     <div id="bookingsList"></div>
@@ -587,11 +590,12 @@
         var d = daysUntil(b.pickup);
         return d >= 0 && d <= 2;
       }).length;
-      document.getElementById('summaryBar').innerHTML =
-        '<div class="summary-card"><div class="s-num">'+total+'</div><div class="s-label">Total Bookings</div></div>' +
-        '<div class="summary-card pending"><div class="s-num">'+pending+'</div><div class="s-label">Pending Payment</div></div>' +
-        '<div class="summary-card paid"><div class="s-num">'+paid+'</div><div class="s-label">Confirmed</div></div>' +
-        '<div class="summary-card remind"><div class="s-num">'+soon+'</div><div class="s-label">Pickup Soon</div></div>';
+      var counts = { all: total, pending: pending, paid: paid, soon: soon };
+      var labels = { all: 'All', pending: 'Pending', paid: 'Paid', soon: 'Pickup soon' };
+      document.querySelectorAll('.sf-btn').forEach(function(btn){
+        var k = btn.dataset.status;
+        btn.innerHTML = labels[k] + ' <span class="sf-count">' + counts[k] + '</span>';
+      });
     }
 
     function renderReminders(bookings) {
@@ -685,6 +689,11 @@
         if (query && !b.carName.toLowerCase().includes(query) && !String(b.bookingId).toLowerCase().includes(query)) return false;
         if (statusFilter === 'pending') return !(b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'));
         if (statusFilter === 'paid')    return (b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'));
+        if (statusFilter === 'soon') {
+          var paidB = (b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A'));
+          var dl = daysUntil(b.pickup);
+          return paidB && dl >= 0 && dl <= 2;
+        }
         return true;
       });
 
