@@ -70,6 +70,14 @@
   function mount(){
     /* drop the page's own old header(s) */
     document.querySelectorAll('header').forEach(function(x){ if(x!==h) x.parentNode.removeChild(x); });
+    /* also drop old title bars that aren't <header> tags (e.g. "Waliko Car Hire | Dashboard") */
+    Array.prototype.slice.call(document.body.children).forEach(function(x){
+      if(x===h || /^(SCRIPT|STYLE|LINK)$/.test(x.tagName)) return;
+      var t = (x.textContent || '').trim();
+      if(t.length < 120 && /waliko car hire/i.test(t) && !x.querySelector('input,textarea,select,form,main')){
+        x.parentNode.removeChild(x);
+      }
+    });
     if(!h.parentNode) document.body.insertBefore(h, document.body.firstChild);
   }
   if(document.body){ document.body.insertBefore(h, document.body.firstChild); }
