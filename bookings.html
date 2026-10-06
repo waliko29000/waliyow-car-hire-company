@@ -91,9 +91,9 @@
     .tag-row{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex:0 0 auto;}
     .tag-row>span{margin-left:0;white-space:nowrap;flex:0 0 auto;}
     @media(max-width:700px){
-      .card-header h3{font-size:0.88em;gap:5px;}
-      .tag-row{gap:4px;}
-      .tag-row>span{font-size:0.68em;padding:2px 6px;}
+      .card-header h3{font-size:clamp(9px,3.3vw,14px);gap:4px;}
+      .tag-row{gap:3px;}
+      .tag-row>span{font-size:0.72em;padding:2px 5px;}
     }
     .show-more-btn{display:block;width:100%;padding:11px;background:#fff;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;color:#1464dd;cursor:pointer;transition:all 0.2s;margin-top:4px;}
     .show-more-btn:hover{background:#f0f4ff;}
@@ -808,7 +808,7 @@
         var conflictTag = isConflicted ? '<span style="display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;">Car Taken</span>' : '';
         var refundTag   = (b.refundStatus === 'pending' || b.refundPending) ? '<span class="status-tag tag-refund">Refund</span>' : '';
         var expiredTag  = isExpired ? '<span class="expired-tag">Dates Expired</span>' : '';
-        var paidTag     = balancePaid ? '<span class="status-tag tag-full">Fully Paid</span>'
+        var paidTag     = balancePaid ? '<span class="status-tag tag-deposit">Fully Paid</span>'
                                       : (isPaid ? '<span class="status-tag tag-deposit">Deposit Paid</span>' : '');
         card.innerHTML =
           '<div class="card-header">'+
