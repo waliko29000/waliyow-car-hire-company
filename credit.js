@@ -319,15 +319,6 @@ const CR = (() => {
           addTag(card, 'rf-done', 'Refunded to credit');
         } else {
           addTag(card, 'rf-pending', 'Refund pending');
-          const wbtn = document.createElement('button');
-          wbtn.className = 'btn btn-refund'; wbtn.textContent = 'Withdraw Request';
-          wbtn.onclick = () => {
-            if (!confirm('Withdraw this refund request?')) return;
-            const err = withdrawRefund(b.bookingId); if (err) { alert(err); return; }
-            card.dataset.rf = ''; card.querySelector('.rf-tag')?.remove(); wbtn.remove();
-            decorate();
-          };
-          card.querySelector('.card-actions').appendChild(wbtn);
         }
         card.querySelectorAll('.btn-balance').forEach(x => x.remove());
         return;
