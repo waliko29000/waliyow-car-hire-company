@@ -7,6 +7,12 @@ const CR = (() => {
   const KES = n => 'Ksh ' + Number(n || 0).toLocaleString();
   const bid = id => '#' + String(id ?? '').replace(/^#+/, '');
   const me = () => (J('currentUser', {}).email || '').toLowerCase();
+  const myPhone = () => {
+    const e = me(), acct = J('currentUser', {}).phone || '';
+    const mine = J('bookings', []).filter(b => (b.email || '').toLowerCase() === e).sort((a, b2) => (b2.paidAt || '').localeCompare(a.paidAt || ''));
+    const paidWith = mine.find(b => b.balancePhone || b.depositPhone);
+    return (paidWith && (paidWith.balancePhone || paidWith.depositPhone)) || acct;
+  };
 
   // ── Credit ledger (balance = sum of rows) ──
   const ledger = e => J('credit_' + e, []);
@@ -21,6 +27,36 @@ const CR = (() => {
     if (!e || !(amt > 0) || balance(e) < amt) return false;
     post(e, -amt, 'used', ref, 'Booking payment');
     return true;
+  };
+
+  // ── Withdraw approved credit back to M-Pesa (goes through admin, like refunds) ──
+  const requestWithdrawal = (amount, phone) => {
+    const e = me();
+    amount = Math.floor(Number(amount));
+    if (!e) return 'Please sign in first.';
+    if (!phone) return 'No M-Pesa number on your account yet. Please update it under Settings first.';
+    if (!/^(0|254)\d{9}$/.test(String(phone).trim())) return 'The number on your account looks invalid. Please update it under Settings first.';
+    if (!(amount > 0) || amount > balance(e)) return 'Enter an amount up to your credit balance.';
+    const w = J('withdrawalRequests', []);
+    const wid = 'W' + Date.now();
+    w.push({ id: wid, email: e, amount, phone: phone.trim(), status: 'pending', at: new Date().toLocaleString() });
+    S('withdrawalRequests', w);
+    post(e, -amount, 'withdrawal_pending', wid, 'Withdrawal requested — held pending admin approval');
+    return '';
+  };
+  // Admin: approve (simulate M-Pesa payout) or reject (credit is returned)
+  const decideWithdrawal = (wid, approve) => {
+    const w = J('withdrawalRequests', []), q = w.find(x => x.id === wid);
+    if (!q || q.status !== 'pending') return 'Already handled.';
+    if (approve) {
+      q.receipt = 'WD' + Date.now().toString().slice(-8);
+    } else {
+      post(q.email, q.amount, 'withdrawal_rejected', wid, 'Withdrawal rejected — credit returned');
+    }
+    q.status = approve ? 'completed' : 'rejected';
+    q.decidedAt = new Date().toLocaleString();
+    S('withdrawalRequests', w);
+    return '';
   };
 
   // ── Bookings helpers ──
@@ -43,6 +79,17 @@ const CR = (() => {
     r.push({ id: 'R' + Date.now(), bookingId: id, email: e, carName: b.carName || '', amount: cap(b), reason, status: 'pending', at: new Date().toLocaleString() });
     S('refundRequests', r);
     saveBooking(id, { refundStatus: 'requested' });
+    return '';
+  };
+
+  // Customer: withdraw their own pending request (before admin decides)
+  const withdrawRefund = id => {
+    const e = me(), r = J('refundRequests', []), q = r.find(x => x.bookingId == id && x.status === 'pending' && x.email === e);
+    if (!q) return 'No pending request found for this booking.';
+    q.status = 'withdrawn';
+    q.decidedAt = new Date().toLocaleString();
+    S('refundRequests', r);
+    saveBooking(id, { refundStatus: undefined });
     return '';
   };
 
@@ -72,40 +119,76 @@ const CR = (() => {
     if (!e) { el.innerHTML = '<div class="cr-card">Please <a href="signin.html">sign in</a> first.</div>'; return; }
     const bs = bookings().filter(b => (b.email || '').toLowerCase() === e && b.paymentStatus === 'paid' && notPicked(b));
     const rq = J('refundRequests', []).filter(r => r.email === e).reverse();
+    const wq = J('withdrawalRequests', []).filter(r => r.email === e).reverse();
     const lg = ledger(e).slice().reverse().slice(0, 15);
     el.innerHTML =
-      `<div class="cr-card cr-bal"><small>Store credit balance</small><h2>${KES(balance(e))}</h2></div>` +
+      `<div class="cr-card cr-bal"><small>Store credit balance</small><h2>${KES(balance(e))}</h2>` +
+        (balance(e) > 0 ? '<button style="margin-top:10px" onclick="CR.cashOutModal()">Withdraw to M-Pesa</button>' : '') +
+      '</div>' +
+      (wq.length ? `<div class="cr-card"><h3>My withdrawal requests</h3>${wq.map(w =>
+        `<div class="cr-row"><span>To ${esc(w.phone)}<br><small>${esc(w.at)}${w.receipt ? ' · ' + esc(w.receipt) : ''}</small></span><span class="cr-tag cr-${w.status === 'completed' ? 'approved' : (w.status === 'rejected' ? 'rejected' : 'pending')}">${esc(w.status)} · ${KES(w.amount)}</span></div>`).join('')}</div>` : '') +
       `<div class="cr-card"><h3>Cars available for refund</h3><p style="margin:0 0 6px">Paid bookings still waiting for pickup.</p>${bs.length ? bs.map(b =>
         `<div class="cr-row"><span>${esc(b.carName)} · ${esc(bid(b.bookingId))}<br><small>Paid ${KES(cap(b))} · Pickup ${esc(b.pickup)}${b.refundStatus ? ' · refund ' + esc(b.refundStatus) : ''}</small></span>` +
         (locked(b) ? '' : `<button onclick="CR.ask('${esc(b.bookingId)}')">Request refund</button>`) + '</div>').join('') : '<p>No cars waiting for pickup right now. Once a car has been picked up, it can no longer be refunded.</p>'}</div>` +
       `<div class="cr-card"><h3>My refund requests</h3>${rq.length ? rq.map(r =>
-        `<div class="cr-row"><span>${esc(r.carName)} · ${esc(bid(r.bookingId))}<br><small>${esc(r.at)}</small></span><span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span></div>`).join('') : '<p>None.</p>'}</div>` +
-      `<div class="cr-card"><h3>Credit history</h3>${lg.length ? lg.map(t =>
-        `<div class="cr-row"><span>${esc(t.note)}<br><small>${esc(t.at)}</small></span><span class="cr-tag" style="color:${t.amount > 0 ? '#1b8a3d' : '#c0392b'}">${t.amount > 0 ? '+' : ''}${KES(t.amount)}</span></div>`).join('') : '<p>No credit activity.</p>'}</div>`;
+        `<div class="cr-row"><span>${esc(r.carName)} · ${esc(bid(r.bookingId))}<br><small>${esc(r.at)}</small></span>` +
+        (r.status === 'pending'
+          ? `<span style="display:flex;align-items:center;gap:8px"><span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span><button class="no" onclick="CR.withdraw('${esc(r.bookingId)}')">Withdraw</button></span>`
+          : `<span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span>`) +
+        '</div>').join('') : '<p>None.</p>'}</div>` +
+      `<div class="cr-card"><h3>Credit history</h3>${lg.length ? lg.map(t => {
+        if (t.type === 'withdrawal_pending') {
+          const wList = J('withdrawalRequests', []);
+          const req = wList.find(x => x.id === t.ref) ||
+            wList.find(x => x.email === e && x.amount === Math.abs(t.amount) && x.at === t.at);
+          if (req && req.status === 'completed') {
+            return `<div class="cr-row"><span>Paid out to M-Pesa ${esc(req.phone)}${req.receipt ? ' · ' + esc(req.receipt) : ''}<br><small>${esc(req.decidedAt || t.at)}</small></span><span class="cr-tag" style="color:#1b8a3d">${KES(Math.abs(t.amount))} paid</span></div>`;
+          }
+          if (req && req.status === 'rejected') {
+            return `<div class="cr-row"><span>Withdrawal cancelled — credit returned below<br><small>${esc(t.at)}</small></span><span class="cr-tag" style="color:#8a97b8">${KES(Math.abs(t.amount))}</span></div>`;
+          }
+          return `<div class="cr-row"><span>Withdrawal requested — on hold until reviewed<br><small>${esc(t.at)}</small></span><span class="cr-tag" style="color:#b35c00">${KES(Math.abs(t.amount))} held</span></div>`;
+        }
+        const color = t.amount > 0 ? '#1b8a3d' : '#c0392b';
+        return `<div class="cr-row"><span>${esc(t.note)}<br><small>${esc(t.at)}</small></span><span class="cr-tag" style="color:${color}">${t.amount > 0 ? '+' : ''}${KES(t.amount)}</span></div>`;
+      }).join('') : '<p>No credit activity.</p>'}</div>`;
   }
-  const ask = id => {
-    const reason = prompt('Reason for the refund?'); if (reason === null) return;
-    const m = requestRefund(id, reason.trim()); if (m) alert(m);
+  const withdraw = id => {
+    if (!confirm('Withdraw this refund request? The booking will go back to normal.')) return;
+    const m = withdrawRefund(id); if (m) alert(m);
     customer();
   };
+  const ask = id => openRefundModal(id, customer);
 
   // ── Admin page (#adminApp) — TEST ONLY: add your admin login check here ──
   function admin() {
     const el = document.getElementById('adminApp'); if (!el) return;
     const all = J('refundRequests', []).slice().reverse();
     const pend = all.filter(r => r.status === 'pending'), done = all.filter(r => r.status !== 'pending');
+    const wAll = J('withdrawalRequests', []).slice().reverse();
+    const wPend = wAll.filter(w => w.status === 'pending'), wDone = wAll.filter(w => w.status !== 'pending');
     el.innerHTML =
-      `<div class="cr-card"><h3>Pending (${pend.length})</h3>${pend.length ? pend.map(r =>
+      `<div class="cr-card"><h3>Pending Refunds (${pend.length})</h3>${pend.length ? pend.map(r =>
         `<div class="cr-req"><div class="cr-grid"><span>Customer</span><b>${esc(r.email)}</b><span>Car</span><b>${esc(r.carName)}</b><span>Booking</span><b>${esc(bid(r.bookingId))}</b><span>Amount</span><b>${KES(r.amount)}</b><span>Reason</span><b>${esc(r.reason || 'No reason given')}</b><span>Requested</span><b>${esc(r.at)}</b></div>` +
         `<div class="cr-act"><button onclick="CR.act('${r.id}',true)">Approve</button><button class="no" onclick="CR.act('${r.id}',false)">Reject</button></div></div>`).join('') : '<p>No pending requests.</p>'}</div>` +
-      `<div class="cr-card"><h3>History</h3>${done.length ? done.map(r =>
-        `<div class="cr-row"><span>${esc(r.email)} · ${esc(bid(r.bookingId))}<br><small>${esc(r.decidedAt || '')}</small></span><span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span></div>`).join('') : '<p>Nothing yet.</p>'}</div>`;
+      `<div class="cr-card"><h3>Refund History</h3>${done.length ? done.map(r =>
+        `<div class="cr-row"><span>${esc(r.email)} · ${esc(bid(r.bookingId))}<br><small>${esc(r.decidedAt || '')}</small></span><span class="cr-tag cr-${esc(r.status)}">${esc(r.status)} · ${KES(r.amount)}</span></div>`).join('') : '<p>Nothing yet.</p>'}</div>` +
+      `<div class="cr-card"><h3>Pending Withdrawals (${wPend.length})</h3>${wPend.length ? wPend.map(w =>
+        `<div class="cr-req"><div class="cr-grid"><span>Customer</span><b>${esc(w.email)}</b><span>M-Pesa No.</span><b>${esc(w.phone)}</b><span>Amount</span><b>${KES(w.amount)}</b><span>Requested</span><b>${esc(w.at)}</b></div>` +
+        `<div class="cr-act"><button onclick="CR.actWithdrawal('${w.id}',true)">Approve &amp; Pay</button><button class="no" onclick="CR.actWithdrawal('${w.id}',false)">Reject</button></div></div>`).join('') : '<p>No pending withdrawals.</p>'}</div>` +
+      `<div class="cr-card"><h3>Withdrawal History</h3>${wDone.length ? wDone.map(w =>
+        `<div class="cr-row"><span>${esc(w.email)} · ${esc(w.phone)}<br><small>${esc(w.decidedAt || '')}${w.receipt ? ' · ' + esc(w.receipt) : ''}</small></span><span class="cr-tag cr-${w.status === 'completed' ? 'approved' : 'rejected'}">${esc(w.status)} · ${KES(w.amount)}</span></div>`).join('') : '<p>Nothing yet.</p>'}</div>`;
   }
   const act = (id, ok) => {
     let amt = 0;
     if (ok) { const q = J('refundRequests', []).find(x => x.id === id); amt = prompt('Credit amount to give (Ksh):', q ? q.amount : ''); if (amt === null) return; }
     else if (!confirm('Reject this refund request?')) return;
     const m = decide(id, ok, amt); if (m) alert(m);
+    admin();
+  };
+  const actWithdrawal = (id, ok) => {
+    if (!confirm(ok ? 'Confirm you have sent this payout on M-Pesa?' : 'Reject this withdrawal? The credit will be returned to the customer.')) return;
+    const m = decideWithdrawal(id, ok); if (m) alert(m);
     admin();
   };
 
@@ -117,7 +200,7 @@ const CR = (() => {
     if (!e || bal <= 0) return;
     const d = document.createElement('div');
     d.className = 'payment-method'; d.id = 'creditBtn';
-    d.innerHTML = '<span style="font-size:1.4em">💰</span> Pay with Store Credit <small style="margin-left:6px;color:#1b8a3d">(' + KES(bal) + ' available)</small><span class="method-arrow">›</span>';
+    d.innerHTML = 'Pay with Store Credit <small style="margin-left:6px;color:#1b8a3d">(' + KES(bal) + ' available)</small><span class="method-arrow">›</span>';
     d.onclick = () => {
       if (paymentLocked) return;
       const need = Number(amount);
@@ -158,7 +241,7 @@ const CR = (() => {
     refundModalEl = m;
     return m;
   }
-  function openRefundModal(b, btn, h, card) {
+  function openRefundModal(bookingId, onSuccess) {
     const m = ensureRefundModal();
     const ta = m.querySelector('#rfReason'), err = m.querySelector('#rfErr');
     ta.value = ''; err.style.display = 'none';
@@ -167,37 +250,96 @@ const CR = (() => {
     m.querySelector('.rf-send').onclick = () => {
       const reason = ta.value.trim();
       if (!reason) { err.textContent = 'Please tell us why.'; err.style.display = 'block'; return; }
-      const errMsg = requestRefund(b.bookingId, reason);
+      const errMsg = requestRefund(bookingId, reason);
       if (errMsg) { err.textContent = errMsg; err.style.display = 'block'; return; }
       m.classList.remove('open');
-      btn.remove();
-      h.insertAdjacentHTML('beforeend', '<span class="rf-tag rf-pending">⏳ Refund pending</span>');
-      card.querySelectorAll('.btn-balance').forEach(x => x.remove());
+      onSuccess();
     };
   }
 
-  // ── My Bookings hook: adds "Request Refund" + refund tags to booking cards ──
+  // ── Withdraw credit to M-Pesa modal ──
+  let cashOutModalEl = null;
+  function ensureCashOutModal() {
+    if (cashOutModalEl) return cashOutModalEl;
+    ensureRefundModal(); // shares the .rf-modal/.rf-box CSS injected there
+    const m = document.createElement('div');
+    m.className = 'rf-modal';
+    m.innerHTML =
+      '<div class="rf-box">' +
+        '<button class="rf-close" type="button">✕</button>' +
+        '<h3>Withdraw to M-Pesa</h3>' +
+        '<p>Send your store credit to your M-Pesa number. Our team reviews each withdrawal before it\'s paid out.</p>' +
+        '<label>M-Pesa number</label>' +
+        '<input id="woPhone" type="tel" readonly style="width:100%;padding:10px 12px;border:1.5px solid #dde3f0;border-radius:8px;font-family:Poppins,sans-serif;font-size:.88em;outline:none;background:#f5f8ff;color:#555;cursor:not-allowed">' +
+        '<p style="margin-top:4px;font-size:.75em;color:#8a97b8">This is the number on your account, to keep your withdrawal safe.</p>' +
+        '<label>Amount (Ksh)</label>' +
+        '<input id="woAmount" type="number" min="1" style="width:100%;padding:10px 12px;border:1.5px solid #dde3f0;border-radius:8px;font-family:Poppins,sans-serif;font-size:.88em;outline:none">' +
+        '<div class="rf-err" id="woErr"></div>' +
+        '<div class="rf-actions"><button type="button" class="rf-cancel">Cancel</button><button type="button" class="rf-send">Withdraw</button></div>' +
+      '</div>';
+    document.body.appendChild(m);
+    m.querySelector('.rf-close').onclick = m.querySelector('.rf-cancel').onclick = () => m.classList.remove('open');
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+    cashOutModalEl = m;
+    return m;
+  }
+  const cashOutModal = () => {
+    const e = me(); if (!e) return;
+    const m = ensureCashOutModal();
+    const ph = m.querySelector('#woPhone'), amt = m.querySelector('#woAmount'), err = m.querySelector('#woErr');
+    ph.value = myPhone(); amt.value = ''; amt.max = balance(e); err.style.display = 'none';
+    m.classList.add('open');
+    m.querySelector('.rf-send').onclick = () => {
+      const errMsg = requestWithdrawal(amt.value, ph.value);
+      if (errMsg) { err.textContent = errMsg; err.style.display = 'block'; return; }
+      m.classList.remove('open');
+      customer();
+    };
+  };
+
+  // ── My Bookings hook: adds "Request Refund" + refund badges to booking cards ──
   function bookingsHook() {
     const list = document.getElementById('bookingsList'); if (!list) return;
     const st = document.createElement('style');
-    st.textContent = '.btn-refund{background:#fff5e6;color:#b35c00;border:1px solid #ffc87a}.btn-refund:hover{background:#ffe9c7}.rf-tag{display:inline-block;font-size:.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px}.rf-pending{background:#fff5e6;color:#b35c00}.rf-done{background:#e6fff0;color:#1b8a3d}';
+    st.textContent = '.btn-refund{background:#fff5e6;color:#b35c00;border:1px solid #ffc87a}.btn-refund:hover{background:#ffe9c7}.rf-tag{display:inline-block;font-size:.72em;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap}.rf-pending{background:#fff5e6;color:#b35c00}.rf-done{background:#e6fff0;color:#1b8a3d}';
     document.head.appendChild(st);
+    // Put the badge in the same single-line row as the other badges (falls back to the title)
+    const addTag = (card, cls, text) => {
+      const row = card.querySelector('.tag-row') || card.querySelector('h3');
+      row.insertAdjacentHTML('beforeend', '<span class="rf-tag ' + cls + '">' + text + '</span>');
+    };
     const decorate = () => list.querySelectorAll('.booking-card').forEach(card => {
       if (card.dataset.rf) return;
       const m = /ID:\s*(\S+)/.exec((card.querySelector('.booking-id') || {}).textContent || '');
       const b = m && bookings().find(x => String(x.bookingId) === m[1]);
       if (!b) return;
       card.dataset.rf = '1';
-      const h = card.querySelector('h3'), pending = '<span class="rf-tag rf-pending">⏳ Refund pending</span>';
       if (locked(b)) {
-        h.insertAdjacentHTML('beforeend', b.refundStatus === 'refunded' ? '<span class="rf-tag rf-done">💰 Refunded to credit</span>' : pending);
+        if (b.refundStatus === 'refunded') {
+          addTag(card, 'rf-done', 'Refunded');
+        } else {
+          addTag(card, 'rf-pending', 'Refund');
+          const wbtn = document.createElement('button');
+          wbtn.className = 'btn btn-refund'; wbtn.textContent = 'Withdraw Request';
+          wbtn.onclick = () => {
+            if (!confirm('Withdraw this refund request?')) return;
+            const err = withdrawRefund(b.bookingId); if (err) { alert(err); return; }
+            card.dataset.rf = ''; card.querySelector('.rf-tag')?.remove(); wbtn.remove();
+            decorate();
+          };
+          card.querySelector('.card-actions').appendChild(wbtn);
+        }
         card.querySelectorAll('.btn-balance').forEach(x => x.remove());
         return;
       }
       if (!(b.paymentStatus === 'paid' && notPicked(b))) return;
       const btn = document.createElement('button');
       btn.className = 'btn btn-refund'; btn.textContent = 'Request Refund';
-      btn.onclick = () => openRefundModal(b, btn, h, card);
+      btn.onclick = () => openRefundModal(b.bookingId, () => {
+        btn.remove();
+        addTag(card, 'rf-pending', 'Refund');
+        card.querySelectorAll('.btn-balance').forEach(x => x.remove());
+      });
       card.querySelector('.card-actions').appendChild(btn);
     });
     new MutationObserver(decorate).observe(list, { childList: true });
@@ -207,10 +349,10 @@ const CR = (() => {
   // ── Init ──
   if (document.getElementById('creditApp') || document.getElementById('adminApp')) {
     const st = document.createElement('style');
-    st.textContent = "*{box-sizing:border-box}body{margin:0;background:#f0f4ff;font-family:Poppins,sans-serif;color:#333;-webkit-text-size-adjust:100%}.cr-wrap{max-width:560px;margin:0 auto;padding:16px;width:100%}.cr-wrap h1{color:#1464dd;font-size:1.2em;margin:10px 0}.cr-wrap a{color:#1464dd;font-weight:600;text-decoration:none;font-size:.85em;display:inline-block;padding:4px 0}.cr-card{background:#fff;border-radius:14px;padding:16px 18px;margin:12px 0;box-shadow:0 3px 16px rgba(20,100,221,.09)}.cr-card h3{margin:0 0 8px;font-size:.95em;color:#1464dd}.cr-card p{font-size:.85em;color:#888}.cr-bal h2{margin:2px 0 0;color:#1b8a3d;font-size:1.6em;word-break:break-word}.cr-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px;padding:10px 0;border-bottom:1px dashed #e2e7f3;font-size:.85em}.cr-row:last-child{border:0}.cr-row>span:first-child{flex:1 1 180px;min-width:0;word-break:break-word}.cr-row button,.cr-act button{background:#1464dd;color:#fff;border:0;border-radius:8px;padding:10px 14px;font:600 .82em Poppins,sans-serif;cursor:pointer;min-height:38px}.cr-row button.no,.cr-act button.no{background:#fff0f0;color:#c0392b;border:1px solid #ffcccc}.cr-req{padding:12px 0;border-bottom:1px dashed #e2e7f3}.cr-req:last-child{border:0}.cr-grid{display:grid;grid-template-columns:88px 1fr;gap:6px 10px;font-size:.85em}.cr-grid span{color:#8a97b8}.cr-grid b{font-weight:600;word-break:break-word}.cr-act{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.cr-act button{flex:1 1 100px}.cr-tag.cr-approved{color:#1b8a3d;background:#e6fff0;border:1px solid #27ae60;padding:3px 10px;border-radius:20px}.cr-tag.cr-rejected{color:#c0392b;background:#fff0f0;border:1px solid #f5a3a3;padding:3px 10px;border-radius:20px}.cr-tag.cr-pending{color:#b35c00;background:#fff5e6;border:1px solid #ffc87a;padding:3px 10px;border-radius:20px}.cr-tag{font-size:.78em;font-weight:700;white-space:nowrap}@media(max-width:480px){.cr-wrap{padding:12px}.cr-card{padding:14px}.cr-grid{grid-template-columns:78px 1fr;font-size:.8em}.cr-row{font-size:.8em}.cr-row button,.cr-act button{width:100%;flex:1 1 100%}.cr-act{flex-direction:column}}";
+    st.textContent = "*{box-sizing:border-box}body{margin:0;background:#f0f4ff;font-family:Poppins,sans-serif;color:#333;-webkit-text-size-adjust:100%}.cr-wrap{max-width:560px;margin:0 auto;padding:16px;width:100%}.cr-wrap h1{color:#1464dd;font-size:1.2em;margin:10px 0}.cr-wrap a{color:#1464dd;font-weight:600;text-decoration:none;font-size:.85em;display:inline-block;padding:4px 0}.cr-card{background:#fff;border-radius:14px;padding:16px 18px;margin:12px 0;box-shadow:0 3px 16px rgba(20,100,221,.09)}.cr-card h3{margin:0 0 8px;font-size:.95em;color:#1464dd}.cr-card p{font-size:.85em;color:#888}.cr-bal h2{margin:2px 0 0;color:#1b8a3d;font-size:1.6em;word-break:break-word}.cr-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 10px;padding:10px 0;border-bottom:1px dashed #e2e7f3;font-size:.85em}.cr-row:last-child{border:0}.cr-row>span:first-child{flex:1 1 180px;min-width:0;word-break:break-word}.cr-row button,.cr-act button{background:#1464dd;color:#fff;border:0;border-radius:8px;padding:10px 14px;font:600 .82em Poppins,sans-serif;cursor:pointer;min-height:38px}.cr-row button.no,.cr-act button.no{background:#fff0f0;color:#c0392b;border:1px solid #ffcccc}.cr-req{padding:12px 0;border-bottom:1px dashed #e2e7f3}.cr-req:last-child{border:0}.cr-grid{display:grid;grid-template-columns:88px 1fr;gap:6px 10px;font-size:.85em}.cr-grid span{color:#8a97b8}.cr-grid b{font-weight:600;word-break:break-word}.cr-act{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.cr-act button{flex:1 1 100px}.cr-tag.cr-approved{color:#1b8a3d;background:#e6fff0;border:1px solid #27ae60;padding:3px 10px;border-radius:20px}.cr-tag.cr-rejected{color:#c0392b;background:#fff0f0;border:1px solid #f5a3a3;padding:3px 10px;border-radius:20px}.cr-tag.cr-pending{color:#b35c00;background:#fff5e6;border:1px solid #ffc87a;padding:3px 10px;border-radius:20px}.cr-tag{font-size:.78em;font-weight:700;white-space:nowrap}@media(max-width:480px){.cr-wrap{padding:12px}.cr-card{padding:14px}.cr-grid{grid-template-columns:78px 1fr;font-size:.8em}.cr-row{font-size:.8em}.cr-row button,.cr-act button{width:100%;flex:1 1 100%}.cr-act{flex-direction:column}}@media(min-width:860px){.cr-wrap{max-width:960px}#creditApp,#adminApp{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}#creditApp .cr-bal{grid-column:1/-1}#creditApp .cr-card,#adminApp .cr-card{margin:0}.cr-bal h2{font-size:2em}}";
     document.head.appendChild(st);
   }
   customer(); admin(); payHook(); bookingsHook();
 
-  return { balance, requestRefund, decide, use, ask, act };
+  return { balance, requestRefund, decide, use, ask, act, withdraw, cashOutModal, actWithdrawal };
 })();
