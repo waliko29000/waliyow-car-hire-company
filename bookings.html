@@ -91,8 +91,9 @@
     .tag-row>span{margin-left:0;white-space:nowrap;flex:0 0 auto;}
     @media(max-width:700px){
       .card-header h3{font-size:clamp(9px,3vw,13px);gap:4px;width:100%;}
-      .card-header h3 .tag-row{flex:1 1 0;min-width:0;gap:3px;}
-      .tag-row>span,.tag-row>.rf-tag{flex:1 1 0;min-width:max-content;text-align:center;font-size:0.78em;padding:2px 4px;}
+      .pk-w{display:none;}
+      .card-header h3 .tag-row{flex:0 0 auto;gap:4px;}
+      .tag-row>span,.tag-row>.rf-tag{flex:0 0 auto;font-size:0.78em;padding:2px 7px;}
     }
     .show-more-btn{display:block;width:100%;padding:11px;background:#fff;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;color:#1464dd;cursor:pointer;transition:all 0.2s;margin-top:4px;}
     .show-more-btn:hover{background:#f0f4ff;}
@@ -812,7 +813,7 @@
           '<div class="card-header">'+
             '<div>'+
               '<h3><span class="car-name">'+b.carName+'</span>'+
-              ((paidTag||pickupSoon||conflictTag||expiredTag)?'<span class="tag-row">'+paidTag+(pickupSoon?'<span class="pickup-soon-tag">Pickup '+soonLabel+'</span>':'')+conflictTag+expiredTag+'</span>':'')+'</h3>'+
+              ((paidTag||pickupSoon||conflictTag||expiredTag)?'<span class="tag-row">'+paidTag+(pickupSoon?'<span class="pickup-soon-tag"><span class="pk-w">Pickup </span>'+soonLabel+'</span>':'')+conflictTag+expiredTag+'</span>':'')+'</h3>'+
               '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+fmtStamp(b.timestamp)+'</div>'+
             '</div>'+
             '<div class="card-actions">'+actionsHtml+'</div>'+
