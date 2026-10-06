@@ -316,9 +316,9 @@ const CR = (() => {
       card.dataset.rf = '1';
       if (locked(b)) {
         if (b.refundStatus === 'refunded') {
-          addTag(card, 'rf-done', 'Refunded');
+          addTag(card, 'rf-done', 'Refunded to credit');
         } else {
-          addTag(card, 'rf-pending', 'Refund');
+          addTag(card, 'rf-pending', 'Refund pending');
           const wbtn = document.createElement('button');
           wbtn.className = 'btn btn-refund'; wbtn.textContent = 'Withdraw Request';
           wbtn.onclick = () => {
@@ -337,7 +337,7 @@ const CR = (() => {
       btn.className = 'btn btn-refund'; btn.textContent = 'Request Refund';
       btn.onclick = () => openRefundModal(b.bookingId, () => {
         btn.remove();
-        addTag(card, 'rf-pending', 'Refund');
+        addTag(card, 'rf-pending', 'Refund pending');
         card.querySelectorAll('.btn-balance').forEach(x => x.remove());
       });
       card.querySelector('.card-actions').appendChild(btn);
