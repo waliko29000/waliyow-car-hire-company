@@ -914,6 +914,16 @@
       var days=Math.max(1,Math.round(ms/86400000));
       var total=b.price*days,deposit=Math.floor(total/2),balance=total-deposit;
       var isPaid=b.paymentStatus==='paid'||(b.mpesaReceipt&&b.mpesaReceipt!=='N/A');
+      var isExpiredPdf=!isPaid&&daysUntil(b.pickup)<0;
+      if(!isPaid&&!isExpiredPdf){
+        var tS=new Date(b.pickup+'T00:00:00'),tE=new Date(b.endDate+'T00:00:00');
+        var carTaken=bookings.some(function(o){
+          if(String(o.bookingId)===String(b.bookingId)||o.carName!==b.carName) return false;
+          if(!(o.paymentStatus==='paid'||(o.mpesaReceipt&&o.mpesaReceipt!=='N/A'))) return false;
+          return tS<new Date(o.endDate+'T00:00:00')&&tE>new Date(o.pickup+'T00:00:00');
+        });
+        if(carTaken){alert('Sorry, you cannot download a PDF for this booking. This car has already been taken by another customer for your dates.');return;}
+      }
       var balObj=getBalanceStatus(b.bookingId);
       var balancePaid=!!(balObj&&balObj.paid)||!!(b.balancePaid);
       var balReceipt=(balObj&&balObj.receipt)||b.balanceReceipt||'N/A';
@@ -931,10 +941,11 @@
       doc.setFillColor(244,196,48);doc.rect(0,46,PW,4,'F');
       doc.setFillColor(240,245,255);doc.rect(0,50,PW,16,'F');
       doc.setTextColor(100,120,165);doc.setFont('helvetica','normal');doc.setFontSize(8);
-      var statusBarTxt=balancePaid?'Waliko Car Hire  ·  All payments cleared  ·  Ready for pickup':'Waliko Car Hire  ·  Deposit = 50% of total hire cost  ·  Balance due at pickup';
+      var statusBarTxt=balancePaid?'Waliko Car Hire  ·  All payments cleared  ·  Ready for pickup':(isExpiredPdf?'Waliko Car Hire  ·  Booking dates have expired  ·  Please reschedule':'Waliko Car Hire  ·  Deposit = 50% of total hire cost  ·  Balance due at pickup');
       doc.text(statusBarTxt,L,60);
       if(balancePaid){doc.setFillColor(39,174,96);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('FULLY PAID',PW-33,59.5,{align:'center'});}
       else if(isPaid){doc.setFillColor(230,249,238);doc.roundedRect(PW-38,53,24,10,2,2,'F');doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PAID',PW-26,59.5,{align:'center'});}
+      else if(isExpiredPdf){doc.setFillColor(255,234,234);doc.roundedRect(PW-60,53,46,10,2,2,'F');doc.setTextColor(192,57,43);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('BOOKING EXPIRED',PW-37,59.5,{align:'center'});}
       else{doc.setFillColor(255,245,220);doc.roundedRect(PW-44,53,30,10,2,2,'F');doc.setTextColor(160,90,0);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PENDING',PW-29,59.5,{align:'center'});}
       function secHead(label,y){doc.setFillColor(NR,NG,NB);doc.rect(L,y,3,11,'F');doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(label,L+6,y+8);}
       function tRow(label,value,y,shade,highlight,greenVal,rh){rh=rh||11;if(highlight){doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,rh,'F');doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,rh,'D');}else if(shade){doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,rh,'F');}doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(label,L+4,y+rh*0.55);if(greenVal)doc.setTextColor(26,112,64);else if(highlight)doc.setTextColor(NR,NG,NB);else doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);doc.text(String(value),RR,y+rh*0.55,{align:'right'});}
