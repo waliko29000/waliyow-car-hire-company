@@ -302,7 +302,7 @@
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
               ${expired
                 ? `<span style="font-size:0.8em;color:#c0392b;font-weight:600;">Dates expired</span>
-              <a class="btn btn-light" style="font-size:0.75em;padding:6px 12px;text-decoration:none;" href="bookings.html">Reschedule</a>`
+              <a class="btn btn-light" style="font-size:0.75em;padding:6px 12px;text-decoration:none;" href="bookings.html?id=${encodeURIComponent(b.bookingId)}">Reschedule</a>`
                 : `<span style="font-size:0.82em;color:#b35c00;font-weight:600;">Deposit: Ksh ${a.deposit.toLocaleString()}</span>
               <button class="btn btn-blue" style="font-size:0.75em;padding:6px 12px;"
                 onclick="localStorage.setItem('paymentAmount','${a.deposit}');localStorage.setItem('paymentBookingId','${b.bookingId}');localStorage.removeItem('paymentType');window.location.href='payment-gateway.html'">Pay Now</button>`}
