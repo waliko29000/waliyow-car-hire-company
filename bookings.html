@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Bookings – Waliko Car Hire</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
@@ -113,6 +115,9 @@
     .reschedule-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
     .reschedule-modal.open{display:flex;}
     .reschedule-box{background:#fff;border-radius:18px;padding:28px 24px;width:100%;max-width:380px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.25);}
+    .flatpickr-calendar{z-index:3000 !important;}
+    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
+    .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
     .reschedule-box h3{font-size:1.05em;font-weight:700;color:#1464dd;margin-bottom:16px;}
     .reschedule-close{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
     .reschedule-close:hover{background:#dde3f0;color:#1464dd;}
@@ -308,11 +313,11 @@
       <div style="font-size:0.8em;color:#888;margin-bottom:14px;" id="rescheduleCarName"></div>
       <div class="rform-group">
         <label>New Start Date</label>
-        <input type="date" id="newPickup" />
+        <input type="text" id="newPickup" placeholder="Select start date" readonly />
       </div>
       <div class="rform-group">
         <label>New End Date</label>
-        <input type="date" id="newEndDate" />
+        <input type="text" id="newEndDate" placeholder="Select end date" readonly />
       </div>
       <div style="font-size:0.78em;color:#e74c3c;margin-bottom:10px;display:none;" id="rescheduleError"></div>
       <button class="btn-reschedule-save" onclick="saveReschedule()">Save New Dates</button>
@@ -413,33 +418,69 @@
     }
     window.closeExpiredModal = closeExpiredModal;
 
+    var rsPickupFP = null, rsEndFP = null;
+    function ymd(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
     function openRescheduleModal(bookingId, carName, currentPickup, currentEnd) {
       rescheduleTargetId = String(bookingId);
       document.getElementById('rescheduleCarName').textContent = carName;
+      var errEl = document.getElementById('rescheduleError');
+      errEl.style.display = 'none'; errEl.textContent = '';
 
-      var today = new Date().toISOString().split('T')[0];
+      var today = new Date(); today.setHours(0,0,0,0);
 
-      var pickupVal = currentPickup && currentPickup >= today ? currentPickup : '';
-      document.getElementById('newPickup').value = pickupVal;
-      document.getElementById('newEndDate').value = (currentEnd && pickupVal) ? currentEnd : '';
-      document.getElementById('rescheduleError').style.display = 'none';
-      document.getElementById('rescheduleError').textContent = '';
+      // Dates already paid for by someone else on this car are greyed out (same as the Cars page)
+      var all = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var ranges = all.filter(function(b) {
+        if (String(b.bookingId) === String(bookingId)) return false;
+        if (b.carName !== carName) return false;
+        var paid = b.paymentStatus === 'paid' || (b.mpesaReceipt && b.mpesaReceipt !== 'N/A');
+        return paid && new Date(b.endDate + 'T00:00:00') >= today;
+      }).map(function(b){ return { from: b.pickup, to: b.endDate }; });
 
-      document.getElementById('newPickup').min = today;
-      document.getElementById('newEndDate').min = today;
+      if (rsPickupFP) rsPickupFP.destroy();
+      if (rsEndFP)    rsEndFP.destroy();
+      document.getElementById('newPickup').value = '';
+      document.getElementById('newEndDate').value = '';
 
-      document.getElementById('newPickup').onchange = function() {
-        var picked = this.value;
-        if (picked) {
-          var next = new Date(picked + 'T00:00:00');
-          next.setDate(next.getDate() + 1);
-          var nextStr = next.toISOString().split('T')[0];
-          document.getElementById('newEndDate').min = nextStr;
-          if (document.getElementById('newEndDate').value && document.getElementById('newEndDate').value <= picked) {
-            document.getElementById('newEndDate').value = '';
+      function injectTip(inst) {
+        if (!inst.calendarContainer.querySelector('.fp-tip')) {
+          var tip = document.createElement('div');
+          tip.className = 'fp-tip';
+          tip.style.cssText = 'background:#fff8ee;border-top:1.5px solid #ffd98a;padding:7px 13px;font-size:0.74em;color:#7a3e00;font-family:Poppins,sans-serif;text-align:center;';
+          tip.innerHTML = '📅 Greyed dates are past or already booked.';
+          inst.calendarContainer.appendChild(tip);
+        }
+      }
+
+      var pickupVal = (currentPickup && currentPickup >= ymd(today)) ? currentPickup : '';
+
+      rsEndFP = flatpickr('#newEndDate', {
+        dateFormat: 'Y-m-d', minDate: new Date(today.getTime() + 86400000), disable: ranges, disableMobile: true,
+        onReady: function(_, __, inst){ injectTip(inst); },
+        onOpen:  function(_, __, inst){ injectTip(inst); }
+      });
+
+      rsPickupFP = flatpickr('#newPickup', {
+        dateFormat: 'Y-m-d', minDate: today, disable: ranges, disableMobile: true,
+        defaultDate: pickupVal || null,
+        onReady: function(_, __, inst){ injectTip(inst); },
+        onOpen:  function(_, __, inst){ injectTip(inst); },
+        onChange: function(sel) {
+          if (sel.length > 0) {
+            var next = new Date(sel[0]); next.setDate(next.getDate() + 1);
+            rsEndFP.set('minDate', next);
+            if (rsEndFP.selectedDates[0] && rsEndFP.selectedDates[0] <= sel[0]) rsEndFP.clear();
           }
         }
-      };
+      });
+
+      if (pickupVal && currentEnd) {
+        var nx = new Date(pickupVal + 'T00:00:00'); nx.setDate(nx.getDate() + 1);
+        rsEndFP.set('minDate', nx);
+        rsEndFP.setDate(currentEnd, false);
+      }
 
       document.getElementById('rescheduleModal').classList.add('open');
     }
