@@ -82,29 +82,42 @@
       border-bottom: 2px solid #f0f4ff;
     }
 
-    /* ── ACCESS ALERT ── */
-    .access-alert {
-      display: none;
-      background: #fff5e6;
-      border: 1px solid #ffc87a;
-      border-left: 4px solid #f39c12;
-      border-radius: 10px;
-      padding: 16px 18px;
+    /* ── NOT LOGGED IN WARNING (same as feedback / change-pass) ── */
+    .disclaimer-banner {
+      background: #fdf2f2;
+      border: 1px solid #f8b4b4;
+      border-left: 4px solid #e74c3c;
+      color: #981b1b;
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.85em;
       margin-bottom: 16px;
-      font-size: 0.88em;
-      color: #b35c00;
-      line-height: 1.6;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
     }
 
-    .access-alert .alert-title {
-      font-weight: 700;
-      font-size: 0.95em;
-      margin-bottom: 6px;
-      color: #a04000;
+    .disclaimer-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .access-alert a { color: #1464dd; font-weight: 600; text-decoration: none; }
-    .access-alert a:hover { text-decoration: underline; }
+    .disclaimer-banner a {
+      align-self: flex-start;
+      display: inline-block;
+      white-space: nowrap;
+      background: #1464dd;
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 6px;
+      font-size: 0.85em;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .disclaimer-banner a:hover { background: #0d47a1; }
 
     /* ── INFO BOX ── */
     .info-box {
@@ -217,6 +230,45 @@
     }
 
     .reply-box .msg-label { color: #1e8449; }
+    .reply-box .msg-time { font-size: 0.7em; color: #5a9c72; font-weight: 500; margin-top: 4px; }
+
+    .user-reply-box {
+      background: #eef4ff;
+      border: 1px solid #c6d8f7;
+      border-left: 4px solid #1464dd;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 10px;
+    }
+    .user-reply-box .msg-label { color: #1464dd; }
+    .user-reply-box .msg-time { font-size: 0.7em; color: #7a95c9; font-weight: 500; margin-top: 4px; }
+
+    .user-reply-composer { display:flex; gap:8px; margin-top: 12px; }
+    .user-reply-composer textarea {
+      flex: 1;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.85em;
+      resize: vertical;
+      outline: none;
+    }
+    .user-reply-composer textarea:focus { border-color: #1464dd; box-shadow: 0 0 0 3px rgba(20,100,221,0.1); }
+    .btn-user-reply {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #1464dd, #0d47a1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.82em;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-user-reply:hover { background: linear-gradient(135deg, #0d47a1, #083080); }
 
     @media (max-width: 600px) {
       header { flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -227,6 +279,7 @@
   </style>
 </head>
 <body>
+  <script src="user-header.js"></script>
 
   <header>
     <h1>🚗 Waliko Car Hire</h1>
@@ -244,11 +297,12 @@
 
   <main>
 
-    <!-- Access Alert -->
-    <div class="access-alert" id="accessAlert">
-      <div class="alert-title">🔒 Access Restricted</div>
-      You must be logged in to access the Help Center. Please
-      <a href="signin.html">Sign In</a> or <a href="signup.html">Sign Up</a> to continue.
+    <!-- Not logged in warning -->
+    <div class="disclaimer-banner" id="accessAlert">
+      <div class="disclaimer-content">
+        <span>⚠️ You are not logged in. Please log in to use the Help Center.</span>
+      </div>
+      <a href="signin.html">Log In</a>
     </div>
 
     <!-- Help Form Card -->
@@ -282,10 +336,11 @@
   <script>
     const problemsKey = 'helpMessages';
     let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    let draftReplies = {}; // oi -> in-progress reply text, kept across auto-refreshes
 
     // ── Check login ──
     if (!currentUser) {
-      document.getElementById('accessAlert').style.display = 'block';
+      document.getElementById('accessAlert').style.display = 'flex';
       document.getElementById('problem').disabled = true;
       document.getElementById('problem').placeholder = 'Sign in to submit a help request...';
       document.querySelector('.btn-submit').disabled = true;
@@ -330,7 +385,8 @@
         email: currentUser.email,
         phone: currentUser.phone,
         message: text,
-        reply: ''
+        replies: [],
+        userReplies: []
       });
 
       localStorage.setItem(problemsKey, JSON.stringify(problems));
@@ -338,7 +394,21 @@
       renderUserMessages();
     }
 
+    // Reads a message's replies whichever way they're stored: the newer
+    // "replies" array (one entry per admin reply, each with its own
+    // timestamp) or an old single "reply" string from before admin
+    // could send more than one reply per message.
+    function getReplies(p) {
+      if (Array.isArray(p.replies)) return p.replies;
+      if (p.reply && p.reply.trim()) return [{ text: p.reply, at: p.repliedAt || '' }];
+      return [];
+    }
+
     function renderUserMessages() {
+      const activeEl = document.activeElement;
+      const activeId = (activeEl && activeEl.id && activeEl.id.startsWith('userReplyBox')) ? activeEl.id : null;
+      const caretPos = activeId ? activeEl.selectionStart : null;
+
       const problems  = JSON.parse(localStorage.getItem(problemsKey)) || [];
       const container = document.getElementById('userMessages');
       const card      = document.getElementById('messagesCard');
@@ -349,20 +419,65 @@
       card.style.display = 'block';
       container.innerHTML = '';
 
-      mine.forEach(p => {
+      mine.forEach((p, idx) => {
+        const oi = problems.indexOf(p);
+        const adminReplies = getReplies(p).map(r => ({ text: r.text, at: r.at, from: 'admin' }));
+        const userReplies  = (Array.isArray(p.userReplies) ? p.userReplies : []).map(r => ({ text: r.text, at: r.at, from: 'user' }));
+        const timeline = adminReplies.concat(userReplies).sort((a, b) => {
+          const da = new Date(a.at), db = new Date(b.at);
+          const va = isNaN(da) ? 0 : da.getTime();
+          const vb = isNaN(db) ? 0 : db.getTime();
+          return va - vb;
+        });
+
         const div = document.createElement('div');
         div.className = 'message-item';
         div.innerHTML = `
           <div class="msg-label">Your Message</div>
           <div class="msg-text">${p.message}</div>
-          ${p.reply ? `
+          ${timeline.map(r => r.from === 'admin' ? `
             <div class="reply-box">
               <div class="msg-label">Admin Reply</div>
-              <div class="msg-text">${p.reply}</div>
-            </div>` : ''}
+              <div class="msg-text">${r.text}</div>
+              ${r.at ? `<div class="msg-time">${formatWhen(r.at)}</div>` : ''}
+            </div>` : `
+            <div class="user-reply-box">
+              <div class="msg-label">You</div>
+              <div class="msg-text">${r.text}</div>
+              ${r.at ? `<div class="msg-time">${formatWhen(r.at)}</div>` : ''}
+            </div>`).join('')}
+          <div class="user-reply-composer">
+            <textarea id="userReplyBox${oi}" placeholder="Reply..." oninput="draftReplies[${oi}]=this.value">${draftReplies[oi] || ''}</textarea>
+            <button class="btn-user-reply" onclick="sendUserReply(${oi})">Reply</button>
+          </div>
         `;
         container.appendChild(div);
       });
+
+      if (activeId) {
+        const el = document.getElementById(activeId);
+        if (el) {
+          el.focus();
+          if (caretPos !== null) el.setSelectionRange(caretPos, caretPos);
+        }
+      }
+    }
+
+    function formatWhen(iso) {
+      const d = new Date(iso);
+      return isNaN(d) ? iso : d.toLocaleString();
+    }
+
+    function sendUserReply(oi) {
+      const box = document.getElementById('userReplyBox' + oi);
+      const text = box.value.trim();
+      if (!text) { box.focus(); return; }
+      const problems = JSON.parse(localStorage.getItem(problemsKey)) || [];
+      if (!Array.isArray(problems[oi].userReplies)) problems[oi].userReplies = [];
+      problems[oi].userReplies.push({ text, at: new Date().toISOString() });
+      localStorage.setItem(problemsKey, JSON.stringify(problems));
+      delete draftReplies[oi];
+      renderUserMessages();
     }
 
     function liveCheck() {
@@ -379,6 +494,6 @@
       window.location.href = 'index.html';
     });
   </script>
-
+<script src="maintenance-check.js"></script>
 </body>
 </html>
