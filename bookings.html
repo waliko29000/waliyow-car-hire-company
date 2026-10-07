@@ -813,7 +813,7 @@
           '<div class="card-header">'+
             '<div>'+
               '<h3><span class="car-name">'+b.carName+'</span>'+
-              ((paidTag||pickupSoon||conflictTag||expiredTag)?'<span class="tag-row">'+paidTag+(pickupSoon?'<span class="pickup-soon-tag"><span class="pk-w">Pickup </span>'+soonLabel+'</span>':'')+conflictTag+expiredTag+'</span>':'')+'</h3>'+
+              ((paidTag||conflictTag||expiredTag)?'<span class="tag-row">'+paidTag+conflictTag+expiredTag+'</span>':'')+'</h3>'+
               '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+fmtStamp(b.timestamp)+'</div>'+
             '</div>'+
             '<div class="card-actions">'+actionsHtml+'</div>'+
