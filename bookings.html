@@ -990,6 +990,29 @@
     window.renderBookings       = renderBookings;
 
     renderBookings();
+
+    // Opened from Payments with ?id=... : jump to that booking and open Reschedule
+    (function(){
+      var qid = new URLSearchParams(window.location.search).get('id');
+      if (!qid) return;
+      displayCount = 9999;
+      renderBookings();
+      var all = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var target = null;
+      for (var i = 0; i < all.length; i++) { if (String(all[i].bookingId) === qid) { target = all[i]; break; } }
+      if (!target) return;
+      var cards = document.querySelectorAll('.booking-card');
+      for (var j = 0; j < cards.length; j++) {
+        var idEl = cards[j].querySelector('.booking-id');
+        if (idEl && idEl.textContent.indexOf('ID: ' + qid) === 0) {
+          cards[j].style.boxShadow = '0 0 0 3px #1464dd';
+          cards[j].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          break;
+        }
+      }
+      openRescheduleModal(target.bookingId, target.carName, target.pickup, target.endDate);
+      if (window.history && history.replaceState) history.replaceState(null, '', window.location.pathname);
+    })();
   })();
   </script>
   <script>document.write('<script src="credit.js?t='+Date.now()+'"><\/script>');</script>
