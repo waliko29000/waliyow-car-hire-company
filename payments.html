@@ -30,6 +30,9 @@
     .filter-btns{display:flex;gap:6px;flex-wrap:wrap;}
     .f-btn{padding:6px 14px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
     .f-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
+    .f-btn{white-space:nowrap;}
+    .f-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:3px;border-radius:99px;background:#eef2fb;color:#1464dd;font-size:0.9em;font-weight:700;text-align:center;}
+    .f-btn.active .f-count{background:rgba(255,255,255,0.25);color:#fff;}
     .empty-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);margin-bottom:16px;}
     .alert-box{background:#fff5e6;border:1px solid #ffc87a;border-radius:10px;padding:14px 16px;font-size:0.88em;color:#b35c00;line-height:1.7;margin-bottom:16px;}
     .empty-card .alert-box:last-child{margin-bottom:0;}
@@ -86,6 +89,11 @@
       .summary-card{min-width:80px;padding:10px;}
       .controls{gap:8px;}
       .search-wrap{max-width:100%;}
+      .controls .page-title{flex:1 1 100%;}
+      .controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
+      .controls .filter-btns{flex:1 1 100%;flex-wrap:nowrap;gap:4px;}
+      .controls .f-btn{flex:1 1 0;min-width:0;padding:6px 3px;font-size:0.68em;text-align:center;}
+      .f-count{min-width:16px;padding:1px 5px;margin-left:2px;}
     }
   </style>
 </head>
@@ -105,7 +113,6 @@
   </header>
 
   <main>
-    <div class="summary-bar" id="summaryBar"></div>
     <div class="controls">
       <div class="page-title">Payment History</div>
       <div class="search-wrap">
@@ -113,9 +120,10 @@
         <input type="text" id="searchInput" placeholder="Search car or booking ID…" oninput="renderPayments()">
       </div>
       <div class="filter-btns">
-        <button class="f-btn active" data-f="all"     onclick="setFilter(this)">All</button>
-        <button class="f-btn"        data-f="deposit" onclick="setFilter(this)">Deposit Paid</button>
-        <button class="f-btn"        data-f="full"    onclick="setFilter(this)">Fully Paid</button>
+        <button class="f-btn active" data-f="all"     onclick="setFilter(this)">All <span class="f-count">0</span></button>
+        <button class="f-btn"        data-f="pending" onclick="setFilter(this)">Pending <span class="f-count">0</span></button>
+        <button class="f-btn"        data-f="deposit" onclick="setFilter(this)">Deposit Paid <span class="f-count">0</span></button>
+        <button class="f-btn"        data-f="full"    onclick="setFilter(this)">Fully Paid <span class="f-count">0</span></button>
       </div>
     </div>
     <div id="paymentsList"></div>
@@ -185,10 +193,12 @@
       var paid     = allBookings.filter(isPaid);
       var pending  = allBookings.filter(b => !isPaid(b));
       var fullPaid = paid.filter(b => { var bo=getBalanceStatus(b.bookingId); return !!(bo&&bo.paid)||!!b.balancePaid; });
-      document.getElementById('summaryBar').innerHTML =
-        `<div class="summary-card"><div class="s-num">${paid.length}</div><div class="s-label">Paid Bookings</div></div>`+
-        `<div class="summary-card"><div class="s-num">${pending.length}</div><div class="s-label">Pending</div></div>`+
-        `<div class="summary-card"><div class="s-num">${fullPaid.length}</div><div class="s-label">Fully Paid</div></div>`;
+      var counts = { all: allBookings.length, pending: pending.length, deposit: paid.length - fullPaid.length, full: fullPaid.length };
+      var labels = { all: 'All', pending: 'Pending', deposit: 'Deposit Paid', full: 'Fully Paid' };
+      document.querySelectorAll('.f-btn').forEach(function(btn){
+        var k = btn.dataset.f;
+        btn.innerHTML = labels[k] + ' <span class="f-count">' + counts[k] + '</span>';
+      });
     }
 
     function renderPayments(){
@@ -212,6 +222,7 @@
       var filtered = paid.filter(b => {
         var bo = getBalanceStatus(b.bookingId);
         var fp = !!(bo&&bo.paid)||!!b.balancePaid;
+        if (activeFilter === 'pending')        return false;
         if (activeFilter === 'deposit' && fp)  return false;
         if (activeFilter === 'full'    && !fp) return false;
         if (query && !b.carName.toLowerCase().includes(query) && !String(b.bookingId).toLowerCase().includes(query)) return false;
@@ -270,12 +281,14 @@
         list.appendChild(card);
       });
 
-      if(pending.length > 0){
+      if(pending.length > 0 && (activeFilter === 'all' || activeFilter === 'pending')){
         var wrap = document.createElement('div');
         wrap.className = 'empty-card';
         wrap.innerHTML = `<div class="alert-box">💳 You have <strong>${pending.length}</strong> booking(s) awaiting deposit payment.</div>`;
         pending.forEach(b => {
           var a = calcAmounts(b);
+          var todayMid = new Date(); todayMid.setHours(0,0,0,0);
+          var expired = new Date(b.pickup + 'T00:00:00') < todayMid;
           var row = document.createElement('div');
           row.className = 'pending-row';
           row.innerHTML =
@@ -284,9 +297,12 @@
               <div style="font-size:0.75em;color:#888;">#${shortId(b.bookingId)}</div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-              <span style="font-size:0.82em;color:#b35c00;font-weight:600;">Deposit: Ksh ${a.deposit.toLocaleString()}</span>
+              ${expired
+                ? `<span style="font-size:0.8em;color:#c0392b;font-weight:600;">Dates expired</span>
+              <a class="btn btn-light" style="font-size:0.75em;padding:6px 12px;text-decoration:none;" href="bookings.html">Reschedule</a>`
+                : `<span style="font-size:0.82em;color:#b35c00;font-weight:600;">Deposit: Ksh ${a.deposit.toLocaleString()}</span>
               <button class="btn btn-blue" style="font-size:0.75em;padding:6px 12px;"
-                onclick="localStorage.setItem('paymentAmount','${a.deposit}');localStorage.setItem('paymentBookingId','${b.bookingId}');localStorage.removeItem('paymentType');window.location.href='payment-gateway.html'">Pay Now</button>
+                onclick="localStorage.setItem('paymentAmount','${a.deposit}');localStorage.setItem('paymentBookingId','${b.bookingId}');localStorage.removeItem('paymentType');window.location.href='payment-gateway.html'">Pay Now</button>`}
             </div>`;
           wrap.appendChild(row);
         });
@@ -376,7 +392,7 @@
       doc.setTextColor(100,120,165);doc.setFont('helvetica','normal');doc.setFontSize(8);
       doc.text(fp?'Payment verified via M-Pesa  \u00B7  All payments cleared  \u00B7  Ready for pickup':'Payment verified via M-Pesa  \u00B7  Deposit = 50% of total hire cost',L,60);
       if(fp){doc.setFillColor(39,174,96);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('FULLY PAID',PW-33,59.5,{align:'center'});}
-      else{doc.setFillColor(230,249,238);doc.roundedRect(PW-38,53,24,10,2,2,'F');doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PAID',PW-26,59.5,{align:'center'});}
+      else{doc.setFillColor(230,249,238);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('DEPOSIT PAID',PW-33,59.5,{align:'center'});}
       function secHead(label,y){doc.setFillColor(NR,NG,NB);doc.rect(L,y,3,13,'F');doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text(label,L+6,y+9);}
       function tRow(label,value,y,shade,highlight,greenVal,RH){RH=RH||11;if(highlight){doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,RH,'F');doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,RH,'D');}else if(shade){doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,RH,'F');}doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(label,L+4,y+RH*0.55);if(greenVal)doc.setTextColor(26,112,64);else if(highlight)doc.setTextColor(NR,NG,NB);else doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);doc.text(String(value),RR,y+RH*0.55,{align:'right'});}
       var RH=9,y=78;
