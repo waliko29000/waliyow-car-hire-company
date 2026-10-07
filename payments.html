@@ -31,6 +31,7 @@
     .f-btn{padding:6px 14px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
     .f-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
     .f-btn{white-space:nowrap;}
+    .f-short{display:none;}
     .f-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:3px;border-radius:99px;background:#eef2fb;color:#1464dd;font-size:0.9em;font-weight:700;text-align:center;}
     .f-btn.active .f-count{background:rgba(255,255,255,0.25);color:#fff;}
     .empty-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);margin-bottom:16px;}
@@ -92,8 +93,10 @@
       .controls .page-title{flex:1 1 100%;}
       .controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
       .controls .filter-btns{flex:1 1 100%;flex-wrap:nowrap;gap:4px;}
-      .controls .f-btn{flex:1 1 0;min-width:0;padding:6px 3px;font-size:0.68em;text-align:center;}
-      .f-count{min-width:16px;padding:1px 5px;margin-left:2px;}
+      .controls .f-btn{flex:1 1 0;min-width:0;padding:6px 2px;font-size:0.7em;text-align:center;}
+      .f-full{display:none;}
+      .f-short{display:inline;}
+      .f-count{min-width:16px;padding:1px 4px;margin-left:2px;}
     }
   </style>
 </head>
@@ -194,7 +197,7 @@
       var pending  = allBookings.filter(b => !isPaid(b));
       var fullPaid = paid.filter(b => { var bo=getBalanceStatus(b.bookingId); return !!(bo&&bo.paid)||!!b.balancePaid; });
       var counts = { all: allBookings.length, pending: pending.length, deposit: paid.length - fullPaid.length, full: fullPaid.length };
-      var labels = { all: 'All', pending: 'Pending', deposit: 'Deposit Paid', full: 'Fully Paid' };
+      var labels = { all: 'All', pending: 'Pending', deposit: '<span class="f-full">Deposit Paid</span><span class="f-short">Deposit</span>', full: '<span class="f-full">Fully Paid</span><span class="f-short">Full</span>' };
       document.querySelectorAll('.f-btn').forEach(function(btn){
         var k = btn.dataset.f;
         btn.innerHTML = labels[k] + ' <span class="f-count">' + counts[k] + '</span>';
