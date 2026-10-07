@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Bookings – Waliko Car Hire</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -942,7 +943,28 @@
       });
     }
 
-    function drawStamp(doc,cx,cy){var R=14,NR=13,NG=59,NB=140,GR=244,GG=196,GB=48;doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.2);doc.circle(cx,cy,R,'D');doc.setLineWidth(0.5);doc.circle(cx,cy,R-2.5,'D');var sCY=cy-4.5,r1=3.2,r2=1.3,pts=[];for(var i=0;i<10;i++){var ang=(i*36-90)*Math.PI/180,rr=i%2===0?r1:r2;pts.push([cx+rr*Math.cos(ang),sCY+rr*Math.sin(ang)]);}doc.setFillColor(GR,GG,GB);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.triangle(cx,sCY,a[0],a[1],b2[0],b2[1],'F');}doc.setDrawColor(200,152,10);doc.setLineWidth(0.2);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.line(a[0],a[1],b2[0],b2[1]);}var tTxt='WALIKO CAR HIRE LTD',tR=R-3.5,tSpan=170*Math.PI/180;var tStart=-Math.PI/2-tSpan/2,tStep=tSpan/(tTxt.length-1);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(3.8);for(var i=0;i<tTxt.length;i++){var a=tStart+i*tStep;doc.text(tTxt[i],cx+tR*Math.cos(a),cy+tR*Math.sin(a),{angle:-(a*180/Math.PI+90),align:'center'});}var bTxt='NAIROBI \u00B7 KENYA',bR=R-3.5,bSpan=115*Math.PI/180;var bStart=Math.PI/2-bSpan/2,bStep=bSpan/(bTxt.length-1);doc.setFontSize(3.8);for(var i=0;i<bTxt.length;i++){var a=bStart+i*bStep;doc.text(bTxt[i],cx+bR*Math.cos(a),cy+bR*Math.sin(a),{angle:-(a*180/Math.PI-90),align:'center'});}doc.setFont('helvetica','bold');doc.setFontSize(4.8);doc.setTextColor(NR,NG,NB);doc.text('VERIFIED',cx,cy+2,{align:'center'});doc.setFontSize(4.5);doc.text('& PAID',cx,cy+6.5,{align:'center'});doc.setFontSize(3.5);doc.setTextColor(140,150,175);doc.text('EST. 2020',cx,cy+10.5,{align:'center'});}
+    function depRefOf(b){
+      var c=[b.mpesaReceipt,b.mpesaRef,b.mpesaCode,b.depositReceipt,b.receipt,b.transactionId,b.paymentRef];
+      for(var i=0;i<c.length;i++){ if(c[i] && String(c[i]).toUpperCase()!=='N/A') return String(c[i]); }
+      return 'N/A';
+    }
+    function drawQR(doc,text,x,y,size){
+      try{
+        if(typeof qrcode==='undefined') return false;
+        var qr=qrcode(0,'M'); qr.addData(text); qr.make();
+        var n=qr.getModuleCount(), m=size/n;
+        doc.setFillColor(13,59,140);
+        for(var r=0;r<n;r++){ for(var c=0;c<n;c++){ if(qr.isDark(r,c)) doc.rect(x+c*m,y+r*m,m+0.02,m+0.02,'F'); } }
+        return true;
+      }catch(e){ return false; }
+    }
+    function drawVerify(doc,PW,sigY,idStr,carName,ref,total,full){
+      var rcpNo='RCP-'+idStr, qx=PW/2-6, qy=sigY+3;
+      var ok=drawQR(doc,'WALIKO CAR HIRE|'+rcpNo+'|'+carName+'|'+ref+'|KSH '+total+'|'+(full?'FULLY PAID':'DEPOSIT PAID'),qx,qy,26);
+      if(ok){doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.text('Scan to verify',qx+13,qy+30,{align:'center'});}
+      doc.setTextColor(13,59,140);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(rcpNo,qx+13,qy+(ok?34:8),{align:'center'});
+    }
+    function drawStamp(doc,cx,cy,full){var R=14,NR=13,NG=59,NB=140,GR=244,GG=196,GB=48;doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.2);doc.circle(cx,cy,R,'D');doc.setLineWidth(0.5);doc.circle(cx,cy,R-2.5,'D');var sCY=cy-4.5,r1=3.2,r2=1.3,pts=[];for(var i=0;i<10;i++){var ang=(i*36-90)*Math.PI/180,rr=i%2===0?r1:r2;pts.push([cx+rr*Math.cos(ang),sCY+rr*Math.sin(ang)]);}doc.setFillColor(GR,GG,GB);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.triangle(cx,sCY,a[0],a[1],b2[0],b2[1],'F');}doc.setDrawColor(200,152,10);doc.setLineWidth(0.2);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.line(a[0],a[1],b2[0],b2[1]);}var tTxt='WALIKO CAR HIRE LTD',tR=R-3.5,tSpan=170*Math.PI/180;var tStart=-Math.PI/2-tSpan/2,tStep=tSpan/(tTxt.length-1);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(3.8);for(var i=0;i<tTxt.length;i++){var a=tStart+i*tStep;doc.text(tTxt[i],cx+tR*Math.cos(a),cy+tR*Math.sin(a),{angle:-(a*180/Math.PI+90),align:'center'});}var bTxt='NAIROBI \u00B7 KENYA',bR=R-3.5,bSpan=115*Math.PI/180;var bStart=Math.PI/2-bSpan/2,bStep=bSpan/(bTxt.length-1);doc.setFontSize(3.8);for(var i=0;i<bTxt.length;i++){var a=bStart+i*bStep;doc.text(bTxt[i],cx+bR*Math.cos(a),cy+bR*Math.sin(a),{angle:-(a*180/Math.PI-90),align:'center'});}doc.setFont('helvetica','bold');doc.setFontSize(4.8);doc.setTextColor(NR,NG,NB);doc.text(full?'VERIFIED':'DEPOSIT',cx,cy+2,{align:'center'});doc.setFontSize(4.5);doc.text(full?'& PAID':'PAID',cx,cy+6.5,{align:'center'});doc.setFontSize(3.5);doc.setTextColor(140,150,175);doc.text('EST. 2020',cx,cy+10.5,{align:'center'});}
     function drawSignatureA(doc,ox,oy){var sc=0.52,NR=13,NG=59,NB=140;function p(px,py){return [ox+px*sc,oy+py*sc];}doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.1);var W=[[4,10],[10,34],[16,18],[22,34],[28,10]];for(var i=0;i<W.length-1;i++){var a=p(W[i][0],W[i][1]),b2=p(W[i+1][0],W[i+1][1]);doc.line(a[0],a[1],b2[0],b2[1]);}doc.setLineWidth(0.85);var s0=p(28,10);doc.lines([[sc*(32-28),sc*(22-10),sc*(36-28),sc*(28-10),sc*(40-28),sc*(26-10)],[sc*(43-40),sc*(24-26),sc*(43-40),sc*(19-26),sc*(41-40),sc*(17-26)],[sc*(39-41),sc*(15-17),sc*(37-41),sc*(18-17),sc*(38-41),sc*(21-17)],[sc*(39-38),sc*(24-21),sc*(42-38),sc*(26-21),sc*(45-38),sc*(23-21)]],s0[0],s0[1]);var lA=p(47,13),lB=p(47,30);doc.line(lA[0],lA[1],lB[0],lB[1]);doc.setFillColor(NR,NG,NB);var dp=p(47,10);doc.circle(dp[0],dp[1],0.7,'F');var o0=p(50,19);doc.lines([[sc*(51-50),sc*(13-19),sc*(56-50),sc*(12-19),sc*(59-50),sc*(16-19)],[sc*(61-59),sc*(19-16),sc*(59-59),sc*(25-16),sc*(55-59),sc*(26-16)],[sc*(52-55),sc*(27-26),sc*(50-55),sc*(24-26),sc*(52-55),sc*(21-26)],[sc*(54-52),sc*(18-21),sc*(58-52),sc*(17-21),sc*(61-52),sc*(20-21)],[sc*(63-61),sc*(23-20),sc*(62-61),sc*(28-20),sc*(59-61),sc*(30-20)]],o0[0],o0[1]);doc.setLineWidth(0.5);var tail=[[59,30],[72,25],[92,23],[112,27],[126,30],[138,27],[145,24]];for(var i=0;i<tail.length-1;i++){var ta=p(tail[i][0],tail[i][1]),tb=p(tail[i+1][0],tail[i+1][1]);doc.line(ta[0],ta[1],tb[0],tb[1]);}doc.setLineWidth(0.35);var ul1=p(3,39),ul2=p(100,39);doc.line(ul1[0],ul1[1],ul2[0],ul2[1]);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);var np=p(3,47);doc.text('Waliko Car Hire Ltd.',np[0],np[1]);doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8.5);var tp=p(3,55);doc.text('Authorised Signatory',tp[0],tp[1]);}
 
     function downloadPDF(bookingId){
@@ -996,7 +1018,7 @@
       var cRows=[['Full Name',b.fullName],['Phone No.',b.phone],['National ID',b.nationalId],['Licence No.',b.license],['Vehicle Hired',b.carName],['Booking ID',String(b.bookingId).replace('#','')],['Pickup Date',fmtDate(b.pickup)],['Return Date',fmtDate(b.endDate)],['Duration',days+' day'+(days!==1?'s':'')]];
       cRows.forEach(function(r,i){tRow(r[0],r[1],y,i%2===0,false,false,RH);y+=RH;});
       y+=4;secHead('Payment Summary',y);y+=13;
-      if(isPaid){tRow('Deposit M-Pesa Ref',b.mpesaReceipt||'N/A',y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',fmtStamp(b.paidAt||'N/A'),y,false,false,false,RH);y+=RH;}
+      if(isPaid){tRow('Deposit M-Pesa Ref',depRefOf(b),y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',fmtStamp(b.paidAt||'N/A'),y,false,false,false,RH);y+=RH;}
       if(balancePaid){tRow('Balance M-Pesa Ref',balReceipt,y,true,false,true,RH);y+=RH;tRow('Balance Paid On',fmtStamp(balPaidAt),y,false,false,false,RH);y+=RH;}
       tRow('Price Per Day','Ksh '+b.price.toLocaleString(),y,true,false,false,RH);y+=RH;
       tRow('Number of Days',days+' day'+(days!==1?'s':''),y,false,false,false,RH);y+=RH;
@@ -1009,9 +1031,9 @@
       doc.setFillColor(248,250,255);doc.rect(0,sigY-6,PW,PH-16-(sigY-6),'F');
       doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text('Authorised by',L,sigY);
       drawSignatureA(doc,L,sigY+2);
-      if(isPaid){drawStamp(doc,PW-30,sigY+14);}
+      if(isPaid){drawStamp(doc,PW-30,sigY+14,balancePaid);drawVerify(doc,PW,sigY,String(b.bookingId).replace('#',''),b.carName,depRefOf(b),total,balancePaid);}
       doc.setFillColor(NR,NG,NB);doc.rect(0,PH-16,PW,16,'F');
-      doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('waliko.co.ke  \u00B7  info@waliko.co.ke  \u00B7  +254 700 000 000',PW/2,PH-8.5,{align:'center'});
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('waliko.co.ke  \u00B7  info@waliko.co.ke  \u00B7  0729177741',PW/2,PH-8.5,{align:'center'});
       doc.setFontSize(6.5);doc.setTextColor(160,195,255);doc.text('This is an official computer-generated receipt and is valid without a physical stamp.',PW/2,PH-3,{align:'center'});
       doc.save('Waliko_Booking_'+bookingId+'.pdf');
     }
