@@ -211,10 +211,20 @@
       var currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
       var userEmail   = (currentUser.email || '').toLowerCase();
       var allBookings = JSON.parse(localStorage.getItem('bookings')||'[]');
-      // Only show bookings for the logged-in user
-      var bookings = allBookings.filter(function(b){
-        return (b.email || '').toLowerCase() === userEmail;
-      });
+      // Logged in: only this account's bookings.
+      // Logged out: only bookings made on THIS browser (same rule as My Bookings),
+      // never every booking that just has a blank email.
+      var bookings;
+      if (userEmail) {
+        bookings = allBookings.filter(function(b){
+          return (b.email || '').toLowerCase() === userEmail;
+        });
+      } else {
+        var myGuestId = localStorage.getItem('guestId');
+        bookings = allBookings.filter(function(b){
+          return !b.email && myGuestId && b.guestId === myGuestId;
+        });
+      }
       bookings.forEach(b => { if(b.mpesaReceipt&&b.mpesaReceipt!=='N/A') b.paymentStatus='paid'; });
 
       renderSummary(bookings);
