@@ -1,319 +1,1210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Login – Waliko Car Hire</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Bookings – Waliko Car Hire</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{height:100%;font-family:'Poppins',sans-serif;color:#1a1a2e;}
-    body{display:grid;grid-template-columns:1.1fr 1fr;min-height:100vh;background:#f6f8ff;}
-
-    /* ── LEFT: brand panel ── */
-    .brand{
-      position:relative;overflow:hidden;color:#fff;
-      background:linear-gradient(145deg,#1464dd 0%,#0d47a1 55%,#082a6b 100%);
-      display:flex;flex-direction:column;justify-content:space-between;
-      padding:48px 56px;
+    body{font-family:'Poppins',sans-serif;background:#f0f4ff;color:#333;}
+    header{background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;padding:10px 20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 3px 15px rgba(20,100,221,0.35);}
+    header h1{font-size:1.2em;font-weight:700;}
+    nav{display:flex;flex-wrap:wrap;gap:6px;}
+    nav a{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:7px 13px;border-radius:25px;font-size:0.78em;font-weight:500;text-decoration:none;transition:all 0.2s;}
+    nav a:hover,nav a.active{background:rgba(255,255,255,0.3);border-color:rgba(255,255,255,0.6);}
+    nav a.logout{border-color:rgba(255,100,100,0.4);color:#ffaaaa;}
+    nav a.logout:hover{background:rgba(255,80,80,0.2);}
+    main{max-width:900px;margin:24px auto;padding:0 16px 40px;}
+    .summary-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
+    .summary-card{flex:1;min-width:110px;background:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 2px 10px rgba(20,100,221,0.08);border:1px solid rgba(20,100,221,0.07);text-align:center;}
+    .summary-card .s-num{font-size:1.6em;font-weight:700;color:#1464dd;line-height:1;}
+    .summary-card .s-label{font-size:0.72em;color:#888;margin-top:3px;}
+    .summary-card.pending .s-num{color:#b35c00;}
+    .summary-card.paid .s-num{color:#27ae60;}
+    .summary-card.remind .s-num{color:#1464dd;}
+    .reminder-banner{background:linear-gradient(135deg,#f2f8ff,#e6f1ff);border:1.5px solid #bcd6fa;border-left:5px solid #1464dd;border-radius:14px;padding:14px 46px 14px 16px;margin-bottom:16px;display:none;position:relative;box-shadow:0 2px 10px rgba(20,100,221,0.08);}
+    .reminder-close{position:absolute;top:10px;right:12px;background:rgba(20,100,221,0.1);border:none;width:26px;height:26px;border-radius:50%;font-size:0.85em;cursor:pointer;color:#1464dd;display:flex;align-items:center;justify-content:center;transition:background 0.2s;line-height:1;}
+    .reminder-close:hover{background:rgba(20,100,221,0.2);}
+    .reminder-banner-title{font-size:0.92em;font-weight:700;color:#0d47a1;margin-bottom:8px;}
+    .reminder-item{font-size:0.84em;color:#24406b;padding:4px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+    .reminder-icon{font-size:1.1em;line-height:1.5;}
+    .reminder-id{font-size:0.85em;color:#6b83a8;}
+    .reminder-tip{font-size:0.78em;color:#4a648a;margin-top:8px;padding-top:8px;border-top:1px dashed #bcd6fa;}
+    .booking-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+    .page-title{font-size:1.2em;font-weight:700;color:#1464dd;}
+    .search-wrap{position:relative;flex:1;min-width:180px;max-width:280px;}
+    .search-wrap input{width:100%;padding:8px 12px 8px 34px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.82em;outline:none;transition:border-color 0.2s;background:#fff;}
+    .search-wrap input:focus{border-color:#1464dd;}
+    .search-wrap .s-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:0.9em;color:#aaa;pointer-events:none;}
+    .status-filter{display:flex;gap:6px;flex-wrap:wrap;}
+    .sf-btn{padding:6px 12px;border:1.5px solid #dde3f0;border-radius:25px;font-family:'Poppins',sans-serif;font-size:0.75em;font-weight:600;background:#fff;color:#666;cursor:pointer;transition:all 0.2s;}
+    .sf-btn.active{background:#1464dd;color:#fff;border-color:#1464dd;}
+    .sf-btn{white-space:nowrap;}
+    .sf-count{display:inline-block;min-width:18px;padding:1px 6px;margin-left:3px;border-radius:99px;background:#eef2fb;color:#1464dd;font-size:0.9em;font-weight:700;text-align:center;}
+    .sf-btn.active .sf-count{background:rgba(255,255,255,0.25);color:#fff;}
+    .empty-msg{background:#fff;border-radius:14px;padding:32px 24px;text-align:center;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);color:#666;font-size:0.92em;line-height:1.7;}
+    .empty-msg a{color:#1464dd;font-weight:600;text-decoration:none;}
+    .empty-msg a.btn-browse{display:inline-block;margin-top:14px;padding:11px 26px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border-radius:25px;font-size:0.9em;font-weight:700;box-shadow:0 4px 14px rgba(20,100,221,0.3);transition:all 0.2s;}
+    .empty-msg a.btn-browse:hover{background:#0d47a1;transform:translateY(-1px);}
+    .booking-card{background:#fff;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 3px 16px rgba(20,100,221,0.09);border:1px solid rgba(20,100,221,0.07);animation:fadeIn 0.3s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+    .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px;flex-wrap:wrap;}
+    .card-header h3{font-size:1em;font-weight:700;color:#1a1a2e;}
+    .card-header .booking-id{font-size:0.75em;color:#888;margin-top:2px;}
+    .card-actions{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap;}
+    .btn{padding:7px 14px;border:none;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.78em;font-weight:600;cursor:pointer;transition:all 0.2s;}
+    .btn-pay-now{background:#1464dd;color:#fff;}
+    .btn-pay-now:hover{background:#0d47a1;}
+    .btn-balance{background:#27ae60;color:#fff;}
+    .btn-balance:hover{background:#1e8449;}
+    .btn-reschedule{background:#f0f4ff;color:#1464dd;border:1px solid #c5d5f5;}
+    .btn-reschedule:hover{background:#e0eaff;}
+    .btn-delete{background:#fff0f0;color:#c0392b;border:1px solid #ffcccc;}
+    .btn-delete:hover{background:#ffe0e0;}
+    .btn-pdf{background:#f0f4ff;color:#1464dd;border:1px solid #c5d5f5;}
+    .btn-pdf:hover{background:#e0eaff;}
+    .info-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
+    .info-table tr{border-bottom:1px solid #f0f4ff;}
+    .info-table tr:last-child{border-bottom:none;}
+    .info-table th{text-align:left;font-size:0.78em;font-weight:600;color:#888;padding:6px 8px 6px 0;width:140px;white-space:nowrap;}
+    .info-table td{font-size:0.85em;color:#333;padding:6px 8px 6px 0;}
+    .pending-notice{background:#fff5e6;border:1px solid #ffc87a;border-radius:8px;padding:10px 14px;font-size:0.8em;color:#b35c00;margin-bottom:12px;line-height:1.6;}
+    .paid-notice{background:#f0fff6;border:1px solid #a8f0c6;border-radius:8px;padding:10px 14px;font-size:0.8em;color:#1a6e3a;margin-bottom:12px;line-height:1.6;}
+    .fully-paid-notice{background:#e6fff0;border:2px solid #27ae60;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#1a6e3a;margin-bottom:12px;line-height:1.8;}
+    .fully-paid-notice .fp-title{font-size:0.95em;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+    .badge-fully-paid{display:inline-block;background:#27ae60;color:#fff;border-radius:20px;padding:3px 10px;font-size:0.75em;font-weight:700;margin-left:6px;}
+    .expired-notice{background:#fff0f0;border:2px solid #e74c3c;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a1a1a;margin-bottom:12px;line-height:1.8;}
+    .expired-notice .ex-title{font-size:0.95em;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px;color:#c0392b;}
+    .booking-card.pickup-soon{border-left:4px solid #1464dd;}
+    .booking-card.booking-conflicted{border-left:4px solid #c0392b;background:#fffafa;}
+    .booking-card.booking-expired{border-left:4px solid #c0392b;background:#fffafa;}
+    .pickup-soon-tag{display:inline-block;background:#e3f0ff;color:#0d47a1;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .expired-tag{display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .status-tag{display:inline-block;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;}
+    .tag-deposit{background:#e6f9ee;color:#1a7040;}
+    .tag-full{background:#27ae60;color:#fff;}
+    .card-header h3{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;white-space:nowrap;}
+    .card-header h3 .car-name{white-space:nowrap;flex:0 0 auto;}
+    .tag-row{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;flex:0 0 auto;}
+    .tag-row>span{margin-left:0;white-space:nowrap;flex:0 0 auto;}
+    @media(max-width:700px){
+      .card-header h3{font-size:clamp(9px,3vw,13px);gap:4px;width:100%;}
+      .pk-w{display:none;}
+      .card-header h3 .tag-row{flex:0 0 auto;gap:4px;}
+      .tag-row>span,.tag-row>.rf-tag{flex:0 0 auto;font-size:0.78em;padding:2px 7px;}
     }
-    .brand::before,.brand::after{
-      content:"";position:absolute;border-radius:50%;filter:blur(2px);
+    .show-more-btn{display:block;width:100%;padding:11px;background:#fff;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;color:#1464dd;cursor:pointer;transition:all 0.2s;margin-top:4px;}
+    .show-more-btn:hover{background:#f0f4ff;}
+    .admin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .admin-modal.open{display:flex;}
+    .admin-modal-box{background:#fff;border-radius:18px;padding:28px 24px;width:100%;max-width:380px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.25);text-align:center;}
+    .admin-modal-close{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;transition:background 0.2s;}
+    .admin-modal-close:hover{background:#dde3f0;color:#1464dd;}
+    .admin-modal-icon{font-size:3em;margin-bottom:10px;}
+    .admin-modal-box h3{font-size:1.05em;font-weight:700;color:#c0392b;margin-bottom:10px;}
+    .admin-modal-box p{font-size:0.85em;color:#555;line-height:1.7;margin-bottom:6px;}
+    .admin-info-box{background:#f0f4ff;border-left:4px solid #1464dd;border-radius:8px;padding:10px 14px;margin:14px 0;text-align:left;font-size:0.82em;color:#1a1a2e;line-height:1.8;}
+    .admin-info-box strong{color:#1464dd;}
+    .admin-contact{background:#fff5e6;border:1px solid #ffc87a;border-radius:8px;padding:10px 14px;font-size:0.82em;color:#905000;margin-bottom:16px;line-height:1.7;}
+    .admin-contact a{color:#1464dd;font-weight:600;text-decoration:none;}
+    .btn-admin-close{width:100%;padding:11px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.9em;font-weight:700;cursor:pointer;}
+    .reschedule-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .reschedule-modal.open{display:flex;}
+    .reschedule-box{background:#fff;border-radius:18px;padding:28px 24px;width:100%;max-width:380px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.25);}
+    .flatpickr-calendar{z-index:3000 !important;}
+    .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { background: #f0f0f0 !important; color: #bbb !important; text-decoration: line-through !important; cursor: not-allowed !important; opacity: 1 !important; }
+    .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { visibility: hidden !important; pointer-events: none !important; }
+    .reschedule-box h3{font-size:1.05em;font-weight:700;color:#1464dd;margin-bottom:16px;}
+    .reschedule-close{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
+    .reschedule-close:hover{background:#dde3f0;color:#1464dd;}
+    .rform-group{margin-bottom:14px;}
+    .rform-group label{display:block;font-size:0.8em;font-weight:600;color:#444;margin-bottom:4px;}
+    .rform-group input{width:100%;padding:9px 12px;border:1.5px solid #dde3f0;border-radius:8px;font-family:'Poppins',sans-serif;font-size:0.88em;outline:none;}
+    .rform-group input:focus{border-color:#1464dd;}
+    .btn-reschedule-save{width:100%;padding:11px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.9em;font-weight:700;cursor:pointer;margin-top:4px;}
+    .pay-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .pay-modal.open{display:flex;}
+    .pay-box{background:#fff;border-radius:18px;padding:26px 22px;width:100%;max-width:400px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.25);}
+    .pay-box h3{font-size:1.05em;font-weight:700;color:#1464dd;margin-bottom:4px;}
+    .pay-close-x{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
+    .pay-close-x:hover{background:#dde3f0;color:#1464dd;}
+    .pay-option{position:relative;border:1.5px solid #dde3f0;border-radius:12px;padding:14px 16px;margin-bottom:12px;cursor:pointer;transition:all 0.15s;text-align:left;background:#fff;-webkit-tap-highlight-color:transparent;}
+    .pay-option:last-child{margin-bottom:0;}
+    .pay-option:hover{border-color:#1464dd;background:#f5f8ff;}
+    .pay-option:active{transform:scale(0.98);background:#eaf1ff;}
+    .pay-option-title{font-size:0.92em;font-weight:700;color:#1a1a2e;margin-bottom:3px;}
+    .pay-option-amount{font-size:1.15em;font-weight:700;color:#1464dd;margin-bottom:6px;}
+    .pay-option-full:hover{border-color:#27ae60;background:#f3fbf6;}
+    .pay-option-full:active{background:#e4f7ec;}
+    .pay-option-full .pay-option-amount{color:#27ae60;}
+    .pay-option-desc{font-size:0.76em;color:#888;line-height:1.55;margin-bottom:12px;}
+    .pay-option-cta{display:inline-flex;align-items:center;gap:5px;background:#1464dd;color:#fff;font-size:0.78em;font-weight:700;padding:8px 16px;border-radius:25px;pointer-events:none;}
+    .pay-option-full .pay-option-cta{background:#27ae60;}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:12px 24px;border-radius:30px;font-family:'Poppins',sans-serif;font-size:0.88em;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,0.2);z-index:3000;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+    .toast.show{opacity:1;}
+    .taken-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .taken-modal.open{display:flex;}
+    .taken-box{background:#fff;border-radius:18px;padding:28px 24px;width:100%;max-width:400px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.28);text-align:center;}
+    .taken-icon{font-size:3.2em;margin-bottom:10px;}
+    .taken-box h3{font-size:1.1em;font-weight:700;color:#c0392b;margin-bottom:8px;}
+    .taken-box p{font-size:0.84em;color:#555;line-height:1.75;margin-bottom:10px;}
+    .taken-detail{background:#fff5e6;border:1px solid #ffc87a;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a3800;line-height:1.85;margin:14px 0;text-align:left;}
+    .taken-detail strong{color:#b35c00;}
+    .taken-actions{display:flex;gap:10px;margin-top:4px;}
+    .btn-taken-delete{flex:1;padding:10px;background:#fff0f0;color:#c0392b;border:1.5px solid #ffcccc;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:700;cursor:pointer;transition:background 0.2s;}
+    .btn-taken-delete:hover{background:#ffe0e0;}
+    .btn-taken-close{flex:1;padding:10px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:700;cursor:pointer;}
+    .taken-close-x{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
+    .taken-close-x:hover{background:#dde3f0;color:#1464dd;}
+    .expired-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:2000;justify-content:center;align-items:center;padding:16px;}
+    .expired-modal.open{display:flex;}
+    .expired-box{background:#fff;border-radius:18px;padding:28px 24px;width:100%;max-width:400px;position:relative;box-shadow:0 20px 50px rgba(0,0,0,0.28);text-align:center;}
+    .expired-icon{font-size:3.2em;margin-bottom:10px;}
+    .expired-box h3{font-size:1.1em;font-weight:700;color:#c0392b;margin-bottom:8px;}
+    .expired-box p{font-size:0.84em;color:#555;line-height:1.75;margin-bottom:10px;}
+    .expired-detail{background:#fff5e6;border:1px solid #ffc87a;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a3800;line-height:1.85;margin:14px 0;text-align:left;}
+    .expired-detail strong{color:#b35c00;}
+    .expired-actions{display:flex;gap:10px;margin-top:4px;}
+    .btn-expired-reschedule{flex:1;padding:10px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;border:none;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:700;cursor:pointer;}
+    .btn-expired-close{flex:1;padding:10px;background:#f0f4ff;color:#1464dd;border:1.5px solid #c5d5f5;border-radius:10px;font-family:'Poppins',sans-serif;font-size:0.85em;font-weight:700;cursor:pointer;}
+    .expired-close-x{position:absolute;top:12px;right:14px;background:#f0f4ff;border:none;width:28px;height:28px;border-radius:50%;font-size:1em;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#555;}
+    .expired-close-x:hover{background:#dde3f0;color:#1464dd;}
+    @media(max-width:700px){
+      header{flex-direction:column;align-items:flex-start;gap:8px;}
+      nav{margin-top:4px;width:100%;}
+      header h1{font-size:1em;}
+      nav a{font-size:0.7em;padding:6px 10px;flex:1 1 auto;text-align:center;}
+      nav a.logout{flex:0 0 auto;margin-left:auto;padding:6px 18px;}
+      .card-header{flex-direction:column;gap:10px;}
+      .card-actions{display:flex;flex-wrap:wrap;gap:6px;}
+      .card-actions .btn{flex:1;text-align:center;min-width:80px;}
+      .info-table th{width:100px;font-size:0.75em;}
+      .info-table td{font-size:0.82em;word-break:break-word;}
+      .booking-card{padding:14px;}
+      main{padding:0 10px 40px;}
+      .summary-bar{gap:8px;}
+      .summary-card{min-width:70px;padding:8px 6px;}
+      .summary-card .s-num{font-size:1.15em;}
+      .summary-card .s-label{font-size:0.62em;}
+      .booking-controls{gap:8px;}
+      .search-wrap{max-width:100%;}
     }
-    .brand::before{width:420px;height:420px;right:-140px;top:-120px;background:radial-gradient(circle,rgba(255,255,255,0.18),transparent 70%);animation:float 9s ease-in-out infinite;}
-    .brand::after{width:360px;height:360px;left:-120px;bottom:-140px;background:radial-gradient(circle,rgba(120,180,255,0.28),transparent 70%);animation:float 11s ease-in-out infinite reverse;}
-    @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,22px)}}
-    .grid-bg{
-      position:absolute;inset:0;opacity:.07;
-      background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);
-      background-size:44px 44px;
-      mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);
-      -webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);
-    }
-    .brand > *{position:relative;z-index:1;}
-    .logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.15em;}
-    .logo-badge{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,0.16);border:1px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:1.4em;backdrop-filter:blur(6px);}
-    .hero h1{font-size:2.6em;line-height:1.15;font-weight:800;letter-spacing:-0.5px;margin-bottom:14px;}
-    .hero h1 span{color:#9fd0ff;}
-    .hero p{font-size:0.98em;opacity:.85;max-width:440px;line-height:1.7;margin-bottom:30px;}
-    .feats{display:grid;gap:14px;max-width:440px;}
-    .feat{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.16);border-radius:14px;padding:13px 16px;backdrop-filter:blur(6px);}
-    .feat i{font-style:normal;width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;font-size:1.15em;flex-shrink:0;}
-    .feat b{display:block;font-size:.9em;font-weight:600;}
-    .feat small{font-size:.76em;opacity:.8;}
-    .brand-foot{font-size:.76em;opacity:.65;}
-
-    /* ── RIGHT: login ── */
-    .side{display:flex;align-items:center;justify-content:center;padding:40px 32px;}
-    .box{width:100%;max-width:400px;animation:rise .5s ease;transition:opacity .4s ease,transform .4s ease;}
-    .box.leaving{opacity:0;transform:translateY(-12px) scale(.97);pointer-events:none;}
-    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-    .lock{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.7em;margin-bottom:22px;box-shadow:0 10px 24px rgba(20,100,221,.35);}
-    .box h2{font-size:1.7em;font-weight:800;letter-spacing:-0.3px;margin-bottom:6px;}
-    .box .sub{font-size:.88em;color:#7b86a3;margin-bottom:30px;}
-    label{display:block;font-size:.82em;font-weight:600;color:#444;margin-bottom:8px;}
-    .field{position:relative;margin-bottom:12px;}
-    .field input{
-      width:100%;padding:15px 52px 15px 18px;
-      border:1.5px solid #dde3f0;border-radius:12px;background:#fff;
-      font-family:inherit;font-size:.95em;color:#1a1a2e;outline:none;
-      transition:border-color .2s,box-shadow .2s;
-    }
-    .field input:focus{border-color:#1464dd;box-shadow:0 0 0 4px rgba(20,100,221,.12);}
-    .field input:disabled{background:#f1f3f9;cursor:not-allowed;}
-    .eye{
-      position:absolute;right:8px;top:50%;transform:translateY(-50%);
-      width:38px;height:38px;border:0;border-radius:9px;background:transparent;
-      cursor:pointer;font-size:1.1em;color:#7b86a3;transition:background .2s;
-    }
-    .eye:hover{background:#f0f4ff;}
-    .hint{display:none;font-size:.78em;color:#b35c00;background:#fff7e8;border:1px solid #ffd89a;border-radius:8px;padding:7px 11px;margin-bottom:12px;}
-    .err{display:none;background:#fff0f0;border:1px solid #f5a3a3;border-left:4px solid #e74c3c;border-radius:10px;padding:11px 14px;font-size:.82em;color:#c0392b;margin-bottom:14px;line-height:1.5;}
-    .shake{animation:shake .4s;}
-    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-    .btn{
-      width:100%;padding:15px;margin-top:6px;border:0;border-radius:12px;
-      background:linear-gradient(135deg,#1464dd,#0d47a1);color:#fff;
-      font-family:inherit;font-weight:700;font-size:.97em;cursor:pointer;
-      transition:transform .2s,box-shadow .2s,opacity .2s;
-      box-shadow:0 8px 22px rgba(20,100,221,.3);
-    }
-    .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(20,100,221,.4);}
-    .btn:disabled{opacity:.65;cursor:not-allowed;}
-    .secure{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:26px;font-size:.74em;color:#9aa4bf;}
-
-    /* ══════════ SUCCESS TRANSITION (~5s total) ══════════ */
-    .success{position:fixed;inset:0;z-index:100;pointer-events:none;visibility:hidden;}
-    .success.on{visibility:visible;pointer-events:all;}
-
-    /* 0s – 1.1s: circle expands from the Login button */
-    .reveal{
-      position:absolute;width:40px;height:40px;border-radius:50%;
-      background:linear-gradient(145deg,#1464dd 0%,#0d47a1 60%,#082a6b 100%);
-      transform:translate(-50%,-50%) scale(0);
-    }
-    .success.on .reveal{animation:expand 1.1s cubic-bezier(.65,0,.25,1) forwards;}
-    @keyframes expand{to{transform:translate(-50%,-50%) scale(var(--s,120))}}
-
-    .success-in{
-      position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-      color:#fff;text-align:center;padding:24px;opacity:0;
-    }
-    /* 0.8s: content fades in */
-    .success.on .success-in{animation:fadeUp .7s ease .8s forwards;}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-    .tick{position:relative;width:110px;height:110px;margin-bottom:28px;}
-    .tick::before,.tick::after{
-      content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.5);
-      opacity:0;
-    }
-    .success.on .tick::before{animation:ping 1.8s ease-out 2.3s infinite;}
-    .success.on .tick::after{animation:ping 1.8s ease-out 3.2s infinite;}
-    @keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(2);opacity:0}}
-    .tick svg{width:100%;height:100%;position:relative;z-index:1;}
-    .tick .ring{stroke-dasharray:302;stroke-dashoffset:302;}
-    .tick .check{stroke-dasharray:60;stroke-dashoffset:60;}
-    /* 1.1s – 2.1s: ring draws */
-    .success.on .tick .ring{animation:draw 1s ease 1.1s forwards;}
-    /* 2.1s – 2.7s: check draws, fill appears */
-    .success.on .tick .check{animation:draw .6s ease 2.1s forwards;}
-    .success.on .tick .fill{animation:fillIn .6s ease 2s forwards;}
-    @keyframes draw{to{stroke-dashoffset:0}}
-    .tick .fill{opacity:0;}
-    @keyframes fillIn{to{opacity:1}}
-
-    .success-in h3{font-size:1.9em;font-weight:800;letter-spacing:-.3px;margin-bottom:6px;}
-    .success-in p{font-size:.95em;opacity:.85;margin-bottom:28px;}
-    .bar{width:240px;height:5px;border-radius:5px;background:rgba(255,255,255,.22);overflow:hidden;}
-    .bar i{display:block;height:100%;width:0;background:#fff;border-radius:5px;}
-    /* 1.6s – 4.8s: progress bar fills, then redirect at 5s */
-    .success.on .bar i{animation:load 3.2s cubic-bezier(.4,0,.2,1) 1.6s forwards;}
-    @keyframes load{to{width:100%}}
-
-    /* ── Tablet / phone ── */
-    @media (max-width:900px){
-      body{grid-template-columns:1fr;grid-template-rows:auto 1fr;}
-      .brand{padding:26px 24px 30px;}
-      .hero h1{font-size:1.6em;margin-bottom:6px;}
-      .hero p,.feats,.brand-foot{display:none;}
-      .brand{gap:16px;}
-      .side{padding:30px 20px 40px;align-items:flex-start;}
-      .lock{display:none;}
-    }
-    @media (prefers-reduced-motion:reduce){
-      *{animation:none!important;transition:none!important;}
-      .success.on .reveal{transform:translate(-50%,-50%) scale(var(--s,120));}
-      .success.on .success-in{opacity:1;}
-      .tick .ring,.tick .check{stroke-dashoffset:0;}
-      .tick .fill{opacity:1;}
-      .success.on .bar i{width:100%;}
+    /* ── Phone-friendly controls row: title / search / filters each on their own row ── */
+    @media(max-width:700px){
+      .booking-controls{gap:10px;}
+      .booking-controls .page-title{flex:1 1 100%;}
+      .booking-controls .search-wrap{flex:1 1 100%;max-width:100%;min-width:0;}
+      .booking-controls .status-filter{flex:1 1 100%;flex-wrap:nowrap;gap:4px;}
+      .booking-controls .sf-btn{flex:1 1 0;min-width:0;padding:6px 3px;font-size:0.7em;text-align:center;}
+      .sf-count{min-width:16px;padding:1px 5px;margin-left:2px;}
     }
   </style>
 </head>
 <body>
-
-  <!-- LEFT -->
-  <section class="brand">
-    <div class="grid-bg"></div>
-    <div class="logo"><div class="logo-badge">🚗</div> Waliko Car Hire</div>
-
-    <div class="hero">
-      <h1>Run your fleet,<br><span>all in one place.</span></h1>
-      <p>Manage bookings, payments, customers and support from a single, secure admin dashboard.</p>
-      <div class="feats">
-        <div class="feat"><i>📅</i><div><b>Bookings &amp; Cars</b><small>Track every rental from request to return</small></div></div>
-        <div class="feat"><i>💳</i><div><b>Payments &amp; Refunds</b><small>M-Pesa, card and store credit in one view</small></div></div>
-        <div class="feat"><i>💬</i><div><b>Customer Support</b><small>Reply to help messages and feedback fast</small></div></div>
+  <script>document.write('<script src="user-header.js?t='+Date.now()+'"><\/script>');</script>
+  <header>
+    <h1>&#x1F697; Waliko Car Hire</h1>
+    <nav>
+      <a href="dashboard.html">How to use</a>
+      <a href="car-available.html">Cars</a>
+      <a href="bookings.html" class="active">My Bookings</a>
+      <a href="payments.html">Payments</a>
+      <a href="help.html">Help</a>
+      <a href="account.html">Settings</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="index.html" class="logout" id="logoutBtn">Logout</a>
+    </nav>
+  </header>
+  <main>
+    <div class="reminder-banner" id="reminderBanner">
+      <button class="reminder-close" title="Dismiss" onclick="dismissReminder()">&#x2715;</button>
+      <div class="reminder-banner-title">🚗 Your pickup is coming up</div>
+      <div id="reminderList"></div>
+      <div class="reminder-tip">📋 Please remember to carry your National ID and driving licence.</div>
+    </div>
+    <div id="creditBar" style="display:none;"></div>
+    <div class="booking-controls">
+      <div class="page-title">My Bookings</div>
+      <div class="search-wrap">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Search car or booking ID…" oninput="renderBookings()">
+      </div>
+      <div class="status-filter">
+        <button class="sf-btn active" data-status="all"     onclick="setStatusFilter(this)">All</button>
+        <button class="sf-btn"        data-status="pending" onclick="setStatusFilter(this)">Pending</button>
+        <button class="sf-btn"        data-status="paid"    onclick="setStatusFilter(this)">Paid</button>
+        <button class="sf-btn"        data-status="refunded" onclick="setStatusFilter(this)" title="Bookings refunded to your store credit" style="display:none;">Refunded</button>
+        <button class="sf-btn"        data-status="soon"    onclick="setStatusFilter(this)" title="Paid bookings with pickup in the next 2 days" style="display:none;">Pickup soon</button>
       </div>
     </div>
+    <div id="bookingsList"></div>
+  </main>
 
-    <div class="brand-foot">© Waliko Car Hire · Authorised access only</div>
-  </section>
+  <div class="toast" id="toast"></div>
 
-  <!-- RIGHT -->
-  <section class="side">
-    <div class="box" id="box">
-      <div class="lock">🔐</div>
-      <h2>Welcome back</h2>
-      <p class="sub">Enter the admin password to open the dashboard.</p>
-
-      <label for="adminPass">Admin Password</label>
-      <div class="field">
-        <input type="password" id="adminPass" placeholder="Enter admin password" autocomplete="current-password" autofocus/>
-        <button type="button" class="eye" id="eyeBtn" title="Show / hide password" aria-label="Show or hide password">👁️</button>
+  <div class="taken-modal" id="takenModal">
+    <div class="taken-box">
+      <button class="taken-close-x" onclick="closeTakenModal()">&#x2715;</button>
+      <div class="taken-icon">🚫</div>
+      <h3>Car No Longer Available</h3>
+      <p>Sorry! Someone else already paid and confirmed this car for your dates. <strong>First come, first served</strong> — their booking takes priority.</p>
+      <div class="taken-detail" id="takenDetail"></div>
+      <p style="font-size:0.8em;color:#888;">You can delete this booking and choose a different car or dates.</p>
+      <div class="taken-actions">
+        <button class="btn-taken-delete" id="takenDeleteBtn">🗑️ Delete My Booking</button>
+        <button class="btn-taken-close" onclick="closeTakenModal()">Keep It / Pick New Dates</button>
       </div>
-
-      <div class="hint" id="capsHint">⚠️ Caps Lock is on</div>
-      <div class="err" id="loginErr">❌ Incorrect password. Try again.</div>
-
-      <button class="btn" id="loginBtn" onclick="doLogin()">Login</button>
-
-      <div class="secure">🛡️ Secure admin area</div>
     </div>
-  </section>
+  </div>
 
-  <!-- SUCCESS TRANSITION -->
-  <div class="success" id="success">
-    <div class="reveal" id="reveal"></div>
-    <div class="success-in">
-      <div class="tick">
-        <svg viewBox="0 0 104 104" fill="none">
-          <circle class="fill" cx="52" cy="52" r="48" fill="rgba(255,255,255,0.16)"/>
-          <circle class="ring" cx="52" cy="52" r="48" stroke="#fff" stroke-width="4" stroke-linecap="round" transform="rotate(-90 52 52)"/>
-          <path class="check" d="M32 54l14 14 27-30" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+  <div class="expired-modal" id="expiredModal">
+    <div class="expired-box">
+      <button class="expired-close-x" onclick="closeExpiredModal()">&#x2715;</button>
+      <div class="expired-icon">⏰</div>
+      <h3>These Dates Have Passed</h3>
+      <p>This booking's pickup date is in the past and was never paid for, so it can no longer be confirmed for these dates.</p>
+      <div class="expired-detail" id="expiredDetail"></div>
+      <p style="font-size:0.8em;color:#888;">Please choose new dates to continue with payment.</p>
+      <div class="expired-actions">
+        <button class="btn-expired-reschedule" id="expiredRescheduleBtn">📅 Reschedule Now</button>
+        <button class="btn-expired-close" onclick="closeExpiredModal()">Cancel</button>
       </div>
-      <h3 id="welcomeText">Login successful</h3>
-      <p>Opening your dashboard…</p>
-      <div class="bar"><i></i></div>
+    </div>
+  </div>
+
+  <div class="admin-modal" id="adminModal">
+    <div class="admin-modal-box">
+      <button class="admin-modal-close" onclick="closeAdminModal()">&#x2715;</button>
+      <div class="admin-modal-icon">&#x1F6E1;&#xFE0F;</div>
+      <h3>Cannot Delete Paid Booking</h3>
+      <p>This booking has been <strong>paid and confirmed</strong>. Only an admin can cancel or delete it.</p>
+      <div class="admin-info-box">&#x1F698; <strong>Car:</strong> <span id="adminPopupCar"></span><br>&#x1F516; <strong>Booking ID:</strong> <span id="adminPopupId"></span></div>
+      <div class="admin-contact">&#x1F4DE; To cancel this booking, please contact us:<br><strong>Phone:</strong> <a href="tel:0790337687">0790 337 687</a><br><strong>Email:</strong> <a href="mailto:info@waliko.co.ke">info@waliko.co.ke</a><br><strong>Or visit:</strong> <a href="help.html">Help &amp; Support &#x2192;</a></div>
+      <button class="btn-admin-close" onclick="closeAdminModal()">OK, Got It</button>
+    </div>
+  </div>
+
+  <div class="pay-modal" id="payModal">
+    <div class="pay-box">
+      <button class="pay-close-x" onclick="closePayModal()">&#x2715;</button>
+      <h3>&#x1F4B3; Choose Payment Option</h3>
+      <div style="font-size:0.8em;color:#888;margin-bottom:10px;" id="payModalCarName"></div>
+      <div id="payCreditNote" style="display:none;background:#e6fff0;border:1px solid #27ae60;border-radius:10px;padding:9px 12px;font-size:0.78em;color:#1a6e3a;line-height:1.6;margin-bottom:14px;"></div>
+      <div class="pay-option pay-option-deposit" id="payOptionDeposit">
+        <div class="pay-option-title">Pay Deposit</div>
+        <div class="pay-option-amount" id="payDepositAmount"></div>
+        <div class="pay-option-desc">Dear customer, you can pay a deposit — just half of the full amount — to confirm your booking today. The rest is settled at pickup.</div>
+        <span class="pay-option-cta">Choose Deposit &rarr;</span>
+      </div>
+      <div class="pay-option pay-option-full" id="payOptionFull">
+        <div class="pay-option-title">Pay Full Amount</div>
+        <div class="pay-option-amount" id="payFullAmount"></div>
+        <div class="pay-option-desc">Prefer it done and dusted? Pay the full amount now and there'll be nothing left to pay at pickup.</div>
+        <span class="pay-option-cta">Choose Full Payment &rarr;</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reschedule-modal" id="rescheduleModal">
+    <div class="reschedule-box">
+      <button class="reschedule-close" onclick="closeRescheduleModal()">&#x2715;</button>
+      <h3>📅 Reschedule Booking</h3>
+      <div style="font-size:0.8em;color:#888;margin-bottom:14px;" id="rescheduleCarName"></div>
+      <div class="rform-group">
+        <label>New Start Date</label>
+        <input type="text" id="newPickup" placeholder="Select start date" readonly />
+      </div>
+      <div class="rform-group">
+        <label>Time of Collecting the Car</label>
+        <input type="text" id="newPickupTime" placeholder="Select pickup time" readonly />
+      </div>
+      <div class="rform-group">
+        <label>New End Date</label>
+        <input type="text" id="newEndDate" placeholder="Select end date" readonly />
+      </div>
+      <div style="font-size:0.78em;color:#e74c3c;margin-bottom:10px;display:none;" id="rescheduleError"></div>
+      <button class="btn-reschedule-save" onclick="saveReschedule()">Save New Dates</button>
     </div>
   </div>
 
   <script>
-    /* Default password, used until the admin changes it on the Profile page */
-    var DEFAULT_ADMIN_PASS = '2080';
-    function getAdminPass(){ return localStorage.getItem('adminPassword') || DEFAULT_ADMIN_PASS; }
+  (function(){
+    var displayCount = 3;
+    var statusFilter = 'all';
+    var rescheduleTargetId = null;
+    var currentReminderSig = '';
 
-    /* Total length of the success animation before redirecting (ms) */
-    var SUCCESS_MS = 5000;
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
-    if(localStorage.getItem('adminAuth')==='true') window.location.href='admin-overview.html';
+    function isRefunded(b){ return !!b && b.refundStatus === 'refunded'; }
+    /* A booking counts as PAID only if money was paid AND it was not refunded to store credit */
+    function isPaidBk(b){ return !isRefunded(b) && (b.paymentStatus === 'paid' || !!(b.mpesaReceipt && b.mpesaReceipt !== 'N/A')); }
 
-    var passEl = document.getElementById('adminPass');
-    var errEl  = document.getElementById('loginErr');
-    var btn    = document.getElementById('loginBtn');
-    var box    = document.getElementById('box');
-    var fails  = 0, lockTimer = null;
-
-    function caps(e){
-      document.getElementById('capsHint').style.display =
-        (e.getModifierState && e.getModifierState('CapsLock')) ? 'block' : 'none';
-    }
-    passEl.addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); caps(e); });
-    passEl.addEventListener('keyup', caps);
-
-    document.getElementById('eyeBtn').addEventListener('click', function(){
-      var show = passEl.type === 'password';
-      passEl.type = show ? 'text' : 'password';
-      this.textContent = show ? '🙈' : '👁️';
-      passEl.focus();
-    });
-
-    function showError(msg){
-      errEl.textContent = msg;
-      errEl.style.display = 'block';
-      box.classList.remove('shake'); void box.offsetWidth; box.classList.add('shake');
+    /* Was this booking paid IN FULL in one go (deposit + balance together)? */
+    function isFullPay(b, total, balancePaid, balReceipt){
+      if (!balancePaid || !(total > 0)) return false;
+      if (Number(b.paidAmount) >= total) return true;
+      var r = String(b.mpesaReceipt || '');
+      return !!r && r !== 'N/A' && r !== 'CASH' && r === String(balReceipt || '');
     }
 
-    function lockOut(seconds){
-      passEl.disabled = true; btn.disabled = true;
-      var left = seconds;
-      lockTimer = setInterval(function(){
-        showError('⛔ Too many wrong attempts. Try again in ' + left + 's.');
-        box.classList.remove('shake');
-        if(--left < 0){
-          clearInterval(lockTimer);
-          passEl.disabled = false; btn.disabled = false; fails = 0;
-          errEl.style.display = 'none';
-          passEl.focus();
+    function fmtDate(str) {
+      if (!str) return '';
+      var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(str));
+      if (!m) return str;
+      return parseInt(m[3], 10) + ' ' + MONTHS[parseInt(m[2], 10) - 1] + ' ' + m[1];
+    }
+
+    function fmtStamp(str) {
+      if (!str) return '';
+      var m = /^(\d{1,2})\/(\d{1,2})\/(\d{4}),?\s+(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/.exec(String(str).trim());
+      if (!m) return str;
+      var first = parseInt(m[1], 10), second = parseInt(m[2], 10), hr = parseInt(m[4], 10), ap = m[6];
+      var day = ap ? second : first;
+      var mon = ap ? first  : second;
+      if (mon < 1 || mon > 12) return str;
+      var time = ap ? (hr + ':' + m[5] + ' ' + ap.toUpperCase())
+                    : ((hr % 12 || 12) + ':' + m[5] + ' ' + (hr >= 12 ? 'PM' : 'AM'));
+      return day + ' ' + MONTHS[mon - 1] + ' ' + m[3] + ', ' + time;
+    }
+
+    function fmtTime12(t) {
+      var m = /^(\d{1,2}):(\d{2})$/.exec(String(t || ''));
+      if (!m) return '';
+      var h = parseInt(m[1], 10), ap = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return h + ':' + m[2] + ' ' + ap;
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(function(){ t.classList.remove('show'); }, 3000);
+    }
+
+    function closeAdminModal(){ document.getElementById('adminModal').classList.remove('open'); }
+
+    var takenDeleteBookingIdx = -1;
+    function closeTakenModal(){ document.getElementById('takenModal').classList.remove('open'); takenDeleteBookingIdx = -1; }
+    function openTakenModal(myBooking, myIdx, conflictBooking) {
+      takenDeleteBookingIdx = myIdx;
+      var myDays = Math.max(1, Math.round((new Date(myBooking.endDate+'T00:00:00') - new Date(myBooking.pickup+'T00:00:00')) / 86400000));
+      document.getElementById('takenDetail').innerHTML =
+        '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
+        '📅 <strong>Your dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+        '🔒 <strong>Confirmed by another customer</strong> who paid before you.<br>' +
+        '💡 <strong>Tip:</strong> Reschedule to different dates or pick another car.';
+      document.getElementById('takenDeleteBtn').onclick = function() {
+        if (confirm('Delete your booking for ' + myBooking.carName + '?')) {
+          var bks = JSON.parse(localStorage.getItem('bookings') || '[]');
+          bks.splice(takenDeleteBookingIdx, 1);
+          localStorage.setItem('bookings', JSON.stringify(bks));
+          closeTakenModal();
+          renderBookings();
+          showToast('🗑️ Booking deleted. Please rebook with available dates.');
         }
-      }, 1000);
+      };
+      document.getElementById('takenModal').classList.add('open');
     }
 
-    /* Success animation: circle grows from the Login button, check draws, bar fills, then redirect */
-    function playSuccess(){
-      var r = btn.getBoundingClientRect();
-      var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      var reveal = document.getElementById('reveal');
-      reveal.style.left = cx + 'px';
-      reveal.style.top  = cy + 'px';
-      /* scale big enough to cover the farthest corner of the screen */
-      var far = Math.max(
-        Math.hypot(cx, cy),
-        Math.hypot(window.innerWidth - cx, cy),
-        Math.hypot(cx, window.innerHeight - cy),
-        Math.hypot(window.innerWidth - cx, window.innerHeight - cy)
-      );
-      reveal.style.setProperty('--s', Math.ceil((far * 2) / 40) + 2);
+    function closeExpiredModal(){ document.getElementById('expiredModal').classList.remove('open'); }
+    function openExpiredModal(myBooking) {
+      var myDays = Math.max(1, Math.round((new Date(myBooking.endDate+'T00:00:00') - new Date(myBooking.pickup+'T00:00:00')) / 86400000));
+      var depositPaid = isPaidBk(myBooking);
 
-      /* greet by name if a profile was saved */
-      try{
-        var p = JSON.parse(localStorage.getItem('adminProfile') || '{}');
-        if(p && p.name) document.getElementById('welcomeText').textContent = 'Welcome back, ' + p.name.split(' ')[0] + '!';
-      }catch(e){}
+      var titleEl = document.querySelector('#expiredModal h3');
+      var introEl = document.querySelector('#expiredModal p');
 
-      box.classList.add('leaving');
-      document.getElementById('success').classList.add('on');
+      if (depositPaid) {
+        if (titleEl) titleEl.textContent = 'Pickup Date Has Passed';
+        if (introEl) introEl.textContent = 'Your deposit was paid, but the pickup date on this booking has already gone by. Please reschedule to new dates before paying the balance.';
+        document.getElementById('expiredDetail').innerHTML =
+          '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
+          '📅 <strong>Old dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+          '✅ <strong>Deposit already paid</strong> — M-Pesa Receipt: ' + (myBooking.mpesaReceipt || 'N/A') + '<br>' +
+          '⚠️ <strong>These dates have already passed.</strong> Reschedule to keep your deposit and confirm new dates.';
+      } else {
+        if (titleEl) titleEl.textContent = 'These Dates Have Passed';
+        if (introEl) introEl.textContent = "This booking's pickup date is in the past and was never paid for, so it can no longer be confirmed for these dates.";
+        document.getElementById('expiredDetail').innerHTML =
+          '🚗 <strong>Car:</strong> ' + myBooking.carName + '<br>' +
+          '📅 <strong>Old dates:</strong> ' + fmtDate(myBooking.pickup) + ' → ' + fmtDate(myBooking.endDate) + ' (' + myDays + ' day' + (myDays!==1?'s':'') + ')<br>' +
+          '⚠️ <strong>These dates have already passed</strong> and were never paid for.';
+      }
 
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      setTimeout(function(){ window.location.href = 'admin-overview.html'; }, reduce ? 400 : SUCCESS_MS);
+      document.getElementById('expiredRescheduleBtn').onclick = function() {
+        closeExpiredModal();
+        openRescheduleModal(myBooking.bookingId, myBooking.carName, myBooking.pickup, myBooking.endDate);
+      };
+      document.getElementById('expiredModal').classList.add('open');
+    }
+    window.closeExpiredModal = closeExpiredModal;
+
+    var rsPickupFP = null, rsEndFP = null, rsTimeFP = null;
+    function ymd(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function openRescheduleModal(bookingId, carName, currentPickup, currentEnd) {
+      rescheduleTargetId = String(bookingId);
+      document.getElementById('rescheduleCarName').textContent = carName;
+      var errEl = document.getElementById('rescheduleError');
+      errEl.style.display = 'none'; errEl.textContent = '';
+
+      var today = new Date(); today.setHours(0,0,0,0);
+
+      // Dates already paid for by someone else on this car are greyed out (same as the Cars page)
+      var all = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var ranges = all.filter(function(b) {
+        if (String(b.bookingId) === String(bookingId)) return false;
+        if (b.carName !== carName) return false;
+        var paid = isPaidBk(b);
+        return paid && new Date(b.endDate + 'T00:00:00') >= today;
+      }).map(function(b){ return { from: b.pickup, to: b.endDate }; });
+
+      if (rsPickupFP) rsPickupFP.destroy();
+      if (rsEndFP)    rsEndFP.destroy();
+      if (rsTimeFP)   rsTimeFP.destroy();
+
+      // Keep the customer's current collecting time (default 08:00)
+      var curBooking = null;
+      for (var ci = 0; ci < all.length; ci++) { if (String(all[ci].bookingId) === String(bookingId)) { curBooking = all[ci]; break; } }
+      var curTime = (curBooking && /^\d{1,2}:\d{2}$/.test(String(curBooking.pickupTime || ''))) ? curBooking.pickupTime : '08:00';
+      if (curTime.length === 4) curTime = '0' + curTime;
+      document.getElementById('newPickupTime').value = '';
+      rsTimeFP = flatpickr('#newPickupTime', {
+        enableTime: true, noCalendar: true, dateFormat: 'H:i', time_24hr: true,
+        minTime: '06:00', maxTime: '22:00', defaultDate: curTime, minuteIncrement: 15,
+        disableMobile: true
+      });
+      document.getElementById('newPickup').value = '';
+      document.getElementById('newEndDate').value = '';
+
+      function injectTip(inst) {
+        if (!inst.calendarContainer.querySelector('.fp-tip')) {
+          var tip = document.createElement('div');
+          tip.className = 'fp-tip';
+          tip.style.cssText = 'background:#fff8ee;border-top:1.5px solid #ffd98a;padding:7px 13px;font-size:0.74em;color:#7a3e00;font-family:Poppins,sans-serif;text-align:center;';
+          tip.innerHTML = '📅 Greyed dates are past or already booked.';
+          inst.calendarContainer.appendChild(tip);
+        }
+      }
+
+      var pickupVal = (currentPickup && currentPickup >= ymd(today)) ? currentPickup : '';
+
+      rsEndFP = flatpickr('#newEndDate', {
+        dateFormat: 'Y-m-d', minDate: new Date(today.getTime() + 86400000), disable: ranges, disableMobile: true,
+        onReady: function(_, __, inst){ injectTip(inst); },
+        onOpen:  function(_, __, inst){ injectTip(inst); }
+      });
+
+      rsPickupFP = flatpickr('#newPickup', {
+        dateFormat: 'Y-m-d', minDate: today, disable: ranges, disableMobile: true,
+        defaultDate: pickupVal || null,
+        onReady: function(_, __, inst){ injectTip(inst); },
+        onOpen:  function(_, __, inst){ injectTip(inst); },
+        onChange: function(sel) {
+          if (sel.length > 0) {
+            var next = new Date(sel[0]); next.setDate(next.getDate() + 1);
+            rsEndFP.set('minDate', next);
+            if (rsEndFP.selectedDates[0] && rsEndFP.selectedDates[0] <= sel[0]) rsEndFP.clear();
+          }
+        }
+      });
+
+      if (pickupVal && currentEnd) {
+        var nx = new Date(pickupVal + 'T00:00:00'); nx.setDate(nx.getDate() + 1);
+        rsEndFP.set('minDate', nx);
+        rsEndFP.setDate(currentEnd, false);
+      }
+
+      document.getElementById('rescheduleModal').classList.add('open');
     }
 
-    function doLogin(){
-      if(btn.disabled) return;
-      var pass = passEl.value;
+    function closeRescheduleModal() {
+      document.getElementById('rescheduleModal').classList.remove('open');
+      rescheduleTargetId = null;
+    }
 
-      /* Empty field: ask for the password, don't count it as a failed attempt */
-      if(!pass){
-        showError('⚠️ Please enter your password.');
-        passEl.focus();
+    function saveReschedule() {
+      var newPickup  = document.getElementById('newPickup').value;
+      var newEndDate = document.getElementById('newEndDate').value;
+      var newTime    = document.getElementById('newPickupTime').value;
+      var errEl      = document.getElementById('rescheduleError');
+
+      function showErr(msg){ errEl.textContent = msg; errEl.style.display = 'block'; }
+
+      if (!newPickup || !newEndDate) { showErr('⚠️ Please select both dates.'); return; }
+      if (!newTime) { showErr('⚠️ Please select the time you will collect the car.'); return; }
+
+      var nStart = new Date(newPickup + 'T00:00:00');
+      var nEnd   = new Date(newEndDate + 'T00:00:00');
+      var today  = new Date(); today.setHours(0,0,0,0);
+
+      if (nStart < today)   { showErr('⚠️ Start date cannot be in the past.'); return; }
+      if (nEnd <= nStart)   { showErr('⚠️ End date must be after start date.'); return; }
+      if (newPickup === ymd(today)) {
+        var tp = newTime.split(':');
+        var chosenT = new Date(); chosenT.setHours(parseInt(tp[0], 10), parseInt(tp[1], 10), 0, 0);
+        if (chosenT <= new Date()) { showErr('⚠️ That pickup time has already passed today. Choose a later time or another date.'); return; }
+      }
+
+      var bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+
+      var targetIdx = -1;
+      for (var i = 0; i < bookings.length; i++) {
+        if (String(bookings[i].bookingId) === rescheduleTargetId) { targetIdx = i; break; }
+      }
+
+      if (targetIdx === -1) {
+        showErr('⚠️ Booking not found. Please refresh the page and try again.');
         return;
       }
 
-      if(pass === getAdminPass()){
-        errEl.style.display = 'none';
-        btn.disabled = true; passEl.disabled = true;
-        localStorage.setItem('adminAuth','true');
-        playSuccess();
+      var target = bookings[targetIdx];
+
+      var conflict = bookings.some(function(b, idx) {
+        if (idx === targetIdx) return false;
+        if (!b.carName || !target.carName) return false;
+        if (b.carName !== target.carName) return false;
+        var isPaid = isPaidBk(b);
+        if (!isPaid) return false;
+        var bStart = new Date(b.pickup  + 'T00:00:00');
+        var bEnd   = new Date(b.endDate + 'T00:00:00');
+        return nStart < bEnd && nEnd > bStart;
+      });
+
+      if (conflict) {
+        showErr('⚠️ These dates overlap with an existing confirmed booking for this car. Please choose different dates.');
+        return;
+      }
+
+      bookings[targetIdx].pickup     = newPickup;
+      bookings[targetIdx].pickupTime = newTime;
+      bookings[targetIdx].endDate    = newEndDate;
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+      closeRescheduleModal();
+      renderBookings();
+      showToast('✅ Booking rescheduled successfully!');
+    }
+
+    function getBalanceStatus(id){
+      try{ return JSON.parse(localStorage.getItem('balancePaid_'+id)||'null'); }
+      catch(e){ return null; }
+    }
+
+    function closePayModal(){ document.getElementById('payModal').classList.remove('open'); }
+    window.closePayModal = closePayModal;
+
+    function openPayModal(bookingId, deposit, total){
+      var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var myBooking = null;
+      for (var i = 0; i < allBookings.length; i++) {
+        if (String(allBookings[i].bookingId) === String(bookingId)) { myBooking = allBookings[i]; break; }
+      }
+      document.getElementById('payModalCarName').textContent = myBooking ? myBooking.carName : '';
+      document.getElementById('payDepositAmount').textContent = 'Ksh ' + Number(deposit).toLocaleString();
+      document.getElementById('payFullAmount').textContent    = 'Ksh ' + Number(total).toLocaleString();
+
+      document.getElementById('payOptionDeposit').onclick = function(){
+        closePayModal();
+        proceedToPayment(bookingId, deposit, false);
+      };
+      document.getElementById('payOptionFull').onclick = function(){
+        closePayModal();
+        proceedToPayment(bookingId, total, true);
+      };
+
+      // Store credit hint: the "Pay with Store Credit" button is on the payment page (credit.js)
+      var cn = document.getElementById('payCreditNote');
+      cn.style.display = 'none';
+      try {
+        var cu = JSON.parse(localStorage.getItem('currentUser') || '{}') || {};
+        var ce = String(cu.email || '').toLowerCase();
+        var cb = (ce && typeof CR !== 'undefined') ? CR.balance(ce) : 0;
+        if (cb > 0) {
+          var dep = Number(deposit), tot = Number(total), kes = function(n){ return 'Ksh ' + Number(n).toLocaleString(); };
+          var msg;
+          if (cb >= tot)      msg = '\uD83D\uDC9A You have <strong>' + kes(cb) + '</strong> store credit — enough for either option. After choosing, tap <strong>Pay with Store Credit</strong> on the payment page.';
+          else if (cb >= dep) msg = '\uD83D\uDC9A You have <strong>' + kes(cb) + '</strong> store credit — enough for the <strong>deposit</strong>. Choose Deposit, then tap <strong>Pay with Store Credit</strong> on the payment page.';
+          else                msg = '\uD83D\uDC9B You have <strong>' + kes(cb) + '</strong> store credit, which is not enough for this booking. Credit can\'t be combined with M-Pesa, so pay with M-Pesa instead.';
+          cn.innerHTML = msg;
+          cn.style.display = 'block';
+        }
+      } catch (e) {}
+
+      document.getElementById('payModal').classList.add('open');
+    }
+
+    function proceedToPayment(bookingId, amount, isFull){
+      var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+
+      var myIdx = -1;
+      var myBooking = null;
+      for (var i = 0; i < allBookings.length; i++) {
+        if (String(allBookings[i].bookingId) === String(bookingId)) {
+          myIdx = i; myBooking = allBookings[i]; break;
+        }
+      }
+      if (!myBooking) return;
+
+      if (daysUntil(myBooking.pickup) < 0) {
+        openExpiredModal(myBooking);
+        return;
+      }
+
+      var myStart = new Date(myBooking.pickup  + 'T00:00:00');
+      var myEnd   = new Date(myBooking.endDate + 'T00:00:00');
+
+      var blocker = null;
+      for (var j = 0; j < allBookings.length; j++) {
+        var b = allBookings[j];
+        if (String(b.bookingId) === String(bookingId)) continue;
+        if (b.carName !== myBooking.carName) continue;
+        var alreadyPaid = isPaidBk(b);
+        if (!alreadyPaid) continue;
+        var bStart = new Date(b.pickup  + 'T00:00:00');
+        var bEnd   = new Date(b.endDate + 'T00:00:00');
+        if (myStart < bEnd && myEnd > bStart) { blocker = b; break; }
+      }
+
+      if (blocker) {
+        openTakenModal(myBooking, myIdx, blocker);
       } else {
-        fails++;
-        passEl.value = '';
-        if(fails >= 5){ lockOut(30); return; }
-        showError('❌ Incorrect password. ' + (5 - fails) + ' attempt' + (5 - fails === 1 ? '' : 's') + ' left.');
-        passEl.focus();
+        localStorage.setItem('paymentAmount', amount);
+        localStorage.setItem('paymentBookingId', bookingId);
+        if (isFull) {
+          localStorage.setItem('paymentType', 'full');
+        } else {
+          localStorage.removeItem('paymentType');
+          localStorage.removeItem('fullPaymentIntent_' + bookingId);
+        }
+        window.location.href = 'payment-gateway.html';
       }
     }
+
+    function setStatusFilter(btn) {
+      document.querySelectorAll('.sf-btn').forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      statusFilter = btn.dataset.status;
+      displayCount = 3;
+      renderBookings();
+    }
+    window.setStatusFilter = setStatusFilter;
+
+    function daysUntil(dateStr) {
+      var d = new Date(dateStr + 'T00:00:00');
+      var today = new Date(); today.setHours(0,0,0,0);
+      return Math.ceil((d - today) / 86400000);
+    }
+
+    function renderSummary(bookings) {
+      var total   = bookings.length;
+      var refundedN = bookings.filter(isRefunded).length;
+      var pending = bookings.filter(function(b){ return !isRefunded(b) && !isPaidBk(b); }).length;
+      var paid    = total - pending - refundedN;
+      var soon    = bookings.filter(function(b){
+        var isPaid = isPaidBk(b);
+        if (!isPaid) return false;
+        var d = daysUntil(b.pickup);
+        return d >= 0 && d <= 2;
+      }).length;
+      var counts = { all: total, pending: pending, paid: paid, soon: soon, refunded: refundedN };
+      var labels = { all: 'All', pending: 'Pending', paid: 'Paid', soon: 'Pickup soon', refunded: 'Refunded' };
+
+      // If the "Pickup soon" filter is active but nothing matches any more, fall back to All
+      if ((soon === 0 && statusFilter === 'soon') || (refundedN === 0 && statusFilter === 'refunded')) {
+        statusFilter = 'all';
+        document.querySelectorAll('.sf-btn').forEach(function(b){
+          b.classList.toggle('active', b.dataset.status === 'all');
+        });
+      }
+
+      document.querySelectorAll('.sf-btn').forEach(function(btn){
+        var k = btn.dataset.status;
+        btn.innerHTML = labels[k] + ' <span class="sf-count">' + counts[k] + '</span>';
+        // Hide "Pickup soon" when there are none
+        if (k === 'soon' || k === 'refunded') btn.style.display = counts[k] === 0 ? 'none' : '';
+      });
+    }
+
+    function renderReminders(bookings) {
+      var reminders = bookings.filter(function(b){
+        var isPaid = isPaidBk(b);
+        if (!isPaid) return false;
+        var d = daysUntil(b.pickup);
+        return d >= 0 && d <= 2;
+      });
+      var banner = document.getElementById('reminderBanner');
+      var list   = document.getElementById('reminderList');
+      if (reminders.length === 0) { banner.style.display='none'; currentReminderSig=''; return; }
+
+      currentReminderSig = reminders.map(function(b){ return b.bookingId+'@'+daysUntil(b.pickup); }).join('|');
+      if (localStorage.getItem('reminderDismissed') === currentReminderSig) { banner.style.display='none'; return; }
+
+      banner.style.display = 'block';
+      list.innerHTML = reminders.map(function(b){
+        var d = daysUntil(b.pickup);
+        var when = d === 0 ? 'today' : d === 1 ? 'tomorrow' : 'in 2 days';
+        return '<div class="reminder-item"><span class="reminder-icon">🚗</span><span><strong>'+b.carName+'</strong> pickup is <strong>'+when+'</strong> · '+fmtDate(b.pickup)+(b.pickupTime ? ' at '+fmtTime12(b.pickupTime) : '')+'<br><span class="reminder-id">Booking ID: '+b.bookingId+'</span></span></div>';
+      }).join('');
+    }
+
+    function dismissReminder() {
+      localStorage.setItem('reminderDismissed', currentReminderSig);
+      document.getElementById('reminderBanner').style.display = 'none';
+    }
+
+    // Stable per-browser identifier for guests (no account). Used so a guest
+    // only ever sees the bookings THEY made on this device/browser, never
+    // every other guest's unclaimed bookings.
+    function getOrCreateGuestId() {
+      var gid = localStorage.getItem('guestId');
+      if (!gid) {
+        gid = 'guest_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+        localStorage.setItem('guestId', gid);
+      }
+      return gid;
+    }
+    window.getOrCreateGuestId = getOrCreateGuestId;
+
+    function isGuestEmail(e) {
+      // Treat blank and common placeholder values as "no email"
+      var v = String(e == null ? '' : e).trim().toLowerCase();
+      return v === '' || v === 'n/a' || v === 'na' || v === 'guest' || v === '-' || v === 'none' || v === 'null' || v === 'undefined';
+    }
+
+    function renderBookings(){
+      var list = document.getElementById('bookingsList');
+      list.innerHTML = '';
+      var currentUser = {};
+      try { currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}') || {}; } catch(e) { currentUser = {}; }
+      var userEmail   = isGuestEmail(currentUser.email) ? '' : String(currentUser.email).toLowerCase();
+      var allBookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+
+      var bookings;
+      if (userEmail) {
+        // Logged in: only bookings tied to this account's email
+        bookings = allBookings.filter(function(b){
+          return (b.email || '').toLowerCase() === userEmail;
+        });
+      } else {
+        // Guest: only bookings made in THIS browser. Match by guestId.
+        // Older guest bookings saved without a guestId are adopted by this
+        // browser (localStorage is per-browser, so they can only be this guest's).
+        var myGuestId = getOrCreateGuestId();
+        var adopted = false;
+        bookings = allBookings.filter(function(b){
+          if (!isGuestEmail(b.email)) return false;
+          if (!b.guestId) { b.guestId = myGuestId; adopted = true; return true; }
+          return b.guestId === myGuestId;
+        });
+        if (adopted) localStorage.setItem('bookings', JSON.stringify(allBookings));
+      }
+
+      if (bookings.length === 0) {
+        list.innerHTML='<div class="empty-msg"><p>You haven\'t made any bookings yet.</p><p>Go to <a href="car-available.html">Cars</a> to browse and book a vehicle.</p><a href="car-available.html" class="btn-browse">🚗 Browse Cars</a></div>';
+        renderSummary([]); renderReminders([]);
+        return;
+      }
+
+      var changed = false;
+      bookings.forEach(function(bk){
+        if(bk.mpesaReceipt && bk.mpesaReceipt!=='N/A' && bk.paymentStatus!=='paid'){
+          bk.paymentStatus='paid'; changed=true;
+        }
+      });
+      if(changed){
+        var all = JSON.parse(localStorage.getItem('bookings')||'[]');
+        bookings.forEach(function(bk){
+          var idx = all.findIndex(function(a){ return String(a.bookingId)===String(bk.bookingId); });
+          if(idx>-1) all[idx] = bk;
+        });
+        localStorage.setItem('bookings', JSON.stringify(all));
+      }
+
+      renderSummary(bookings);
+      renderReminders(bookings);
+
+      var query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      var filtered = bookings.filter(function(b){
+        if (query && !b.carName.toLowerCase().includes(query) && !String(b.bookingId).toLowerCase().includes(query)) return false;
+        if (statusFilter === 'pending') return !isRefunded(b) && !isPaidBk(b);
+        if (statusFilter === 'refunded') return isRefunded(b);
+        if (statusFilter === 'paid')    return (isPaidBk(b));
+        if (statusFilter === 'soon') {
+          var paidB = (isPaidBk(b));
+          var dl = daysUntil(b.pickup);
+          return paidB && dl >= 0 && dl <= 2;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        list.innerHTML='<div class="empty-msg"><p>No bookings match your search.</p></div>';
+        return;
+      }
+
+      filtered.slice(0, displayCount).forEach(function(b){
+        var realIdx     = bookings.indexOf(b);
+        var isPaid      = isPaidBk(b);
+        var refunded    = isRefunded(b);
+        var ms          = new Date(b.endDate+'T00:00:00') - new Date(b.pickup+'T00:00:00');
+        var days        = Math.max(1, Math.round(ms / 86400000));
+        var total       = b.price * days;
+        var deposit     = Math.floor(total / 2);
+        var balance     = total - deposit;
+        var balObj      = getBalanceStatus(b.bookingId);
+        var balancePaid = !!(balObj&&balObj.paid) || !!(b.balancePaid);
+        var balReceipt  = (balObj&&balObj.receipt) || b.balanceReceipt || '';
+        var balPaidAt   = (balObj&&balObj.paidAt)  || b.balancePaidAt  || '';
+        var daysLeft    = daysUntil(b.pickup);
+        var pickupSoon  = isPaid && daysLeft >= 0 && daysLeft <= 2;
+        var soonLabel   = daysLeft === 0 ? 'TODAY' : daysLeft === 1 ? 'Tomorrow' : 'In 2 days';
+
+        var isExpired   = !isPaid && !refunded && daysLeft < 0;
+
+        var myStart = new Date(b.pickup + 'T00:00:00');
+        var myEnd   = new Date(b.endDate + 'T00:00:00');
+        var isConflicted = !isPaid && !refunded && !isExpired && bookings.some(function(other) {
+          if (String(other.bookingId) === String(b.bookingId)) return false;
+          if (other.carName !== b.carName) return false;
+          var otherPaid = isPaidBk(other);
+          if (!otherPaid) return false;
+          var oStart = new Date(other.pickup + 'T00:00:00');
+          var oEnd   = new Date(other.endDate + 'T00:00:00');
+          return myStart < oEnd && myEnd > oStart;
+        });
+
+        var noticeHtml = '';
+        if (refunded) {
+          noticeHtml = '<div class="paid-notice" style="background:#f0f4ff;border-color:#c5d5f5;color:#1a3a8f;">↩️ <strong>Refunded to store credit.</strong> This booking was cancelled and the money was added to your credit. Use it for a new booking from your <a href="credit.html" style="color:#1464dd;font-weight:700;">Store Credit page</a>.</div>';
+        } else if (isExpired) {
+          noticeHtml = '<div class="expired-notice"><div class="ex-title">⏰ Booking Dates Expired</div>These dates have already passed and were never paid for, so this booking can no longer be confirmed as-is.<br><span style="color:#c0392b;font-weight:600;">➡ Please reschedule to new dates before paying.</span></div>';
+        } else if (!isPaid && isConflicted) {
+          noticeHtml = '<div style="background:#fff0f0;border:2px solid #e74c3c;border-radius:10px;padding:12px 16px;font-size:0.82em;color:#7a1a1a;margin-bottom:12px;line-height:1.8;">🚫 <strong>Car No Longer Available!</strong> Another customer paid for <strong>'+b.carName+'</strong> on overlapping dates before you. Your deposit payment will be blocked.<br><span style="color:#c0392b;font-weight:600;">➡ Please reschedule to different dates or delete this booking and choose another car.</span></div>';
+        } else if (!isPaid) {
+          noticeHtml = '<div class="pending-notice">⏳ <strong>Pending Payment:</strong> Pay a deposit of <strong>Ksh '+deposit.toLocaleString()+'</strong> to confirm your booking, or pay <strong>Ksh '+total.toLocaleString()+'</strong> now to clear the full amount. Remaining balance (if any) is paid at pickup.</div>';
+        } else if (balancePaid) {
+          var pickupApproved = localStorage.getItem('pickupStatus_' + b.bookingId) === 'picked';
+          if (pickupApproved) {
+            noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">✅ Car collected. Enjoy your ride! Thanks for choosing Waliko Car Hire.</div></div>';
+          } else {
+            noticeHtml = '<div class="fully-paid-notice"><div style="font-size:0.85em;color:#1a6e3a;font-weight:600;">✅ Fully paid! Collect your car at our office — bring your physical National ID &amp; Driving Licence.</div></div>';
+          }
+        } else {
+          noticeHtml = '<div class="paid-notice">✅ <strong>Deposit Paid!</strong> Balance of <strong>Ksh '+balance.toLocaleString()+'</strong> is due at pickup. You can also pay it now online.<br>Please bring your physical National ID &amp; Driving Licence at pickup.</div>';
+        }
+
+        var actionsHtml = '';
+        if (refunded) {
+          /* no actions: booking is cancelled */
+        } else if (isExpired) {
+          actionsHtml +=
+            '<button class="btn btn-reschedule" data-id="'+String(b.bookingId)+'" data-car="'+b.carName+'" data-pickup="'+b.pickup+'" data-end="'+b.endDate+'">📅 Reschedule</button>' +
+            '<button class="btn btn-delete" data-idx="'+realIdx+'" data-id="'+b.bookingId+'">Delete</button>';
+        } else if (!isPaid) {
+          var payBtnDisabled = isConflicted ? ' disabled style="opacity:0.45;cursor:not-allowed;"' : '';
+          actionsHtml +=
+            '<button class="btn btn-pay-now" data-deposit="'+deposit+'" data-full="'+total+'" data-id="'+b.bookingId+'"'+payBtnDisabled+'>Pay Now</button>' +
+            '<button class="btn btn-reschedule" data-id="'+String(b.bookingId)+'" data-car="'+b.carName+'" data-pickup="'+b.pickup+'" data-end="'+b.endDate+'">📅 Reschedule</button>' +
+            '<button class="btn btn-delete" data-idx="'+realIdx+'" data-id="'+b.bookingId+'">Delete</button>';
+        } else if (!balancePaid) {
+          actionsHtml +=
+            '<button class="btn btn-balance" data-amount="'+balance+'" data-id="'+b.bookingId+'">Pay Balance (Ksh '+balance.toLocaleString()+')</button>';
+        }
+        if (!refunded) actionsHtml += '<button class="btn btn-pdf" data-id="'+b.bookingId+'">⬇ '+(isPaid ? 'Receipt' : 'PDF')+'</button>';
+
+        var moneyRows = '';
+        if (refunded) {
+          moneyRows += '<tr><th>Refund</th><td style="color:#1a3a8f;font-weight:600;">Added to your store credit</td></tr>';
+        } else if (isPaid && isFullPay(b, total, balancePaid, balReceipt)) {
+          moneyRows += '<tr><th>Full Payment Paid</th><td style="color:#1a6e3a;font-weight:600;">Ksh '+total.toLocaleString()+'</td></tr>';
+        } else if (isPaid) {
+          moneyRows += '<tr><th>Deposit Paid</th><td style="color:#1a6e3a;font-weight:600;">Ksh '+deposit.toLocaleString()+'</td></tr>';
+          if (balancePaid) {
+            moneyRows += '<tr><th>Balance Paid</th><td style="color:#1a6e3a;font-weight:600;">Ksh '+balance.toLocaleString()+'</td></tr>';
+          } else {
+            moneyRows += '<tr><th>Balance Due</th><td style="color:#b35c00;font-weight:600;">Ksh '+balance.toLocaleString()+' <span style="font-weight:400;color:#888;">(at pickup)</span></td></tr>';
+          }
+        }
+
+        var card = document.createElement('div');
+        card.className = 'booking-card' + (pickupSoon ? ' pickup-soon' : '') + (isConflicted ? ' booking-conflicted' : '') + (isExpired ? ' booking-expired' : '');
+        var conflictTag = isConflicted ? '<span style="display:inline-block;background:#ffeaea;color:#c0392b;font-size:0.72em;font-weight:700;padding:2px 9px;border-radius:20px;margin-left:6px;">Car Taken</span>' : '';
+        var pickupChip  = (pickupSoon && statusFilter === 'soon') ? '<span class="pickup-soon-tag"><span class="pk-w">Pickup </span>'+soonLabel+'</span>' : '';
+        var expiredTag  = isExpired ? '<span class="expired-tag">Dates Expired</span>' : '';
+        var paidTag     = refunded ? '' : balancePaid ? '<span class="status-tag tag-deposit">Fully Paid</span>'
+                                      : (isPaid ? '<span class="status-tag tag-deposit">Deposit Paid</span>' : '');
+        card.innerHTML =
+          '<div class="card-header">'+
+            '<div>'+
+              '<h3><span class="car-name">'+b.carName+'</span>'+
+              ((paidTag||pickupChip||conflictTag||expiredTag)?'<span class="tag-row">'+paidTag+pickupChip+conflictTag+expiredTag+'</span>':'')+'</h3>'+
+              '<div class="booking-id">ID: '+b.bookingId+' &nbsp;·&nbsp; '+fmtStamp(b.timestamp)+'</div>'+
+            '</div>'+
+            '<div class="card-actions">'+actionsHtml+'</div>'+
+          '</div>'+
+          '<table class="info-table">'+
+            '<tr><th>Full Name</th><td>'+b.fullName+'</td></tr>'+
+            '<tr><th>Phone No.</th><td>'+b.phone+'</td></tr>'+
+            '<tr><th>National ID</th><td>'+b.nationalId+'</td></tr>'+
+            '<tr><th>Licence No.</th><td>'+b.license+'</td></tr>'+
+            '<tr><th>Start Date</th><td>'+fmtDate(b.pickup)+'</td></tr>'+
+            (b.pickupTime ? '<tr><th>Collecting Time</th><td>🕒 '+fmtTime12(b.pickupTime)+'</td></tr>' : '')+
+            '<tr><th>End Date</th><td>'+fmtDate(b.endDate)+'</td></tr>'+
+            '<tr><th>Days Booked</th><td>'+days+' day'+(days!==1?'s':'')+'</td></tr>'+
+            '<tr><th>Price/Day</th><td>Ksh '+b.price.toLocaleString()+'</td></tr>'+
+            '<tr><th>Total Fee</th><td>Ksh '+total.toLocaleString()+'</td></tr>'+
+            moneyRows+
+          '</table>'+
+          noticeHtml;
+
+        list.appendChild(card);
+      });
+
+      if (filtered.length > displayCount) {
+        var btn = document.createElement('button');
+        btn.className = 'show-more-btn';
+        btn.textContent = 'Show More (' + (filtered.length - displayCount) + ' remaining)';
+        btn.addEventListener('click', function(){ displayCount += 5; renderBookings(); });
+        list.appendChild(btn);
+      }
+
+      list.querySelectorAll('.btn-pay-now').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if (btn.disabled) return;
+          openPayModal(btn.dataset.id, btn.dataset.deposit, btn.dataset.full);
+        });
+      });
+
+      list.querySelectorAll('.btn-balance').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var bookingId = btn.dataset.id;
+          var allBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+          var myBooking = null;
+          for (var i = 0; i < allBookings.length; i++) {
+            if (String(allBookings[i].bookingId) === String(bookingId)) { myBooking = allBookings[i]; break; }
+          }
+          if (!myBooking) return;
+
+          if (daysUntil(myBooking.pickup) < 0) {
+            openExpiredModal(myBooking);
+            return;
+          }
+
+          localStorage.setItem('paymentAmount', btn.dataset.amount);
+          localStorage.setItem('paymentBookingId', bookingId);
+          localStorage.setItem('paymentType', 'balance');
+          window.location.href = 'payment-gateway.html';
+        });
+      });
+
+      list.querySelectorAll('.btn-reschedule').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          openRescheduleModal(
+            btn.dataset.id,
+            btn.dataset.car,
+            btn.dataset.pickup,
+            btn.dataset.end
+          );
+        });
+      });
+
+      list.querySelectorAll('.btn-delete').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          if (confirm('Delete this booking?')) {
+            // Delete by bookingId (the visible list is filtered, so its index is not the global index)
+            var bks = JSON.parse(localStorage.getItem('bookings')||'[]');
+            var di = -1;
+            for (var k = 0; k < bks.length; k++) { if (String(bks[k].bookingId) === String(btn.dataset.id)) { di = k; break; } }
+            if (di > -1) bks.splice(di, 1);
+            localStorage.setItem('bookings', JSON.stringify(bks));
+            renderBookings();
+            showToast('🗑️ Booking deleted.');
+          }
+        });
+      });
+
+      list.querySelectorAll('.btn-pdf').forEach(function(btn){
+        btn.addEventListener('click', function(){ downloadPDF(btn.dataset.id); });
+      });
+    }
+
+    function depRefOf(b){
+      var c=[b.mpesaReceipt,b.mpesaRef,b.mpesaCode,b.depositReceipt,b.receipt,b.transactionId,b.paymentRef];
+      for(var i=0;i<c.length;i++){ if(c[i] && String(c[i]).toUpperCase()!=='N/A') return String(c[i]); }
+      return 'N/A';
+    }
+    function drawQR(doc,text,x,y,size){
+      try{
+        if(typeof qrcode==='undefined') return false;
+        var qr=qrcode(0,'L'); qr.addData(text); qr.make();
+        var n=qr.getModuleCount(), m=size/n;
+        doc.setFillColor(13,59,140);
+        for(var r=0;r<n;r++){ for(var c=0;c<n;c++){ if(qr.isDark(r,c)) doc.rect(x+c*m,y+r*m,m+0.02,m+0.02,'F'); } }
+        return true;
+      }catch(e){ return false; }
+    }
+    function drawVerify(doc,PW,sigY,idStr,carName,ref,total,dep,bal,full,fp){
+      var rcpNo='RCP-'+idStr, qx=PW/2-7, qy=sigY+3;
+      var K=function(n){return 'Ksh '+Number(n).toLocaleString('en-US');};
+      var txt=['WALIKO CAR HIRE','Receipt: '+rcpNo,'Car: '+carName,'Status: '+(full?'FULLY PAID':'DEPOSIT PAID'),
+               'Total: '+K(total),
+               (fp?'Full payment: '+K(total)+' (Outstanding Ksh 0)':'Deposit paid: '+K(dep)),
+               (fp?'':(full?'Balance paid: '+K(bal)+' (Outstanding Ksh 0)':'Balance due at pickup: '+K(bal))),
+               'M-Pesa Ref: '+ref].filter(Boolean).join('\n');
+      var ok=drawQR(doc,txt,qx,qy,28);
+      if(ok){doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.text('Scan to verify',qx+14,qy+32,{align:'center'});}
+      doc.setTextColor(13,59,140);doc.setFont('helvetica','bold');doc.setFontSize(7);doc.text(rcpNo,qx+14,qy+(ok?36:8),{align:'center'});
+    }
+    function drawStamp(doc,cx,cy,full){var R=14,NR=13,NG=59,NB=140,GR=244,GG=196,GB=48;doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.2);doc.circle(cx,cy,R,'D');doc.setLineWidth(0.5);doc.circle(cx,cy,R-2.5,'D');var sCY=cy-4.5,r1=3.2,r2=1.3,pts=[];for(var i=0;i<10;i++){var ang=(i*36-90)*Math.PI/180,rr=i%2===0?r1:r2;pts.push([cx+rr*Math.cos(ang),sCY+rr*Math.sin(ang)]);}doc.setFillColor(GR,GG,GB);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.triangle(cx,sCY,a[0],a[1],b2[0],b2[1],'F');}doc.setDrawColor(200,152,10);doc.setLineWidth(0.2);for(var i=0;i<10;i++){var a=pts[i],b2=pts[(i+1)%10];doc.line(a[0],a[1],b2[0],b2[1]);}var tTxt='WALIKO CAR HIRE LTD',tR=R-3.5,tSpan=170*Math.PI/180;var tStart=-Math.PI/2-tSpan/2,tStep=tSpan/(tTxt.length-1);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(3.8);for(var i=0;i<tTxt.length;i++){var a=tStart+i*tStep;doc.text(tTxt[i],cx+tR*Math.cos(a),cy+tR*Math.sin(a),{angle:-(a*180/Math.PI+90),align:'center'});}var bTxt='NAIROBI \u00B7 KENYA',bR=R-3.5,bSpan=115*Math.PI/180;var bStart=Math.PI/2-bSpan/2,bStep=bSpan/(bTxt.length-1);doc.setFontSize(3.8);for(var i=0;i<bTxt.length;i++){var a=bStart+i*bStep;doc.text(bTxt[i],cx+bR*Math.cos(a),cy+bR*Math.sin(a),{angle:-(a*180/Math.PI-90),align:'center'});}doc.setFont('helvetica','bold');doc.setFontSize(4.8);doc.setTextColor(NR,NG,NB);doc.text(full?'VERIFIED':'DEPOSIT',cx,cy+2,{align:'center'});doc.setFontSize(4.5);doc.text(full?'& PAID':'PAID',cx,cy+6.5,{align:'center'});doc.setFontSize(3.5);doc.setTextColor(140,150,175);doc.text('EST. 2020',cx,cy+10.5,{align:'center'});}
+    function drawSignatureA(doc,ox,oy){var sc=0.52,NR=13,NG=59,NB=140;function p(px,py){return [ox+px*sc,oy+py*sc];}doc.setDrawColor(NR,NG,NB);doc.setLineWidth(1.1);var W=[[4,10],[10,34],[16,18],[22,34],[28,10]];for(var i=0;i<W.length-1;i++){var a=p(W[i][0],W[i][1]),b2=p(W[i+1][0],W[i+1][1]);doc.line(a[0],a[1],b2[0],b2[1]);}doc.setLineWidth(0.85);var s0=p(28,10);doc.lines([[sc*(32-28),sc*(22-10),sc*(36-28),sc*(28-10),sc*(40-28),sc*(26-10)],[sc*(43-40),sc*(24-26),sc*(43-40),sc*(19-26),sc*(41-40),sc*(17-26)],[sc*(39-41),sc*(15-17),sc*(37-41),sc*(18-17),sc*(38-41),sc*(21-17)],[sc*(39-38),sc*(24-21),sc*(42-38),sc*(26-21),sc*(45-38),sc*(23-21)]],s0[0],s0[1]);var lA=p(47,13),lB=p(47,30);doc.line(lA[0],lA[1],lB[0],lB[1]);doc.setFillColor(NR,NG,NB);var dp=p(47,10);doc.circle(dp[0],dp[1],0.7,'F');var o0=p(50,19);doc.lines([[sc*(51-50),sc*(13-19),sc*(56-50),sc*(12-19),sc*(59-50),sc*(16-19)],[sc*(61-59),sc*(19-16),sc*(59-59),sc*(25-16),sc*(55-59),sc*(26-16)],[sc*(52-55),sc*(27-26),sc*(50-55),sc*(24-26),sc*(52-55),sc*(21-26)],[sc*(54-52),sc*(18-21),sc*(58-52),sc*(17-21),sc*(61-52),sc*(20-21)],[sc*(63-61),sc*(23-20),sc*(62-61),sc*(28-20),sc*(59-61),sc*(30-20)]],o0[0],o0[1]);doc.setLineWidth(0.5);var tail=[[59,30],[72,25],[92,23],[112,27],[126,30],[138,27],[145,24]];for(var i=0;i<tail.length-1;i++){var ta=p(tail[i][0],tail[i][1]),tb=p(tail[i+1][0],tail[i+1][1]);doc.line(ta[0],ta[1],tb[0],tb[1]);}doc.setLineWidth(0.35);var ul1=p(3,39),ul2=p(100,39);doc.line(ul1[0],ul1[1],ul2[0],ul2[1]);doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);var np=p(3,47);doc.text('Waliko Car Hire Ltd.',np[0],np[1]);doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8.5);var tp=p(3,55);doc.text('Authorised Signatory',tp[0],tp[1]);}
+
+    function downloadPDF(bookingId){
+      var bookings = JSON.parse(localStorage.getItem('bookings')||'[]');
+      var b = null;
+      for(var i=0;i<bookings.length;i++){
+        if(String(bookings[i].bookingId)===String(bookingId)){b=bookings[i];break;}
+      }
+      if(!b){alert('Booking not found.');return;}
+      if(isRefunded(b)){alert('This booking was refunded to your store credit, so there is no receipt to download.');return;}
+      var ms=new Date(b.endDate+'T00:00:00')-new Date(b.pickup+'T00:00:00');
+      var days=Math.max(1,Math.round(ms/86400000));
+      var total=b.price*days,deposit=Math.floor(total/2),balance=total-deposit;
+      var isPaid=isPaidBk(b);
+      var isExpiredPdf=!isPaid&&daysUntil(b.pickup)<0;
+      if(!isPaid&&!isExpiredPdf){
+        var tS=new Date(b.pickup+'T00:00:00'),tE=new Date(b.endDate+'T00:00:00');
+        var carTaken=bookings.some(function(o){
+          if(String(o.bookingId)===String(b.bookingId)||o.carName!==b.carName) return false;
+          if(!(isPaidBk(o))) return false;
+          return tS<new Date(o.endDate+'T00:00:00')&&tE>new Date(o.pickup+'T00:00:00');
+        });
+        if(carTaken){alert('Sorry, you cannot download a PDF for this booking. This car has already been taken by another customer for your dates.');return;}
+      }
+      var balObj=getBalanceStatus(b.bookingId);
+      var balancePaid=!!(balObj&&balObj.paid)||!!(b.balancePaid);
+      var balReceipt=(balObj&&balObj.receipt)||b.balanceReceipt||'N/A';
+      var balPaidAt=(balObj&&balObj.paidAt)||b.balancePaidAt||'N/A';
+      var fullPay=isFullPay(b,total,balancePaid,(balObj&&balObj.receipt)||b.balanceReceipt||'');
+      var jsPDF=window.jspdf.jsPDF;
+      var doc=new jsPDF({unit:'mm',format:'a4'});
+      var PW=210,PH=297,L=14,RR=196,CW=182,NR=13,NG=59,NB=140;
+      var issued=new Date().toLocaleDateString('en-KE',{day:'2-digit',month:'long',year:'numeric'});
+      doc.setFillColor(NR,NG,NB);doc.rect(0,0,PW,46,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(22);doc.text('WALIKO CAR HIRE',L,20);
+      doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(180,210,255);doc.text('Premium Vehicle Rentals  \u00B7  Nairobi, Kenya',L,29);
+      doc.setTextColor(140,175,240);doc.setFontSize(8);doc.text('Booking ID: '+String(b.bookingId).replace('#','')+'   \u00B7   Date: '+issued,L,39);
+      doc.setFillColor(255,255,255);doc.roundedRect(PW-46,8,32,12,2,2,'F');
+      doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.text('BOOKING',PW-30,15.5,{align:'center'});
+      doc.setFillColor(244,196,48);doc.rect(0,46,PW,4,'F');
+      doc.setFillColor(240,245,255);doc.rect(0,50,PW,16,'F');
+      doc.setTextColor(100,120,165);doc.setFont('helvetica','normal');doc.setFontSize(8);
+      var statusBarTxt=balancePaid?'Waliko Car Hire  ·  All payments cleared  ·  Ready for pickup':(isExpiredPdf?'Waliko Car Hire  ·  Booking dates have expired  ·  Please reschedule':'Waliko Car Hire  ·  Deposit = 50% of total hire cost  ·  Balance due at pickup');
+      doc.text(statusBarTxt,L,60);
+      if(balancePaid){doc.setFillColor(39,174,96);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('FULLY PAID',PW-33,59.5,{align:'center'});}
+      else if(isPaid){doc.setFillColor(230,249,238);doc.roundedRect(PW-52,53,38,10,2,2,'F');doc.setTextColor(26,112,64);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('DEPOSIT PAID',PW-33,59.5,{align:'center'});}
+      else if(isExpiredPdf){doc.setFillColor(255,234,234);doc.roundedRect(PW-60,53,46,10,2,2,'F');doc.setTextColor(192,57,43);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('BOOKING EXPIRED',PW-37,59.5,{align:'center'});}
+      else{doc.setFillColor(255,245,220);doc.roundedRect(PW-44,53,30,10,2,2,'F');doc.setTextColor(160,90,0);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text('PENDING',PW-29,59.5,{align:'center'});}
+      function secHead(label,y){doc.setFillColor(NR,NG,NB);doc.rect(L,y,3,11,'F');doc.setTextColor(NR,NG,NB);doc.setFont('helvetica','bold');doc.setFontSize(10);doc.text(label,L+6,y+8);}
+      function tRow(label,value,y,shade,highlight,greenVal,rh){rh=rh||11;if(highlight){doc.setFillColor(230,243,255);doc.rect(L,y-2,CW,rh,'F');doc.setDrawColor(180,210,240);doc.setLineWidth(0.3);doc.rect(L,y-2,CW,rh,'D');}else if(shade){doc.setFillColor(247,250,255);doc.rect(L,y-2,CW,rh,'F');}doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text(label,L+4,y+rh*0.55);if(greenVal)doc.setTextColor(26,112,64);else if(highlight)doc.setTextColor(NR,NG,NB);else doc.setTextColor(26,26,46);doc.setFont('helvetica','bold');doc.setFontSize(highlight?9.5:8);doc.text(String(value),RR,y+rh*0.55,{align:'right'});}
+      var RH=balancePaid?6.8:8;var y=72;
+      secHead('Customer & Booking Details',y);y+=13;
+      var cRows=[['Full Name',b.fullName],['Phone No.',b.phone],['National ID',b.nationalId],['Licence No.',b.license],['Vehicle Hired',b.carName],['Booking ID',String(b.bookingId).replace('#','')],['Pickup Date',fmtDate(b.pickup)+(b.pickupTime?' at '+fmtTime12(b.pickupTime):'')],['Return Date',fmtDate(b.endDate)],['Duration',days+' day'+(days!==1?'s':'')]];
+      cRows.forEach(function(r,i){tRow(r[0],r[1],y,i%2===0,false,false,RH);y+=RH;});
+      y+=4;secHead('Payment Summary',y);y+=13;
+      if(isPaid&&fullPay){tRow('Payment Ref',depRefOf(b),y,true,false,true,RH);y+=RH;tRow('Paid On',fmtStamp(b.paidAt||balPaidAt||'N/A'),y,false,false,false,RH);y+=RH;}
+      else{
+        if(isPaid){tRow('Deposit M-Pesa Ref',depRefOf(b),y,true,false,true,RH);y+=RH;tRow('Deposit Paid On',fmtStamp(b.paidAt||'N/A'),y,false,false,false,RH);y+=RH;}
+        if(balancePaid){tRow('Balance M-Pesa Ref',balReceipt,y,true,false,true,RH);y+=RH;tRow('Balance Paid On',fmtStamp(balPaidAt),y,false,false,false,RH);y+=RH;}
+      }
+      tRow('Price Per Day','Ksh '+b.price.toLocaleString(),y,true,false,false,RH);y+=RH;
+      tRow('Number of Days',days+' day'+(days!==1?'s':''),y,false,false,false,RH);y+=RH;
+      tRow('Total Rental Fee','Ksh '+total.toLocaleString(),y,true,true,false,RH);y+=RH;
+      if(fullPay){tRow('Full Payment Paid','Ksh '+total.toLocaleString(),y,false,false,true,RH);y+=RH;tRow('Outstanding Balance','Ksh 0.00',y,true,false,true,RH);y+=RH;}
+      else{
+      tRow('Deposit (50%)','Ksh '+deposit.toLocaleString(),y,false,false,false,RH);y+=RH;
+      if(balancePaid){tRow('Balance Paid','Ksh '+balance.toLocaleString(),y,true,false,true,RH);y+=RH;tRow('Outstanding Balance','Ksh 0.00',y,false,false,true,RH);y+=RH;}
+      else{tRow('Balance on Pickup','Ksh '+balance.toLocaleString(),y,true,false,false,RH);y+=RH;}
+      }
+      var sigY=Math.min(Math.max(y+6,PH-16-62),PH-16-41);
+      doc.setDrawColor(210,218,235);doc.setLineWidth(0.3);doc.line(L,sigY-4,PW-L,sigY-4);
+      doc.setFillColor(248,250,255);doc.rect(0,sigY-6,PW,PH-16-(sigY-6),'F');
+      doc.setTextColor(140,150,170);doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.text('Authorised by',L,sigY);
+      drawSignatureA(doc,L,sigY+2);
+      if(isPaid){drawStamp(doc,PW-30,sigY+14,balancePaid);drawVerify(doc,PW,sigY,String(b.bookingId).replace('#',''),b.carName,depRefOf(b),total,deposit,balance,balancePaid,fullPay);}
+      doc.setFillColor(NR,NG,NB);doc.rect(0,PH-16,PW,16,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.text('waliko.co.ke  \u00B7  info@waliko.co.ke  \u00B7  0729177741',PW/2,PH-8.5,{align:'center'});
+      doc.setFontSize(6.5);doc.setTextColor(160,195,255);doc.text('This is an official computer-generated receipt and is valid without a physical stamp.',PW/2,PH-3,{align:'center'});
+      doc.save('Waliko_Booking_'+bookingId+'.pdf');
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', function(e){
+      e.preventDefault();
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('currentUser');
+      window.location.href = 'index.html';
+    });
+
+    window.closeAdminModal      = closeAdminModal;
+    window.closeRescheduleModal = closeRescheduleModal;
+    window.saveReschedule       = saveReschedule;
+    window.closeTakenModal      = closeTakenModal;
+    window.dismissReminder      = dismissReminder;
+    window.renderBookings       = renderBookings;
+
+    renderBookings();
+
+    // Opened from Payments with ?id=... : jump to that booking and open Reschedule
+    (function(){
+      var qid = new URLSearchParams(window.location.search).get('id');
+      if (!qid) return;
+      displayCount = 9999;
+      renderBookings();
+      var all = JSON.parse(localStorage.getItem('bookings') || '[]');
+      var target = null;
+      for (var i = 0; i < all.length; i++) { if (String(all[i].bookingId) === qid) { target = all[i]; break; } }
+      if (!target) return;
+      var cards = document.querySelectorAll('.booking-card');
+      for (var j = 0; j < cards.length; j++) {
+        var idEl = cards[j].querySelector('.booking-id');
+        if (idEl && idEl.textContent.indexOf('ID: ' + qid) === 0) {
+          cards[j].style.boxShadow = '0 0 0 3px #1464dd';
+          cards[j].scrollIntoView({ behavior: 'smooth', block: 'center' });
+          break;
+        }
+      }
+      openRescheduleModal(target.bookingId, target.carName, target.pickup, target.endDate);
+      if (window.history && history.replaceState) history.replaceState(null, '', window.location.pathname);
+    })();
+  })();
   </script>
+  <script>document.write('<script src="credit.js?t='+Date.now()+'"><\/script>');</script>
+  <script src="maintenance-check.js"></script>
+  <script>
+  /* Store credit bar: credit.js keeps the balance (key credit_<email>); show it here so refunded money is visible */
+  (function(){
+    try{
+      if (typeof CR === 'undefined') return;
+      var u = JSON.parse(localStorage.getItem('currentUser') || '{}') || {};
+      var e = String(u.email || '').toLowerCase();
+      if (!e) return;
+      var bal = CR.balance(e);
+      if (!(bal > 0)) return;
+      var bar = document.getElementById('creditBar');
+      bar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#e6fff0;border:1.5px solid #27ae60;border-radius:14px;padding:12px 16px;margin-bottom:16px;box-shadow:0 2px 10px rgba(39,174,96,0.12);';
+      bar.innerHTML = '<div><div style="font-size:0.75em;color:#1a6e3a;font-weight:600;">Your store credit</div><div style="font-size:1.35em;font-weight:700;color:#1b8a3d;">Ksh ' + Number(bal).toLocaleString() + '</div><div style="font-size:0.75em;color:#4a7a5a;">Use it to pay for a booking, or withdraw it to M-Pesa.</div></div>'
+        + '<a href="credit.html" style="background:#27ae60;color:#fff;text-decoration:none;font-weight:700;font-size:0.82em;padding:9px 16px;border-radius:25px;">View credit &rarr;</a>';
+    }catch(err){}
+  })();
+  </script>
+   <script src="maintenance-check.js"></script>
+  <script src="notify.js"></script>
 </body>
 </html>
